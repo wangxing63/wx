@@ -8,45 +8,58 @@
 </head>
 <body>
 
-<header class="site-header">
-  <div class="header-inner">
+<header class="navbar">
+  <div class="container nav-inner">
     <a class="brand" href="index.html">
       <span class="brand-badge">学</span>
       <span class="brand-name">我的教程站</span>
     </a>
-    <nav class="header-nav">
+    <nav class="nav-links">
       <a href="index.html" class="active">首页</a>
-      <a href="#categories">全部教程</a>
+      <a href="#tutorials">全部教程</a>
       <a href="#tags">标签</a>
     </nav>
   </div>
 </header>
 
-<main class="container">
-
-  <section class="hero">
+<!-- Hero：通栏背景，内容居中约束 -->
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-eyebrow">LEARNING HUB</div>
     <h1>个人学习教程站</h1>
-    <p>把自己整理过的教程做成静态站点，无需数据库，快速查阅与分享。</p>
+    <p class="hero-sub">把自己整理过的教程做成站点，无需数据库，随时随地在线查阅与分享。</p>
     <div class="hero-search">
-      <input id="searchBox" type="text" placeholder="输入关键词搜索教程（标题 / 标签 / 简介）" autocomplete="off">
+      <input id="searchBox" type="text" placeholder="搜索教程（标题 / 标签 / 简介）" autocomplete="off">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
     </div>
-    <div class="hero-stats" id="heroStats"></div>
-  </section>
+    <div class="hero-stats"><span id="heroStats"></span></div>
+  </div>
+</section>
 
-  <section id="categories" class="section">
-    <h2 class="section-title">全部教程</h2>
+<main class="container page">
+
+  <section id="tutorials" class="section">
+    <div class="section-head">
+      <h2 class="section-title">全部教程</h2>
+      <span class="section-line"></span>
+    </div>
     <div id="categoryList"></div>
   </section>
 
   <section id="tags" class="section">
-    <h2 class="section-title">标签</h2>
+    <div class="section-head">
+      <h2 class="section-title">标签</h2>
+      <span class="section-line"></span>
+    </div>
     <div id="tagCloud" class="tag-cloud"></div>
   </section>
 
 </main>
 
-<footer class="site-footer">
-  <p>由个人整理 · 托管于 GitHub Pages · 纯静态站点</p>
+<footer class="footer">
+  <div class="container">
+    <p>由个人整理 · 托管于 GitHub Pages · 纯静态站点</p>
+  </div>
 </footer>
 
 <script src="assets/app.js"></script>

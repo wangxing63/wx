@@ -54,5 +54,13 @@
     "tags": ["WSL", "Linux", "Windows"],
     "path": "docs/wsl.html",
     "date": "2026-09-24"
+  },
+  {
+    "title": "Vue3 零基础完全教程",
+    "desc": "从零开始的 Vue3 小白向全文档教程：模板语法、响应式、计算属性、事件、组件、插槽、生命周期、组合式 API、过渡动画、工具链与部署上线，类比讲解、代码逐行注释、分步实战。",
+    "category": "前端开发",
+    "tags": ["Vue", "Vue3", "JavaScript", "Composition API"],
+    "path": "docs/vue3.html",
+    "date": "2026-09-24"
   }
 ]

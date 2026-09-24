@@ -1,0 +1,2272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f7f9">
+<meta name="description" content="Vue3 完全教程：从零基础到组件开发，类比讲解、每行代码带注释、循序渐进的步骤，覆盖官方教程全部核心内容。">
+<title>Vue3 完全教程 · 从零基础到组件开发</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  background:#f6f7f9; color:#28303b; font-size:16.5px; line-height:1.95;
+  -webkit-font-smoothing:antialiased;
+}
+::selection { background:#d6e4ff; }
+a { color:#1a56db; text-decoration:none; }
+a:hover { text-decoration:underline; }
+section[id] { scroll-margin-top:24px; }
+code { font-family:"JetBrains Mono",Consolas,"Courier New",monospace; }
+
+/* 顶部进度条 */
+#progress { position:fixed; top:0; left:0; height:3px; width:0; background:linear-gradient(90deg,#3f7cff,#6aa5ff); z-index:1200; }
+
+/* ============ 侧边栏 ============ */
+.sidebar { position:fixed; top:0; left:0; bottom:0; width:290px; background:#fff; border-right:1px solid #e7ebf0; overflow-y:auto; z-index:1100; padding:30px 0 40px; }
+.brand { padding:0 26px 24px; border-bottom:1px solid #eef1f5; margin-bottom:14px; }
+.logo { display:flex; align-items:center; gap:12px; }
+.logo-mark { width:44px; height:44px; border-radius:12px; background:linear-gradient(135deg,#3f7cff,#42d392); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; letter-spacing:.5px; box-shadow:0 6px 14px rgba(63,124,255,.25); }
+.logo-txt b { display:block; font-size:17px; color:#1f2733; }
+.logo-txt span { font-size:12px; color:#8a95a5; letter-spacing:1px; }
+.nav-cap { padding:18px 26px 8px; font-size:12px; color:#9aa5b4; letter-spacing:2px; font-weight:600; }
+.nav a { display:flex; align-items:baseline; gap:10px; padding:8.5px 26px 8.5px 23px; color:#5c6878; font-size:14px; border-left:3px solid transparent; transition:.15s; }
+.nav a .n { font-family:Consolas,monospace; font-size:11.5px; color:#a8b2c1; }
+.nav a:hover { color:#1a56db; background:#eef3ff; text-decoration:none; }
+.nav a.active { color:#1a56db; border-left-color:#3f7cff; background:#edf3ff; font-weight:600; }
+.nav a.active .n { color:#6aa5ff; }
+.side-foot { margin-top:26px; padding:16px 26px 0; border-top:1px solid #eef1f5; font-size:12px; color:#9aa5b4; line-height:1.9; }
+
+/* ============ 主区域 ============ */
+main { margin-left:290px; }
+.container { width:100%; max-width:880px; margin:0 auto; padding:0 56px 140px; }
+
+/* ---- 宽屏 / 超宽屏自适应 ---- */
+@media (min-width:1500px) {
+  body { font-size:17px; }
+  .container { max-width:1100px; }
+  pre.code { font-size:14.5px; }
+}
+@media (min-width:1900px) {
+  body { font-size:18px; }
+  .container { max-width:1360px; padding:0 64px 140px; }
+  .sidebar { width:320px; }
+  main { margin-left:320px; }
+  .nav a { font-size:15px; padding:9.5px 26px 9.5px 23px; }
+  .nav-cap { font-size:13px; }
+  .hero h1 { font-size:56px; }
+  .hero .sub { font-size:19px; max-width:800px; }
+  .chap-head h2 { font-size:32px; }
+  h3 { font-size:23px; }
+  pre.code { font-size:15px; }
+  pre.output { font-size:14px; }
+  .codehead { font-size:13.5px; }
+  .copybtn { font-size:13px; }
+  .callout { font-size:16.5px; }
+  table { font-size:15.5px; }
+  th { font-size:14px; }
+  .stat b { font-size:30px; }
+  .stat span { font-size:14px; }
+}
+@media (min-width:2500px) {
+  body { font-size:19px; }
+  .container { max-width:1700px; padding:0 80px 140px; }
+  .sidebar { width:344px; }
+  main { margin-left:344px; }
+  .hero h1 { font-size:64px; }
+  .chap-head h2 { font-size:36px; }
+  h3 { font-size:25px; }
+  pre.code { font-size:16px; }
+  pre.output { font-size:15px; }
+  .callout { font-size:18px; }
+  table { font-size:17px; }
+  .stat b { font-size:34px; }
+}
+@media (min-width:3300px) {
+  body { font-size:20px; }
+  .container { max-width:2100px; padding:0 96px 140px; }
+  .hero h1 { font-size:74px; }
+}
+
+/* Hero */
+.hero { padding:92px 0 8px; }
+.hero-kicker { display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; letter-spacing:2px; color:#1a56db; background:#eaf1ff; border:1px solid #c4d7ff; padding:6px 16px; border-radius:999px; }
+.hero h1 { margin:26px 0 18px; font-size:clamp(32px,4.6vw,50px); line-height:1.28; color:#1c2430; letter-spacing:.5px; font-weight:800; }
+.hero h1 em { font-style:normal; color:#3f7cff; }
+.hero .sub { font-size:18px; color:#5c6878; max-width:640px; line-height:1.9; }
+.stats { display:flex; flex-wrap:wrap; margin-top:34px; background:#fff; border:1px solid #e7ebf0; border-radius:16px; overflow:hidden; box-shadow:0 4px 16px rgba(24,34,56,.05); }
+.stat { flex:1 1 150px; padding:22px 10px; text-align:center; border-right:1px solid #eef1f5; }
+.stat:last-child { border-right:0; }
+.stat b { display:block; font-size:26px; color:#3f7cff; font-weight:800; }
+.stat span { font-size:13px; color:#8a95a5; }
+
+/* 章节 */
+.chapter { margin-top:104px; }
+.chap-head { display:flex; align-items:center; gap:20px; padding-bottom:22px; border-bottom:1px solid #e7ebf0; margin-bottom:34px; }
+.chap-num { flex:none; width:58px; height:58px; border-radius:15px; background:linear-gradient(135deg,#3f7cff,#42d392); color:#fff; font-size:24px; font-weight:800; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(63,124,255,.22); }
+.chap-head h2 { font-size:29px; line-height:1.35; color:#1c2430; font-weight:800; }
+.chap-head .desc { margin-top:6px; font-size:14.5px; color:#8a95a5; font-weight:400; line-height:1.7; }
+
+h3 { margin:54px 0 6px; font-size:21.5px; color:#1c2430; display:flex; align-items:center; gap:10px; font-weight:700; }
+h3::before { content:""; flex:none; width:7px; height:20px; border-radius:3px; background:linear-gradient(#42d392,#3f7cff); }
+h4 { margin:34px 0 4px; font-size:17px; color:#2c3644; font-weight:700; }
+p { margin:16px 0; }
+.lead { font-size:17px; color:#5c6878; }
+ul.plain { margin:14px 0 14px 4px; padding-left:22px; }
+ul.plain li { margin:8px 0; }
+
+p code, li code, td code, th code, .callout code { background:#eef1f5; color:#1a4fbf; padding:2px 7px; border-radius:6px; font-size:.88em; }
+
+/* ============ 代码块 ============ */
+.codewrap { margin:26px 0; border-radius:14px; overflow:hidden; border:1px solid #232e44; box-shadow:0 10px 30px rgba(18,26,44,.14); }
+.codehead { display:flex; align-items:center; justify-content:space-between; background:#1a2334; color:#8fa0bb; padding:9px 16px; font-size:12.5px; font-family:Consolas,monospace; }
+.codehead .lab { display:flex; align-items:center; gap:10px; }
+.codehead .dots { display:flex; gap:6px; }
+.codehead .dots i { width:10px; height:10px; border-radius:50%; }
+.codehead .dots i:nth-child(1){ background:#ff5f56; }
+.codehead .dots i:nth-child(2){ background:#ffbd2e; }
+.codehead .dots i:nth-child(3){ background:#27c93f; }
+.copybtn { background:#2a3550; color:#aebdd4; border:1px solid #37435f; padding:4px 12px; border-radius:7px; cursor:pointer; font-size:12px; font-family:inherit; transition:.15s; }
+.copybtn:hover { background:#3f7cff; border-color:#3f7cff; color:#fff; }
+pre.code { background:#151d30; color:#dde6f2; padding:18px 22px; overflow-x:auto; font-size:14px; line-height:1.95; font-family:Consolas,"JetBrains Mono",monospace; margin:0; }
+pre.code .cmt { color:#7ee787; }
+pre.code .kw { color:#82b8ff; }
+pre.code .pr { color:#5c6c86; }
+pre.output { background:#1b2438; color:#9db0ca; padding:14px 22px 16px; overflow-x:auto; font-size:13px; line-height:1.85; font-family:Consolas,monospace; border-top:1px dashed #32405c; margin:0; }
+pre.output::before { content:"运行效果（示意，注释为中文标注）"; display:block; color:#6a7a95; font-size:11.5px; margin-bottom:8px; letter-spacing:1px; }
+pre.code::-webkit-scrollbar, pre.output::-webkit-scrollbar { height:8px; }
+pre.code::-webkit-scrollbar-thumb, pre.output::-webkit-scrollbar-thumb { background:#2e3b57; border-radius:4px; }
+
+/* ============ 提示框 ============ */
+.callout { position:relative; border-radius:13px; padding:20px 22px 20px 64px; margin:28px 0; font-size:15.5px; line-height:1.9; }
+.callout::before { position:absolute; left:18px; top:20px; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; }
+.callout .tag { display:inline-block; font-weight:800; margin-right:6px; }
+.callout.analogy { background:#fff8e9; border:1px solid #f2ddb0; color:#6b5518; }
+.callout.analogy::before { background:#f0a92e; content:"喻"; }
+.callout.tip { background:#ecf8f0; border:1px solid #c2e6cd; color:#1e5c33; }
+.callout.tip::before { background:#2f9e5f; content:"技"; }
+.callout.warn { background:#fdf0eb; border:1px solid #f4c9b8; color:#8a3319; }
+.callout.warn::before { background:#e8542f; content:"警"; }
+.callout.info { background:#edf3fc; border:1px solid #c8d9f2; color:#274a7d; }
+.callout.info::before { background:#4a7fd4; content:"注"; }
+.callout code { background:rgba(255,255,255,.75); color:inherit; }
+
+.practice { border:1.5px dashed #9fc0ff; background:#f7faff; border-radius:13px; padding:20px 24px; margin:30px 0; color:#2c3a52; }
+.practice .tag { color:#1a56db; font-weight:800; letter-spacing:1px; font-size:13px; display:block; margin-bottom:8px; }
+.practice ol { padding-left:22px; }
+.practice ol li { margin:6px 0; }
+
+/* ============ 标签 ============ */
+.os { display:inline-block; padding:3px 12px; border-radius:999px; font-size:12.5px; font-weight:700; letter-spacing:.5px; margin-right:6px; vertical-align:1px; }
+.os.win { background:#e8f1fc; color:#1263c3; border:1px solid #c4d9f4; }
+.os.linux { background:#2c3543; color:#f2c94c; border:1px solid #2c3543; }
+.os.both { background:#edf7ef; color:#227a43; border:1px solid #c8e8d2; }
+.osgrid { display:grid; grid-template-columns:1fr 1fr; gap:22px; margin:26px 0; }
+.oscard { background:#fff; border:1px solid #e7ebf0; border-radius:16px; padding:24px 24px 10px; box-shadow:0 4px 16px rgba(24,34,56,.05); }
+.oscard .os-head { display:flex; align-items:center; margin-bottom:4px; }
+.oscard h4 { margin:0; font-size:16.5px; }
+.oscard .codewrap { margin:16px 0; }
+
+/* ============ 表格 ============ */
+.tblwrap { overflow-x:auto; margin:26px 0; border-radius:13px; border:1px solid #e7ebf0; background:#fff; box-shadow:0 4px 16px rgba(24,34,56,.05); }
+table { width:100%; border-collapse:collapse; font-size:14.5px; line-height:1.85; min-width:520px; }
+th { background:#f2f5f9; color:#3b4656; text-align:left; padding:12px 18px; font-size:13.5px; letter-spacing:.5px; border-bottom:1px solid #e3e9f0; white-space:nowrap; }
+td { padding:13px 18px; border-bottom:1px solid #eef2f6; vertical-align:top; color:#3b4656; }
+tr:last-child td { border-bottom:0; }
+td code { white-space:nowrap; }
+
+/* 步骤列表 */
+ol.steps { list-style:none; counter-reset:s; margin:22px 0; }
+ol.steps li { counter-increment:s; position:relative; padding:0 0 18px 46px; }
+ol.steps li::before { content:counter(s); position:absolute; left:0; top:1px; width:30px; height:30px; border-radius:50%; background:#eaf1ff; color:#1a56db; border:1.5px solid #bfd2ff; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:14px; }
+ol.steps li b { color:#1c2430; }
+
+kbd { display:inline-block; background:#fff; border:1px solid #cfd7e2; border-bottom-width:2.5px; border-radius:7px; padding:1px 9px; font-size:13px; font-family:inherit; color:#333e4e; margin:0 2px; }
+
+.chapter-end { text-align:center; color:#c3ccd8; letter-spacing:10px; margin:56px 0 0; font-size:15px; }
+
+footer.site-foot { margin-top:90px; padding-top:28px; border-top:1px solid #e7ebf0; color:#9aa5b4; font-size:13.5px; line-height:2; }
+
+/* 返回顶部 */
+#totop { position:fixed; right:26px; bottom:26px; width:46px; height:46px; border-radius:50%; background:#fff; border:1px solid #e0e6ee; color:#5c6878; font-size:18px; cursor:pointer; box-shadow:0 6px 20px rgba(24,34,56,.12); opacity:0; visibility:hidden; transform:translateY(8px); transition:.25s; z-index:900; }
+#totop.show { opacity:1; visibility:visible; transform:none; }
+#totop:hover { color:#1a56db; border-color:#bfd2ff; }
+
+/* 汉堡按钮 & 遮罩 */
+#menu { display:none; position:fixed; top:16px; left:16px; z-index:1300; width:44px; height:44px; border-radius:12px; background:#fff; border:1px solid #e0e6ee; box-shadow:0 6px 20px rgba(24,34,56,.14); cursor:pointer; padding:12px 10px; }
+#menu span { display:block; height:2.5px; background:#3b4656; border-radius:2px; margin:5.5px 0; transition:.25s; }
+#mask { display:none; position:fixed; inset:0; background:rgba(18,26,44,.45); z-index:1050; }
+
+@media (max-width:1180px) {
+  .sidebar { transform:translateX(-100%); transition:.28s; box-shadow:0 0 40px rgba(0,0,0,.2); }
+  .sidebar.open { transform:none; }
+  #menu { display:block; }
+  #mask.show { display:block; }
+  main { margin-left:0; }
+  .container { padding:0 26px 120px; }
+  .hero { padding-top:84px; }
+}
+@media (max-width:760px) {
+  .osgrid { grid-template-columns:1fr; }
+  .chap-head h2 { font-size:24px; }
+  .chap-num { width:48px; height:48px; font-size:20px; }
+  .callout { padding-left:56px; }
+  .stat b { font-size:22px; }
+  body { font-size:15.5px; }
+  .hero .sub { font-size:16px; }
+}
+@media print {
+  .sidebar, #totop, #menu, #mask, #progress, .copybtn { display:none !important; }
+  main { margin:0; }
+  .codewrap { box-shadow:none; }
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<button id="menu" aria-label="打开目录"><span></span><span></span><span></span></button>
+<div id="mask"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="logo">
+      <div class="logo-mark">Vue</div>
+      <div class="logo-txt"><b>Vue3 完全教程</b><span>零基础友好版</span></div>
+    </div>
+  </div>
+  <div class="nav-cap">教程目录</div>
+  <nav class="nav">
+    <a href="#top"><span class="n">00</span>导读 · 如何学习</a>
+    <a href="#ch1"><span class="n">01</span>Vue 是什么：热身</a>
+    <a href="#ch2"><span class="n">02</span>创建第一个应用</a>
+    <a href="#ch3"><span class="n">03</span>模板语法：写界面</a>
+    <a href="#ch4"><span class="n">04</span>响应式：数据会动</a>
+    <a href="#ch5"><span class="n">05</span>计算属性与侦听器</a>
+    <a href="#ch6"><span class="n">06</span>事件处理</a>
+    <a href="#ch7"><span class="n">07</span>条件与列表渲染</a>
+    <a href="#ch8"><span class="n">08</span>表单输入绑定</a>
+    <a href="#ch9"><span class="n">09</span>组件基础：积木</a>
+    <a href="#ch10"><span class="n">10</span>Props 与事件</a>
+    <a href="#ch11"><span class="n">11</span>插槽：积木的接口</a>
+    <a href="#ch12"><span class="n">12</span>生命周期</a>
+    <a href="#ch13"><span class="n">13</span>组合式 API 与复用</a>
+    <a href="#ch14"><span class="n">14</span>依赖注入与跨层传参</a>
+    <a href="#ch15"><span class="n">15</span>过渡与动画</a>
+    <a href="#ch16"><span class="n">16</span>可组合式函数与工具链</a>
+    <a href="#ch17"><span class="n">17</span>部署上线：发布你的网站</a>
+  </nav>
+  <div class="side-foot">边看边敲，效果最佳。<br>每个示例都附「动手练习」。</div>
+</aside>
+
+<main>
+<div class="container">
+
+<!-- ==================== HERO ==================== -->
+<section class="hero" id="top">
+  <span class="hero-kicker">零基础友好 · 类比教学 · 每行注释</span>
+  <h1>把 <em>Vue3</em> 一次讲透的<br>完全自学教程</h1>
+  <p class="sub">不需要任何编程基础。我们会把 Vue 拆成一个个生活里的比喻——<b>模型、挂钟、积木、插座</b>，再配上<b>每一行都有中文注释</b>的代码，带你从「这到底是啥」一路走到「开发自己的组件」。</p>
+  <div class="stats">
+    <div class="stat"><b>17</b><span>个章节 · 由浅入深</span></div>
+    <div class="stat"><b>80+</b><span>段代码 · 行行有注释</span></div>
+    <div class="stat"><b>40+</b><span>个生活化类比</span></div>
+    <div class="stat"><b>4</b><span>大核心体系全覆盖</span></div>
+  </div>
+  <div class="callout info">
+    <span class="tag">怎么用这份教程</span>
+    ① 按顺序读，第 4 章「响应式」是整份教程的「心脏」，务必修好；② 每章的「动手练习」请亲手打开浏览器敲一遍；③ 真机练习前，先看第 2 章怎么把 Vue 用起来（推荐用官方 CDN，最省事）；④ 想快速上手组件，可先跳到第 9 章再回头补概念。
+  </div>
+</section>
+
+<!-- ==================== 第 1 章 ==================== -->
+<section class="chapter" id="ch1">
+  <div class="chap-head">
+    <div class="chap-num">01</div>
+    <div>
+      <h2>Vue 是什么：热身运动</h2>
+      <div class="desc">用一个比喻搞懂「前端框架」到底解决什么问题</div>
+    </div>
+  </div>
+
+  <p class="lead">在写任何代码之前，先回答三个问题：<b>前端开发在干嘛</b>、<b>为什么需要 Vue</b>、<b>Vue 到底怎么运作</b>。这一章不讲技术，只讲比喻和直觉——它们是理解一切命令的地基。</p>
+
+  <h3>1.1 前端开发：帮页面「变活」的手艺人</h3>
+  <p>一个网页通常由三件事组成：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>名字</th><th>负责什么</th><th>生活化类比</th></tr></thead>
+    <tbody>
+      <tr><td><b>HTML</b></td><td>页面的内容和结构（有哪些元素）</td><td>毛坯房的<b>砖墙和房间</b></td></tr>
+      <tr><td><b>CSS</b></td><td>页面的外观和样式（颜色、大小、位置）</td><td>房内的<b>装修和家具摆放</b></td></tr>
+      <tr><td><b>JavaScript</b></td><td>页面的行为（点击、计算、数据变化）</td><td>房里的<b>电路和水管</b>，让它有生命</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>JavaScript</b> 负责让网页"动起来"。但当你直接用原生的 JavaScript（jQuery、DOM 操作）控制页面，很快会发现：</p>
+  <ul class="plain">
+    <li><b>改数据很啰嗦</b>——你改了一个数字，还得手动去页面上找到那个已经变化的文本节点，再手动更新它。</li>
+    <li><b>数据和界面容易失同步</b>——人一多、功能一多，常常出现"数据改了、页面没跟上"或"页面改了、数据没跟上"的 bug。</li>
+    <li><b>代码难维护</b>——到处是 <code>document.querySelector</code> 和事件监听，像一团乱麻。</li>
+  </ul>
+  <div class="callout analogy">
+    <span class="tag">类比</span>想象你在老式钟表店里打工。每有一块表的时间变了，你都要亲手拆开机芯，把指针一个个拨到对的位置（手动更新界面）。<b>表多、改动频繁时，你的手根本忙不过来，还容易拨错。</b>这就是"纯 JavaScript 手动操作界面"的真实写照。
+  </div>
+
+  <h3>1.2 Vue 是干什么的：一个"自动对齐指针"的表盘</h3>
+  <p><b>Vue（发音类似"view"）</b>是一个 <b>JavaScript 前端框架</b>。它最核心的本事只有一个——<b>让"数据"和"界面"始终保持同步</b>：你只管把数据显示出来，并告诉它"这个数字变了"，剩下的页面对照更新它全自动完成。</p>
+  <p>来，直接看一个最直观的对比。同样是"一个数字，点击按钮让它加 1"：</p>
+
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>方式 A · 原生 JavaScript（先手动找节点，再手动改）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">let count = 0;                       <span class="cmt">// 声明一个数字变量，初始为 0</span>
+count = count + 1;                    <span class="cmt">// 数字 +1（注意：此时页面上的文字并不会变！）</span>
+<span class="cmt">// 麻烦来了：页面还是显示旧的 0，你得自己去"找到那个按钮旁边的小字"，手动改成 1：</span>
+document.getElementById('num').textContent = count;  <span class="cmt">// 手动更新界面，一处也没改好则漏</span></pre>
+  </div>
+
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>方式 B · Vue（只改数据，界面自动更新）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;template&gt;                          <span class="cmt">// Vue 的"模板"，就是页面的 HTML 部分</span>
+  &lt;p&gt;{{ count }}&lt;/p&gt;              <span class="cmt">// 把 count 的值"插"到这一行显示（{{ }} 是插值）</span>
+&lt;/template&gt;
+
+&lt;script setup&gt;                       <span class="cmt">// Vue 的"逻辑"部分（组合式 API，后文详解）</span>
+const count = ref(0)                  <span class="cmt">// 声明一个"响应式"数字，初始 0（ref 表示可被监听）</span>
+count.value++                         <span class="cmt">// 让它 +1。神奇的事发生了：</span>
+<span class="cmt">// 页面上的 {{ count }} 会自动变成 1，你什么都不用手动做！</span>
+&lt;/script&gt;</pre>
+  </div>
+
+  <div class="callout analogy">
+    <span class="tag">类比</span>如果说原生 JS 是「钟表店里用手拨指针」，那么 Vue 就是「一块电子表」——<b>你只需要说"现在的时间变得了"，电子表的指针自己会转到正确位置</b>。这个「自动对齐指针」的魔法，就叫<b>响应式系统（Reactivity）</b>，是 Vue 的灵魂。
+  </div>
+
+  <h3>1.3 Vue 和 Vue3 里的常用称谓</h3>
+  <p>学习 Vue 时你会在各种文章里看到这些词，先分清，避免迷茫：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>术语</th><th>一句话理解</th></tr></thead>
+    <tbody>
+      <tr><td><b>Vue2 / Vue3</b></td><td>Vue 的两个大版本。Vue3 是最新版，本教程只讲 Vue3。</td></tr>
+      <tr><td><b>选项式 API</b></td><td>Vue2 时代的写法，把逻辑按「数据、方法、生命周期」等大堆在一起。</td></tr>
+      <tr><td><b>组合式 API</b></td><td>Vue3 推荐的写法（<code>script setup</code>），按「功能」聚合逻辑，更灵活，本教程采用。</td></tr>
+      <tr><td><b>SFC 单文件组件</b></td><td>把「模板 + 样式 + 逻辑」写在同一个 <code>.vue</code> 文件里，是 Vue 日常开发的标准构件。</td></tr>
+      <tr><td><b>CDN / 构建工具</b></td><td>CDN 是「在网页里直接引一条链接就能用 Vue，零配置」；构建工具（如 Vite）是「正式项目的脚手架，功能更强」。两者都会在本教程覆盖。</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>1.4 学习路线：本教程怎么带你走</h3>
+  <ol class="steps">
+    <li><b>第 1–3 章</b>：让你把 Vue 跑起来、理解模板怎么写。这是「开门」。</li>
+    <li><b>第 4–8 章</b>：理解响应式、计算属性、事件、条件/列表、表单。你会开始体会到"自动对齐"的爽感。</li>
+    <li><b>第 9–14 章</b>：进入"组件化"世界——写自己的积木、传数据、插槽、生命周期、复用逻辑。</li>
+    <li><b>第 15–17 章</b>：动画、工具链、部署上线，把作品真的发布给别人看。</li>
+  </ol>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 2 章 ==================== -->
+<section class="chapter" id="ch2">
+  <div class="chap-head">
+    <div class="chap-num">02</div>
+    <div>
+      <h2>创建第一个 Vue 应用</h2>
+      <div class="desc">三条路线任选，零配置的 CDN 最适合新手起步</div>
+    </div>
+  </div>
+
+  <p class="lead">动手之前最怕"配环境"。好消息是：<b>Vue3 给新手留了一条完全不配环境的路（CDN），一条正式项目的路（Vite）</b>。这一章两种都讲，并手把手帮你做出第一个"Hello World"。</p>
+
+  <h3>2.1 路线对比：你该走哪条？</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>路线</th><th>配置难度</th><th>适合场景</th><th>本教程建议</th></tr></thead>
+    <tbody>
+      <tr><td><b>CDN 直接引用</b></td><td>近乎零配置</td><td>学概念、写小 demo、快速试</td><td>学习阶段的主力</td></tr>
+      <tr><td><b>Vite 工程化项目</b></td><td>要装 Node.js，但一条命令搞定</td><td>正式开发、多人协作、要热更新</td><td>进阶与部署章节使用</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>作为超级小白，<b>先用 CDN 把概念一个个吃透</b>，不要一上来就被「脚手架、包管理、构建」这些词吓到。等第 16 章再升级到 Vite 正式项目，你会毫无压力。
+  </div>
+
+  <h3>2.2 路线 A：用 CDN 秒开一个 Vue 应用（推荐新手）</h3>
+  <p>CDN 的中文作用是「内容分发网络」，简单说就是<b>别人把 Vue 的文件托管在服务器上，你引一条链接就能用</b>。麻雀虽小五脏俱全，请按下面步骤操作：</p>
+  <ol class="steps">
+    <li><b>新建一个 HTML 文件</b>：在电脑上新建 <code>first-vue.html</code>（用记事本/VS Code 打开）。</li>
+    <li><b>引入 Vue</b>：在 <code>&lt;head&gt;</code> 里加一条 <code>&lt;script&gt;</code> 标签，写上 CDN 的链接。</li>
+    <li><b>写一个挂载点</b>：放一个 <code>&lt;div id="app"&gt;</code>，Vue 会"接管"这个区域。</li>
+    <li><b>创建应用</b>：在脚本里调用 <code>createApp</code> 创建 Vue 应用，并 <code>mount</code> 到挂载点上。</li>
+    <li><b>用浏览器打开</b>：双击这个 HTML 文件，浏览器里就能看到效果。</li>
+  </ol>
+
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>first-vue.html · 用 CDN 创建的第一个 Vue 应用，每行都有注释</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;!DOCTYPE html&gt;                      <span class="cmt">// 声明这是 HTML5 文档</span>
+&lt;html lang="zh-CN"&gt;                  <span class="cmt">// 语言设为简体中文</span>
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;            <span class="cmt">// 字符集 UTF-8，保证中文不乱码</span>
+  &lt;title&gt;我的第一个 Vue 应用&lt;/title&gt;  <span class="cmt">// 浏览器标签页上显示的标题</span>
+  &lt;!-- ↓ 用官方 CDN 引入 Vue3，global 是全局构建，可直接在浏览器里用 --&gt;
+  &lt;script src="https://unpkg.com/vue@3/dist/vue.global.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- ↓ 挂载点：下面这块区域交给 Vue 来"接管"和"控制"，id 是 app --&gt;
+  &lt;div id="app"&gt;
+    &lt;!-- {{ }} 叫"插值"，作用是：把 Vue 里 count 变量的值，显示到这一行 --&gt;
+    &lt;p&gt;你点了 {{ count }} 次&lt;/p&gt;
+    &lt;!-- @click 是 Vue 的"事件绑定"：用户点击按钮时，执行 increment 这个方法 --&gt;
+    &lt;button @click="increment"&gt;点我加 1&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;script&gt;
+    <span class="cmt">// Vue 对象由刚才引入的 CDN 提供，Vue.createApp 用来"新建一个应用"</span>
+    const app = Vue.createApp({
+      <span class="cmt">// setup 是"组合式 API"的入口，应用的逻辑都写在这里</span>
+      setup() {
+        <span class="cmt">// ref() 声明一个"响应式数据"：count 初始值 0。它像一个"会通知别人的盒子"</span>
+        const count = Vue.ref(0)
+
+        <span class="cmt">// 一个方法：让 count 增加 1。因为是响应式，界面会自动跟着变</span>
+        function increment() {
+          count.value++   <span class="cmt">// 注意：ref 数据要用 .value 来读和改（盒子里的"东西"）</span>
+        }
+
+        <span class="cmt">// 把 count 和 increment "交出去"，模板里才能用 {{ count }} 和 @click</span>
+        return { count, increment }
+      }
+    })
+
+    <span class="cmt">// 把应用挂载到 id="app" 的 div 上，Vue 就正式接管这块区域了</span>
+    app.mount('#app')
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>浏览器里看到的效果</span><button class="copybtn">复制代码</button></div>
+    <pre class="output">你点了 0 次
+[ 点我加 1 ]
+-- 每点一次按钮，"0" 就 +1，页面无需刷新自动更新 --></pre>
+  </div>
+  <div class="callout info">
+    <span class="tag">注</span>如果你用的是 <code>Vue.global.js</code>（全局构建），请在运行时用 <code>Vue.ref</code>、<code>Vue.createApp</code> 这样的「Vue.」前缀写法。之后在正式项目里则会改为「import 导入」的方式，两者本质相同。
+  </div>
+
+  <h3>2.3 路线 B：用 Vite 创建工程化项目（正式开发）</h3>
+  <p>当你的项目变大、组件变多，就会想用「正式的工程结构」：自动刷新、打包、管理依赖。Vite 是目前 Vue 官方推荐的构建工具，一条命令就能开一个新项目。先决条件：电脑上装好 <b>Node.js</b>（去 <a href="https://nodejs.org" target="_blank">nodejs.org</a> 装 LTS 版即可）。</p>
+  <ol class="steps">
+    <li><b>打开终端</b>：Windows 用 PowerShell / CMD，Mac / Linux 用终端。</li>
+    <li><b>执行创建命令</b>：输入 <code>npm create vue@latest</code>，按提示给项目起名（如 <code>my-app</code>）。</li>
+    <li><b>进入项目并装依赖</b>：<code>cd my-app</code> 再执行 <code>npm install</code>。</li>
+    <li><b>启动开发服务器</b>：执行 <code>npm run dev</code>，终端会给出一个本地网址（如 <code>http://localhost:5173</code>），浏览器打开即可实时预览。</li>
+  </ol>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端里的完整命令序列</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm create vue@latest      <span class="cmt"># 官方脚手架，按向导起名、勾选功能</span>
+<span class="cmt"># 提示 Project name: 时输入 my-app 回车；其余大部分一路回车用默认即可</span>
+
+cd my-app                  <span class="cmt"># 进入刚创建的项目文件夹</span>
+npm install                <span class="cmt"># 根据 package.json 安装所有依赖（第一次会稍慢）</span>
+npm run dev                <span class="cmt"># 启动开发服务器，浏览器打开 http://localhost:5173</span></pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">技巧</span><code>npm run dev</code> 启动后，你改保存 <code>.vue</code> 文件，页面会<b>瞬间自动刷新</b>，这就是「热更新」（Hot Reload），开发体验极爽。
+  </div>
+
+  <h3>2.4 <span class="os both">通用</span>别人的代码：几个阅读约定</h3>
+  <p>本教程之后大量使用「组合式 API 的简写」<code>&lt;script setup&gt;</code>，它是 Vue3 很受欢迎的写法，省去手动 <code>return</code>。看懂它很简单：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>script setup · App.vue 的骨架</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;                  <span class="cmt">// setup 是"魔法标签"：里面声明的东西，模板可直接用，不用 return</span>
+import { ref } from 'vue'       <span class="cmt">// 从 vue 包导入 ref 函数</span>
+const count = ref(0)            <span class="cmt">// 声明响应式数据（模板可直接用 {{ count }}）</span>
+&lt;/script&gt;
+
+&lt;template&gt;                       <span class="cmt">// 页面结构（HTML）</span>
+  &lt;p&gt;当前：{{ count }}&lt;/p&gt;
+&lt;/template&gt;
+
+&lt;style scoped&gt;                  <span class="cmt">// 样式，scoped 表示"只作用于本组件"，不污染外面</span>
+p { color: blue; }
+&lt;/style&gt;</pre>
+  </div>
+
+  <div class="practice">
+    <span class="tag">动手练习 2·1</span>
+    <ol>
+      <li>按 2.2 节，用记事本写一个 <code>first-vue.html</code>，双击打开，确认"你点了 0 次"能显示、点按钮能 +1。</li>
+      <li>改一改：把初始值 <code>ref(0)</code> 改成 <code>ref(10)</code>，刷新看看初始显示是不是变成 10？</li>
+      <li>把按钮文字从"点我加 1"改成"+ 1"，再试一次。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 3 章 ==================== -->
+<section class="chapter" id="ch3">
+  <div class="chap-head">
+    <div class="chap-num">03</div>
+    <div>
+      <h2>模板语法：怎么写界面</h2>
+      <div class="desc">插值、指令、绑定——让 HTML 拥有"会变"的能力</div>
+    </div>
+  </div>
+
+  <p class="lead">Vue 里写页面的那部分叫<b>模板（Template）</b>。它本质上还是 HTML，只是被 Vue 增加了几种"魔法"写法，让静态的 HTML 能<b>显示数据、根据条件变化、响应点击</b>。这一章把这些魔法逐一讲透。</p>
+
+  <h3>3.1 插值：把数据"灌进"页面 {{ }}</h3>
+  <p>最常见的一种魔法叫<b>插值（Text Interpolation）</b>，用双花括号 <code>{{ 表达式 }}</code> 把 Vue 里的数据显示到页面上。花括号里的内容是一个<b>合法的 JavaScript 表达式</b>（能算出值的式子）。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>插值示例</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+const user = { name: '小明', age: 18 }   <span class="cmt">// 一个对象数据</span>
+const hour = new Date().getHours()      <span class="cmt">// 当前小时数</span>
+&lt;/script&gt;
+
+&lt;template&gt;
+  <span class="cmt">// 直接在文本里插入数据：</span>
+  &lt;p&gt;你好，{{ user.name }}！&lt;/p&gt;      <span class="cmt">// 输出：你好，小明！</span>
+
+  <span class="cmt">// 支持任何能算出值的表达式（算术、三元、字符串拼接都可以）：</span>
+  &lt;p&gt;你今年 {{ user.age + 1 }} 岁（虚岁）&lt;/p&gt;   <span class="cmt">// 19</span>
+  &lt;p&gt;{{ hour &lt; 12 ? '上午' : '下午' }}好&lt;/p&gt;    <span class="cmt">// 三元：判断是上午还是下午</span>
+  &lt;p&gt;{完整名字：'' }}&lt;/p&gt;  <span class="cmt">// 字符串拼接</span>
+&lt;/template&gt;</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">注意</span>花括号里<b>只能写表达式，不能写语句</b>（比如 if、for、let 声明）。如果里面有太复杂的逻辑或副作用，别硬塞进模板，留到计算属性（第 5 章）里做。
+  </div>
+
+  <h3>3.2 v-bind：把数据绑到 HTML 属性上</h3>
+  <p>插值只管"文本内容"。但像 <code>href</code>、<code>src</code>、<code>class</code> 这类<b>属性（attribute）</b>上的值，需要用 <b>v-bind 指令</b>来绑定。常用的简写是冒号 <code>:</code>。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>v-bind 绑定属性的例子</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+const url = 'https://vuejs.org'            <span class="cmt">// 一个网址字符串</span>
+const isActive = true                      <span class="cmt">// 一个布尔值</span>
+const styleObj = { color: 'red' }          <span class="cmt">// 一个 CSS 样式对象</span>
+&lt;/script&gt;
+
+&lt;template&gt;
+  <span class="cmt">// :href 就是从 Vue 里取值赋给 href 属性（完整写法是 v-bind:href）</span>
+  &lt;a :href="url"&gt;去 Vue 官网&lt;/a&gt;
+
+  <span class="cmt">// :class 可以绑定对象：当 isActive 为 true 时，加一个 light 的 CSS 类</span>
+  &lt;p :class="{ light: isActive }"&gt;这个段落的背景会随 isActive 变化&lt;/p&gt;
+
+  <span class="cmt">// :style 绑定样式对象</span>
+  &lt;p :style="styleObj"&gt;这行是红色的&lt;/p&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <h3>3.3 指令导读：模板里的"咒语"</h3>
+  <p>以 <code>v-</code> 开头的属性统称<b>指令（Directives）</b>，它们让元素拥有各种"附加能力"。这一章先用一张速览表让你眼熟它们，后面的章节会逐个给出完整例子。</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>指令</th><th>作用的一句话概括</th><th>配套简写</th></tr></thead>
+    <tbody>
+      <tr><td><code>v-bind</code></td><td>把数据绑定到属性上</td><td><code>:</code></td></tr>
+      <tr><td><code>v-on</code></td><td>监听事件（如点击）执行方法</td><td><code>@</code></td></tr>
+      <tr><td><code>v-if</code> / <code>v-else</code></td><td>条件渲染：成立才显示</td><td>—</td></tr>
+      <tr><td><code>v-for</code></td><td>列表渲染：循环生成多条</td><td>—</td></tr>
+      <tr><td><code>v-model</code></td><td>表单双向绑定（数据 ⇄ 输入框）</td><td>—</td></tr>
+      <tr><td><code>v-show</code></td><td>按条件显示/隐藏（只是切 display，元素还在）</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>Vue 的指令就像家电上的<b>电源开关</b>：<code>v-if</code> 是"这条灯亮不亮"，<code>v-for</code> 是"这排开关循环控制多个灯"，<code>v-on:click</code> 是"人按开关时触发动作"，<code>v-bind</code> 是"把遥控器上的数据传到设备上"。
+  </div>
+
+  <div class="practice">
+    <span class="tag">动手练习 3·1</span>
+    <ol>
+      <li>在 <code>first-vue.html</code> 里新增数据 <code>const name = 'Vue3'</code>，并在页面显示"我在学 {{ name }}"。刷新看效果。</li>
+      <li>给一个链接用 <code>:href</code> 绑定一个网址，鼠标放上去看看地址栏变成你绑定的链接。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 4 章 ==================== -->
+<section class="chapter" id="ch4">
+  <div class="chap-head">
+    <div class="chap-num">04</div>
+    <div>
+      <h2>响应式：数据会动</h2>
+      <div class="desc">ref 与 reactive——Vue 的灵魂，让数据变化自动驱动界面</div>
+    </div>
+  </div>
+
+  <p class="lead">这一章是全书的<b>核心</b>。理解了「响应式」，你就理解了 Vue 活着的意义。核心就一句话：<b>把一个普通数据变成"会通知别人"的响应式数据，界面就会跟着它自动更新</b>。Vue 提供两个最常用的工具：<code>ref</code> 和 <code>reactive</code>。</p>
+
+  <h3>4.1 为什么普通变量不行？</h3>
+  <p>试想：如果没有响应式，你写 <code>let count = 0; count++</code>，浏览器根本不知道 count 变了对它有什么影响——因为普通变量"不会通知别人"。Vue 里要把数据"升级"成会通知别人的状态，才会触发界面更新。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>普通变量像一个<b>不出声的哑巴盒</b>——你往里面换东西，外面没人知道。响应式数据像一个<b>带喇叭的快递箱</b>——每次内容变化，它就"叮咚"响一声，通知 Vue："我变了，快检查哪些界面需要更新！" 于是界面就会自动刷新。
+  </div>
+
+  <h3>4.2 ref：给单个数据装上"喇叭"</h3>
+  <p><code>ref</code> 用来包装<b>单个值</b>（数字、字符串、布尔、对象……）。被 ref 包住后，读和改都要通过它返回的对象的 <code>.value</code> 属性。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>ref 的用法，注意 .value</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { ref } from 'vue'              <span class="cmt">// 从 vue 里导入 ref 工具</span>
+
+const count = ref(0)                   <span class="cmt">// 造一个响应式数字，初始 0（count 变成一个带 .value 的对象）</span>
+
+<span class="cmt">// 在 JS 里读值：</span>
+console.log(count.value)               <span class="cmt">// 输出 0</span>
+
+<span class="cmt">// 在 JS 里改值：</span>
+count.value = 5                        <span class="cmt">// 改 .value，Vue 侦测到变化</span>
+
+<span class="cmt">// 但注意：在模板里，Vue 会自动"拆箱子"，不用写 .value：</span>
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;p&gt;计数：{{ count }}&lt;/p&gt;            <span class="cmt">// 这里直接写 count，Vue 自动读它的 .value</span>
+&lt;/template&gt;</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>记不住什么时候加 <code>.value</code>？就记一条：<b>在 JS（script）里用，要加 <code>.value</code>；在模板（template）里用，不用加</b>。Vue 在模板里会自动帮你拆包。
+  </div>
+
+  <h3>4.3 reactive：给一整个"对象"安装监听</h3>
+  <p>当你有<b>一整个对象</b>（里面很多字段，像一份简历），逐个用 ref 包装太啰嗦。此时用 <code>reactive</code>：直接传一个对象进去，它里面的所有字段都变成响应式，而且<b>访问不用 .value</b>，就像直接用普通对象一样。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>reactive 的用法，访问不用 .value</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { reactive } from 'vue'         <span class="cmt">// 导入 reactive</span>
+
+const user = reactive({               <span class="cmt">// reactive 传一个对象，整本都变响应式</span>
+  name: '小明',
+  age: 18
+})
+
+<span class="cmt">// 读写都不用 .value，跟普通对象一样：</span>
+user.age = 19                          <span class="cmt">// 改 age，界面若显示 user.age 会自动更新</span>
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;p&gt;{{ user.name }} 今年 {{ user.age }} 岁&lt;/p&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <div class="tblwrap"><table>
+    <thead><tr><th>对比项</th><th>ref</th><th>reactive</th></tr></thead>
+    <tbody>
+      <tr><td>适合包装</td><td>单个值 / 也常用对象</td><td>整个对象</td></tr>
+      <tr><td>脚本里访问</td><td>需 <code>.value</code></td><td>直接访问属性</td></tr>
+      <tr><td>模板里访问</td><td>自动解包，不用 .value</td><td>直接访问属性</td></tr>
+      <tr><td>是否推荐主力</td><td><b>Vue 官方推荐，写法统一</b></td><td>适合对象，但注意不能整体替换</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout warn">
+    <span class="tag">注意</span>reactive 有个坑：如果你用 <code>reactive</code> 包对象后又想「整本替换成另一个对象」（例如 <code>user = someNewObj</code>），会丢失响应性。另外，它<b>不能用在基本类型</b>（数字、字符串）上。化解办法是：<b>干脆都用 ref</b>——ref 既能包装基本类型，包对象时访问也只是多一层 <code>.value</code>，写法最省心。这也正是 Vue 官方现在的推荐。
+  </div>
+
+  <h3>4.4 ref 包对象：现代 Vue 的推荐姿势</h3>
+  <p>Vue3 的官方建议里，现在更推崇「<b>一律用 ref</b>」——包括对象。区别只是你用的时候要记住 <code>.value.属性</code>。好处是整体替换、拆解逻辑都简单。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>用 ref 包对象（推荐写法）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { ref } from 'vue'
+
+const user = ref({                       <span class="cmt">// ref 也能包对象</span>
+  name: '小红',
+  age: 20
+})
+
+<span class="cmt">// 读取：user.value.age</span>
+<span class="cmt">// 修改：user.value.age = 21</span>
+function happyBirthday() {
+  user.value.age++                       <span class="cmt">// 记得 .value 再 .age</span>
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;p&gt;{{ user.name }} {{ user.age }} 岁&lt;/p&gt;
+  <span class="cmt">// 模板里 Vue 自动解开最外层 .value，所以直接 user.name 即可</span>
+  &lt;button @click="happyBirthday"&gt;过生日&lt;/button&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <div class="practice">
+    <span class="tag">动手练习 4·1</span>
+    <ol>
+      <li>用 <code>ref</code> 写一个计时器数据：<code>const t = ref(0)</code>，页面放两个按钮「+1」「-1」，点击分别让 <code>t.value</code> 加减，观察页面实时变化。</li>
+      <li>再用 <code>reactive</code> 写一个商品对象（名称、价格、库存），页面显示三个字段。</li>
+      <li>试着打印 <code>count.value</code> 和直接打印 <code>count</code>，看看 console 里它们长什么样，理解"带喇叭的箱子"。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 5 章 ==================== -->
+<section class="chapter" id="ch5">
+  <div class="chap-head">
+    <div class="chap-num">05</div>
+    <div>
+      <h2>计算属性与侦听器</h2>
+      <div class="desc">computed 算新值，watch 看变化——把"算"和"盯"交给 Vue</div>
+    </div>
+  </div>
+
+  <p class="lead">写界面时你会需要两件事：<b>根据已有数据算出新值</b>（比如"价格×数量=总价"），以及<b>在数据变化时做点额外动作</b>。Vue 给了两个好帮手：<code>computed</code>（计算属性）与 <code>watch</code>（侦听器）。</p>
+
+  <h3>5.1 computed：像"公式"一样的派生数据</h3>
+  <p><b>计算属性</b>的用处是：它依赖其他响应式数据，当那些数据变时，它<b>自动重新计算</b>，你只需把它当普通数据用。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>计算属性就像 Excel 里的<b>公式栏</b>：你在 A1 里输入"=B1*C1"，B1 或 C1 只要一变，A1 立刻自动更新。你不用每隔一秒手动去算一次——Vue（Excel）替你盯着。
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>computed：根据单价和数量算出总价</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { ref, computed } from 'vue'
+
+const price = ref(10)                  <span class="cmt">// 单价 10 元</span>
+const quantity = ref(2)                <span class="cmt">// 数量 2 件</span>
+
+<span class="cmt">// computed 接收一个"求值函数"，返回的值会缓存，依赖变化才重算：</span>
+const total = computed(() =&gt; {
+  return price.value * quantity.value  <span class="cmt">// 总价 = 单价 × 数量</span>
+})
+<span class="cmt">// 注意：computed 返回的也是个 ref 式的对象，脚本里要用 total.value</span>
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;p&gt;单价 {{ price }} 元 × {{ quantity }} 件&lt;/p&gt;
+  &lt;p&gt;&lt;b&gt;总价：{{ total }} 元&lt;/b&gt;&lt;/p&gt;  <span class="cmt">// 模板里直接 total，自动算总价</span>
+  &lt;button @click="quantity++"&gt;加一件&lt;/button&gt; &lt;span class="cmt"&gt;// 数量一变，total 自动更新&lt;/span&gt;
+&lt;/template&gt;</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>什么时候用 <code>computed</code>，什么时候直接把表达式写在模板里？原则是：<b>只要这个"算出来的值"在模板里出现了两次以上，或逻辑已经超过一行，就值得抽成 computed</b>。它还会自动缓存，性能更好。
+  </div>
+
+  <h3>5.2 watch：数据一变，去"做事情"</h3>
+  <p><b>侦听器</b>用于「当数据变化时，执行一段副作用代码」——比如发请求、存到本地、打印日志、弹提示。它和 computed 的区别：computed 是"算返回值给人用"，watch 是"变化后去干活，不在乎返回值"。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>watch：监控一个 ref，变化时打印</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { ref, watch } from 'vue'
+
+const name = ref('小明')                 <span class="cmt">// 一个名字</span>
+
+<span class="cmt">// watch(要监控的数据, 变化后执行的回调)</span>
+<span class="cmt">// 回调收到两个参数：新值 newVal 和 旧值 oldVal</span>
+watch(name, (newVal, oldVal) =&gt; {
+  console.log('名字从', oldVal, '变成了', newVal)  <span class="cmt">// 每次 name 变都打印</span>
+})
+
+function changeName() {
+  name.value = '小红'                    <span class="cmt">// 触发 watch，控制台打印</span>
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;p&gt;当前名字：{{ name }}&lt;/p&gt;
+  &lt;button @click="changeName"&gt;换名字&lt;/button&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <h3>5.3 watch 监听"对象里的某个属性"</h3>
+  <p>当你要监听的是 reactive 对象里的<b>某一个属性</b>，不能直接 <code>watch(obj.prop)</code>，要传一个 <b>getter 函数</b>（返回你想看的那个值）。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>watch 单个属性，用 getter 函数</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { ref, watch } from 'vue'
+
+const user = ref({ name: '小明', age: 18 })
+
+<span class="cmt">// 传一个 getter：() => user.value.age，表示"观测 age 这个字段"</span>
+watch(() =&gt; user.value.age, (newAge, oldAge) =&gt; {
+  console.log('年龄从', oldAge, '→', newAge)
+})
+&lt;/script&gt;</pre>
+  </div>
+
+  <div class="callout warn">
+    <span class="tag">注意</span>像 <code>watch</code> 会被「对象被整体替换」或链式引用搞晕，本教程只需掌握两种最常用形态：<b>① watch(ref变量, ...)</b> 监听单个；<b>② watch(()=>obj.字段, ...)</b> 监听某字段。复杂场景（深度监听）进阶再学。
+  </div>
+
+  <div class="practice">
+    <span class="tag">动手练习 5·1</span>
+    <ol>
+      <li>用 <code>computed</code> 实现：一个「温度（摄氏度）」ref，通过 computed 显示对应的「华氏度」。</li>
+      <li>用 <code>watch</code> 监控一个「搜索关键词」ref，每次变化打印到控制台。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 6 章 ==================== -->
+<section class="chapter" id="ch6">
+  <div class="chap-head">
+    <div class="chap-num">06</div>
+    <div>
+      <h2>事件处理</h2>
+      <div class="desc">@click、@input 等——让用户操作触发你的逻辑</div>
+    </div>
+  </div>
+
+  <p class="lead">界面不只是"显示数据"，更要能"响应用户"。当用户点击、输入、移动鼠标时，Vue 用 <code>v-on</code>（简写 <code>@</code>）让你轻松挂上处理函数。这一章解决「事件怎么绑、参数怎么传、怎么阻止默认行为」。</p>
+
+  <h3>6.1 给元素绑定事件：@事件名</h3>
+  <p>语法：<code>@click="处理函数"</code>。最常见的是点击 <code>click</code>，还有输入 <code>input</code>、提交 <code>submit</code>、键盘 <code>keyup</code> 等。写法如下：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>三种常见事件绑定写法</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { ref } from 'vue'
+
+const text = ref('')                     <span class="cmt">// 输入框的文字</span>
+
+<span class="cmt">// 1. 无论带不带参数都可以绑：</span>
+function onSave() {
+  console.log('保存了', text.value)
+}
+
+<span class="cmt">// 2. 想拿"原生事件对象"（比如 input 的输入值），可以带 $event 参数：</span>
+function onInput(evt) {
+  text.value = evt.target.value          <span class="cmt">// 从事件里取输入框当前值</span>
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  <span class="cmt">// 按钮点击：绑一个无参函数</span>
+  &lt;button @click="onSave"&gt;保存&lt;/button&gt;
+
+  <span class="cmt">// 输入框：@input 时把事件对象 $event 传进去</span>
+  &lt;input @input="onInput" /&gt;
+
+  <span class="cmt">// 也可以直接在模板里写小逻辑</span>
+  &lt;p @click="text = ''"&gt;点击这段文字清空输入&lt;/p&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <h3>6.2 传参数：@click="函数(参数)"</h3>
+  <p>给处理函数传自己定义的值也很简单，直接在模板里写：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>给事件传参，并把事件对象 $event 一起传</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { ref } from 'vue'
+const score = ref(0)
+
+<span class="cmt">// 接收一个增量 n，加到分数上</span>
+function add(n) {
+  score.value += n                      <span class="cmt">// score 加 n</span>
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;p&gt;当前分数：{{ score }}&lt;/p&gt;
+  &lt;button @click="add(1)"&gt;+1&lt;/button&gt;     <span class="cmt">// 传参 1</span>
+  &lt;button @click="add(5)"&gt;+5&lt;/button&gt;     <span class="cmt">// 传参 5</span>
+  <span class="cmt">// 想既传自己的参数又要原生事件对象，用 $event：</span>
+  &lt;button @click="add(10)"&gt;+10&lt;/button&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <h3>6.3 事件修饰符：干干净净地处理常见需求</h3>
+  <p>有些事件需求非常常见，Vue 提供了<b>修饰符</b>，让你不用在函数里手写一堆判断。最常用的几个：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>修饰符</th><th>作用</th><th>示例</th></tr></thead>
+    <tbody>
+      <tr><td><code>.stop</code></td><td>阻止事件冒泡（不让父元素也触发）</td><td><code>@click.stop</code></td></tr>
+      <tr><td><code>.prevent</code></td><td>阻止默认行为（如按钮的不必提交表单）</td><td><code>@submit.prevent</code></td></tr>
+      <tr><td><code>.once</code></td><td>只触发一次</td><td><code>@click.once</code></td></tr>
+      <tr><td><code>.enter</code></td><td>仅在按回车时触发（键盘事件用）</td><td><code>@keyup.enter</code></td></tr>
+      <tr><td><code>.self</code></td><td>仅当事件目标是自身时触发</td><td><code>@click.self</code></td></tr>
+    </tbody>
+  </table></div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>修饰符实战：回车提交 + 阻止表单默认提交</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { ref } from 'vue'
+const msg = ref('')
+
+function submit() {
+  console.log('已提交：', msg.value)     <span class="cmt">// 按回车或点按钮触发</span>
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  <span class="cmt">// @keyup.enter：输入框里按回车时调用 submit()</span>
+  &lt;input v-model="msg" @keyup.enter="submit" /&gt;
+
+  <span class="cmt">// 用一个 form 包起来，@submit.prevent 阻止真的跳页提交</span>
+  &lt;form @submit.prevent="submit"&gt;
+    &lt;button type="submit"&gt;提交&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/template&gt;</pre>
+  </div>
+  <div class="callout info">
+    <span class="tag">注</span>这里出现了 <code>v-model</code>（第 8 章详细讲），它让输入框和 <code>msg</code> 双向绑定——输入什么，<code>msg</code> 就存什么。这章先带着感觉看，下一章就会系统讲。
+  </div>
+
+  <div class="practice">
+    <span class="tag">动手练习 6·1</span>
+    <ol>
+      <li>做一个「点赞」按钮：点击 <code>likes.value++</code>，旁边显示 <code>{{ likes }}</code>。</li>
+      <li>加一个「回车提交」的输入框，回车后把输入内容弹到 console。</li>
+      <li>试着在 <code>@click.stop</code> 一个嵌套 div 上观察"冒泡"区别（了解阻止冒泡的意义）。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 7 章 ==================== -->
+<section class="chapter" id="ch7">
+  <div class="chap-head">
+    <div class="chap-num">07</div>
+    <div>
+      <h2>条件与列表渲染</h2>
+      <div class="desc">v-if 显示不显示，v-for 循环生成一堆——把"动态"玩明白</div>
+    </div>
+  </div>
+
+  <p class="lead">页面打交道时最常做的两件事：<b>按条件显示/隐藏</b>某块内容，以及<b>根据数组循环生成</b>一列内容。Vue 用 <code>v-if</code> 和 <code>v-for</code> 来完成，本章彻底讲透。</p>
+
+  <h3>7.1 v-if / v-else / v-else-if：条件显示</h3>
+  <p><code>v-if</code> 表示"条件为真才渲染这个元素"。配合 <code>v-else</code>、<code>v-else-if</code>，可以写成多个分支，类似 if-else。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>v-if / v-else-if / v-else 三级判断</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { ref } from 'vue'
+const score = ref(85)                    <span class="cmt">// 考生分数</span>
+&lt;/script&gt;
+
+&lt;template&gt;
+  <span class="cmt">// 分数 ≥ 90：优秀</span>
+  &lt;p v-if="score &gt;= 90"&gt;优秀！&lt;/p&gt;
+  <span class="cmt">// 否则若 ≥ 60：及格</span>
+  &lt;p v-else-if="score &gt;= 60"&gt;及格&lt;/p&gt;
+  <span class="cmt">// 否则：不及格</span>
+  &lt;p v-else&gt;不及格，加油&lt;/p&gt;
+
+  <span class="cmt">// 布尔判断显示/隐藏：用 v-show 也行（见下）</span>
+  &lt;p v-show="score &gt; 0"&gt;有成绩显示&lt;/p&gt;
+&lt;/template&gt;</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span><code>v-if</code> 像<b>厨房里"这道菜做不做"</b>——决定不做，就根本不进厨房（不渲染该元素）。<code>v-show</code> 像<b>"菜做好了但先盖个罩子"</b>——菜一直做在那里（元素一直存在），只是看不见（用 CSS 藏起来）。频繁切换用 <code>v-show</code>（省事），很少切换用 <code>v-if</code>（省资源）。
+  </div>
+
+  <div class="tblwrap"><table>
+    <thead><tr><th>对比</th><th>v-if</th><th>v-show</th></tr></thead>
+    <tbody>
+      <tr><td>原理</td><td>真才创建元素，假就移除</td><td>只是设置 <code>display:none</code></td></tr>
+      <tr><td>元素是否存在</td><td>否（被移除）</td><td>是（一直存在）</td></tr>
+      <tr><td>首次渲染开销</td><td>创建才花销</td><td>总是渲染</td></tr>
+      <tr><td>适合</td><td>很少切换、条件初始化</td><td>频繁切换</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>7.2 v-for：循环渲染列表</h3>
+  <p><code>v-for</code> 用来"对数组里的每一项，生成一个元素"，几乎能循环任何东西——数组、对象、数字。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>v-for 遍历数组、带索引、带 key</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { ref } from 'vue'
+const fruits = ref(['苹果', '香蕉', '橙子'])   <span class="cmt">// 一个水果数组</span>
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;ul&gt;
+    <span class="cmt">// 遍历 fruits，每一项叫 fruit，还有索引 i</span>
+    &lt;li v-for="(fruit, i) in fruits" :key="i"&gt;
+      {{ i + 1 }}. {{ fruit }}            <span class="cmt">// 显示 编号. 水果名</span>
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/template&gt;</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">注意</span>循环里<b>一定要给 <code>:key</code></b>（一个稳定、唯一的标识）。它像身份证，帮 Vue 在列表增删改时精准复用元素，提升性能、避免 bug。<b>不要用索引当 key</b>，最好用数据里已有的唯一 id。
+  </div>
+
+  <h3>7.3 遍历对象与数字</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>v-for 遍历对象属性 和 连续数字</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { reactive } from 'vue'
+<span class="cmt">// reactive 的对象可以直接 for 遍历它的字段</span>
+const info = reactive({ name: '小明', city: '北京' })
+&lt;/script&gt;
+
+&lt;template&gt;
+  <span class="cmt">// 遍历对象：用 (值, 键) 的顺序</span>
+  &lt;ul&gt;
+    &lt;li v-for="(value, key) in info" :key="key"&gt;{{ key }}：{{ value }}&lt;/li&gt;
+  &lt;/ul&gt;
+
+  <span class="cmt">// 遍历数字：1 到 5</span>
+  &lt;p v-for="n in 5" :key="n"&gt;第 {{ n }} 个&lt;/p&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <h3>7.4 列表交互：增删改</h3>
+  <p>配合响应式数组，你能做出完整的增删功能。注意：<b>能用数组方法（push、splice 等）就不要用下标直接赋值</b>，这样 Vue 才能侦测到变化。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>用 v-for 做一个待办清单（增、删）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { ref } from 'vue'
+
+const todos = ref([                      <span class="cmt">// 初始待办数组，每项带唯一 id</span>
+  { id: 1, text: '写 Vue 教程' },
+  { id: 2, text: '买菜' }
+])
+const newText = ref('')                  <span class="cmt">// 输入框内容</span>
+
+function addTodo() {
+  <span class="cmt">// push 往数组末尾加一项；id 用 Date.now() 保证唯一</span>
+  todos.value.push({ id: Date.now(), text: newText.value })
+  newText.value = ''                     <span class="cmt">// 清空输入框</span>
+}
+
+function removeTodo(id) {
+  <span class="cmt">// filter 返回"去掉该项"的新数组，赋值回去</span>
+  todos.value = todos.value.filter(t =&gt; t.id !== id)
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;input v-model="newText" placeholder="输入待办" /&gt;
+  &lt;button @click="addTodo"&gt;添加&lt;/button&gt;
+  &lt;ul&gt;
+    <span class="cmt">// key 用每项的唯一 id（正确姿势）</span>
+    &lt;li v-for="t in todos" :key="t.id"&gt;
+      {{ t.text }}
+      &lt;button @click="removeTodo(t.id)"&gt;删除&lt;/button&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <div class="practice">
+    <span class="tag">动手练习 7·1</span>
+    <ol>
+      <li>用 <code>v-if/v-else</code> 做一个"登录/未登录"切换显示。</li>
+      <li>用 <code>v-for</code> 渲染一组三国人名，加上"序号"和 <code>:key</code>。</li>
+      <li>模仿 7.4 做一个「点击添加 + 点击删除」的列表，跑通增删。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 8 章 ==================== -->
+<section class="chapter" id="ch8">
+  <div class="chap-head">
+    <div class="chap-num">08</div>
+    <div>
+      <h2>表单输入绑定</h2>
+      <div class="desc">v-model：让"输入框"和"数据"变成一个硬币的两面</div>
+    </div>
+  </div>
+
+  <p class="lead">前面你已经多次看到 <code>v-model</code> 的"惊鸿一瞥"。这一章把它彻底讲透：它是 Vue 里<b>最省心、最常用</b>的指令之一，让"用户输入什么"直接同步到"你的数据里"，反过来数据变，输入框也变——这叫<b>双向绑定</b>。</p>
+
+  <h3>8.1 手动 vs v-model：双向绑定省在哪</h3>
+  <p>没有 v-model 时，你要自己做"输入→存数据"和"数据变化→改输入框"两件事。用 v-model 后，全自动。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>v-model 在文本框上的最简用法</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { ref } from 'vue'
+const message = ref('')                   <span class="cmt">// 输入框绑定的数据</span>
+&lt;/script&gt;
+
+&lt;template&gt;
+  <span class="cmt">// v-model="message"：用户输入什么，message.value 就变成什么</span>
+  &lt;input v-model="message" placeholder="随便打点字" /&gt;
+  <span class="cmt">// 同时 message 变，输入框也会变。下面实时显示：</span>
+  &lt;p&gt;你正在输入：{{ message }}&lt;/p&gt;
+&lt;/template&gt;</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>想象一个<b>传话筒（对讲机）</b>，两头分别是"输入框"和"数据"。你说一句话（输入），数据端立刻同步听见；反过来你改动数据，输入框也立刻念出来。v-model 就是这根<b>双向传话筒</b>——省去你手动搭线。
+  </div>
+
+  <h3>8.2 不同表单控件的 v-model</h3>
+  <p>v-model 不止适用文本框，单选、复选、下拉框都给咱们想好了。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>多种控件的 v-model（下拉、勾选、单选）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { ref } from 'vue'
+const city = ref('北京')         <span class="cmt">// 下拉框选中的城市</span>
+const agreed = ref(false)        <span class="cmt">// 是否勾选同意条款</span>
+const gender = ref('')           <span class="cmt">// 单选性别</span>
+&lt;/script&gt;
+
+&lt;template&gt;
+  <span class="cmt">// 下拉框：选中值会存进 city</span>
+  &lt;select v-model="city"&gt;
+    &lt;option&gt;北京&lt;/option&gt;
+    &lt;option&gt;上海&lt;/option&gt;
+    &lt;option&gt;广州&lt;/option&gt;
+  &lt;/select&gt;
+
+  <span class="cmt">// 勾选框：agreed 变为 true / false</span>
+  &lt;label&gt;&lt;input type="checkbox" v-model="agreed" /&gt; 我已阅读条款&lt;/label&gt;
+
+  <span class="cmt">// 单选框：选中的 value 存进 gender</span>
+  &lt;label&gt;&lt;input type="radio" value="男" v-model="gender" /&gt; 男&lt;/label&gt;
+  &lt;label&gt;&lt;input type="radio" value="女" v-model="gender" /&gt; 女&lt;/label&gt;
+
+  &lt;p&gt;城市：{{ city }} ｜ 性别：{{ gender }} ｜ 同意：{{ agreed }}&lt;/p&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <h3>8.3 数字与修饰符</h3>
+  <p>有时你希望输入的内容自动转成数字，或去掉首尾空格，v-model 自带修饰符：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>v-model.number 转数字、.trim 去空格</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { ref } from 'vue'
+const age = ref(0)      <span class="cmt">// 默认按文本存，加 .number 后自动转成数字类型</span>
+const keyword = ref('') <span class="cmt">// 加 .trim 后自动去除首尾空格</span>
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;input type="number" v-model.number="age" /&gt;   <span class="cmt">// 存成数字，不是字符串</span>
+  &lt;input v-model.trim="keyword" /&gt;               <span class="cmt">// 自动 trim 首尾空格</span>
+&lt;/template&gt;</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>`.number`、`.trim` 这类叫<b>修饰符</b>，可以直接加在 v-model 后面。遇到"输入框明明存的是字符串却当数字用"的坑，多半是忘了加 <code>v-model.number</code>。
+  </div>
+
+  <div class="practice">
+    <span class="tag">动手练习 8·1</span>
+    <ol>
+      <li>做一个"个人资料"表单：名字（文本框）、城市（下拉）、爱好（多个勾选）、性别（单选），全部用 v-model 绑定，底部实时预览所有值。</li>
+      <li>给某个数字输入框加 <code>.number</code>，核对存的是不是数字类型。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 9 章 ==================== -->
+<section class="chapter" id="ch9">
+  <div class="chap-head">
+    <div class="chap-num">09</div>
+    <div>
+      <h2>组件基础：搭积木</h2>
+      <div class="desc">把页面拆成一块块可复用的"积木"，是 Vue 开发的灵魂</div>
+    </div>
+  </div>
+
+  <p class="lead">前面你也算会"写页面"了，但直接 app 里堆内容会越写越乱。Vue 的杀手锏是<b>组件化</b>：把一个页面拆成许多小部件（组件），每个小部件自己管自己的模板、样式和逻辑，还能互相嵌套、复用。这一章带你迈入组件世界。</p>
+
+  <h3>9.1 组件是什么：一块"能复用的积木"</h3>
+  <p><b>组件（Component）</b> = 一段<b>可复用的 UI + 逻辑</b>块。你可以把「导航栏」「卡片」「按钮」各做成一个组件，就像搭积木一样拼出整个页面。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>一个最基础的组件（.vue 单文件组件）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"><span class="cmt">// 文件：MyButton.vue —— 一个"我的按钮"组件</span>
+&lt;template&gt;                          <span class="cmt">// ① 模板：这个组件长什么样</span>
+  &lt;button class="btn"&gt;点我&lt;/button&gt;
+&lt;/template&gt;
+
+&lt;script setup&gt;                       <span class="cmt">// ② 逻辑：这个组件的脚本</span>
+<span class="cmt">// 这里可有自己的响应式数据、方法，但都不会泄漏到外面</span>
+let count = 0
+console.log('MyButton 组件被创建')
+&lt;/script&gt;
+
+&lt;style scoped&gt;                      <span class="cmt">// ③ 样式：scoped 表示只对本组件生效</span>
+.btn { background: #42d392; color: #fff; padding: 10px 16px; border-radius: 8px; border: none; }
+&lt;/style&gt;</pre>
+  </div>
+
+  <h3>9.2 在父组件里使用子组件</h3>
+  <p>写好组件后，要"放"到别的地方用。用 import 导入，然后在模板里像用 HTML 标签一样写它（组件名建议大写开头，区分原生标签）。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>App.vue 里引入并使用 MyButton</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import MyButton from './MyButton.vue'   <span class="cmt">// 导入组件（注意路径 .vue）</span>
+&lt;/script&gt;
+
+&lt;template&gt;
+  <span class="cmt">// 像普通标签一样使用它，可重复用多次</span>
+  &lt;h2&gt;首页&lt;/h2&gt;
+  &lt;MyButton /&gt;
+  &lt;MyButton /&gt;
+  &lt;MyButton /&gt;
+&lt;/template&gt;</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>组件就像<b>乐高积木</b>：你先做出「轮子」「车厢」「车头」几块积木（组件），然后想拼什么车就拼什么车。每个积木都<b>有自己的样子和功能</b>，且<b>能被反复使用</b>。改一处积木，所有用到它的地方一起变。
+  </div>
+
+  <h3>9.3 为什么需要组件：好处一目了然</h3>
+  <ul class="plain">
+    <li><b>复用</b>：同样一个"卡片"，写一次，到处用。</li>
+    <li><b>隔离</b>：每个组件的样式（scoped）、数据、逻辑互不干扰，改一处不炸全站。</li>
+    <li><b>可读</b>：页面变成"组件清单"，别人一眼看懂结构。</li>
+    <li><b>可维护</b>：出 bug 只需定位到那一个组件修。</li>
+  </ul>
+
+  <h3>9.4 组件里也能有自己的数据与事件</h3>
+  <p>组件不是空壳——它自己有响应式数据，也能绑事件、用 v-for，和普通页面写法完全一样，只是"关在自己盒子里"。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>计数器组件 Counter.vue：自己管自己的状态</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { ref } from 'vue'
+const count = ref(0)               <span class="cmt">// 组件自有的响应式数据（不影响外部同名变量）</span>
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div class="card"&gt;
+    &lt;p&gt;计数：{{ count }}&lt;/p&gt;
+    &lt;button @click="count++"&gt;加一&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;style scoped&gt;
+.card { border: 1px solid #ddd; padding: 16px; border-radius: 12px; }
+&lt;/style&gt;</pre>
+  </div>
+
+  <h3>9.5 页面要拆成几个组件？</h3>
+  <p>新手常问"拆多细"。经验法则：<b>凡是长得像、可重复、或独占一片逻辑的东西，就值得拆成组件</b>。一开始不要过度拆，随着"同类代码出现两次"再抽。</p>
+  <div class="callout tip">
+    <span class="tag">技巧</span>怎么判断？如果有一段 HTML+逻辑，你发现有<b>复制粘贴第 2 次</b>的冲动，就打住——把它抽成组件吧。
+  </div>
+
+  <div class="practice">
+    <span class="tag">动手练习 9·1</span>
+    <ol>
+      <li>新建一个 <code>Card.vue</code> 组件，显示一段固定的卡片（标题+内容）。</li>
+      <li>在 <code>App.vue</code> 里使用它三次，页面出现三张卡片。</li>
+      <li>给卡片组件加上 <code>scoped</code> 样式，确认它的背景色不影响页面其他部分。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 10 章 ==================== -->
+<section class="chapter" id="ch10">
+  <div class="chap-head">
+    <div class="chap-num">10</div>
+    <div>
+      <h2>Props 与事件：组件之间怎么说话</h2>
+      <div class="desc">父传子用 props，子传父用 emit——搭好积木之间的"插头和电线"</div>
+    </div>
+  </div>
+
+  <p class="lead">只用组件还不够——组件之间还要<b>传数据</b>。Vue 的规矩非常清晰：<b>数据从父组件传给子组件（Props），子组件要通知父组件就发事件（emit）</b>。这一章把"积木之间怎么连电线"讲透。</p>
+
+  <h3>10.1 为什么要有 Props：积木上的"插孔"</h3>
+  <p>如果组件是积木，那 <b>Props（属性）</b>就是积木上允许"插入不同参数"的<b>插孔</b>。父组件往插孔里塞值，子组件就能拿到并显示。这样同一个组件能显示不同内容。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>子组件：声明它接受哪些 props（defineProps）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"><span class="cmt">// 文件：Greet.vue —— 一个"打招呼"组件，接受一个 name prop</span>
+&lt;script setup&gt;
+<span class="cmt">// defineProps 声明这个组件允许接收哪些属性。这里接收一个叫 name 的字符串</span>
+defineProps({
+  name: String
+})
+&lt;/script&gt;
+
+&lt;template&gt;
+  <span class="cmt">// 直接用 prop 名（模板里自动可用）</span>
+  &lt;p&gt;你好，{{ name }}！&lt;/p&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>父组件：往插孔里传不同的值</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import Greet from './Greet.vue'    <span class="cmt">// 导入打招呼组件</span>
+&lt;/script&gt;
+
+&lt;template&gt;
+  <span class="cmt">// 每次用 Greet 时，都给它传一个不同的 name</span>
+  &lt;Greet name="小明" /&gt;
+  &lt;Greet name="小红" /&gt;
+  &lt;Greet name="陌生人" /&gt;
+&lt;/template&gt;</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>想想<b>名片机（标签打印机）</b>：机器（组件）本身长一个样，但你每次<b>放一张不同内容的小纸条（prop）</b>进去，它就打出一张不同名字的卡片。<code>name</code> 就是那个可以被塞进不同内容的小纸条。
+  </div>
+
+  <h3>10.2 组件标签上能不能绑数据？能，用动态绑定</h3>
+  <p>prop 的值不只是固定字符串，也可以是响应式数据——用前面学的 <code>:</code> 绑定。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>把响应式数据作为 prop 传下去</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import Greet from './Greet.vue'
+import { ref } from 'vue'
+const currentUser = ref('小红')     <span class="cmt">// 一个会变化的用户名</span>
+&lt;/script&gt;
+
+&lt;template&gt;
+  <span class="cmt">// 用 : 绑定：currentUser 一变，子组件自动显示新名字</span>
+  &lt;Greet :name="currentUser" /&gt;
+  &lt;button @click="currentUser = '小刚'"&gt;换成小刚&lt;/button&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <h3>10.3 子传父：用 emit 发"信号"</h3>
+  <p>props 是"父 → 子"。那子组件想<b>通知父组件</b>（比如"我点击了""我要删除自己")怎么办？用 <b>emit（触发自定义事件）</b>：子组件 <code>emit('事件名', 数据)</code>，父组件用 <code>@事件名</code> 监听。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>子组件：点击时 emit 一个 filled 事件，附带参数</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"><span class="cmt">// Child.vue 子组件</span>
+&lt;script setup&gt;
+<span class="cmt">// defineEmits 声明这个组件"能向外发哪些事件"</span>
+const emit = defineEmits(['close'])
+
+function handleClose() {
+  <span class="cmt">// emit('close') 表示发出一个 close 信号，可带一个数据参数</span>
+  emit('close')
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;button @click="handleClose"&gt;关闭&lt;/button&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>父组件：监听这个自定义事件</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import Child from './Child.vue'
+const show = ref(true)
+
+function onClose() {
+  show.value = false               <span class="cmt">// 子组件点关闭后，父组件把内容藏起来</span>
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;Child v-if="show" @close="onClose" /&gt;
+&lt;/template&gt;</pre>
+  </div>
+  <div class="callout info">
+    <span class="tag">注</span>props 是<b>单项向下</b>的：父传子很容易，但<b>绝不建议子组件直接改 prop</b>。要是子组件想改变状态，正确做法是「发事件让父组件来改」。这条约定保证数据流向清晰，别说成习惯，但这是 Vue 的架构哲学。
+  </div>
+
+  <h3>10.4 完整小例子：一个"待办项"组件</h3>
+  <p>综合 props（传内容）+ emit（通知删除），做一个可复用的待办项：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>TodoItem.vue：接收 text，点击可发删除事件</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+<span class="cmt">// 接收两个 props：text（文本）、id（唯一标识）</span>
+const props = defineProps({
+  text: String,
+  id: Number
+})
+const emit = defineEmits(['remove'])     <span class="cmt">// 声明可发 remove 事件</span>
+
+function onRemove() {
+  emit('remove', props.id)               <span class="cmt">// 发 remove 事件，把 id 带给父组件</span>
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;li&gt;
+    {{ text }}
+    &lt;button @click="onRemove"&gt;删除&lt;/button&gt;
+  &lt;/li&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>App.vue：用 v-for 渲染，监听 remove 删除对应项</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import TodoItem from './TodoItem.vue'
+import { ref } from 'vue'
+
+const todos = ref([
+  { id: 1, text: '学习 props' },
+  { id: 2, text: '学习 emit' }
+])
+
+function removeTodo(id) {
+  todos.value = todos.value.filter(t =&gt; t.id !== id)
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;ul&gt;
+    <span class="cmt">// 给每个待办传两个 prop，并监听它的 remove 事件</span>
+    &lt;TodoItem
+      v-for="t in todos"
+      :key="t.id"
+      :text="t.text"
+      :id="t.id"
+      @remove="removeTodo"
+    /&gt;
+  &lt;/ul&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <div class="practice">
+    <span class="tag">动手练习 10·1</span>
+    <ol>
+      <li>做一个 <code>Avatar.vue</code> 组件，接收 <code>name</code> prop 并显示。</li>
+      <li>再做一个 <code>Alert.vue</code>，点"关闭"时 <code>emit('close')</code>，父组件收到后隐藏它。</li>
+      <li>复刻 10.4 的待办项组件，把增删跑通。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 11 章 ==================== -->
+<section class="chapter" id="ch11">
+  <div class="chap-head">
+    <div class="chap-num">11</div>
+    <div>
+      <h2>插槽：积木上的"插口"</h2>
+      <div class="desc">slot 让父组件把内容"塞进"子组件的指定位置，布局更灵活</div>
+    </div>
+  </div>
+
+  <p class="lead">前面我们用 props 传"数据"，但有时你想传的是"一段 HTML（内容）"——比如给一个弹窗组件塞进"标题 + 正文 + 按钮"。这就是 <b>插槽（Slot）</b> 的用武之地，相当于给积木留了个"可往里塞内容的插口"。</p>
+
+  <h3>11.1 插槽是什么：给组件开一道"可装东西的口子"</h3>
+  <p>普通的组件，标签之间一般是空的：<code>&lt;Card /&gt;</code>。但用插槽后，父组件可以把任意 HTML 放进 <code>&lt;Card&gt;...&lt;/Card&gt;</code> 里面，子组件用 <code>&lt;slot&gt;</code> 占个位，那块位置就会被塞入的内容替换。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>子组件：留一个 slot 占位</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"><span class="cmt">// Card.vue —— 卡片组件，中间留一个 slot</span>
+&lt;template&gt;
+  &lt;div class="card"&gt;
+    &lt;h4&gt;卡片标题&lt;/h4&gt;
+    &lt;slot /&gt;   <span class="cmt">// ← 这是"插口"：父组件塞进来的内容会出现在这里</span>
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;style scoped&gt;
+.card { border: 1px solid #e5e5e5; padding: 20px; border-radius: 12px; }
+&lt;/style&gt;</pre>
+  </div>
+
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>父组件：往插口里塞不同内容</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import Card from './Card.vue'
+&lt;/script&gt;
+
+&lt;template&gt;
+  <span class="cmt">// 每次给 Card 塞不同的内容，卡片就能显示不同信息</span>
+  &lt;Card&gt;
+    &lt;p&gt;这是一段普通说明文字&lt;/p&gt;
+  &lt;/Card&gt;
+
+  &lt;Card&gt;
+    &lt;ul&gt;
+      &lt;li&gt;第一项&lt;/li&gt;
+      &lt;li&gt;第二项&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/Card&gt;
+&lt;/template&gt;</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>插槽就像<b>相框</b>：相框（组件）本身固定，但你可以在框里<b>换不同的照片（父组件塞的内容）</b>。同一个相框，放不同的照片就成了不同的作品。
+  </div>
+
+  <h3>11.2 具名插槽：一个组件多个口子</h3>
+  <p>当组件有不止一个插口时（比如"头部""尾部"），可以用<b>具名插槽</b>给每个 slot 起名字，父组件用 <code>v-slot:名字</code>（简写 <code>#名字</code>）指定往哪个口子塞。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Layout.vue：带 header 和 footer 两个具名插槽</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;template&gt;
+  &lt;div&gt;
+    <span class="cmt">// 具名插槽：name="header" 这个口子放头部内容</span>
+    &lt;header&gt;&lt;slot name="header" /&gt;&lt;/header&gt;
+    <span class="cmt">// 不写 name 的默认插槽，放主体内容</span>
+    &lt;main&gt;&lt;slot /&gt;&lt;/main&gt;
+    &lt;footer&gt;&lt;slot name="footer" /&gt;&lt;/footer&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>父组件：用 #名字 往指定口子塞内容</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import Layout from './Layout.vue'
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;Layout&gt;
+    <span class="cmt">// #header 表示塞进 header 口子；#footer 塞进 footer 口子</span>
+    &lt;template #header&gt;
+      &lt;h1&gt;网站标题&lt;/h1&gt;
+    &lt;/template&gt;
+
+    <span class="cmt">// 没写 # 的 = 默认插槽，塞进主体位置</span>
+    &lt;p&gt;这里是页面主体内容&lt;/p&gt;
+
+    &lt;template #footer&gt;
+      &lt;small&gt;版权信息&lt;/small&gt;
+    &lt;/template&gt;
+  &lt;/Layout&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <h3>11.3 插槽 vs props：什么时候用哪个？</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>场景</th><th>用哪个</th><th>为什么</th></tr></thead>
+    <tbody>
+      <tr><td>要传"一个值"（数字、字符串、对象）</td><td>props</td><td>传数据用 props 最直接</td></tr>
+      <tr><td>要传"一整段界面结构（HTML）"</td><td>插槽 slot</td><td>传界面用插槽更灵活</td></tr>
+      <tr><td>组件只是"套壳"，我关心里面的内容</td><td>插槽 slot</td><td>内容/布局由调用方决定</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="practice">
+    <span class="tag">动手练习 11·1</span>
+    <ol>
+      <li>做一个 <code>Modal.vue</code> 弹窗组件，带 <code>header</code> 和默认插槽。</li>
+      <li>用模态框展示一段消息，试试往两个口子塞不同内容。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 12 章 ==================== -->
+<section class="chapter" id="ch12">
+  <div class="chap-head">
+    <div class="chap-num">12</div>
+    <div>
+      <h2>生命周期：组件的"人生"</h2>
+      <div class="desc">创建、挂载、更新、销毁——在关键节点挂上你的"作业"</div>
+    </div>
+  </div>
+
+  <p class="lead">每个组件从「出生」到「销毁」都要经历几个固定阶段，叫<b>生命周期</b>。Vue 允许你在这些时间点"挂了钩子函数"，去做该做的事（比如页面挂载后请求数据）。掌握它，你就能在正确时机写代码。</p>
+
+  <h3>12.1 四个关键阶段（顺手记两个就够）</h3>
+  <p>对新手来说，真正常用的钩子没几个。强烈建议先熟练这两个：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>钩子</th><th>触发时机</th><th>常用场景</th></tr></thead>
+    <tbody>
+      <tr><td><code>onMounted</code></td><td>组件首次挂载到页面后</td><td>拉取初始数据、启动定时器、绑定第三方窗口事件</td></tr>
+      <tr><td><code>onBeforeUnmount</code></td><td>组件即将被销毁前</td><td>清理定时器、移除事件监听，防止"内存泄漏"</td></tr>
+    </tbody>
+  </table></div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>生命周期全貌（示意图 + 打印）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { onMounted, onUpdated, onBeforeUnmount } from 'vue'
+import { ref } from 'vue'
+
+const count = ref(0)
+
+<span class="cmt">// ① 挂载后：组件第一次出现在页面上时执行一次</span>
+onMounted(() =&gt; {
+  console.log('组件已挂载，页面可见了')
+})
+
+<span class="cmt">// ② 更新后：每次响应式数据变化、界面刷新后执行</span>
+onUpdated(() =&gt; {
+  console.log('组件更新了，当前 count =', count.value)
+})
+
+<span class="cmt">// ③ 卸载前：组件即将离开页面时执行（清理现场）</span>
+onBeforeUnmount(() =&gt; {
+  console.log('组件即将被销毁，做清理')
+})
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;p&gt;count = {{ count }}&lt;/p&gt;
+  &lt;button @click="count++"&gt;加一&lt;/button&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <div class="callout analogy">
+    <span class="tag">类比</span>把组件想成<b>一家餐厅</b>的经营管理：
+    <ul class="plain" style="margin:8px 0 0">
+      <li><b>onMounted</b> = 餐厅<b>开业那天</b>，邀请员工、备好食材（拉初始数据）；</li>
+      <li><b>onUpdated</b> = <b>每次顾客点菜</b>出餐时更新（数据变→界面刷新）；</li>
+      <li><b>onBeforeUnmount</b> = <b>打烊前</b>，关灯锁门、清点结账（清理定时器、移除监听）。</li>
+    </ul>
+  </div>
+
+  <h3>12.2 实战：用 onMounted 拉取数据 + 定时器，销毁时清理</h3>
+  <p>最常见的真实用途：页面一打开就去后端拿数据展示；同时要小心定时器这类会一直跑的玩意儿，销毁组件时记得清掉。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>定时器 + onMounted + 清理</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { onMounted, onBeforeUnmount, ref } from 'vue'
+
+const now = ref('')       <span class="cmt">// 显示当前时间</span>
+let timer = null          <span class="cmt">// 定时器的句柄</span>
+
+onMounted(() =&gt; {
+  <span class="cmt">// 组件挂载后开始：每秒更新一次时间</span>
+  timer = setInterval(() =&gt; {
+    now.value = new Date().toLocaleTimeString()
+  }, 1000)
+})
+
+<span class="cmt">// 组件销毁前：清掉定时器，否则它会在后台一直跑</span>
+onBeforeUnmount(() =&gt; {
+  clearInterval(timer)    <span class="cmt">// 关键！防止内存泄漏/性能损耗</span>
+})
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;p&gt;现在时间：{{ now }}&lt;/p&gt;
+&lt;/template&gt;</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">注意</span>新手常见病：<b>在 <code>setup</code> 里直接 <code>setInterval</code> 而从不到期清理</b>。组件销毁了定时器还在跑，越积越多拖垮页面。切记：<b>有开就有关</b>——开了定时器 / 监听，就在 <code>onBeforeUnmount</code> 里关掉。
+  </div>
+
+  <div class="practice">
+    <span class="tag">动手练习 12·1</span>
+    <ol>
+      <li>写一个组件，<code>onMounted</code> 里 <code>console.log('挂载了')</code>，加 <code>onBeforeUnmount</code> 打印"卸载了"，用 <code>v-if</code> 开关它，观察打印顺序。</li>
+      <li>做一个每秒 +1 的计时器，正确清理。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 13 章 ==================== -->
+<section class="chapter" id="ch13">
+  <div class="chap-head">
+    <div class="chap-num">13</div>
+    <div>
+      <h2>组合式 API：逻辑的"抽屉收纳"</h2>
+      <div class="desc">把一个功能抽到一起，代码不再东一块西一块</div>
+    </div>
+  </div>
+
+  <p class="lead">你已经用了很多"组合式 API"的语法（<code>setup</code>、<code>ref</code>），这一章要解决它真正优雅的地方：<b>把一个功能的逻辑集中起来，还能抽出去复用</b>。对比一下旧写法，你就明白它为什么是 Vue3 的主角。</p>
+
+  <h3>13.1 为什么要组合式：想象你的"生活抽屉" vs "一个万能大纸箱"</h3>
+  <p>写一个功能（比如"搜索"）往往牵扯<b>数据 + 逻辑 + 生命周期</b>好几样。在传统写法里，它们被打散在不同区块（数据区、方法区、生命周期区），改一个功能要上下翻。组合式 API 则允许你把<b>一个功能的所有相关代码放在一起</b>。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>选项式写法像一个<b>没有分隔的大收纳箱</b>——衣服、鞋子、工具全堆里面，找"秋天的一双鞋"要翻遍整箱。组合式 API 像<b>分格抽屉</b>——每个格子（一个功能）装它自己的所有东西，想要什么、改什么都顺藤摸瓜、互不打扰。
+  </div>
+
+  <h3>13.2 把一个功能"抽"成函数：可组合（Composable）</h3>
+  <p>组合式 API 最棒的用法是：把一段"数据 + 方法"包成一个<b>自定义函数</b>，多个组件都能调用它，这就是 <b>可组合函数（composable）</b>。习惯上函数名以 <code>useXxx</code> 开头。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>useCounter.js：把"计数器"逻辑做成可复用函数</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"><span class="cmt">// 文件：useCounter.js（普通 js 文件，不是组件）</span>
+import { ref } from 'vue'
+
+<span class="cmt">// 一个返回数据+方法的函数，谁调用谁就拿到一套独立计数器</span>
+export function useCounter(start = 0) {
+  const count = ref(start)     <span class="cmt">// 起始值由外部传入</span>
+
+  function add() { count.value++ }        <span class="cmt">// 加一</span>
+  function reset() { count.value = start }<span class="cmt">// 复位到起点</span>
+
+  return { count, add, reset }  <span class="cmt">// 把需要暴露的东西交出去</span>
+}</pre>
+  </div>
+
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>在组件里使用这个可组合函数</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { useCounter } from './useCounter'
+
+<span class="cmt">// 一行拿到整套计数器逻辑，组件里直接用</span>
+const { count, add, reset } = useCounter(100)
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;p&gt;计数：{{ count }}&lt;/p&gt;
+  &lt;button @click="add"&gt;加一&lt;/button&gt;
+  &lt;button @click="reset"&gt;复位&lt;/button&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <h3>13.3 可组合函数的好处</h3>
+  <ul class="plain">
+    <li><b>复用</b>：同一段逻辑，一个函数多处组件都能 import 使用。</li>
+    <li><b>隔离</b>：同一个 `useCounter` 被两个组件调用，各自有独立的 count，互不干扰。</li>
+    <li><b>可读</b>：组件变成"我用了哪些可组合函数"，结构一目了然。</li>
+    <li><b>可测</b>：把逻辑从组件里抽出来，单独就能测试。</li>
+  </ul>
+
+  <h3>13.4 凭什么用它：拿"鼠标位置"举例（实时 + 清理）</h3>
+  <p>可组合函数还可以利用生命周期钩子，把自己"挂"到组件生命周期上，自动完成初始化和清理。这是它最优雅的地方。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>useMouse.js：追踪鼠标坐标，用完自动移除监听</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"><span class="cmt">// useMouse.js —— 监听全局鼠标移动并返回坐标</span>
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+
+export function useMouse() {
+  const x = ref(0)     <span class="cmt">// 横坐标</span>
+  const y = ref(0)     <span class="cmt">// 纵坐标</span>
+
+  function update(e) { x.value = e.clientX; y.value = e.clientY }
+
+  onMounted(() =&gt; window.addEventListener('mousemove', update))      <span class="cmt">// 挂载后开始监听</span>
+  onBeforeUnmount(() =&gt; window.removeEventListener('mousemove', update)) <span class="cmt">// 销毁前移除 -> 自动清理</span>
+
+  return { x, y }
+}</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>任意组件里直接显示鼠标坐标</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { useMouse } from './useMouse'
+const { x, y } = useMouse()    <span class="cmt">// 一行接入，自动管理监听与清理</span>
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;p&gt;鼠标位置：{{ x }}, {{ y }}&lt;/p&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <div class="callout tip">
+    <span class="tag">技巧</span>看到 `useCounter`、`useMouse` 这类名字了吗？<b>「useXxx」是可组合函数的标准命名习惯</b>，像"接口说明书"，一看就知道它能做什么。写 Vue3 时，凡是"逻辑可以抽出去、被多个地方复用"的场景，都值得包成 useXxx。
+  </div>
+
+  <div class="practice">
+    <span class="tag">动手练习 13·1</span>
+    <ol>
+      <li>把第 5 章的计算器（price×quantity）逻辑抽成一个 <code>useCart</code> 可组合函数。</li>
+      <li>复刻 <code>useMouse</code>，在组件里显示坐标。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 14 章 ==================== -->
+<section class="chapter" id="ch14">
+  <div class="chap-head">
+    <div class="chap-num">14</div>
+    <div>
+      <h2>依赖注入与跨层传参</h2>
+      <div class="desc">provide / inject——让"爷爷"直接给"孙子"递东西，不用一层层传</div>
+    </div>
+  </div>
+
+  <p class="lead">普通情况父子传参（props）就够了。但当组件层级很深（爷爷→爸爸→儿子→孙子都要同一个数据），一级级 <code>@removes</code> 传下去会非常啰嗦。<b>provide / inject</b> 让"高层"直接"提供"，"深层"直接"注入"，像一座直达电梯。</p>
+
+  <h3>14.1 什么时候需要它：避免"传参传到手软"</h3>
+  <p>想象：App（爷爷）想给最底层的 Level3（孙子）传一个主题色。用 props 得「爷爷传爸爸、爸爸传儿子、儿子传孙子」三级接力。用 provide/inject，爷爷 provide 一次，孙子 inject 一次直接拿到。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>props 像<b>层层转交的传令兵</b>——司令的命令要经过团长、连长、班长才能到士兵，每层都要转一道，慢又容易错。provide/inject 像<b>总司令直接打电话给基层士兵</b>——跨过中间所有层级，一个电话直达。
+  </div>
+
+  <h3>14.2 provide：高层"提供"数据</h3>
+  <p>在高层组件里用 <code>provide('键名', 值)</code> 提供数据。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>App.vue（爷爷）：provide 一个主题色和一个主题状态</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { provide, ref } from 'vue'
+
+<span class="cmt">// provide('data是主题'.'键', '值')：把值"广播"给所有后代（哪怕隔了很多层）</span>
+provide('theme', 'dark')
+
+<span class="cmt">// 甚至可以 provide 一个响应式数据（常见做法）</span>
+const theme = ref('dark')
+provide('theme', theme)      <span class="cmt">// 后代改 theme，所有用到的地方一起变</span>
+&lt;/template&gt;</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">注意</span>上面示例的模板标签只是示意，重点是序列：先用 <code>ref</code> 造数据，再用 <code>provide</code> 传出去。真正用于主题、user 信息等全局状态时，常配合 <code>readonly</code> 防止后代胡乱改动（进阶话题，此处了解即可）。
+  </div>
+
+  <h3>14.3 inject：深层"注入"拿到数据</h3>
+  <p>在任意后代的组件里，用 <code>inject('键名')</code> 就能拿到祖先 provide 的值，一次到位，无需层层传递。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Level3.vue（孙子）：直接 inject 拿到爷爷的 theme</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { inject } from 'vue'
+
+<span class="cmt">// inject('theme')：直接拿爷爷 provide 的那个值，不用经过爸爸、儿子传递</span>
+const theme = inject('theme')
+
+<span class="cmt">// 如果想给"可能不存在"的值提供默认值：</span>
+const font = inject('font', '16px')   <span class="cmt">// 找不到 font 就用 '16px'</span>
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;p&gt;我是小孙子，拿到的主题是：{{ theme }}&lt;/p&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <h3>14.4 provide/inject vs props 怎么选</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>场景</th><th>推荐</th></tr></thead>
+    <tbody>
+      <tr><td>相邻父子之间传数据</td><td><b>props</b>（直接、清晰）</td></tr>
+      <tr><td>跨多层共享一份数据（主题、日志、登录态）</td><td><b>provide/inject</b></td></tr>
+      <tr><td>要严格单向流动、类型声明的</td><td><b>props</b></td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout warn">
+    <span class="tag">注意</span>provide/inject 虽然方便，但也有代价：<b>数据来源在哪里不容易一眼看出</b>。最好只用于"明确定义的全局状态"，别到处滥用，否则项目也会变得像乱接线的盘根错节。
+  </div>
+
+  <div class="practice">
+    <span class="tag">动手练习 14·1</span>
+    <ol>
+      <li>App 组件 <code>provide('username', '小王')</code>，在第三层子组件里 <code>inject</code> 并显示。</li>
+      <li>把用户名改成 ref 作为 provide，做一个"修改用户名"按钮，观察深层组件的显示是否实时变化。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<section class="chapter" id="ch15">
+  <div class="chap-head">
+    <div class="chap-num">15</div>
+    <div>
+      <h2>过渡与动画：让页面「动起来」</h2>
+      <div class="desc">用电梯开门、公交播报的类比，学会给元素的出现、离开、移动加动画</div>
+    </div>
+  </div>
+
+  <p class="lead">页面不是死了的一张图，而是"活的表演"。数据变化时，元素<b>快速出现</b>和<b>突然消失</b>会让人觉得生硬。这一章学怎么给它们加<b>过渡动画</b>，让出现、离开、移动都"优雅丝滑"。</p>
+
+  <h3>15.1 为什么要有动画：把「生硬」变成「自然」</h3>
+  <p>想象你在等电梯：门<b>哗地瞬间打开</b>和<b>缓缓滑开</b>，哪种体验更好？当然是缓缓打开——因为我们的眼睛会期待一个<b>连续的过程</b>。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>动画就是给"状态变化"加一个<b>过渡过程</b>。没有动画，界面就像"打板切换"：一个画面<code>啪</code>没了，另一个<code>啪</code>出现；有动画，就像"摄影机摇移"，观众能跟上变化，知道发生了什么。
+  </div>
+  <p>Vue 内置了两个组件负责这件事：<code>&lt;Transition&gt;</code>（管<b>单个</b>元素的进出）和 <code>&lt;TransitionGroup&gt;</code>（管<b>一组</b>列表的增删和移动）。</p>
+
+  <h3>15.2 第一个过渡：元素消失/出现变平滑</h3>
+  <p>思路就三步：① 用 <code>&lt;Transition&gt;</code> 把要动画的元素<b>包起来</b>；② 给它命名（比如 <code>name="fade"</code>）；③ 写 6 个"状态类"的 CSS 控制不同时刻的样式。</p>
+  <ol class="steps">
+    <li><b>包一层</b>：在 <code>&lt;Transition name="fade"&gt;</code> 里面放 <code>&lt;p v-if="show"&gt;</code>。</li>
+    <li><b>起个名字</b>：给过渡起名字 <code>fade</code>，名字会成为 CSS 类名的前缀。</li>
+    <li><b>写动画</b>：Vue 会自动在合适时机给元素加上 <code>fade-enter-active</code> 等类，你只要给这些类写样式。</li>
+  </ol>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>fade 过渡 · 淡入淡出的完整例子，每行注释</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;!-- Transition 把要加动画的那个元素包起来，name 是过渡的名字 --&gt;
+&lt;Transition name="fade"&gt;
+  <span class="cmt">// v-show 控制：为 true 显示、为 false 隐藏（v-if 也同理）</span>
+  &lt;p v-show="show"&gt;这句文字会淡入淡出&lt;/p&gt;
+&lt;/Transition&gt;
+
+<span class="cmt">// ↓ CSS：Vue 会自动给元素加"状态类"，你负责给这些类写样式</span>
+<span class="cmt">// .fade-enter-active：进入过程在'整个动画期间'生效（这里控制淡入）</span>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease; <span class="cmt">// 在 0.5 秒里改变透明度，ease 是缓动</span>
+}
+<span class="cmt">// 进入的'起点状态'：透明度从 0（完全透明）开始</span>
+.fade-enter-from { opacity: 0; }
+<span class="cmt">// 离开的'终点状态'：透明度降到 0（完全看不见）</span>
+.fade-leave-to { opacity: 0; }</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>一般你只需要记住两组：<b>进入</b>用 <code>enter-from</code>（起点，通常设为透明/位移）+ <code>enter-active</code>（过程）；<b>离开</b>镜像对应用 <code>leave-active</code> + <code>leave-to</code>。Vue 在切换那一瞬间自动帮你加类、播完再移除类，你不用自己动手。
+  </div>
+
+  <h3>15.3 六种状态类：动画的「幕后剧本」</h3>
+  <p>很多教程让你背 6 个类名很头疼，其实它是有规律的——就像出国旅游的<b>过海关清单</b>，我们按"进/出"两幕来记。</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>阶段</th><th>类名</th><th>它管什么时刻</th><th>生活类比</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="2"><b>进入</b>（元素出现）</td><td><code>enter-from</code></td><td>从"进场前"那一刻的起点样式</td><td>演员<b>上台前</b>站的位置</td></tr>
+      <tr><td><code>enter-active</code></td><td>进入动画进行的整个过程</td><td>演员<b>登台中</b>的动作</td></tr>
+      <tr><td></td><td><code>enter-to</code></td><td>进入完成后的终点样式</td><td>演员<b>站定</b>的位置</td></tr>
+      <tr><td rowspan="2"><b>离开</b>（元素消失）</td><td><code>leave-from</code></td><td>从"离场前"那一刻的起点样式</td><td>演员<b>起身</b>前</td></tr>
+      <tr><td><code>leave-active</code></td><td>离开动画进行的整个过程</td><td>演员<b>下台中</b>的动作</td></tr>
+      <tr><td></td><td><code>leave-to</code></td><td>离开完成后的终点样式</td><td>演员<b>走下台消失</b></td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout info">
+    <span class="tag">记忆口诀</span><b>进</b>是 <code>from → to</code>，<b>出</b>是 <code>from → to</code>，各自再配一个 <code>active</code> 管"过程"。名字前缀 <code>fade-</code> 就是你在 <code>name="fade"</code> 里起的名字，想换就换。
+  </div>
+
+  <h3>15.4 多种动画效果：位移、缩放、旋转</h3>
+  <p>只是淡入淡出太单调。动画本质上是<b>改 CSS 属性</b>——位移用 <code>transform: translateX/translateY</code>，变大小用 <code>scale</code>，重点是把"起点 state"和"终点 state"写得不同，中间自动过渡。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>slide 过渡 · 从右边滑进来的入场动画</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;Transition name="slide"&gt;
+  &lt;p v-if="show"&gt;我从右边滑进来&lt;/p&gt;
+&lt;/Transition&gt;
+
+<span class="cmt">// 过程：0.4 秒内平滑改变位移和透明度</span>
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.4s ease;
+}
+<span class="cmt">// 进入前：元素整块往右挪 100%，且完全透明 —— 所以看起来是"从右边滑入"</span>
+.slide-enter-from {
+  transform: translateX(100%);
+  opacity: 0;
+}
+<span class="cmt">// 离开后：挪回右边并隐藏</span>
+.slide-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
+}</pre>
+  </div>
+
+  <h3>15.5 列表动画：用 TransitionGroup 让每一项「排队移动」</h3>
+  <p>加到删除列表项时，<b>剩下的一项会"突然跳"上去</b>补齐位置，很生硬。<code>&lt;TransitionGroup&gt;</code> 专门解决这个：它允许整体移动时，给移动的那一项也加动画。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>想象一班地铁的乘客<b>排队上车</b>：有人下去了，后面的人会<b>往前补位</b>。<code>&lt;TransitionGroup&gt;</code> 就是给"补位"这件事加了动画——让往前挪的人不是瞬间跳过去，而是<b>平滑地走前面</b>。
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>列表动画 · v-for + TransitionGroup</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">// TransitionGroup 用来包一组 v-for 渲染的元素
+&lt;TransitionGroup name="list" tag="ul"&gt;
+  <span class="cmt">// v-for 循环渲染每个待办，key 是唯一标识（动画靠 key 认人）</span>
+  &lt;li v-for="(item, i) in list" :key="item.id"&gt;
+    {{ item.text }}
+    <span class="cmt">// 点击删除这一项，注意下面传的是 id 而不是下标</span>
+    &lt;button @click="remove(item.id)"&gt;删除&lt;/button&gt;
+  &lt;/li&gt;
+&lt;/TransitionGroup&gt;
+
+<span class="cmt">// 进入和离开的动画，和单元素那套一样写法</span>
+.list-enter-active,
+.list-leave-active { transition: all 0.4s ease; }
+.list-enter-from { opacity: 0; transform: translateX(30px); }
+.list-leave-to   { opacity: 0; transform: translateX(30px); }
+
+<span class="cmt">// 关键：move 是"移动动画" —— 剩下的项目前缓慢补位而不是瞬间跳上去</span>
+.list-move { transition: transform 0.4s ease; }</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">注意</span>列表项一定要写 <code>:key</code>，而且用<b>稳定的 id</b>，不要用下标 <code>index</code>。因为 Vue 靠 key 来"认出"哪一项移动了，用下标会导致顺序乱了就判断错人。
+  </div>
+
+  <div class="practice">
+    <span class="tag">动手练习 15·1</span>
+    <ol>
+      <li>做一个按钮切换 <code>v-show</code>，让文字<b>淡入淡出</b>。</li>
+      <li>把上面的滑动动画改成<b>从上方落下来</b>（用 <code>translateY</code>）。</li>
+      <li>做一个"待办列表"，添加和删除项都有<b>进出 + 移动</b>动画。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<section class="chapter" id="ch16">
+  <div class="chap-head">
+    <div class="chap-num">16</div>
+    <div>
+      <h2>组合式函数与工具链：走向「真正的项目」</h2>
+      <div class="desc">从写着玩的 HTML 到多人协作的真项目：路由、状态库、单文件组件与构建工具</div>
+    </div>
+  </div>
+
+  <p class="lead">前面我们用 CDN + 单个 HTML 文件演示，方便理解。但<b>真实项目</b>会有很多页面、很多共享数据、很多文件。这一章教你用<b>工具链</b>把它们组织起来，像把散件组装成流水线工厂一样。</p>
+
+  <h3>16.1 单文件组件 SFC：把「外貌」和「大脑」放在一个文件里</h3>
+  <p>之前一个页面把所有 HTML/CSS/JS 混在一起。在真正的项目里，我们把<b>一个组件</b>的界面（模板）、样式（样式）、逻辑（脚本）放进一个 <code>.vue</code> 文件里，叫"单文件组件"（Single File Component，简称 SFC）。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>一个组件就像一个<b>电子产品包装盒</b>：说明书（模板）、保修卡（样式）、核心芯片（脚本）三样东西装在一个盒子里。用的时候拆开这个盒子拿来即用，不用到处找。
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>MyButton.vue · 单文件组件的三大段结构</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"><span class="cmt">&lt;!-- 第一段：模板 template，决定"外观"长什么样 --&gt;</span>
+&lt;template&gt;
+  <span class="cmt">// 一个按钮，点击触发 doClick</span>
+  &lt;button class="btn" @click="doClick"&gt;{{ label }}&lt;/button&gt;
+&lt;/template&gt;
+
+<span class="cmt">&lt;!-- 第二段：脚本 script setup，决定"大脑"怎么运作 --&gt;</span>
+&lt;script setup&gt;
+<span class="cmt">// defineProps 声明这个组件能接收的参数 label（子组件自己不写死文字）</span>
+const props = defineProps({ label: String })
+<span class="cmt">// 绑个点击方法（这里先留空占位）</span>
+function doClick() { console.log('我被点了：', props.label) }
+&lt;/script&gt;
+
+<span class="cmt">&lt;!-- 第三段：样式 style scoped，只作用在本组件，不污染别人 --&gt;</span>
+&lt;style scoped&gt;
+<span class="cmt">// scoped 属性 ="scope"(范围)，让这段 CSS 只影响本组件里的元素</span>
+.btn { padding: 8px 16px; background: #3f7cff; color: #fff; border-radius: 6px; }
+&lt;/style&gt;</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">小贴士</span>带 <code>.vue</code> 后缀的文件浏览器不能直接打开，需要工具链（Vite）把它"翻译"成浏览器能懂的 HTML/CSS/JS。这就是为什么真实项目要用工具链。
+  </div>
+
+  <h3>16.2 为什么需要工具链：从「小摊」到「工厂」</h3>
+  <p>一个人写一两百行代码，用 CDN 完全够。可一旦项目大了，就会有新需求：代码拆分成好几百个文件、要热更新（改完立刻看到效果）、要压缩打包上传服务器。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>CDN 方式像<b>路边小摊</b>：一个人、一口锅就能开工。工具链像<b>工厂流水线</b>：要烧锅炉、流水线、质检、打包车间。前期搭建麻烦，但一旦产品复杂了，工厂完胜。
+  </div>
+  <div class="tblwrap"><table>
+    <thead><tr><th>能力</th><th>CDN 单文件</th><th>工具链 Vite 工程</th></tr></thead>
+    <tbody>
+      <tr><td>拆分成多个文件</td><td>麻烦</td><td>天然支持</td></tr>
+      <tr><td>改代码立刻看到</td><td>需手动刷新页面</td><td>热更新（HMR），秒级</td></tr>
+      <tr><td>部署到服务器</td><td>原样拷贝</td><td>自动压缩、合并、优化</td></tr>
+      <tr><td>适合规模</td><td>玩具、演示、Demo</td><td>真实的网站/App</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>16.3 用 Vite 创建一个工程：几条命令搞定</h3>
+  <p>Vite 是最流行的 Vue 构建工具。创建新项目只要如下几步（需要电脑已装 Node.js，就是那个能运行 JavaScript 的运行环境）。</p>
+  <ol class="steps">
+    <li><b>建项目</b>：在终端敲 <code>npm create vue@latest my-site</code>，一路回车选择默认。</li>
+    <li><b>进目录</b>：<code>cd my-site</code>。</li>
+    <li><b>装依赖</b>：<code>npm install</code>，npm 会把项目需要的外部包下载到本地。</li>
+    <li><b>起开发服务器</b>：<code>npm run dev</code>，浏览器打开提示的网址（如 <code>http://localhost:5173</code>）。</li>
+    <li><b>改代码看热更新</b>：编辑 <code>src/App.vue</code>，页面自动刷新。</li>
+  </ol>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端命令 · 创建并运行 Vue 项目的完整流程</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"><span class="cmt"># 第1步：创建项目（my-site 是项目名字，可自定义）</span>
+npm create vue@latest my-site
+
+<span class="cmt"># 第2步：进入项目目录</span>
+cd my-site
+
+<span class="cmt"># 第3步：安装依赖（第一次运行这步会比较久，耐心等待）</span>
+npm install
+
+<span class="cmt"># 第4步：启动开发服务器，看到 http://localhost:5173 就成功了</span>
+npm run dev</pre>
+  </div>
+
+  <h3>16.4 页面之间的导航：Vue Router</h3>
+  <p>一个真正的网站有很多页（首页、关于、联系我们）。<b>Vue Router</b> 是 Vue 官方的"导航地图"，负责"在哪个地址显示哪个组件"。就像图书馆的<b>索引目录</b>：查"坐标"到对应书架取书。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>router · 配置两个页面路由</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"><span class="cmt">// 引入 Vue Router 提供的两个函数</span>
+import { createRouter, createWebHistory } from 'vue-router'
+<span class="cmt">// 引入两个页面组件</span>
+import Home from './views/Home.vue'
+import About from './views/About.vue'
+
+<span class="cmt">// 路由：配置"哪个地址 → 显示哪个组件"</span>
+const routes = [
+  { path: '/',      name: 'home',  component: Home },  <span class="cmt">// 访问 / 显示首页</span>
+  { path: '/about', name: 'about', component: About }, <span class="cmt">// 访问 /about 显示关于页</span>
+]
+
+<span class="cmt">// 创建路由实例，createWebHistory 表示用浏览器地址（好看）</span>
+const router = createRouter({ history: createWebHistory(), routes })
+export default router</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">记忆点</span>用 <code>&lt;router-link to="/about"&gt;</code> 代替普通 <code>&lt;a href&gt;</code> 做跳转；用 <code>&lt;RouterView /&gt;</code> 当"出站口"，被匹配到的组件就渲染在那里。
+  </div>
+
+  <h3>16.5 全局共享数据：Pinia</h3>
+  <p>有时候好几个组件要共享同一份数据，比如"用户登录状态""购物车里的商品"。如果各存各的，改一个别处不知道，就会乱套。<b>Pinia</b> 就是专管这种"大家共用的数据"的官方状态库。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>Pinia 就像一个<b>公司公告栏</b>：任何人把信息贴上去，全公司其他人马上都能看到，不用挨个办公室去通知。数据只有一份，改一次全局同步。
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>useCounter.js · 用 Pinia 管理一个全局计数</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"><span class="cmt">// 引入 Pinia 的 defineStore 用来定义一个"仓库"</span>
+import { defineStore } from 'pinia'
+
+<span class="cmt">// useCounter 是仓库名字，返回一个函数供组件调用</span>
+export const useCounterStore = defineStore('counter', {
+  state: () =&gt; ({ count: 0 }),          <span class="cmt">// state：全局共享的数据 count，初始 0</span>
+  actions: {                           <span class="cmt">// actions：修改这份数据的"方法"</span>
+    add(n = 1) { this.count += n }     <span class="cmt">// 给 count 加 n，默认加 1</span>
+  }
+})</pre>
+  </div>
+  <p>任何组件里只要 <code>import { useCounterStore }</code> 拿到仓库，就能读到同一个 <code>count</code>、调用同一个 <code>add</code>——一人改，处处同步。</p>
+
+  <div class="practice">
+    <span class="tag">动手练习 16·1</span>
+    <ol>
+      <li>用 Vite 创建一个新项目并让它跑起来，改一下 <code>App.vue</code> 的文字。</li>
+      <li>把页面拆成 <code>Home.vue</code> 和 <code>About.vue</code>，用 Router 在两个地址间跳转。</li>
+      <li>建一个 Pinia 仓库存一个"昵称"，在首页输入、在关于页显示，体会"全局同步"。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<section class="chapter" id="ch17">
+  <div class="chap-head">
+    <div class="chap-num">17</div>
+    <div>
+      <h2>部署上线：发布你的网站给全世界</h2>
+      <div class="desc">把写好的 Vue 项目「打包」成静态文件，免费托管到网上让大家访问</div>
+    </div>
+  </div>
+
+  <p class="lead">项目写完了不发布，别人永远看不到。这一章教你：把开发中的工程<b>构建（打包）</b>成一组浏览器可直接运行的文件，再<b>上传到免费托管平台</b>（GitHub Pages / Netlify），让网址可以被全世界打开。</p>
+
+  <h3>17.1 什么是「构建」：把半成品加工成成品</h3>
+  <p>开发时我们的文件又长又含注释、还拆成几万个文件，浏览器一个个加载会很慢。<b>构建（build）</b>由构建工具自动完成三件事：<b>压缩</b>（删掉空格注释让体积变小）、<b>合并</b>（把一堆 JS 合并成少数几个文件）、<b>优化</b>（处理资源、加版本号）。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>开发就像<b>厨师的后厨</b>：砧板、菜、调料散落各处，方便随时改。构建就像<b>端上桌的成品菜</b>：摆盘精致、直接能吃，但没法再回锅改配方。发布上去的就是"成品菜"。
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端命令 · 构建生产版本</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"><span class="cmt"># 第1步：执行构建，生成本地预览也行、上传部署也行的"成品"</span>
+npm run build
+
+<span class="cmt"># 第2步：构建完成后，会多出一个 dist 文件夹</span>
+<span class="cmt"># 以后你要部署的就是这个 dist 文件夹里的全部文件</span></pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">检查</span>构建完在项目根目录会看到 <code>dist/</code> 文件夹。里面就是 HTML/CSS/JS 的"成品"。记住：上传网站 = 上传这个 <code>dist</code> 文件夹，其他开发文件都不用传。
+  </div>
+
+  <h3>17.2 部署到 GitHub Pages（免费）</h3>
+  <p>GitHub Pages 是 GitHub 提供的免费静态网站托管。把 <code>dist</code> 里的文件推到仓库，就能得到一个在线网址。步骤如下（假设你已有 GitHub 账号）：</p>
+  <ol class="steps">
+    <li><b>建仓库</b>：在 GitHub 官网新建一个 Repository（仓库），名字随意，比如 <code>my-vue-site</code>。</li>
+    <li><b>推送成品</b>：进到 <code>dist</code> 文件夹，用 Git 把里面文件推到仓库（或直接在仓库网页上传 dist 里的文件）。</li>
+    <li><b>开启 Pages</b>：进仓库 <b>Settings → Pages</b>，Source 选 <code>main</code> 分支 + <code>/</code>(root) 路径，保存。</li>
+    <li><b>等待</b>：等 1~2 分钟，提示部署成功，网址形如 <code>https://你的用户名.github.io/my-vue-site/</code>。</li>
+    <li><b>访问验证</b>：浏览器打开网址，能看到你构建出来的首页就成功了。</li>
+  </ol>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端命令 · 把 dist 推送到 GitHub（Git 基本操作回顾）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"><span class="cmt"># 前提：你已经在网站根目录完成了 git 初始化并配置好远程仓库</span>
+
+<span class="cmt"># 第1步：把改动全部加入暂存区（. 表示全部文件）</span>
+git add .
+
+<span class="cmt"># 第2步：提交，写一句说明这次改了什么</span>
+git commit -m "fix: 修复首页样式"
+
+<span class="cmt"># 第3步：推送到远程 main 分支，GitHub Pages 收到就会自动更新</span>
+git push origin main</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">注意</span>GitHub Pages 免费、无需数据库、纯静态——非常适合我们的场景。但它的网址是公开的（任何人可访问），如果你要"只有自己能看"，需要额外的密码锁方案（比如用 Netlify 的访问密码，或把仓库设私有并自己部署）。
+  </div>
+
+  <h3>17.3 部署到 Netlify（免费、支持密码锁）</h3>
+  <p>Netlify 也是免费托管，优势是：连 GitHub 仓库、每次 push 自动更新，而且免费版提供<b>访问密码保护</b>。如果你需要"上了密码别人才看得到"，这条路径很合适。</p>
+  <ol class="steps">
+    <li><b>注册登录</b>：去 <code>netlify.com</code> 用 GitHub 账号登录。</li>
+    <li><b>导入项目</b>：点 <b>Add new site → Import an existing project</b>，选你的 GitHub 仓库。</li>
+    <li><b>填构建设置</b>：Build command 填 <code>npm run build</code>，Publish directory 填 <code>dist</code>，然后 Deploy。</li>
+    <li><b>部署完成</b>：得到形如 <code>https://xxxxx.netlify.app</code> 的网址。</li>
+    <li><b>（可选）上密码锁</b>：在 Site settings → Access control 里开启 Basic Auth（需在项目根目录放 <code>netlify.toml</code>，配置用户名和密码哈希）。</li>
+  </ol>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>netlify.toml · 开启访问密码保护的配置示例</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"><span class="cmt"># Netlify 配置文件：告诉它怎么构建、以及开不开密码锁</span>
+[build]
+  command = "npm run build"   <span class="cmt"># 构建命令：生成成品</span>
+  publish = "dist"            <span class="cmt"># 发布目录：打包结果在 dist 里</span>
+
+<span class="cmt"># password_protection 块：开启"访问密码保护"</span>
+[build.environment]
+  <span class="cmt"># 下面两行告诉 Netlify 用哪个账号和密码哈希</span>
+  NETLIFY_BASIC_AUTH_USER = "wangxing"     <span class="cmt"># 访问用户名</span>
+  NETLIFY_BASIC_AUTH_PASSWORD = "$2a$..."  <span class="cmt"># 密码用 bcrypt 哈希（不存明文）</span></pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">提示</span>密码哈希不是让你手写，Netlify 后台/或搜索"在线生成 bcrypt 哈希"工具来生成，再把结果填进去。这是<b>真实的服务器级密码锁</b>，比前端遮罩安全得多。
+  </div>
+
+  <h3>17.4 部署后的小事：更新、缓存、404 页面</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>小问题</th><th>怎么回事</th><th>怎么办</th></tr></thead>
+    <tbody>
+      <tr><td>改了代码没变化</td><td>浏览器缓存了旧文件</td><td>强刷 <code>Ctrl + Shift + R</code>，或部署前给资源加版本号</td></tr>
+      <tr><td>子路径 404</td><td>路由用 history 模式在服务器没配置回退</td><td>改用 hash 路由，或用 GitHub Pages 自带的 404 兜底</td></tr>
+      <tr><td>图片/样式路径错</td><td>用了绝对路径</td><td>改用<b>相对路径</b>（<code>./</code>），避免子目录部署失效</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>17.5 收尾：回顾你这一路学到了什么</h3>
+  <p>恭喜！走完这份教程，你已经掌握了 Vue 3 的核心：<b>创建应用</b>（第2章）、<b>模板语法</b>（第3章）、<b>响应式数据 ref/reactive</b>（第4章）、<b>计算属性与侦听器</b>（第5章）、<b>事件处理</b>（第6章）、<b>条件与列表渲染</b>（第7章）、<b>表单绑定</b>（第8章）、<b>组件</b>（第9章）、<b>Props 与事件</b>（第10章）、<b>插槽</b>（第11章）、<b>生命周期</b>（第12章）、<b>组合式 API</b>（第13章）、<b>依赖注入</b>（第14章）、<b>过渡与动画</b>（第15章）、<b>工具链</b>（第16章）、以及现在的<b>部署上线</b>。</p>
+  <div class="callout info">
+    <span class="tag">下一步建议</span>学完基础，最好的方式是<b>做一个属于你自己的小项目</b>：比如做一份"待办清单"或"记账本"，强制自己用上响应式、组件、事件、生命周期。遇到不会的就查 <a href="https://cn.vuejs.org/" target="_blank">Vue 官方中文文档</a>。Practice makes perfect（熟能生巧）。
+  </div>
+
+  <div class="practice">
+    <span class="tag">动手练习 17·1</span>
+    <ol>
+      <li>用 <code>npm run build</code> 构建你的项目，找到 <code>dist</code> 文件夹。</li>
+      <li>把 <code>dist</code> 推到 GitHub，开启 Pages，得到一个在线网址。</li>
+      <li>（可选）尝试在 Netlify 上部署，并开启访问密码，体验"别人要输密码才能看"。</li>
+    </ol>
+  </div>
+
+  <div class="callout analogy">
+    <span class="tag">最后一句话</span>学编程就像<b>学骑自行车</b>：看再多教程、看别人骑得多好，都比不上你自己摔一次、再蹬起来那一瞬间来得实在。现在，去动手吧！
+  </div>
+  <div class="chapter-end">· · · 完 · · ·</div>
+</section>
+
+</div>
+</main>
+
+<button id="totop" aria-label="返回顶部">↑</button>
+<footer class="site-foot" style="position:relative;z-index:1">
+  <div style="max-width:880px;margin:0 auto;padding:0 56px">
+    本教程内容基于 Vue.js 官方文档整理讲解，用于个人学习。<br>
+    官网：<a href="https://cn.vuejs.org/" target="_blank">cn.vuejs.org</a> ｜ 中文文档：<a href="https://cn.vuejs.org/guide/introduction.html" target="_blank">官方指南</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // ---------- 复制代码按钮 ----------
+  var btns = Array.prototype.slice.call(document.querySelectorAll('.copybtn'));
+  btns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var wrap = btn.closest('.codewrap');
+      var pre = wrap ? wrap.querySelector('pre.code') : null;
+      if (!pre) return;
+      var txt = pre.innerText;
+      function done(ok) { btn.textContent = ok ? '已复制 ✓' : '复制失败'; setTimeout(function () { btn.textContent = '复制代码'; }, 1500); }
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        done(ok);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(function () { done(true); }, fallback);
+      } else { fallback(); }
+    });
+  });
+
+  // ---------- 侧边栏当前章节高亮 ----------
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav a[href^="#"]'));
+  var map = {};
+  links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  function spy() {
+    var cur = secs.length ? secs[0].id : null;
+    for (var i = 0; i < secs.length; i++) {
+      if (secs[i].getBoundingClientRect().top <= 160) cur = secs[i].id;
+    }
+    links.forEach(function (a) { a.classList.remove('active'); });
+    if (cur && map[cur]) map[cur].classList.add('active');
+  }
+
+  // ---------- 顶部阅读进度条 ----------
+  var bar = document.getElementById('progress');
+  function prog() {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max * 100) : 0) + '%';
+  }
+
+  // ---------- 返回顶部按钮 ----------
+  var topBtn = document.getElementById('totop');
+  topBtn.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ---------- 移动端目录开关 ----------
+  var sidebar = document.getElementById('sidebar');
+  var mask = document.getElementById('mask');
+  var menuBtn = document.getElementById('menu');
+  function closeMenu() { sidebar.classList.remove('open'); mask.classList.remove('show'); }
+  menuBtn.addEventListener('click', function () {
+    sidebar.classList.toggle('open');
+    mask.classList.toggle('show');
+  });
+  mask.addEventListener('click', closeMenu);
+  links.forEach(function (a) { a.addEventListener('click', closeMenu); });
+
+  window.addEventListener('scroll', function () {
+    spy(); prog();
+    if (window.scrollY > 600) { topBtn.classList.add('show'); }
+    else { topBtn.classList.remove('show'); }
+  }, { passive: true });
+
+  spy(); prog();
+})();
+</script>
+</body>
+</html>

@@ -5,32 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>我的教程站 · 学习资料导航</title>
 <link rel="stylesheet" href="assets/style.css">
-<style>
-/* ===== 密码遮罩 ===== */
-#gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#f8fafc;font-family:"Inter","PingFang SC","Microsoft YaHei",sans-serif}
-#gate-box{width:min(360px,88vw);background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:34px 28px;text-align:center;box-shadow:0 20px 40px -18px rgba(15,23,42,.22)}
-#gate-brand{width:52px;height:52px;margin:0 auto 14px;border-radius:14px;background:linear-gradient(135deg,#8b5cf6,#6366f1);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800}
-#gate-box h2{font-size:18px;font-weight:800;color:#111827;margin-bottom:6px}
-#gate-box p{font-size:13px;color:#64748b;margin-bottom:20px}
-#gate-input{width:100%;padding:12px 14px;border:1px solid #e2e8f0;border-radius:10px;font-size:15px;outline:none;box-sizing:border-box;color:#111827;transition:border-color .15s,box-shadow .15s}
-#gate-input:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,.16)}
-#gate-btn{width:100%;margin-top:12px;padding:12px 0;border:none;border-radius:10px;background:linear-gradient(135deg,#8b5cf6,#6366f1);color:#fff;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s}
-#gate-btn:hover{opacity:.9}
-#gate-err{color:#dc2626;font-size:12.5px;min-height:18px;margin-top:12px}
-</style>
 </head>
 <body>
-
-<div id="gate">
-  <div id="gate-box">
-    <div id="gate-brand">学</div>
-    <h2>个人教程站</h2>
-    <p>请输入访问密码查看内容</p>
-    <input id="gate-input" type="password" placeholder="访问密码" autocomplete="off">
-    <button id="gate-btn">进入</button>
-    <div id="gate-err"></div>
-  </div>
-</div>
 
 <header class="navbar">
   <div class="container nav-inner">
@@ -86,59 +62,6 @@
   </div>
 </footer>
 
-<script>
-  // ===== 密码遮罩逻辑 =====
-  // 说明：这是一道"前端遮罩"，密码以 SHA-256 摘要形式嵌入源码，访问正确则放行。
-  // 它能拦住普通访客，但懂技术、会看网页源码/DevTools 的人仍可绕过。
-  (function () {
-    var PASSWORD_HASH = "811aa9c1cde36c92b4e93bd069f5909b8ee79ee95a89411920404e894f4bc95e"; // sha256("mytutorial2026")
-    var gate = document.getElementById('gate');
-    var input = document.getElementById('gate-input');
-    var btn = document.getElementById('gate-btn');
-    var err = document.getElementById('gate-err');
-
-    function sha256(str) {
-      // 简易实现：使用 Web Crypto API（现代浏览器均支持）
-      if (window.crypto && window.crypto.subtle) {
-        return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (buf) {
-          return Array.prototype.map.call(new Uint8Array(buf), function (b) {
-            return ('0' + b.toString(16)).slice(-2);
-          }).join('');
-        });
-      }
-      return Promise.resolve(plainFallback(str));
-    }
-    function plainFallback(s) {
-      // 仅当浏览器不支持 WebCrypto 时的弱回退（罕见）
-      var h = 0;
-      for (var i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) | 0; }
-      return 'f' + (h >>> 0).toString(16);
-    }
-
-    // 已通过则直接显示
-    if (sessionStorage.getItem('gate_ok') === '1') { gate.style.display = 'none'; }
-
-    function attempt() {
-      var val = input.value;
-      if (!val) { err.textContent = '请输入密码'; return; }
-      sha256(val).then(function (hash) {
-        if (hash === PASSWORD_HASH) {
-          sessionStorage.setItem('gate_ok', '1');
-          gate.style.display = 'none';
-          err.textContent = '';
-        } else {
-          err.textContent = '密码错误，请重试';
-          input.value = '';
-          input.focus();
-        }
-      });
-    }
-
-    btn.addEventListener('click', attempt);
-    input.addEventListener('keydown', function (e) { if (e.key === 'Enter') attempt(); });
-    input.focus();
-  })();
-</script>
 <script src="assets/app.js"></script>
 </body>
 </html>

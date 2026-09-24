@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f7f9">
+<meta name="description" content="WSL 零基础完全教程：类比讲解、每行代码带注释，Windows 与 Linux 两大世界互通全覆盖。">
+<title>WSL 零基础完全教程 · 在 Windows 里住进一个 Linux</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  background:#f6f7f9; color:#28303b; font-size:16.5px; line-height:1.95;
+  -webkit-font-smoothing:antialiased;
+}
+::selection { background:#c2ede8; }
+a { color:#0f766e; text-decoration:none; }
+a:hover { text-decoration:underline; }
+section[id] { scroll-margin-top:24px; }
+code { font-family:"JetBrains Mono",Consolas,"Courier New",monospace; }
+
+/* 顶部进度条 */
+#progress { position:fixed; top:0; left:0; height:3px; width:0; background:linear-gradient(90deg,#0d9488,#2dd4bf); z-index:1200; }
+
+/* ============ 侧边栏 ============ */
+.sidebar { position:fixed; top:0; left:0; bottom:0; width:282px; background:#fff; border-right:1px solid #e7ebf0; overflow-y:auto; z-index:1100; padding:30px 0 40px; }
+.brand { padding:0 26px 24px; border-bottom:1px solid #eef1f5; margin-bottom:14px; }
+.logo { display:flex; align-items:center; gap:12px; }
+.logo-mark { width:44px; height:44px; border-radius:12px; background:linear-gradient(135deg,#0d9488,#2dd4bf); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; letter-spacing:.5px; box-shadow:0 6px 14px rgba(13,148,136,.25); }
+.logo-txt b { display:block; font-size:17px; color:#1f2733; }
+.logo-txt span { font-size:12px; color:#8a95a5; letter-spacing:1px; }
+.nav-cap { padding:18px 26px 8px; font-size:12px; color:#9aa5b4; letter-spacing:2px; font-weight:600; }
+.nav a { display:flex; align-items:baseline; gap:10px; padding:8.5px 26px 8.5px 23px; color:#5c6878; font-size:14px; border-left:3px solid transparent; transition:.15s; }
+.nav a .n { font-family:Consolas,monospace; font-size:11.5px; color:#a8b2c1; }
+.nav a:hover { color:#0f766e; background:#eff9f7; text-decoration:none; }
+.nav a.active { color:#0f766e; border-left-color:#0d9488; background:#e6f6f4; font-weight:600; }
+.nav a.active .n { color:#14a08f; }
+.side-foot { margin-top:26px; padding:16px 26px 0; border-top:1px solid #eef1f5; font-size:12px; color:#9aa5b4; line-height:1.9; }
+
+/* ============ 主区域 ============ */
+main { margin-left:282px; }
+.container { width:100%; max-width:880px; margin:0 auto; padding:0 56px 140px; }
+
+/* ---- 宽屏 / 超宽屏自适应：内容区随屏幕加宽，字号与组件同步放大 ---- */
+@media (min-width:1500px) {
+  body { font-size:17px; }
+  .container { max-width:1100px; }
+  pre.code { font-size:14.5px; }
+}
+@media (min-width:1900px) {
+  body { font-size:18px; }
+  .container { max-width:1360px; padding:0 64px 140px; }
+  .sidebar { width:320px; }
+  main { margin-left:320px; }
+  .nav a { font-size:15px; padding:9.5px 26px 9.5px 23px; }
+  .nav-cap { font-size:13px; }
+  .hero h1 { font-size:56px; }
+  .hero .sub { font-size:19px; max-width:800px; }
+  .chap-head h2 { font-size:32px; }
+  h3 { font-size:23px; }
+  pre.code { font-size:15px; }
+  pre.output { font-size:14px; }
+  .codehead { font-size:13.5px; }
+  .copybtn { font-size:13px; }
+  .callout { font-size:16.5px; }
+  table { font-size:15.5px; }
+  th { font-size:14px; }
+  .os { font-size:13.5px; }
+  kbd { font-size:14px; }
+  .stat b { font-size:30px; }
+  .stat span { font-size:14px; }
+  figure.dg figcaption { font-size:14px; }
+}
+@media (min-width:2500px) {
+  body { font-size:19px; }
+  .container { max-width:1700px; padding:0 80px 140px; }
+  .sidebar { width:344px; }
+  main { margin-left:344px; }
+  .hero h1 { font-size:64px; }
+  .chap-head h2 { font-size:36px; }
+  h3 { font-size:25px; }
+  pre.code { font-size:16px; }
+  pre.output { font-size:15px; }
+  .callout { font-size:18px; }
+  table { font-size:17px; }
+  .stat b { font-size:34px; }
+  .os { font-size:15px; }
+}
+@media (min-width:3300px) {
+  body { font-size:20px; }
+  .container { max-width:2100px; padding:0 96px 140px; }
+  .hero h1 { font-size:74px; }
+}
+
+/* Hero */
+.hero { padding:92px 0 8px; }
+.hero-kicker { display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; letter-spacing:2px; color:#0f766e; background:#e6f6f4; border:1px solid #b8e4df; padding:6px 16px; border-radius:999px; }
+.hero h1 { margin:26px 0 18px; font-size:clamp(32px,4.6vw,50px); line-height:1.28; color:#1c2430; letter-spacing:.5px; font-weight:800; }
+.hero h1 em { font-style:normal; color:#0d9488; }
+.hero .sub { font-size:18px; color:#5c6878; max-width:640px; line-height:1.9; }
+.stats { display:flex; flex-wrap:wrap; margin-top:34px; background:#fff; border:1px solid #e7ebf0; border-radius:16px; overflow:hidden; box-shadow:0 4px 16px rgba(24,34,56,.05); }
+.stat { flex:1 1 150px; padding:22px 10px; text-align:center; border-right:1px solid #eef1f5; }
+.stat:last-child { border-right:0; }
+.stat b { display:block; font-size:26px; color:#0d9488; font-weight:800; }
+.stat span { font-size:13px; color:#8a95a5; }
+
+/* 章节 */
+.chapter { margin-top:104px; }
+.chap-head { display:flex; align-items:center; gap:20px; padding-bottom:22px; border-bottom:1px solid #e7ebf0; margin-bottom:34px; }
+.chap-num { flex:none; width:58px; height:58px; border-radius:15px; background:linear-gradient(135deg,#0d9488,#2dd4bf); color:#fff; font-size:24px; font-weight:800; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(13,148,136,.22); }
+.chap-head h2 { font-size:29px; line-height:1.35; color:#1c2430; font-weight:800; }
+.chap-head .desc { margin-top:6px; font-size:14.5px; color:#8a95a5; font-weight:400; line-height:1.7; }
+
+h3 { margin:54px 0 6px; font-size:21.5px; color:#1c2430; display:flex; align-items:center; gap:10px; font-weight:700; }
+h3::before { content:""; flex:none; width:7px; height:20px; border-radius:3px; background:linear-gradient(#14b8a6,#0d9488); }
+h4 { margin:34px 0 4px; font-size:17px; color:#2c3644; font-weight:700; }
+p { margin:16px 0; }
+.lead { font-size:17px; color:#5c6878; }
+ul.plain { margin:14px 0 14px 4px; padding-left:22px; }
+ul.plain li { margin:8px 0; }
+
+p code, li code, td code, th code, .callout code { background:#eef1f5; color:#0d7d72; padding:2px 7px; border-radius:6px; font-size:.88em; }
+
+/* ============ 代码块 ============ */
+.codewrap { margin:26px 0; border-radius:14px; overflow:hidden; border:1px solid #232e44; box-shadow:0 10px 30px rgba(18,26,44,.14); }
+.codehead { display:flex; align-items:center; justify-content:space-between; background:#1a2334; color:#8fa0bb; padding:9px 16px; font-size:12.5px; font-family:Consolas,monospace; }
+.codehead .lab { display:flex; align-items:center; gap:10px; }
+.codehead .dots { display:flex; gap:6px; }
+.codehead .dots i { width:10px; height:10px; border-radius:50%; }
+.codehead .dots i:nth-child(1){ background:#ff5f56; }
+.codehead .dots i:nth-child(2){ background:#ffbd2e; }
+.codehead .dots i:nth-child(3){ background:#27c93f; }
+.copybtn { background:#2a3550; color:#aebdd4; border:1px solid #37435f; padding:4px 12px; border-radius:7px; cursor:pointer; font-size:12px; font-family:inherit; transition:.15s; }
+.copybtn:hover { background:#0d9488; border-color:#0d9488; color:#fff; }
+pre.code { background:#151d30; color:#dde6f2; padding:18px 22px; overflow-x:auto; font-size:14px; line-height:1.95; font-family:Consolas,"JetBrains Mono",monospace; margin:0; }
+pre.code .cmt { color:#7ee787; }
+pre.code .kw { color:#82b8ff; }
+pre.code .pr { color:#5c6c86; }
+pre.output { background:#1b2438; color:#9db0ca; padding:14px 22px 16px; overflow-x:auto; font-size:13px; line-height:1.85; font-family:Consolas,monospace; border-top:1px dashed #32405c; margin:0; }
+pre.output::before { content:"运行效果（示意，注释为中文标注）"; display:block; color:#6a7a95; font-size:11.5px; margin-bottom:8px; letter-spacing:1px; }
+pre.code::-webkit-scrollbar, pre.output::-webkit-scrollbar { height:8px; }
+pre.code::-webkit-scrollbar-thumb, pre.output::-webkit-scrollbar-thumb { background:#2e3b57; border-radius:4px; }
+
+/* ============ 提示框 ============ */
+.callout { position:relative; border-radius:13px; padding:20px 22px 20px 64px; margin:28px 0; font-size:15.5px; line-height:1.9; }
+.callout::before { position:absolute; left:18px; top:20px; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; }
+.callout .tag { display:inline-block; font-weight:800; margin-right:6px; }
+.callout.analogy { background:#fff8e9; border:1px solid #f2ddb0; color:#6b5518; }
+.callout.analogy::before { background:#f0a92e; content:"喻"; }
+.callout.tip { background:#ecf8f0; border:1px solid #c2e6cd; color:#1e5c33; }
+.callout.tip::before { background:#2f9e5f; content:"技"; }
+.callout.warn { background:#fdf0eb; border:1px solid #f4c9b8; color:#8a3319; }
+.callout.warn::before { background:#e8542f; content:"警"; }
+.callout.info { background:#edf3fc; border:1px solid #c8d9f2; color:#274a7d; }
+.callout.info::before { background:#4a7fd4; content:"注"; }
+.callout code { background:rgba(255,255,255,.75); color:inherit; }
+
+.practice { border:1.5px dashed #8fd8cf; background:#f4fbfa; border-radius:13px; padding:20px 24px; margin:30px 0; color:#3f4f4d; }
+.practice .tag { color:#0f766e; font-weight:800; letter-spacing:1px; font-size:13px; display:block; margin-bottom:8px; }
+.practice ol { padding-left:22px; }
+.practice ol li { margin:6px 0; }
+
+/* ============ 操作系统标签 ============ */
+.os { display:inline-block; padding:3px 12px; border-radius:999px; font-size:12.5px; font-weight:700; letter-spacing:.5px; margin-right:6px; vertical-align:1px; }
+.os.win { background:#e8f1fc; color:#1263c3; border:1px solid #c4d9f4; }
+.os.linux { background:#2c3543; color:#f2c94c; border:1px solid #2c3543; }
+.os.both { background:#edf7ef; color:#227a43; border:1px solid #c8e8d2; }
+.osgrid { display:grid; grid-template-columns:1fr 1fr; gap:22px; margin:26px 0; }
+.oscard { background:#fff; border:1px solid #e7ebf0; border-radius:16px; padding:24px 24px 10px; box-shadow:0 4px 16px rgba(24,34,56,.05); }
+.oscard .os-head { display:flex; align-items:center; margin-bottom:4px; }
+.oscard h4 { margin:0; font-size:16.5px; }
+.oscard .codewrap { margin:16px 0; }
+
+/* ============ 表格 ============ */
+.tblwrap { overflow-x:auto; margin:26px 0; border-radius:13px; border:1px solid #e7ebf0; background:#fff; box-shadow:0 4px 16px rgba(24,34,56,.05); }
+table { width:100%; border-collapse:collapse; font-size:14.5px; line-height:1.85; min-width:520px; }
+th { background:#f2f5f9; color:#3b4656; text-align:left; padding:12px 18px; font-size:13.5px; letter-spacing:.5px; border-bottom:1px solid #e3e9f0; white-space:nowrap; }
+td { padding:13px 18px; border-bottom:1px solid #eef2f6; vertical-align:top; color:#3b4656; }
+tr:last-child td { border-bottom:0; }
+td code { white-space:nowrap; }
+
+/* 步骤列表 */
+ol.steps { list-style:none; counter-reset:s; margin:22px 0; }
+ol.steps li { counter-increment:s; position:relative; padding:0 0 18px 46px; }
+ol.steps li::before { content:counter(s); position:absolute; left:0; top:1px; width:30px; height:30px; border-radius:50%; background:#e6f6f4; color:#0f766e; border:1.5px solid #9fd9d2; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:14px; }
+ol.steps li b { color:#1c2430; }
+
+/* 图 */
+figure.dg { background:#fff; border:1px solid #e7ebf0; border-radius:18px; padding:30px 26px 18px; margin:30px 0; box-shadow:0 4px 16px rgba(24,34,56,.05); text-align:center; }
+figure.dg svg { max-width:100%; height:auto; }
+figure.dg figcaption { margin-top:14px; font-size:13px; color:#8a95a5; }
+
+kbd { display:inline-block; background:#fff; border:1px solid #cfd7e2; border-bottom-width:2.5px; border-radius:7px; padding:1px 9px; font-size:13px; font-family:inherit; color:#333e4e; margin:0 2px; }
+
+.chapter-end { text-align:center; color:#c3ccd8; letter-spacing:10px; margin:56px 0 0; font-size:15px; }
+
+footer.site-foot { margin-top:90px; padding-top:28px; border-top:1px solid #e7ebf0; color:#9aa5b4; font-size:13.5px; line-height:2; }
+
+/* 返回顶部 */
+#totop { position:fixed; right:26px; bottom:26px; width:46px; height:46px; border-radius:50%; background:#fff; border:1px solid #e0e6ee; color:#5c6878; font-size:18px; cursor:pointer; box-shadow:0 6px 20px rgba(24,34,56,.12); opacity:0; visibility:hidden; transform:translateY(8px); transition:.25s; z-index:900; }
+#totop.show { opacity:1; visibility:visible; transform:none; }
+#totop:hover { color:#0d9488; border-color:#9fd9d2; }
+
+/* 汉堡按钮 & 遮罩 */
+#menu { display:none; position:fixed; top:16px; left:16px; z-index:1300; width:44px; height:44px; border-radius:12px; background:#fff; border:1px solid #e0e6ee; box-shadow:0 6px 20px rgba(24,34,56,.14); cursor:pointer; padding:12px 10px; }
+#menu span { display:block; height:2.5px; background:#3b4656; border-radius:2px; margin:5.5px 0; transition:.25s; }
+#mask { display:none; position:fixed; inset:0; background:rgba(18,26,44,.45); z-index:1050; }
+
+@media (max-width:1180px) {
+  .sidebar { transform:translateX(-100%); transition:.28s; box-shadow:0 0 40px rgba(0,0,0,.2); }
+  .sidebar.open { transform:none; }
+  #menu { display:block; }
+  #mask.show { display:block; }
+  main { margin-left:0; }
+  .container { padding:0 26px 120px; }
+  .hero { padding-top:84px; }
+}
+@media (max-width:760px) {
+  .osgrid { grid-template-columns:1fr; }
+  .chap-head h2 { font-size:24px; }
+  .chap-num { width:48px; height:48px; font-size:20px; }
+  .callout { padding-left:56px; }
+  .stat b { font-size:22px; }
+  body { font-size:15.5px; }
+  .hero .sub { font-size:16px; }
+}
+@media print {
+  .sidebar, #totop, #menu, #mask, #progress, .copybtn { display:none !important; }
+  main { margin:0; }
+  .codewrap { box-shadow:none; }
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<button id="menu" aria-label="打开目录"><span></span><span></span><span></span></button>
+<div id="mask"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="logo">
+      <div class="logo-mark">WSL</div>
+      <div class="logo-txt"><b>WSL 完全教程</b><span>零基础友好版</span></div>
+    </div>
+  </div>
+  <div class="nav-cap">教程目录</div>
+  <nav class="nav">
+    <a href="#top"><span class="n">00</span>导读 · 如何使用本教程</a>
+    <a href="#ch1"><span class="n">01</span>初识 WSL：Windows 里的 Linux</a>
+    <a href="#ch2"><span class="n">02</span>安装前的体检</a>
+    <a href="#ch3"><span class="n">03</span>一键安装实战</a>
+    <a href="#ch4"><span class="n">04</span>发行版管家</a>
+    <a href="#ch5"><span class="n">05</span>两大世界互访</a>
+    <a href="#ch6"><span class="n">06</span>Linux 生存命令包</a>
+    <a href="#ch7"><span class="n">07</span>软件管家 apt</a>
+    <a href="#ch8"><span class="n">08</span>权限与文件系统</a>
+    <a href="#ch9"><span class="n">09</span>网络与 SSH</a>
+    <a href="#ch10"><span class="n">10</span>效率神器：终端与 VS Code</a>
+    <a href="#ch11"><span class="n">11</span>开发环境三件套</a>
+    <a href="#ch12"><span class="n">12</span>深度管理与调优</a>
+    <a href="#ch13"><span class="n">13</span>图形界面 WSLg</a>
+    <a href="#ch14"><span class="n">14</span>常见报错急救站</a>
+    <a href="#ch15"><span class="n">15</span>最佳实践与路线</a>
+    <a href="#ch16"><span class="n">16</span>命令速查表</a>
+  </nav>
+  <div class="side-foot">先体检（02），再安装（03）；<br>卡住了直奔第 14 章。</div>
+</aside>
+
+<main>
+<div class="container">
+
+<!-- ==================== HERO ==================== -->
+<section class="hero" id="top">
+  <span class="hero-kicker">零基础友好 · 类比教学 · 双世界互通</span>
+  <h1>在 Windows 里<br>住进一个 <em>Linux</em></h1>
+  <p class="sub">不需要任何 Linux 基础。我们把「在 Windows 上跑 Linux」拆成一个个生活比喻——<b>合租公寓、翻译官、桥梁口岸</b>，再配上<b>每一行都有中文注释</b>的命令，带你从「WSL 到底是啥」一路走到「开发环境全套就绪」。</p>
+  <div class="stats">
+    <div class="stat"><b>16</b><span>个章节 · 由浅入深</span></div>
+    <div class="stat"><b>160+</b><span>条命令 · 行行有注释</span></div>
+    <div class="stat"><b>30+</b><span>个生活化类比</span></div>
+    <div class="stat"><b>2</b><span>大世界 · Windows ↔ Linux</span></div>
+  </div>
+  <div class="callout info">
+    <span class="tag">怎么用这份教程</span>
+    ① 按顺序读，别跳过第 1 章的概念和第 2 章的「体检」——它们决定后面安装是否顺利；② 教程里 <b>Windows 侧命令</b>（蓝色标签）在 PowerShell 里敲，<b>Linux 侧命令</b>（黑色标签）在 WSL 终端里敲，别敲反了；③ 装完卡住就翻第 14 章「报错急救站」；④ 想快速回忆命令，直达第 16 章速查表。
+  </div>
+</section>
+
+<!-- ==================== 第 1 章 ==================== -->
+<section class="chapter" id="ch1">
+  <div class="chap-head">
+    <div class="chap-num">01</div>
+    <div>
+      <h2>初识 WSL：Windows 里的 Linux</h2>
+      <div class="desc">用一栋「合租公寓」理解它是什么、为什么值得装、和虚拟机有啥区别</div>
+    </div>
+  </div>
+
+  <p class="lead">在敲任何命令之前，先花十分钟搞懂 WSL 是什么。这一章全是故事和比喻——但它们是后面每一条命令的「地图」。</p>
+
+  <h3>1.1 一个经典的纠结：想吃西餐，家里只有中餐厨房</h3>
+  <p>很多初学者的处境是这样的：主力电脑是 Windows（打游戏、办公、微信都靠它），但想学的东西在 Linux 上——编程课的老师说「请打开 Linux 终端」；教程里的命令全是 <code>apt install</code>；想玩的服务器、Docker、AI 工具链，说明书第一行就写着「要求 Linux 环境」。</p>
+  <p>于是摆在面前三条路，条条难受：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>方案</th><th>类比</th><th>痛在哪</th></tr></thead>
+    <tbody>
+      <tr><td><b>装双系统</b></td><td>为了吃西餐，把整个厨房拆了重装</td><td>重启才能切换系统；分区一刀切错可能伤到 Windows 数据；日常还得回 Windows 干活</td></tr>
+      <tr><td><b>传统虚拟机</b>（VMware/VirtualBox）</td><td>为了喝杯水，租了整栋楼再自己装修</td><td>要划走几 GB 内存和几十 GB 硬盘；开机像开冰箱一样慢；文件互传像跨省快递</td></tr>
+      <tr><td><b>租云服务器</b></td><td>想吃西餐直接下馆子</td><td>要花钱、要联网、没有图形界面，对新手门槛高；白嫖的随时会被收回</td></tr>
+    </tbody>
+  </table></div>
+  <p>而微软官方给出的第四条路，就是 <b>WSL（Windows Subsystem for Linux，适用于 Linux 的 Windows 子系统）</b>：不拆厨房、不租楼、不下馆子——<b>直接在自家餐厅里搭一个小小的西餐操作台</b>。</p>
+
+  <h3>1.2 WSL 是什么：请一位 Linux 房客免费合租</h3>
+  <p>WSL 的官方定义读起来很绕，我们换种说法：</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>把你的 Windows 电脑想象成一栋<b>独栋小楼</b>。WSL 做的事情是：<b>在楼里隔出一间带独立水电的公寓，免费请一位 Linux 房客常住</b>——他自带全套家具（Linux 内核与工具）、自带生活习惯（文件系统、命令行），想找他干活<b>敲一下门就行</b>（打开终端），不找他时他安静睡觉（后台静默、几乎不占资源），哪天不想合租了，一句话请他搬走（<code>wsl --unregister</code>）且<b>不留任何痕迹</b>。
+  </div>
+  <p>它最妙的地方在于「<b>像呼吸一样自然</b>」：</p>
+  <ul class="plain">
+    <li><b>不用重启</b>——Windows 和 Linux 同时在线，一个窗口切过去就是 Linux；</li>
+    <li><b>文件互通</b>——Linux 能直接读写 <code>C:\</code> 盘，Windows 也能直接翻看 Linux 的家目录；</li>
+    <li><b>程序互调</b>——Linux 里能唤起 Windows 的记事本和资源管理器，Windows 里也能一句话执行 Linux 命令；</li>
+    <li><b>随开随用</b>——首次启动秒级进入，合上盖子（关机）就一起休息。</li>
+  </ul>
+  <figure class="dg">
+    <svg viewBox="0 0 720 350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="WSL2 架构示意图">
+      <defs>
+        <marker id="a1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#0d9488"/></marker>
+      </defs>
+      <rect x="30" y="24" width="660" height="266" rx="18" fill="#ffffff" stroke="#c8d2dd" stroke-width="1.8"/>
+      <text x="360" y="52" text-anchor="middle" font-size="16" font-weight="800" fill="#3b4656">你的电脑（一栋 Windows 小楼）</text>
+      <rect x="58" y="76" width="286" height="188" rx="13" fill="#edf3fc" stroke="#c8d9f2" stroke-width="1.6"/>
+      <text x="201" y="104" text-anchor="middle" font-size="14.5" font-weight="700" fill="#274a7d">Windows 楼层（原住户）</text>
+      <rect x="78" y="120" width="246" height="42" rx="9" fill="#ffffff" stroke="#d5e2f4" stroke-width="1.3"/>
+      <text x="201" y="146" text-anchor="middle" font-size="12.5" fill="#41608f">浏览器 · Office · 微信 · 游戏</text>
+      <rect x="78" y="172" width="246" height="42" rx="9" fill="#ffffff" stroke="#d5e2f4" stroke-width="1.3"/>
+      <text x="201" y="198" text-anchor="middle" font-size="12.5" fill="#41608f">PowerShell · CMD · 资源管理器</text>
+      <rect x="78" y="216" width="246" height="34" rx="9" fill="#e0ecf9" stroke="#bcd4f0" stroke-width="1.3"/>
+      <text x="201" y="238" text-anchor="middle" font-size="12.5" font-weight="700" fill="#274a7d">Windows 内核</text>
+      <rect x="376" y="76" width="286" height="188" rx="13" fill="#e6f6f4" stroke="#b8e4df" stroke-width="1.6"/>
+      <text x="519" y="104" text-anchor="middle" font-size="14.5" font-weight="700" fill="#0f766e">WSL 公寓（Linux 房客）</text>
+      <rect x="396" y="120" width="246" height="42" rx="9" fill="#ffffff" stroke="#cdeee9" stroke-width="1.3"/>
+      <text x="519" y="146" text-anchor="middle" font-size="12.5" fill="#0c6b62">bash · apt · git · python · gcc</text>
+      <rect x="396" y="172" width="246" height="42" rx="9" fill="#ffffff" stroke="#cdeee9" stroke-width="1.3"/>
+      <text x="519" y="198" text-anchor="middle" font-size="12.5" fill="#0c6b62">Ubuntu（发行版：软件大礼包）</text>
+      <rect x="396" y="216" width="246" height="34" rx="9" fill="#d2f0ec" stroke="#a9ded7" stroke-width="1.3"/>
+      <text x="519" y="238" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f766e">真正的 Linux 内核</text>
+      <text x="344" y="140" text-anchor="middle" font-size="20" font-weight="800" fill="#0d9488">⇄</text>
+      <text x="360" y="170" text-anchor="middle" font-size="11.5" fill="#6a7686">文件互通 · 程序互调</text>
+      <text x="360" y="188" text-anchor="middle" font-size="11.5" fill="#6a7686">剪贴板共享 · localhost 互通</text>
+      <line x1="360" y1="290" x2="360" y2="312" stroke="#0d9488" stroke-width="2" marker-end="url(#a1)"/>
+      <text x="360" y="334" text-anchor="middle" font-size="12.5" fill="#5c6878">楼下共用：CPU · 内存 · 磁盘 · 网络（轻量虚拟化，按需取用，几乎零开销）</text>
+    </svg>
+    <figcaption>图 1-1 · WSL2 架构：Windows 与 Linux 同住一栋楼，共享水电（硬件），随时串门</figcaption>
+  </figure>
+
+  <h3>1.3 WSL1 与 WSL2：翻译官模式 vs 独立公寓模式</h3>
+  <p>WSL 至今有<b>两代</b>，安装时几乎总会遇到这个选择题（答案先给你：<b>无脑选 WSL2</b>，它也是如今的默认值）。但理解它们的区别，能帮你看懂后面一半的「怪现象」：</p>
+  <figure class="dg">
+    <svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="WSL1 与 WSL2 工作方式对比">
+      <defs>
+        <marker id="a2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#5c6878"/></marker>
+        <marker id="a3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#0d9488"/></marker>
+      </defs>
+      <rect x="26" y="22" width="330" height="196" rx="14" fill="#f7f9fc" stroke="#d8dfea" stroke-width="1.6"/>
+      <text x="191" y="50" text-anchor="middle" font-size="15" font-weight="800" fill="#3b4656">WSL1 · 翻译官模式</text>
+      <rect x="56" y="66" width="270" height="38" rx="9" fill="#ffffff" stroke="#ccd6e2" stroke-width="1.3"/>
+      <text x="191" y="90" text-anchor="middle" font-size="12.5" fill="#4a5568">Linux 程序（说的是 Linux 语）</text>
+      <line x1="191" y1="106" x2="191" y2="126" stroke="#5c6878" stroke-width="1.8" marker-end="url(#a2)"/>
+      <rect x="56" y="128" width="270" height="38" rx="9" fill="#fff8e9" stroke="#f0d9a8" stroke-width="1.3"/>
+      <text x="191" y="152" text-anchor="middle" font-size="12.5" font-weight="700" fill="#8a6414">翻译层（实时口译：Linux 语 → Windows 语）</text>
+      <line x1="191" y1="168" x2="191" y2="188" stroke="#5c6878" stroke-width="1.8" marker-end="url(#a2)"/>
+      <rect x="56" y="190" width="270" height="26" rx="9" fill="#e0ecf9" stroke="#bcd4f0" stroke-width="1.3"/>
+      <text x="191" y="207" text-anchor="middle" font-size="12" font-weight="700" fill="#274a7d">Windows 内核（只听得懂 Windows 语）</text>
+      <rect x="364" y="22" width="330" height="196" rx="14" fill="#f2fbf9" stroke="#b8e4df" stroke-width="1.6"/>
+      <text x="529" y="50" text-anchor="middle" font-size="15" font-weight="800" fill="#0f766e">WSL2 · 独立公寓模式（推荐）</text>
+      <rect x="394" y="66" width="270" height="52" rx="9" fill="#ffffff" stroke="#cdeee9" stroke-width="1.3"/>
+      <text x="529" y="88" text-anchor="middle" font-size="12.5" fill="#0c6b62">Linux 程序 + 你安装的所有软件</text>
+      <text x="529" y="108" text-anchor="middle" font-size="12.5" fill="#0c6b62">（说 Linux 语）</text>
+      <line x1="529" y1="120" x2="529" y2="140" stroke="#0d9488" stroke-width="1.8" marker-end="url(#a3)"/>
+      <rect x="394" y="142" width="270" height="44" rx="9" fill="#d2f0ec" stroke="#a9ded7" stroke-width="1.3"/>
+      <text x="529" y="160" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f766e">货真价实的 Linux 内核</text>
+      <text x="529" y="178" text-anchor="middle" font-size="11.5" fill="#4a8f88">（自带翻译不了的「方言」也全都会）</text>
+      <line x1="529" y1="188" x2="529" y2="208" stroke="#0d9488" stroke-width="1.8" marker-end="url(#a3)"/>
+      <rect x="394" y="190" width="270" height="26" rx="9" fill="#eef2f6" stroke="#d5dde6" stroke-width="1.3"/>
+      <text x="529" y="207" text-anchor="middle" font-size="12" font-weight="700" fill="#4a5568">轻量虚拟机（微软特制，秒开、按需吃资源）</text>
+    </svg>
+    <figcaption>图 1-2 · WSL1 靠「翻译」运行 Linux 程序；WSL2 直接跑一个真 Linux 内核，兼容性几乎 100%</figcaption>
+  </figure>
+  <div class="tblwrap"><table>
+    <thead><tr><th>对比项</th><th>WSL1（翻译官）</th><th>WSL2（独立公寓）</th></tr></thead>
+    <tbody>
+      <tr><td>有没有 Linux 内核</td><td>没有，靠翻译层代劳</td><td>有，微软官方维护的完整内核</td></tr>
+      <tr><td>软件兼容性</td><td>部分软件跑不了（翻译不出来的就罢工）</td><td>几乎 100%（Docker、大型工具链都行）</td></tr>
+      <tr><td>访问 Windows 文件（/mnt/c）</td><td><b>极快</b>（住在同一层楼，串门零成本）</td><td>较慢（跨系统「过口岸」，适合偶尔取物）</td></tr>
+      <tr><td>访问 Linux 自己的文件</td><td>较慢</td><td><b>极快</b>（ext4 文件系统原生速度）</td></tr>
+      <tr><td>内存占用</td><td>更省</td><td>动态伸缩，默认上限较大（可用配置收紧，见第 12 章）</td></tr>
+      <tr><td>推荐人群</td><td>特殊场景（如重度依赖 /mnt/c 的老设备）</td><td><b>所有人（默认就是它）</b></td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout tip">
+    <span class="tag">一句话记住</span>WSL1 是「<b>请了个翻译陪 Linux 程序在 Windows 楼里办事</b>」；WSL2 是「<b>给 Linux 单独隔了间带真发动机的公寓</b>」。翻译难免有词不达意，独立公寓才能所欲随心——所以<b>本教程全程基于 WSL2</b>（也是官方默认）。
+  </div>
+
+  <h3>1.4 WSL 能做什么、不适合做什么</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>它非常擅长</th><th>它不太合适</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>
+          · 学习 Linux 命令行（零成本练手）<br>
+          · 搭建开发环境：Python / Node.js / C/C++ / Go / Rust<br>
+          · 使用 git、SSH、curl 等命令行工具链<br>
+          · 运行 Docker 容器（新版 WSL2 原生支持）<br>
+          · 跑 GUI 图形程序（WSLg，第 13 章）<br>
+          · AI / 数据科学全家桶（CUDA 还能用上显卡）
+        </td>
+        <td>
+          · 需要独占 USB / 蓝牙等硬件直通的任务<br>
+          · 7×24 小时生产级服务（它随 Windows 作息，关机即休息）<br>
+          · 对磁盘 IO 极敏感且数据全在 C 盘的场景（跨界访问慢）<br>
+          · 想完全替代一个「纯 Linux 桌面系统」的体验
+        </td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <h3>1.5 开课前的小词典：五个必会术语</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>术语</th><th>它是什么</th><th>类比</th></tr></thead>
+    <tbody>
+      <tr><td><b>发行版</b><br>(Distro)</td><td>基于同一 Linux 内核打包的不同「套餐」，预装软件与风格各异</td><td>同一种发动机装不同品牌的车：<b>Ubuntu</b>=新手友好的全家桶、<b>Debian</b>=稳重的老款、<b>Kali</b>=装满安全工具的工程车</td></tr>
+      <tr><td><b>内核</b><br>(Kernel)</td><td>Linux 的心脏，负责调度 CPU、内存、设备</td><td>发动机——WSL2 里是一台货真价实的 Linux 发动机</td></tr>
+      <tr><td><b>终端</b><br>(Terminal)</td><td>你敲命令的那个黑窗口</td><td>驾驶舱——后面所有命令都在这里敲</td></tr>
+      <tr><td><b>挂载点</b><br>/mnt/c</td><td>Windows 的 C 盘在 Linux 世界里的「门牌号」</td><td>口岸——两个世界互相通商的关卡（第 5 章）</td></tr>
+      <tr><td><b>root 与 sudo</b></td><td>root 是 Linux 的超级管理员；sudo 是「临时借用 root 权力」的咒语</td><td>房东与「借钥匙」——装软件动系统才需要，平时用不到（第 6 章）</td></tr>
+    </tbody>
+  </table></div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 2 章 ==================== -->
+<section class="chapter" id="ch2">
+  <div class="chap-head">
+    <div class="chap-num">02</div>
+    <div>
+      <h2>安装前的体检</h2>
+      <div class="desc">两分钟确认「房子够不够格接这位房客」——省去九成的安装报错</div>
+    </div>
+  </div>
+
+  <p class="lead">WSL 安装失败的原因，90% 都能追溯到本章的两个前置条件：<b>Windows 版本太老</b>，或<b>虚拟化没开</b>。先体检、后安装，一次成功。</p>
+
+  <h3>2.1 体检第一项：Windows 版本</h3>
+  <p><span class="os win">Windows</span>按 <kbd>Win</kbd> + <kbd>R</kbd> 打开「运行」，输入 <code>winver</code> 回车；也可以在 PowerShell 里敲：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>PowerShell</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">winver                          # 弹出「关于 Windows」窗口：看第二行的版本与内部版本号
+systeminfo | findstr /C:"OS 版本"   # 命令行方式查 OS 版本（findstr 是 Windows 的文本过滤器，类似 grep）</pre>
+    <pre class="output">OS 名称:  Microsoft Windows 11 专业版
+OS 版本:  10.0.22631 暂缺 Build 22631      ← Build 号 ≥ 19041 即满足 WSL 要求</pre>
+  </div>
+  <div class="tblwrap"><table>
+    <thead><tr><th>你的系统</th><th>能否用「一键安装」</th><th>不满足怎么办</th></tr></thead>
+    <tbody>
+      <tr><td>Windows 11（任意版本）</td><td>✅ 可以</td><td>—</td></tr>
+      <tr><td>Windows 10，Build ≥ 19041（版本 2004 及以后）</td><td>✅ 可以</td><td>—</td></tr>
+      <tr><td>Windows 10，Build 18362~18363（版本 1903/1909）</td><td>⚠️ 不行，但支持 WSL2</td><td>走第 3 章的「手动安装」路线</td></tr>
+      <tr><td>更老的 Windows 10 / Windows 7</td><td>❌ 不支持 WSL2</td><td>先升级系统（设置 → Windows 更新）</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>2.2 体检第二项：虚拟化是否开启（重中之重）</h3>
+  <p>WSL2 的「轻量虚拟机」要靠 CPU 的<b>虚拟化技术</b>（Intel 叫 VT-x，AMD 叫 SVM）供电。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>虚拟化开关就像房子的<b>三相电闸</b>：WSL2 公寓里那些大功率电器全靠它。电闸没合，装修（安装）看似能走完流程，一开灯（启动发行版）就跳闸报错——最著名的报错 <code>0x80370102</code> 就是这么来的。
+  </div>
+  <h4>检查方法一：任务管理器（最直观）</h4>
+  <p>按 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> 打开任务管理器 → <b>性能</b> → <b>CPU</b>，看右下角「<b>虚拟化</b>」一栏：</p>
+  <ul class="plain">
+    <li>显示 <b>已启用</b> —— 体检通过，直接进第 3 章；</li>
+    <li>显示 <b>已禁用</b> —— 需要进 BIOS 合闸（见下方「合闸指南」）。</li>
+  </ul>
+  <h4>检查方法二：命令行</h4>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>PowerShell</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">systeminfo | findstr /C:"虚拟化"      # 在系统信息里过滤「虚拟化」行（繁/英文系统请相应换关键词）</pre>
+    <pre class="output">虚拟化: 已启用                        ← 出现「已启用」即通过
+虚拟化: 已禁用                        ← 出现「已禁用」需要进 BIOS 开启 VT</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">BIOS 合闸指南</span>重启电脑，开机 LOGO 亮起时狂按 <kbd>F2</kbd>（部分主板是 <kbd>Del</kbd>、<kbd>F10</kbd> 或 <kbd>Esc</kbd>，具体看开机画面底部的提示行）进入 BIOS → 找到 <b>Advanced / CPU Configuration</b> 类菜单 → 把 <b>Intel (VMX) Virtualization Technology</b> 或 <b>AMD SVM Mode</b> 设为 <b>Enabled</b> → 保存退出（通常 <kbd>F10</kbd>）。各品牌 BIOS 界面不同，认准 Virtualization / VT-x / SVM 这几个关键词即可。
+  </div>
+
+  <h3>2.3 学会打开「管理员终端」</h3>
+  <p>第 3 章的安装命令<b>必须以管理员身份运行</b>（要动系统功能，普通身份会被拒绝）。两种打开方式：</p>
+  <ul class="plain">
+    <li><span class="os win">Windows 11</span>右键点击「开始」按钮 → 选 <b>「终端(管理员)」</b>；</li>
+    <li><span class="os win">Windows 10</span>右键点击「开始」按钮（或按 <kbd>Win</kbd>+<kbd>X</kbd>）→ 选 <b>「Windows PowerShell(管理员)」</b>。</li>
+  </ul>
+  <p>弹出用户账户控制（UAC）询问时点「是」。怎么确认自己开的确实是管理员？试一块试金石：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>管理员 PowerShell</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">net session                     # 试金石：只有管理员身份才不会报错（普通身份会提示「拒绝访问」）</pre>
+    <pre class="output"># 管理员身份：显示会话列表或「没有项目...」——总之不报错 = 身份正确
+# 普通身份：发生系统错误 5。 拒绝访问。 ← 说明开的不是管理员，请关掉重开</pre>
+  </div>
+  <div class="practice">
+    <span class="tag">体检清单</span>
+    <ol>
+      <li>用 <code>winver</code> 确认 Build ≥ 19041（或 Windows 11）；</li>
+      <li>任务管理器确认「虚拟化：已启用」（否则先进 BIOS 合闸）；</li>
+      <li>确认会打开管理员终端，并用 <code>net session</code> 试过了身份。</li>
+    </ol>
+    <p style="margin:10px 0 0">三项全绿？下一章两分钟装完。</p>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 3 章 ==================== -->
+<section class="chapter" id="ch3">
+  <div class="chap-head">
+    <div class="chap-num">03</div>
+    <div>
+      <h2>一键安装实战</h2>
+      <div class="desc">从 wsl --install 到敲下第一条 Linux 命令——含老系统的手动路线</div>
+    </div>
+  </div>
+
+  <p class="lead">体检通过后，安装本身出乎意料地简单：<b>一条命令 + 一次重启 + 三行输入</b>。本章还附上老系统的手动路线和验证方法。</p>
+
+  <h3>3.1 主路线：wsl --install 一条命令</h3>
+  <p><span class="os win">Windows</span>打开<b>管理员</b> PowerShell（第 2 章的方法），输入：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>管理员 PowerShell</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">wsl --install                   # 官方一键安装：自动启用所需系统功能 + 下载默认发行版 Ubuntu</pre>
+    <pre class="output">正在安装: 虚拟机平台
+已成功安装 虚拟机平台。
+正在安装: 适用于 Linux 的 Windows 子系统
+已成功安装 适用于 Linux 的 Windows 子系统。
+正在下载: WSL 内核
+正在安装: WSL 内核
+已成功安装 WSL 内核。
+正在下载: Ubuntu
+请求的操作成功。直到重新启动系统前更改将不会生效。   ← 提示重启：现在就重启</pre>
+  </div>
+  <ol class="steps">
+    <li><b>执行命令</b>：如上，一条 <code>wsl --install</code>（期间联网下载，耐心等进度条走完）；</li>
+    <li><b>重启电脑</b>：看到「直到重新启动系统前更改将不会生效」即重启；</li>
+    <li><b>等 Ubuntu 开张</b>：重启后可能自动弹出 Ubuntu 黑窗口（安装收尾、解压系统文件，一两分钟）；没弹的话，去开始菜单点 <b>Ubuntu</b> 图标；</li>
+    <li><b>办理入住</b>：见下一节的三行输入。</li>
+  </ol>
+
+  <h3>3.2 入住手续：用户名与密码</h3>
+  <p><span class="os linux">WSL·Linux</span>Ubuntu 首次启动会问你要一个「<b>入住身份</b>」：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端（首次启动）</span><button class="copybtn">复制代码</button></div>
+    <pre class="output">Installation successful!       ← 系统解压完成，开始办入住
+
+Enter new UNIX username: xiaowang      ← 自拟一个 Linux 用户名：全小写字母（可带数字），别用 root
+New password:                          ← 设置密码（输入时屏幕毫无反应——这是故意的，不是卡了！）
+Retype new password:                   ← 再输一遍确认
+passwd: password updated successfully  ← 手续办完，进入系统</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">高能预警</span><b>Linux 输密码时不显示任何字符</b>（连星号都没有）——这是安全设计：不泄露密码长度。新手 90% 在这里以为自己键盘坏了。放心盲敲，敲完回车即可。这个密码以后在 <code>sudo</code> 借管理员权限时用（第 6 章），忘了也没关系，急救站 14 章有找回办法。
+  </div>
+  <p>办完手续后看到的这行，就是你的 Linux「车牌」：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="output">xiaowang@DESKTOP-ABC123:~$    ← 用户名@电脑名:当前目录$ ——~ 表示家目录；$ 结尾=普通用户（root 是 #）</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>这行提示符就像<b>房门上的小铭牌</b>：谁（xiaowang）住在哪台机器（DESKTOP-ABC123）、此刻站在哪个房间（~ 家目录）。以后迷路了看一眼铭牌就知道自己在哪。
+  </div>
+
+  <h3>3.3 验收：三条命令确认一切就绪</h3>
+  <div class="osgrid">
+    <div class="oscard">
+      <div class="os-head"><span class="os win">Windows</span><h4>PowerShell 侧验收</h4></div>
+      <div class="codewrap">
+        <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>PowerShell</span><button class="copybtn">复制代码</button></div>
+        <pre class="code">wsl -l -v                       # 列出已安装发行版：NAME / STATE / VERSION
+wsl --version                   # 查看 WSL 各组件版本（内核、WSLg 等；排查问题时展示的就是它）</pre>
+        <pre class="output">  NAME      STATE           VERSION
+* Ubuntu    Running         2         ← 星号=默认发行版；VERSION=2 表示走的是 WSL2</pre>
+      </div>
+    </div>
+    <div class="oscard">
+      <div class="os-head"><span class="os linux">WSL·Linux</span><h4>Ubuntu 侧验收</h4></div>
+      <div class="codewrap">
+        <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+        <pre class="code">lsb_release -a                  # 报出发行版身份：名字与版本号（-a = all 全套信息）
+uname -r                        # 内核版本号——WSL2 下这是货真价实的 Linux 内核
+whoami                          # 我是谁：打印当前用户名（入住时你起的那 个）</pre>
+        <pre class="output">Distributor ID: Ubuntu
+Description:    Ubuntu 22.04.x LTS     ← 你的发行版版本
+Release:        22.04
+5.15.x-microsoft-standard-WSL2       ← 内核名带 microsoft-standard-WSL2 字样
+xiaowang                             ← 当前用户</pre>
+      </div>
+    </div>
+  </div>
+
+  <h3>3.4 备用路线：老 Windows 10 的手动安装</h3>
+  <p>Build 18362~18363（版本 1903/1909）用不了 <code>wsl --install</code>，手动四步：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>管理员 PowerShell · 手动路线</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"># 第一步：启用「WSL」与「虚拟机平台」两个系统功能（dism 是 Windows 的功能管理器）
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart   # 启用子系统本体
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart             # 启用虚拟机平台（WSL2 必需）
+
+# 第二步：重启电脑（两个功能都需要重启生效）
+
+# 第三步：安装「WSL2 Linux 内核更新包」
+# 浏览器打开微软官网 WSL 文档页，下载 wsl_update_x64.msi 并双击安装（一路下一步）
+
+# 第四步：把默认体系设为 WSL2
+wsl --set-default-version 2     # 此后新装的发行版都按 WSL2 运行（老命令格式，新系统用不到）</pre>
+  </div>
+  <p>然后从 Microsoft Store 搜索安装 <b>Ubuntu</b>，首次打开同样走 3.2 的入住手续。</p>
+  <div class="callout info">
+    <span class="tag">说明</span>新系统（满足 2.1 表格前两行）看到的内核更新包说明基本已是历史——<code>wsl --install</code> 全自动代办。手动路线仅供老设备和「自动路线失败」时兜底。
+  </div>
+
+  <div class="practice">
+    <span class="tag">动手练习 01</span>
+    <ol>
+      <li>完成体检 → <code>wsl --install</code> → 重启 → 入住三行；</li>
+      <li>在 Ubuntu 里敲 <code>uname -r</code>，确认输出里带 <code>WSL2</code> 字样；</li>
+      <li>在 PowerShell 里敲 <code>wsl -l -v</code>，确认 VERSION 列是 2。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 4 章 ==================== -->
+<section class="chapter" id="ch4">
+  <div class="chap-head">
+    <div class="chap-num">04</div>
+    <div>
+      <h2>发行版管家</h2>
+      <div class="desc">像管理 App 一样管理你的 Linux「套餐」：查看、安装、切换、备份、搬家</div>
+    </div>
+  </div>
+
+  <p class="lead">一间公寓住着不过瘾？WSL 允许你同时装好几个发行版，像手机装多个 App 一样按需切换。<span class="os win">Windows</span>本章命令都在 PowerShell 敲。</p>
+
+  <h3>4.1 查看与安装</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>PowerShell</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">wsl -l -v                       # 查看本机已装的发行版：名字、运行状态、WSL 版本号
+wsl --list --online             # 列出官方支持在线安装的发行版「菜单」（各地区可选略有差异）
+wsl --install -d Debian         # 从菜单里安装 Debian（-d = distribution，指定发行版名）
+wsl --install -d Ubuntu-22.04   # 也可以精确指定版本号的 Ubuntu（和已装的可以并存）
+wsl --install -d openSUSE-Tumbleweed   # 再来一个滚动更新的 openSUSE？也没问题</pre>
+    <pre class="output">以下是可安装的有效发行版的列表：
+   Ubuntu                    Ubuntu 24.04 LTS        Debian GNU/Linux
+   Kali Linux Rolling        Ubuntu 22.04 LTS        openSUSE Tumbleweed
+...                                  ← 菜单示意：名字就是安装时 -d 后面接的参数</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">显示小怪癖</span>个别旧版本里 <code>wsl -l -v</code> 的输出「字与字之间像隔了空格」，这是旧版 WSL 输出编码的显示问题（内容本身没错）。<code>wsl --update</code> 升级 WSL 本体后即恢复正常。
+  </div>
+
+  <h3>4.2 切换、进入与转换</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>PowerShell</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">wsl                             # 裸敲 wsl：进入「默认」发行版的交互终端
+wsl -d Debian                   # 临时进入指定发行版（不改变默认，退出即回）
+wsl --set-default Debian        # 把 Debian 设为默认发行版（此后裸敲 wsl 进的就是它）
+wsl -d Debian echo hello        # 不进交互：直接在 Debian 里执行一条命令，输出即返回
+wsl --set-version Ubuntu 2      # 把某个发行版在 WSL1 / WSL2 之间转换（2 = 转为 WSL2，转换需几分钟）
+wsl --status                    # 查看默认发行版、默认体系版本等总览信息</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span><code>-d</code> 像门牌号：楼里住了几户（多发行版），<b>裸敲 <code>wsl</code> 是回自己家（默认户）</b>，<code>-d Debian</code> 是去串门。<code>--set-default</code> 则是「搬家换默认门牌」。
+  </div>
+
+  <h3>4.3 删除与卸载</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>PowerShell</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">wsl --unregister Debian         # 彻底删除该发行版：文件、设置、数据全部清除且不可恢复（慎用！）
+# 温和路线：设置 → 应用 → 找到 Debian → 卸载（仅移除程序本体，用户数据随 --unregister 才删）</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">注意</span><code>--unregister</code> 没有回收站。删之前若有舍不得的数据，先用下一节的导出打包一份。
+  </div>
+
+  <h3>4.4 整体打包与搬家：export / import</h3>
+  <p>这套命令是 WSL 的「<b>行李系统</b>」：把整套公寓（系统+软件+文件+配置）打成一个包，用于<b>备份</b>、<b>迁移到 D 盘</b>（给 C 盘减负）或<b>复制出第二套</b>。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>PowerShell</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">mkdir D:\WSL备份                # 先在 D 盘建个放行李的文件夹（PowerShell 的 mkdir 直接可用）
+wsl --export Ubuntu D:\WSL备份\ubuntu.tar   # 打包：把整个 Ubuntu 发行版导出成一个 tar 文件
+wsl --unregister Ubuntu         # （可选）删掉原来的，等下从行李里恢复/搬家重装
+wsl --import 新Ubuntu D:\WSL\新Ubuntu D:\WSL备份\ubuntu.tar --version 2   # 拆包：在 D 盘恢复一套，名叫「新Ubuntu」
+wsl -l -v                       # 查看新房客名单：新Ubuntu 已入住（VERSION 2）</pre>
+  </div>
+  <div class="callout info">
+    <span class="tag">import 的经典坑</span>导入的发行版<b>默认以 root 身份登录</b>（行李里没带你设的「默认用户」铭牌）。两步补办手续：<span class="os linux">WSL·Linux</span>先进去写一行配置，再<span class="os win">Windows</span>重启它：
+  </div>
+  <div class="osgrid">
+    <div class="oscard">
+      <div class="os-head"><span class="os linux">WSL·Linux</span><h4>第一步：写入默认用户</h4></div>
+      <div class="codewrap">
+        <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>新Ubuntu 终端（当前是 root）</span><button class="copybtn">复制代码</button></div>
+        <pre class="code">nano /etc/wsl.conf              # 编辑发行版私有配置文件（root 身份无需 sudo）
+# 在文件里写入两行（nano：写完按 Ctrl+O 回车保存，Ctrl+X 退出）：
+#   [user]                       ← 「用户」小节
+#   default=xiaowang             ← 默认登录用户改回你的名字</pre>
+      </div>
+    </div>
+    <div class="oscard">
+      <div class="os-head"><span class="os win">Windows</span><h4>第二步：重启生效</h4></div>
+      <div class="codewrap">
+        <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>PowerShell</span><button class="copybtn">复制代码</button></div>
+        <pre class="code">wsl -t 新Ubuntu                 # terminate：结束该发行版（下次启动时读取新配置）
+wsl -d 新Ubuntu                 # 再次进入：提示符已是 xiaowang@...，不再是 root</pre>
+      </div>
+    </div>
+  </div>
+
+  <h3>4.5 选哪个发行版？一张图看懂</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>发行版</th><th>性格</th><th>适合谁</th></tr></thead>
+    <tbody>
+      <tr><td><b>Ubuntu</b></td><td>新手友好、资料最多、软件最全（默认推荐）</td><td>几乎所有初学者；教程、课程几乎都拿它举例</td></tr>
+      <tr><td><b>Debian</b></td><td>Ubuntu 的「稳重老前辈」，版本更新慢但极可靠</td><td>喜欢稳定、不爱折腾的人</td></tr>
+      <tr><td><b>Kali Linux</b></td><td>预装一大柜安全/渗透测试工具</td><td>网络安全方向的学习者</td></tr>
+      <tr><td><b>openSUSE</b></td><td>滚动更新、工具链现代</td><td>想尝鲜的开发者</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout tip">
+    <span class="tag">建议</span>第一次装<b>就选默认的 Ubuntu</b>——遇到问题时能搜到的中文资料最多。玩熟了再开第二个发行版对比着玩，反正它们互不干扰。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 02</span>
+    <ol>
+      <li><code>wsl --list --online</code> 看一眼官方菜单；</li>
+      <li>把整套 Ubuntu 导出到 <code>D:\WSL备份\ubuntu.tar</code>（顺便看看文件多大——这就是你「整间公寓」的体积）；</li>
+      <li>练习 <code>wsl -t</code> 停止发行版，再敲 <code>wsl -l -v</code> 观察状态从 Running 变为 Stopped。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 5 章 ==================== -->
+<section class="chapter" id="ch5">
+  <div class="chap-head">
+    <div class="chap-num">05</div>
+    <div>
+      <h2>两大世界互访</h2>
+      <div class="desc">Windows 与 Linux 之间的桥梁口岸：文件互通、程序互调、剪贴板共享</div>
+    </div>
+  </div>
+
+  <p class="lead">WSL 最香的地方不是「有了 Linux」，而是「<b>两个世界随时串门</b>」。本章讲清所有互访通道——学完你会发现双系统用户羡慕哭了。</p>
+
+  <h3>5.1 口岸总图：文件怎么互相看见</h3>
+  <figure class="dg">
+    <svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Windows 与 WSL 文件互访桥梁图">
+      <defs>
+        <marker id="e1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#0d9488"/></marker>
+        <marker id="e2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#4a7fd4"/></marker>
+      </defs>
+      <rect x="46" y="60" width="250" height="180" rx="14" fill="#edf3fc" stroke="#c8d9f2" stroke-width="1.6"/>
+      <text x="171" y="94" text-anchor="middle" font-size="16" font-weight="700" fill="#274a7d">Windows 世界</text>
+      <rect x="70" y="112" width="202" height="40" rx="9" fill="#ffffff" stroke="#d5e2f4" stroke-width="1.3"/>
+      <text x="171" y="137" text-anchor="middle" font-size="13" font-family="Consolas,monospace" fill="#3b4656">C:\Users\你\Desktop</text>
+      <rect x="70" y="164" width="202" height="40" rx="9" fill="#ffffff" stroke="#d5e2f4" stroke-width="1.3"/>
+      <text x="171" y="189" text-anchor="middle" font-size="13" font-family="Consolas,monospace" fill="#3b4656">D:\  以及其他盘</text>
+      <rect x="424" y="60" width="250" height="180" rx="14" fill="#e6f6f4" stroke="#b8e4df" stroke-width="1.6"/>
+      <text x="549" y="94" text-anchor="middle" font-size="16" font-weight="700" fill="#0f766e">Linux 世界（WSL）</text>
+      <rect x="448" y="112" width="202" height="40" rx="9" fill="#ffffff" stroke="#cdeee9" stroke-width="1.3"/>
+      <text x="549" y="137" text-anchor="middle" font-size="13" font-family="Consolas,monospace" fill="#2c4a46">/home/xiaowang（家目录）</text>
+      <rect x="448" y="164" width="202" height="40" rx="9" fill="#ffffff" stroke="#cdeee9" stroke-width="1.3"/>
+      <text x="549" y="189" text-anchor="middle" font-size="13" font-family="Consolas,monospace" fill="#2c4a46">/etc、/usr 等系统目录</text>
+      <line x1="296" y1="132" x2="424" y2="132" stroke="#0d9488" stroke-width="2.4" marker-end="url(#e1)"/>
+      <text x="360" y="118" text-anchor="middle" font-size="12.5" font-weight="700" font-family="Consolas,monospace" fill="#0f766e">/mnt/c</text>
+      <text x="360" y="152" text-anchor="middle" font-size="11.5" fill="#6a7686">Linux 人看 Windows 文件</text>
+      <line x1="424" y1="200" x2="296" y2="200" stroke="#4a7fd4" stroke-width="2.4" marker-end="url(#e2)"/>
+      <text x="360" y="222" text-anchor="middle" font-size="12.5" font-weight="700" font-family="Consolas,monospace" fill="#4a7fd4">\\wsl$\Ubuntu</text>
+      <text x="360" y="240" text-anchor="middle" font-size="11.5" fill="#6a7686">Windows 人看 Linux 文件</text>
+      <text x="360" y="278" text-anchor="middle" font-size="12.5" fill="#5c6878">双向口岸随时通行——注意：跨口岸搬东西较慢，贵重「行李」（代码项目）放 Linux 家里（见 10.3）</text>
+    </svg>
+    <figcaption>图 5-1 · 双向口岸：/mnt/c 与 \\wsl$ ——两个世界互相看见对方文件的门牌号</figcaption>
+  </figure>
+
+  <h3>5.2 <span class="os linux">WSL·Linux</span>去看 Windows 的文件</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">ls /mnt/                        # 看看「口岸」目录：Windows 的每个盘符都住在这里
+cd /mnt/c/Users/Administrator/Desktop   # 走进 Windows 桌面（C: 被翻译成 /mnt/c）
+ls                              # 列出来的正是你桌面上的那些文件
+touch 我来自WSL.txt              # 在 Windows 桌面上创建一个文件——切到桌面看看，它真的在那
+explorer.exe .                  # 调用 Windows 资源管理器打开「当前 Linux 目录」（.exe 结尾的都是 Windows 程序）
+notepad.exe 我来自WSL.txt        # 用 Windows 记事本编辑 Linux 里的文件（所见即所得）
+wslpath -w ~                    # 问路工具：当前 Linux 家目录对应的 Windows 路径是什么（输出 \\wsl$\...）</pre>
+    <pre class="output">\\wsl.localhost\Ubuntu-22.04\home\xiaowang   ← wslpath 的输出：家目录在 Windows 里的「门牌号」</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span><code>/mnt/c</code> 里的 <b>mnt</b> 是 mount（挂载）的缩写——把 Windows 的 C 盘「<b>挂</b>」在 Linux 目录树的 <code>/mnt</code> 这个挂钩上，像把对面仓库的货架<b>原样搬进自家院子参观</b>：东西还是对面仓库里的，但你能直接伸手拿。
+  </div>
+
+  <h3>5.3 <span class="os win">Windows</span>去看 Linux 的文件</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>PowerShell</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">explorer.exe \\wsl$\Ubuntu-22.04\home\xiaowang   # 资源管理器直接浏览 WSL 内部（Win11 新写法 \\wsl.localhost\...）
+wsl ls /mnt/c                   # 不进交互：让默认发行版执行一条 Linux 命令，输出完就退回来
+cd C:\Users\Administrator\Desktop   # PowerShell 先切到 Windows 桌面
+wsl ls                          # 再敲 wsl ls：列出的是「当前这个 Windows 目录」的文件（路径自动翻译）</pre>
+    <pre class="output">我来自WSL.txt          ← 两个世界的「同一张桌子」，从哪边看都是它</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">魔法所在</span>在 Windows 任意目录敲 <code>wsl 命令</code>，WSL 会<b>自动把当前目录翻译成 /mnt/... 路径再执行</b>——所以「在桌面用 Linux 处理桌面文件」连路径都不用换，无缝得像同 一个系统。
+  </div>
+
+  <h3>5.4 剪贴板与好用的互通小技巧</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">echo "一段要贴给同事的文字" | clip.exe   # 把 Linux 命令的输出送进 Windows 剪贴板（之后 Ctrl+V 直接粘贴）
+powershell.exe Get-Date         # 在 Linux 里调用 Windows PowerShell 执行命令（偶尔救场很香）
+explorer.exe .                  # 再念一遍：它是「用 Windows 窗口打开 Linux 文件夹」的最快咒语</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">性能提醒</span>口岸虽好，<b>「过海关」是有成本的</b>：WSL2 访问 <code>/mnt/c</code> 的速度明显慢于访问自己的家目录（跨系统协议）。原则：<b>代码和项目放 Linux 家里（~/），偶尔来 Windows 拿个文件才走口岸</b>——详细理由与测试见 10.3。
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 6 章 ==================== -->
+<section class="chapter" id="ch6">
+  <div class="chap-head">
+    <div class="chap-num">06</div>
+    <div>
+      <h2>Linux 生存命令包</h2>
+      <div class="desc">在房客家生活的全部日常动作：走动、取物、收拾、查看说明书</div>
+    </div>
+  </div>
+
+  <p class="lead">这是教程的「Linux 半边天」：零基础也逃不掉的三十来条生存命令。每条都当一句「生活话」来记，而不是死背。<span class="os linux">WSL·Linux</span>本章全部在 Ubuntu 终端里敲。</p>
+
+  <h3>6.1 走动与查看：我在哪、这里有什么</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">pwd                             # 我在哪：打印当前目录（print working directory）
+ls                              # 这里有什么：列出当前目录的文件与文件夹
+ls -l                           # 长格式：多显示权限、大小、修改时间（权限那串第 8 章详解）
+ls -a                           # all：连隐藏文件一起列出（Linux 里 . 开头的文件默认隐身）
+ls -lh                          # human：文件大小用 K / M 等人类友好单位显示
+cd /home                        # 去 /home：Linux 的「住户门厅」，每家用户一间
+cd ~                            # 回家：~ 是「当前用户的家目录」简写（最常用的咒语之一）
+cd ..                           # 上楼：回到上一级目录（两个点 = 上一级）
+cd -                            # 返回刚才待过的目录（像电视的「返回上一频道」）
+clear                           # 清屏（也可以按快捷键 Ctrl+L）</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>Linux 的目录树是一栋<b>从根开始的大楼</b>：<code>/</code> 是大门（根目录），<code>/home/xiaowang</code> 是你的房间，<code>/etc</code> 是物业办公室，<code>/usr</code> 是公共仓库。每条 <code>cd</code> 都是在楼里「换层」。
+  </div>
+
+  <h3>6.2 取物与收拾：建、写、看、复制、改名、删</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">mkdir 我的文件夹                  # 新建文件夹（make directory）
+touch 演示.txt                    # 新建空文件（若已存在则只刷新它的时间戳，不动内容）
+echo "你好 Linux" &gt; 演示.txt     # 把一句话写入文件（&gt; 覆盖写入；&gt;&gt; 则是追加一行）
+cat 演示.txt                     # 查看文件全部内容（concatenate 缩写，日常当「打印出来」用）
+cp 演示.txt 备份.txt              # 复制文件（copy）
+mv 备份.txt 新名字.txt            # 重命名（move 兼职改名：同一个命令，换个位置就是搬家）
+mv 新名字.txt 我的文件夹/          # 移动：把文件搬进文件夹（结尾的 / 表示「这 是个文件夹」）
+rm 我的文件夹/新名字.txt            # 删除文件（remove）——Linux 没有回收站，删前想清楚！
+rm -r 我的文件夹                  # 递归删除整个文件夹及其全部内容（-r = recursive，慎用）
+cp -r 我的文件夹 副本文件夹         # 复制整个文件夹（也要 -r 递归）</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">铁律</span><code>rm</code> 是 Linux 里唯一「说到做到、概不退换」的命令——尤其 <code>rm -r</code>。删之前先 <code>ls</code> 看清楚路径，拿不准就先 <code>mv</code> 到一个「待删区」文件夹冷静一晚。另：<b>绝对不要</b>对着 <code>/</code>（根目录）执行任何递归删除。
+  </div>
+
+  <h3>6.3 找东西与查说明书</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">find ~ -name "演示*"             # 在家目录按名字找文件（* 是通配符：任意字符任意长度）
+grep "你好" 演示.txt              # 在文件里搜含「你好」的行（grep = 全局正则打印，文本搜索神器）
+head -n 5 /etc/os-release        # 看文件前 5 行（head=头）
+tail -n 5 /etc/os-release        # 看文件末 5 行（tail=尾；看日志新内容全靠它）
+wc -l 演示.txt                   # 统计文件行数（word count -lines）
+man ls                           # 打开 ls 的官方说明书（manual；按 Q 退出，和 git log 一个套路）
+ls --help                        # 说明书的速查版（比 man 短，适合快速瞄一眼）</pre>
+  </div>
+
+  <h3>6.4 查看这台「公寓」的户口与健康</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">lsb_release -a                  # 户口本：发行版名称与版本号
+uname -r                        # 发动机型号：内核版本号
+whoami                          # 我是谁：当前用户名
+uptime                          # 这次「开机」多久了
+df -h                           # 磁盘用量（h = 人类友好单位；看 / 那一行）
+free -h                         # 内存用量：WSL2 动态吃内存，这里看到的就是它吃到的量
+ps aux | head -n 10             # 看前 10 条正在运行的进程（ps=进程快照，aux=详情模式）
+history                         # 我敲过哪些命令（↑↓ 方向键也能翻，Ctrl+R 可以搜）</pre>
+  </div>
+
+  <h3>6.5 sudo：临时借管理员钥匙</h3>
+  <p>很多命令（装软件、改系统文件）只有管理员（root）有权做。Linux 的做法不是让你一直当管理员，而是<b>平时普通身份，需要时临时借钥匙</b>：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">sudo apt update                  # super user do：以管理员身份执行这一条命令
+# 它会让你输「自己的密码」确认身份（屏幕同样不显示字符，盲敲回车）
+# 密码通过后的一小段时间内再 sudo 不再重复询问（房东懒得让你反复出示证件）</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>Linux 的安全哲学是「<b>平时揣自己的钥匙，进机房才登记借万能钥匙</b>」——比「整天抱着万能钥匙到处跑」（常年 root 登录）安全得多：手滑敲错命令时，没有 sudo 的那一下会被直接拦住。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 03</span>
+    <ol>
+      <li>用 <code>pwd</code>、<code>cd ~</code>、<code>cd ..</code>、<code>cd -</code> 各走一遍，体会「门牌铭牌」的变化；</li>
+      <li>建一个文件夹 + 一个文件，对它完成「写 → 看 → 复制 → 改名 → 移动 → 删除」完整生命周期；</li>
+      <li>用 <code>man ls</code> 打开说明书，按 <kbd>Q</kbd> 退出——以后遇到任何陌生命令都先问它。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 7 章 ==================== -->
+<section class="chapter" id="ch7">
+  <div class="chap-head">
+    <div class="chap-num">07</div>
+    <div>
+      <h2>软件管家 apt</h2>
+      <div class="desc">Linux 的应用商店：一条命令安装全世界的免费软件</div>
+    </div>
+  </div>
+
+  <p class="lead">Windows 装软件要去各官网下载安装包，Linux 只需要「<b>报菜名</b>」。本章讲透 Ubuntu 的软件管家 <code>apt</code>——它会承包你之后 90% 的环境搭建工作。<span class="os linux">WSL·Linux</span></p>
+
+  <h3>7.1 apt 是什么：一座巨大的免费百货商场</h3>
+  <div class="callout analogy">
+    <span class="tag">类比</span>Ubuntu 官方维护着一份<b>软件源</b>——像一座联网的免费百货商场，几万件商品（软件）明码标价（免费）、经过质检（安全审查）。<code>apt</code> 就是你的<b>购物车</b>：报上商品名，它自动下楼取货、拆箱、安装、摆好，连带把依赖的「零件」一次配齐——再也不用「装个 A 先要去找 B，装 B 又要 C」的套娃地狱。
+  </div>
+
+  <h3>7.2 四板斧：更新目录、升级、安装、卸载</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">sudo apt update                  # 刷新商品目录：把商场的价目表更新到今天（注意：不安装任何东西！）
+sudo apt upgrade                 # 把「已买回家」的软件全部升到最新（习惯与 update 连用：先看价目，再补货）
+sudo apt install -y htop         # 安装软件：htop 是个彩色任务管理器；-y = 所有确认自动答「是」
+sudo apt install -y curl git vim # 一次装多个，空格隔开（这三个是装机三大件）
+sudo apt remove htop             # 卸载软件本体（保留个人配置文件，重装不丢设置）
+sudo apt purge htop              # 卸载并连配置文件一起清干净（彻底分手版）
+sudo apt autoremove              # 大扫除：清掉「为别人装、如今没人要」的孤儿依赖包
+apt search 截图                  # 在目录里搜软件（支持模糊关键词；名字视源收录而定）
+apt show htop                    # 看某件「商品」的详情页：版本、大小、用途简介</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">新手最常踩的坑</span>把 <code>sudo apt update</code> 当成「升级软件」——<b>它只是刷新目录</b>，一行软件都不会装。真正的升级是 <code>sudo apt upgrade</code>。记法：<b>update = 更新菜单，upgrade = 按菜单补货</b>。
+  </div>
+
+  <h3>7.3 装机常备清单</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>软件包</th><th>它装来干什么</th></tr></thead>
+    <tbody>
+      <tr><td><code>build-essential</code></td><td>C/C++ 编译全家桶（gcc、make，第 11 章用）</td></tr>
+      <tr><td><code>curl</code> / <code>wget</code></td><td>命令行下载器（「网络之手」）</td></tr>
+      <tr><td><code>git</code></td><td>版本控制（WSL 里的 git 与 Windows 侧互不干扰）</td></tr>
+      <tr><td><code>vim</code> / <code>nano</code></td><td>终端文本编辑器（nano 对新手最友好）</td></tr>
+      <tr><td><code>zip</code> / <code>unzip</code></td><td>zip 压缩解压（第 8 章）</td></tr>
+      <tr><td><code>htop</code></td><td>彩色任务管理器</td></tr>
+      <tr><td><code>python3-pip python3-venv</code></td><td>Python 的包管理器与虚拟环境（第 11 章）</td></tr>
+      <tr><td><code>openssh-client</code></td><td>SSH 客户端（第 9 章；Ubuntu 一般自带）</td></tr>
+    </tbody>
+  </table></div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端 · 一键装齐</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">sudo apt update &amp;&amp; sudo apt install -y build-essential curl wget git vim nano zip unzip htop   # && = 前一条成功才执行后一条</pre>
+  </div>
+
+  <h3>7.4 商场之外：deb 包与 snap</h3>
+  <p>偶尔会有软件不在官方源里（官网给了个 <code>.deb</code> 安装包，或只有 snap 版）：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">sudo apt install ./软件包.deb    # 安装「当前目录下」的 deb 包（./ = 就这个目录里的这个文件）
+sudo snap install 某软件         # snap 是另一种自包含打包格式（Ubuntu 自带；缺点是启动稍慢）</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">下载慢？</span>官方源服务器在境外，若 <code>apt</code> 下载龟速，可把软件源换成国内镜像：搜索「Ubuntu 清华镜像源」或「阿里云镜像源」，按其说明替换源配置文件后 <code>sudo apt update</code> 生效。Ubuntu 24.04 起源配置换到了新位置（<code>/etc/apt/sources.list.d/ubuntu.sources</code>），照镜像站给出的对应版本说明操作即可。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 04</span>
+    <ol>
+      <li><code>sudo apt update</code> 再 <code>sudo apt install -y htop</code>；</li>
+      <li>敲 <code>htop</code> 进入彩色任务管理器，按 <kbd>Q</kbd> 退出；</li>
+      <li><code>sudo apt remove htop</code> 卸掉，再用 <code>apt show htop</code> 确认它的详情页还在（目录里有、家里没装）。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 8 章 ==================== -->
+<section class="chapter" id="ch8">
+  <div class="chap-head">
+    <div class="chap-num">08</div>
+    <div>
+      <h2>权限与文件系统</h2>
+      <div class="desc">读懂 ls -l 那串天书，学会 chmod 借钥匙——顺带避开两个世界的规则冲突</div>
+    </div>
+  </div>
+
+  <p class="lead">「Permission denied（权限不足）」是新手最常撞的墙。理解了本章的<b>三把钥匙模型</b>，这堵墙就变成了门。<span class="os linux">WSL·Linux</span></p>
+
+  <h3>8.1 三把钥匙：读、写、执行</h3>
+  <p>Linux 里每个文件都挂着一块「门禁牌」，写着<b>三类人</b>分别持有<b>哪几把钥匙</b>：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">ls -l 演示.txt                   # 长格式查看：权限串就显示在最前面</pre>
+    <pre class="output">-rw-r--r-- 1 xiaowang xiaowang 12 9月 13 15:00 演示.txt
+└┬┘└┬┘└┬┘   └──┬───┘ └──┬───┘  │      │           └ 文件名
+ │  │  │       │       │    │      └ 修改时间
+ │  │  │       │       │    └ 大小（字节）
+ │  │  │       │       └ 所属组（组名也叫 xiaowang）
+ │  │  │       └ 主人是谁（xiaowang）
+ │  │  └ 其他人（others）的钥匙：r-- 只能看
+ │  └ 同组人（group）的钥匙：r-- 只能看
+ └ 主人（owner/user）的钥匙：rw- 能读能写</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>每个文件是<b>一台共享设备</b>：主人（你自己）、同组人（比如同项目组）、其他人（全楼陌生人）各有各的钥匙——<b>r</b>ead=能看、<b>w</b>rite=能改、e<b>x</b>ecute=能运行（程序/脚本才需要）。谁没有哪把钥匙，操作时就会被拒之门外。
+  </div>
+
+  <h3>8.2 发钥匙与改钥匙：chmod 与 chown</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">chmod +x 部署脚本.sh              # 给脚本补上「可执行」钥匙（+x = 加上 execute；最常用的一句）
+./部署脚本.sh                     # 运行「当前目录下」的脚本（./ 前缀 = 就这个目录里的这个文件）
+chmod 644 演示.txt               # 数字法发钥匙：6=主人读写 4=组只读 4=别人只读（r=4 w=2 x=1 相加）
+chmod 755 部署脚本.sh             # 7=主人读写执行 5=组读+执行 5=别人读+执行（脚本与目录的常用组合）
+chown xiaowang:xiaowang 文件      # 把文件的「主人:组」改成 xiaowang（动别人的东西要 sudo）</pre>
+  </div>
+  <div class="tblwrap"><table>
+    <thead><tr><th>数字</th><th>钥匙组合</th><th>记忆</th></tr></thead>
+    <tbody>
+      <tr><td>7</td><td>读+写+执行</td><td>4+2+1=7（全套钥匙）</td></tr>
+      <tr><td>6</td><td>读+写</td><td>4+2=6（文档常用）</td></tr>
+      <tr><td>5</td><td>读+执行</td><td>4+1=5（程序常用）</td></tr>
+      <tr><td>4</td><td>只读</td><td>4（看不能动）</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>8.3 两个世界的规则冲突（WSL 特供）</h3>
+  <h4>冲突一：大小写敏感</h4>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">cd ~                            # 回家（在 Linux 自己的地盘演示）
+touch readme.txt                 # 创建小写 readme.txt
+touch README.TXT                 # 再创建大写 README.TXT
+ls                               # 惊喜：两个文件同时存在！Linux 眼里它们毫无关系
+# 而在 Windows（/mnt/c）里，这两个名字会被当成同一个文件——从 Windows 拷项目到 Linux 时
+# 偶发的「文件突然重复」「编译报错找不到文件」，多半就是大小写惹的祸</pre>
+  </div>
+  <h4>冲突二：换行符</h4>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">file 部署脚本.sh                  # 让 Linux 鉴定文件：常会写出 "with CRLF line terminators"
+sudo apt install -y dos2unix     # 安装换行符转换小工具
+dos2unix 部署脚本.sh              # 把 Windows 风格换行（\r\n）转成 Linux 风格（\n）
+# 症状速查：脚本明明语法没问题却报错 "\r: command not found" ——九成是它</pre>
+  </div>
+  <div class="callout info">
+    <span class="tag">原理一句话</span>Windows 记事本换行按「回车+换行」两键（CRLF），Linux 只按「换行」一键（LF）。跨世界传<b>脚本和配置文件</b>时留意即可，普通文档无所谓。用 VS Code（10 章）编辑时右下角点「LF/CLF」即可切换。
+  </div>
+
+  <h3>8.4 行李打包：tar 与 zip</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">tar -czvf 行李.tar.gz 我的文件夹   # 打包并压缩（c=创建 z=gzip压缩 v=显示过程 f=文件名）
+tar -xzvf 行李.tar.gz             # 解包解压（x=提取；解到当前目录）
+tar -xzvf 行李.tar.gz -C 目标目录  # 解压到指定目录（-C = 换到那个目录再解）
+sudo apt install -y zip unzip    # 装 zip 家族（Windows 同事打开无障碍）
+zip -r 行李.zip 我的文件夹         # 压缩成 zip（-r = 连文件夹递归一起装）
+unzip 行李.zip -d 目标目录         # 解压 zip 到指定目录（-d = destination）</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">一句话记 tar</span><b>创建 czvf，提取 xzvf</b>——字母就差第一位（c↔x）。Linux 世界互传用 tar.gz，要发给 Windows 用户就选 zip。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 05</span>
+    <ol>
+      <li><code>ls -l</code> 找一个自己的文件，读出「三类人各持什么钥匙」；</li>
+      <li>写个一行脚本（<code>echo 'echo hi' > test.sh</code>）→ <code>./test.sh</code> 被拒 → <code>chmod +x</code> → 再跑通，完整体验「执行钥匙」；</li>
+      <li>把家目录某个文件夹打成 <code>tar.gz</code>，再解压到 <code>/tmp</code>（Linux 的公共草稿间）。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 9 章 ==================== -->
+<section class="chapter" id="ch9">
+  <div class="chap-head">
+    <div class="chap-num">09</div>
+    <div>
+      <h2>网络与 SSH</h2>
+      <div class="desc">两个世界共用一根网线：localhost 互通、联网测试、免密钥匙</div>
+    </div>
+  </div>
+
+  <p class="lead">WSL2 的网络设计简单到奢侈：<b>它和 Windows 像一家人共用一个门牌</b>——你在 WSL 里开的网站，Windows 浏览器直接 <code>localhost</code> 就能看。本章顺带把 SSH 免密钥匙也配齐。</p>
+
+  <h3>9.1 先确认能上网</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">ping -c 4 baidu.com              # 连通性测试：发 4 个探测包（-c 4 = 只发 4 个就停，Linux 不加会一直 ping）
+curl -I https://www.baidu.com    # 只看网页响应头（-I = head）：能返回 HTTP/1.1 200 OK 即网络通畅
+hostname -I                      # 查看 WSL 在虚拟网络里的内网 IP（形如 172.x.x.x；新旧版本网段不同）</pre>
+    <pre class="output">HTTP/1.1 200 OK                  ← 网络通畅的标志（curl 的输出示意）
+172.20.144.100                   ← WSL 的内网 IP（每台机器不同，仅了解即可）</pre>
+  </div>
+
+  <h3>9.2 王牌特性：localhost 互通实战</h3>
+  <figure class="dg">
+    <svg viewBox="0 0 720 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="localhost 互通示意图">
+      <defs>
+        <marker id="f1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#0d9488"/></marker>
+      </defs>
+      <rect x="60" y="60" width="270" height="120" rx="14" fill="#e6f6f4" stroke="#b8e4df" stroke-width="1.6"/>
+      <text x="195" y="92" text-anchor="middle" font-size="15" font-weight="700" fill="#0f766e">WSL（Linux）</text>
+      <rect x="84" y="108" width="222" height="44" rx="9" fill="#ffffff" stroke="#cdeee9" stroke-width="1.3"/>
+      <text x="195" y="135" text-anchor="middle" font-size="12.5" font-family="Consolas,monospace" fill="#2c4a46">python3 -m http.server 8000</text>
+      <rect x="390" y="60" width="270" height="120" rx="14" fill="#edf3fc" stroke="#c8d9f2" stroke-width="1.6"/>
+      <text x="525" y="92" text-anchor="middle" font-size="15" font-weight="700" fill="#274a7d">Windows（浏览器）</text>
+      <rect x="414" y="108" width="222" height="44" rx="9" fill="#ffffff" stroke="#d5e2f4" stroke-width="1.3"/>
+      <text x="525" y="135" text-anchor="middle" font-size="12.5" font-family="Consolas,monospace" fill="#3b4656">http://localhost:8000</text>
+      <line x1="330" y1="120" x2="386" y2="120" stroke="#0d9488" stroke-width="2.4" marker-end="url(#f1)"/>
+      <text x="360" y="106" text-anchor="middle" font-size="12" font-weight="700" fill="#0f766e">同一个门牌</text>
+      <text x="360" y="158" text-anchor="middle" font-size="11.5" fill="#6a7686">无需知道对方 IP、无需任何转发设置</text>
+      <text x="360" y="212" text-anchor="middle" font-size="12.5" fill="#5c6878">一家人共用一个门牌（localhost）——这是 WSL2 最贴心的设计</text>
+    </svg>
+    <figcaption>图 9-1 · WSL 里启动的服务，Windows 浏览器用 localhost 直接访问</figcaption>
+  </figure>
+  <p>亲手跑一遍——<span class="os linux">WSL·Linux</span>启动迷你网页服务器，<span class="os win">Windows</span>看效果：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">cd ~                            # 回家目录
+mkdir 网站演示 &amp;&amp; cd 网站演示      # 建个演示文件夹并进去（&amp;&amp; = 前一条成功才执行后一条）
+echo "&lt;h1&gt;你好，WSL！&lt;/h1&gt;" &gt; index.html   # 写一个极简网页文件
+python3 -m http.server 8000      # 启动迷你网页服务器：端口 8000（Ctrl+C 可随时停止）
+# —— 保持这个窗口开着，去 Windows 打开浏览器 ——</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">见证奇迹</span>Windows 浏览器地址栏输入 <code>http://localhost:8000</code> 回车——大字「你好，WSL！」跃然屏上。这行网页来自 Linux 世界，你却<b>没有配任何转发</b>。日常开发中「Linux 里跑后端、Windows 里用浏览器/Postman 调试」就是这么丝滑。
+  </div>
+
+  <h3>9.3 SSH：从「输密码」升级到「刷门禁卡」</h3>
+  <p>WSL 是练习 SSH 的绝佳靶场（连远程服务器、免密操作 GitHub 全靠它）。若你读过《Git 零基础完全教程》第 8 章，这里原理相同、命令一致——只是钥匙<b>生成在 Linux 这边</b>：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">ssh-keygen -t ed25519 -C "xiaowang@qq.com"   # 生成一对门禁钥匙：-t 算法；-C 备注（三连回车用默认即可）
+cat ~/.ssh/id_ed25519.pub       # 查看「挂锁」（公钥）：复制输出，贴到 GitHub → Settings → SSH keys
+ssh -T git@github.com           # 敲门测试：首次问 yes/no 输 yes；出现 Hi xxx! 即配对成功
+ssh 用户名@服务器IP               # 实战：登录一台远程 Linux 服务器（exit 退出）
+scp 文件名 用户名@服务器IP:/tmp/   # 跨机传文件：把文件送到对方服务器的 /tmp 目录</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>SSH 密钥仍是那套「<b>挂锁 + 钥匙</b>」：公钥（挂锁）见人就发、挂到 GitHub 或服务器门口；私钥（钥匙）只躺在你 Linux 家里的 <code>~/.ssh/</code> 抽屉，从不外传。<b>注意：Windows 侧和 WSL 侧各有自己的一串钥匙</b>——在哪儿生成的，就在哪儿用。
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 10 章 ==================== -->
+<section class="chapter" id="ch10">
+  <div class="chap-head">
+    <div class="chap-num">10</div>
+    <div>
+      <h2>效率神器：终端与 VS Code</h2>
+      <div class="desc">给新房客配上最好的门牌（Windows Terminal）和最好的工坊（VS Code 远程开发）</div>
+    </div>
+  </div>
+
+  <p class="lead">裸用默认黑窗口也能活，但这两件神器能把体验拉满——尤其 VS Code 的「远程」模式，是 Windows + WSL 协作开发的<b>标准姿势</b>。</p>
+
+  <h3>10.1 <span class="os win">Windows</span>Windows Terminal：一个窗口装下所有终端</h3>
+  <ol class="steps">
+    <li><b>安装</b>：Microsoft Store 搜「Windows Terminal」（Windows 11 一般已预装）——支持多标签页、真彩色、字体缩放；</li>
+    <li><b>设为默认</b>：设置 → 启动 → 「默认配置文件」选 <b>Ubuntu</b>——以后按 <kbd>Win</kbd>+<kbd>X</kbd> 或右键「在终端中打开」，直接进 Linux；</li>
+    <li><b>常用快捷键</b>：<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd> 新标签、<kbd>Ctrl</kbd>+<kbd>Tab</kbd> 切标签、<kbd>Ctrl</kbd>+<kbd>+</kbd>/<kbd>-</kbd> 缩放字体（Linux 复制粘贴用 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>C</kbd>/<kbd>V</kbd>，多了个 Shift）。</li>
+  </ol>
+
+  <h3>10.2 <span class="os linux">WSL·Linux</span>VS Code 远程模式：客厅在 Windows，工坊在 Linux</h3>
+  <ol class="steps">
+    <li><b>装 VS Code</b>：<span class="os win">Windows</span>官网下载安装 VS Code（装在 Windows 侧即可，<b>不要</b>往 WSL 里装）；</li>
+    <li><b>装扩展</b>：左侧扩展商店搜「<b>WSL</b>」（微软官方，id: ms-vscode-remote.remote-wsl）安装；</li>
+    <li><b>打通</b>：<span class="os linux">WSL·Linux</span>在 WSL 终端里用 <code>code</code> 命令打开项目（见下方命令）——首次会自动在 WSL 里装好配套服务端，稍等片刻。</li>
+  </ol>
+  <figure class="dg">
+    <svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="VS Code 远程开发架构图">
+      <defs>
+        <marker id="g1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#4a7fd4"/></marker>
+        <marker id="g2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#0d9488"/></marker>
+      </defs>
+      <rect x="50" y="46" width="290" height="140" rx="14" fill="#edf3fc" stroke="#c8d9f2" stroke-width="1.6"/>
+      <text x="195" y="76" text-anchor="middle" font-size="15" font-weight="700" fill="#274a7d">Windows 侧 · VS Code 界面</text>
+      <rect x="74" y="92" width="242" height="40" rx="9" fill="#ffffff" stroke="#d5e2f4" stroke-width="1.3"/>
+      <text x="195" y="117" text-anchor="middle" font-size="12.5" fill="#41608f">编辑器界面、菜单、鼠标键盘（客厅）</text>
+      <rect x="380" y="46" width="290" height="140" rx="14" fill="#e6f6f4" stroke="#b8e4df" stroke-width="1.6"/>
+      <text x="525" y="76" text-anchor="middle" font-size="15" font-weight="700" fill="#0f766e">Linux 侧 · WSL 服务端</text>
+      <rect x="404" y="92" width="242" height="40" rx="9" fill="#ffffff" stroke="#cdeee9" stroke-width="1.3"/>
+      <text x="525" y="117" text-anchor="middle" font-size="12.5" fill="#0c6b62">代码文件、语言服务、终端（工坊）</text>
+      <line x1="340" y1="112" x2="380" y2="112" stroke="#4a7fd4" stroke-width="2.4" marker-end="url(#g1)"/>
+      <line x1="380" y1="136" x2="340" y2="136" stroke="#0d9488" stroke-width="2.4" marker-end="url(#g2)"/>
+      <text x="360" y="100" text-anchor="middle" font-size="11.5" fill="#4a7fd4">你的编辑操作</text>
+      <text x="360" y="158" text-anchor="middle" font-size="11.5" fill="#0f766e">文件与运行结果</text>
+      <text x="360" y="218" text-anchor="middle" font-size="12.5" fill="#5c6878">左下角绿色「WSL: Ubuntu-22.04」标记亮起 = 远程模式已接通</text>
+    </svg>
+    <figcaption>图 10-1 · VS Code 远程模式：你在 Windows 客厅操作，实际干活的是 Linux 工坊</figcaption>
+  </figure>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">mkdir ~/练习项目 &amp;&amp; cd ~/练习项目  # 在 Linux 家目录建一个项目文件夹（安家的正确位置，见 10.3）
+code .                          # 用 VS Code 打开「当前目录」（首次运行自动接驳，之后秒开）
+# 接通后 VS Code 左下角亮起绿色「WSL: Ubuntu-22.04」；按 Ctrl+` 打开的终端也是 Linux 终端</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">免终端打开</span>接通后也可以反向操作：VS Code 里按 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → 输入「WSL」→ 选「<b>WSL: 在 WSL 中打开文件夹</b>」——不碰命令行也能进 Linux 工坊。
+  </div>
+
+  <h3>10.3 重要决策：代码安家在哪一侧？</h3>
+  <div class="callout warn">
+    <span class="tag">性能铁律</span>WSL2 访问自己的家目录（<code>~/</code>）是<b>原生速度</b>；访问 <code>/mnt/c</code>（Windows 地盘）则要跨系统协议，<b>慢一个数量级</b>。所以：<b>项目代码一律放在 <code>~/</code>（Linux 家里）</b>，需要给 Windows 用的成品（打包文件、报告）才「过口岸」交付。
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>工坊（编译、运行、版本管理）开在 Linux 家里，原料成品<b>需要时才运过桥</b>——而不是把整条生产线天天架在桥上跑。VS Code 远程模式正是为这个姿势设计的：客厅（界面）留在 Windows，生产全在 Linux。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 06</span>
+    <ol>
+      <li>把 Windows Terminal 默认配置文件设为 Ubuntu，新开一个标签确认直接进 Linux；</li>
+      <li>WSL 里建 <code>~/练习项目</code>，用 <code>code .</code> 打开，确认左下角绿标；</li>
+      <li>在 VS Code 里新建文件保存，回终端 <code>ls</code> 确认它出现在 Linux 家目录——两个视角，同一份文件。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 11 章 ==================== -->
+<section class="chapter" id="ch11">
+  <div class="chap-head">
+    <div class="chap-num">11</div>
+    <div>
+      <h2>开发环境三件套</h2>
+      <div class="desc">Python、Node.js、C 三种主流环境从零搭起，最后来一场综合小演练</div>
+    </div>
+  </div>
+
+  <p class="lead">WSL 最常见的用途就是搭开发环境。三件套各有各的「坑点」，本章每个坑都提前踩掉。<span class="os linux">WSL·Linux</span>全程在 Ubuntu 终端执行。</p>
+
+  <h3>11.1 Python：实验室隔离术（venv）</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">sudo apt install -y python3 python3-pip python3-venv   # 三件套：解释器、包管理器 pip、虚拟环境 venv
+python3 --version               # 验证：打印 Python 版本号（Ubuntu 22.04 自带 3.10+）
+mkdir ~/py项目 &amp;&amp; cd ~/py项目      # 建个项目文件夹进去
+python3 -m venv .venv           # 创建虚拟环境：项目里多出一个 .venv 文件夹（一间独立实验室）
+source .venv/bin/activate       # 激活实验室（提示符前出现 (.venv) 标记即成功）
+pip install requests            # 在实验室里装第三方包——只装进 .venv，系统毫发无损
+python3 -c "import requests; print(requests.__version__)"   # 验证：打印刚装的包版本号
+deactivate                      # 走出实验室（提示符恢复原样；.venv 里的东西原地保留）</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>直接往系统里 <code>pip install</code>，就像把每件实验试剂都倒进<b>全楼共用的总水管</b>——迟早互相反应出事故（版本冲突）。<b>venv = 每个项目一间独立实验室</b>：试剂（依赖）各放各的，实验黄了拆掉重来（删掉 .venv 文件夹），楼里其他实验室毫不知情。
+  </div>
+
+  <h3>11.2 Node.js：用 nvm 管理多版本</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash   # 下载并运行 nvm 安装脚本（版本号以官网 README 最新为准）
+source ~/.bashrc                # 重新加载配置文件，让 nvm 命令立刻可用（或关掉终端重开）
+nvm install --lts               # 安装最新长期支持版 Node（LTS = 官方盖章的稳妥版）
+node -v                         # 验证 node（如 v20.x.x）
+npm -v                          # 验证 npm：Node 的包管理器（装第三方库用）
+nvm install 18                  # 再装一个大版本 18（多个版本可并存，互不打架）
+nvm use 18                      # 当前终端切换到 18（验证：node -v 变了）
+nvm ls                          # 列出装过哪些版本、当前用哪个</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>直接 <code>apt install nodejs</code> 只能有一个版本、升级听天由命；<b>nvm（Node Version Manager）是「版本车库」</b>——18 号车、20 号车各停一个车位，今天开哪辆随手一换。不同项目要求不同 Node 版本时，你会感谢这个车库。
+  </div>
+
+  <h3>11.3 C/C++：编译自己的第一个程序</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">sudo apt install -y build-essential   # 装编译全家桶：gcc、g++、make 等（C/C++ 的地基）
+cat &lt;&lt; 'EOF' &gt; 你好.c            # 用「就地文档」写文件：EOF 之间的每行都原样写入（可整段复制粘贴）
+#include &lt;stdio.h&gt;              // 告诉编译器：我要用 printf 这个标准输出函数
+int main() {                    // C 程序的入口：一切从 main 开始
+    printf("你好，WSL！\n");      // 打印一句话（\n 表示换行）
+    return 0;                   // 返回 0 = 程序正常跑完的暗号
+}
+EOF                             # 收尾标记：写到这行结束
+gcc 你好.c -o 你好                # 编译：把源码翻译成可执行文件「你好」（-o = 输出文件名）
+./你好                           # 运行（./ = 当前目录下的这个文件）</pre>
+    <pre class="output">你好，WSL！                        ← 你的第一个 Linux 原生编译程序</pre>
+  </div>
+
+  <h3>11.4 综合演练：给家目录做一次「体检报告」</h3>
+  <p>把三件套学的技巧串起来：用 Python 写个小脚本统计家目录，再打包备份——全程 Linux 内闭环：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">cd ~                            # 回家目录
+cat &lt;&lt; 'EOF' &gt; 体检.py           # 写体检脚本（每行 # 开头的是 Python 注释）
+import os                        # 导入系统模块：用来遍历目录、读文件大小
+total_files = 0                  # 文件计数器
+total_size = 0                   # 大小累加器（单位：字节）
+for root, dirs, files in os.walk(os.path.expanduser("~")):   # 从家目录开始逐层走访每个文件夹
+    for name in files:           # 每到一个文件夹，数一遍它的文件
+        total_files += 1         # 计数加一
+        try:                     # 有些特殊文件不让读大小，用 try 兜住别让程序崩
+            total_size += os.path.getsize(os.path.join(root, name))   # 累加该文件的大小
+        except OSError:          # 读不了大小时
+            pass                 # 跳过它，继续数下一个
+print(f"家目录共有 {total_files} 个文件，合计 {total_size / 1024 / 1024:.1f} MB")   # 打印体检报告（MB 留一位小数）
+EOF
+python3 体检.py                   # 运行体检
+tar -czvf 家目录备份.tar.gz 网站演示 py项目   # 顺手把练过的两个项目打包备份（第 8 章的行李术）</pre>
+    <pre class="output">家目录共有 25 个文件，合计 1.4 MB    ← 数字因人而异，看，这就是你的「家底」</pre>
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 07</span>
+    <ol>
+      <li>三件套各跑通一个「验证」命令：<code>python3 --version</code>、<code>node -v</code>、<code>gcc --version</code>；</li>
+      <li>用 venv 建实验室装一个包，<code>deactivate</code> 后确认系统里查不到它；</li>
+      <li>把「体检脚本」跑出你自己的家底报告。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 12 章 ==================== -->
+<section class="chapter" id="ch12">
+  <div class="chap-head">
+    <div class="chap-num">12</div>
+    <div>
+      <h2>深度管理与调优</h2>
+      <div class="desc">给公寓装水电表（.wslconfig）、学会总闸（wsl --shutdown）、启用大管家（systemd）</div>
+    </div>
+  </div>
+
+  <p class="lead">用了一段时间你可能会问：WSL 会不会吃光我的内存？怎么彻底关掉它？怎么把整套系统搬去 D 盘？——本章全是这类「房客管理术」。</p>
+
+  <h3>12.1 vmmem 是谁？为什么它吃这么多内存</h3>
+  <p>打开任务管理器常看到一个叫 <b>vmmem</b> 的进程——它就是 WSL2 的「轻量虚拟机」本体。Linux 有个习性：<b>内存先占着再说</b>（用作缓存，需要时会让出来），于是 vmmem 看起来总在「暴饮暴食」。两种驯服方式：装「水电表」限额，或拉「总闸」停机。</p>
+
+  <h3>12.2 <span class="os win">Windows</span>装水电表：.wslconfig</h3>
+  <p>在 <code>C:\Users\你的用户名\</code> 下新建一个纯文本文件，名叫 <code>.wslconfig</code>（用记事本即可），写入：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：C:\Users\Administrator\.wslconfig</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">[wsl2]                          # 小节声明：以下设置只作用于 WSL2
+memory=8GB                      # 内存上限：按机器实际配置酌情给（不给此行则几乎「有多少吃多少」）
+processors=4                    # CPU 核心数上限
+swap=0                          # 交换空间配额：设 0 可避免虚拟内存文件膨胀（磁盘紧张时推荐）</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>PowerShell · 让水电表生效</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">wsl --shutdown                  # 总闸：停掉整个 WSL（所有发行版一起休息；改 .wslconfig 后必须重启它）
+wsl                             # 重新进入：新限额即已生效（可用 free -h 在里面验证）</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span><code>.wslconfig</code> 是写给「公寓管理处」的<b>水电额度单</b>：每个月最多用多少度电（CPU）、多少吨水（内存）。额度单一交，管理处下次开门就按新规矩执行——但<b>得先拉一次总闸再送电</b>（<code>wsl --shutdown</code>）才生效。
+  </div>
+
+  <h3>12.3 <span class="os win">Windows</span>日常开关与体检</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>PowerShell</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">wsl -l -v                       # 体检：各发行版运行状态（Running 运行中 / Stopped 已休息）
+wsl -t Ubuntu                   # 单户电闸：只停 Ubuntu 这一个发行版（terminate）
+wsl --shutdown                  # 总闸：停掉整个 WSL（下班合盖前想彻底释放内存时用）
+wsl --status                    # 总览：默认发行版、默认体系版本
+wsl --update                    # 更新 WSL 本体（内核、WSLg 等组件；遇到怪问题时先跑它）
+wsl --version                   # 各组件版本号（给技术支持排查问题时展示的就是这份输出）</pre>
+  </div>
+
+  <h3>12.4 <span class="os linux">WSL·Linux</span>启用大管家 systemd</h3>
+  <p>较新的 WSL 已默认启用 systemd（Linux 的「总管家」，负责启动/守护各种后台服务）。若你的发行版还没开（表现：提示找不到 <code>systemctl</code> 命令），两步打开：</p>
+  <div class="osgrid">
+    <div class="oscard">
+      <div class="os-head"><span class="os linux">WSL·Linux</span><h4>第一步：写配置</h4></div>
+      <div class="codewrap">
+        <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+        <pre class="code">sudo nano /etc/wsl.conf          # 编辑发行版私有配置（方括号开头的是「小节」标题）
+# 写入两行（nano：Ctrl+O 回车保存，Ctrl+X 退出）：
+#   [boot]                       ← 「开机」小节
+#   systemd=true                 ← 开机时把大管家叫起来</pre>
+      </div>
+    </div>
+    <div class="oscard">
+      <div class="os-head"><span class="os win">Windows</span><h4>第二步：重启生效</h4></div>
+      <div class="codewrap">
+        <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>PowerShell</span><button class="copybtn">复制代码</button></div>
+        <pre class="code">wsl --shutdown                  # 拉总闸（wsl.conf 的修改同样要重启才生效）
+wsl                             # 重新进入，systemd 已上岗</pre>
+      </div>
+    </div>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端 · systemd 驾驶术</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">systemctl status ssh            # 查看某服务（如 ssh）的运行状态：绿色的 active (running) = 正常
+sudo systemctl start 服务名      # 启动一个服务；stop 停止；restart 重启
+sudo systemctl enable 服务名     # 设为「开机自启」；disable 取消自启
+systemctl list-units --type=service | head -n 15   # 看看大管家现在管着哪些服务（取前 15 行）</pre>
+  </div>
+
+  <h3>12.5 备份与搬家（复习 + 升级）</h3>
+  <p>第 4 章的行李系统就是<b>完整备份方案</b>：<code>wsl --export</code> 打包 → 存到 D 盘或移动硬盘 → 重装系统后 <code>wsl --import</code> 恢复。「搬去 D 盘给 C 盘减负」也用同一套：<code>--unregister</code> 原发行版 → <code>--import</code> 到 <code>D:\WSL\...</code>。要点回顾：</p>
+  <div class="callout tip">
+    <span class="tag">搬家三件套</span>① <code>wsl --export Ubuntu D:\备份.tar</code> 打包 → ② <code>wsl --unregister Ubuntu</code> 腾出原地 → ③ <code>wsl --import Ubuntu D:\WSL\Ubuntu D:\备份.tar --version 2</code> 落户新址。搬完记得按 4.4 的方法把<b>默认用户</b>写回 <code>/etc/wsl.conf</code>——不然每次进门都是 root 房东本人。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 08</span>
+    <ol>
+      <li>建一个 <code>.wslconfig</code> 给内存限额（比如 4GB），总闸重启后用 <code>free -h</code> 验证；</li>
+      <li>按 12.4 检查你的 systemd 是否在岗（<code>systemctl status</code> 任意服务）；</li>
+      <li>做一次 <code>wsl --export</code> 备份——从今天起养成「大改动前先打包」的习惯。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 13 章 ==================== -->
+<section class="chapter" id="ch13">
+  <div class="chap-head">
+    <div class="chap-num">13</div>
+    <div>
+      <h2>图形界面 WSLg</h2>
+      <div class="desc">Linux 程序也能弹出真窗口——不用装任何「远程桌面」</div>
+    </div>
+  </div>
+
+  <p class="lead">WSL 不只是黑窗口：<b>WSLg</b>（WSL GUI）让 Linux 图形程序直接以原生窗口出现在 Windows 桌面上，像多开了一个 Windows 应用一样自然。</p>
+
+  <h3>13.1 原理一分钟：窗口是怎么「飞」过来的</h3>
+  <div class="callout analogy">
+    <span class="tag">类比</span>Linux 房客想给你看张图（图形界面），传统做法要么把整台显示器搬进公寓（远程桌面/VNC，又重又卡），要么让他对着墙画（伪终端）。<b>WSLg 是在两户人家之间装了一套「传真 + 投影」</b>：Linux 侧把画面绘制指令传出来，Windows 侧原样投影成一个原生窗口——轻、快、即开即用，而且剪贴板互通。
+  </div>
+  <div class="callout info">
+    <span class="tag">门槛</span>Windows 11 开箱即用；Windows 10 需较新的系统与 WSL 版本。不确定就先跑 <code>wsl --update</code> 再试本章命令，报 <code>cannot open display</code> 就是还不支持（去急救站 14 章对号入座）。
+  </div>
+
+  <h3>13.2 <span class="os linux">WSL·Linux</span>弹几个窗口玩玩</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">sudo apt install -y x11-apps    # 装一组经典图形小程序（xeyes、xcalc 等，体积小、最适验证）
+xeyes                           # 弹出「一双眼睛」：瞳孔会跟着你的鼠标转——图形通路验证成功！
+xcalc                           # 再弹一台图形计算器
+sudo apt install -y gedit       # 装一个正经的图形化文本编辑器
+gedit ~/演示.txt                 # 用图形窗口编辑家目录里的文件（和终端版各干各的，文件同一个）
+# 都玩完了关掉窗口即可；WSL 会在后台安静收场</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">能玩到什么程度</span>不止小玩具：VS Code 之外的编辑器、数据库图形客户端、乃至完整桌面环境（装个 xfce4 试试）都能跑；做 AI/图形开发时，WSLg 还支持 GPU 加速（配合 Windows 侧显卡驱动）。对初学者，记住一句话就够：<b>「Linux 有窗口界面的软件，WSL 基本都能弹出来」</b>。
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 14 章 ==================== -->
+<section class="chapter" id="ch14">
+  <div class="chap-head">
+    <div class="chap-num">14</div>
+    <div>
+      <h2>常见报错急救站</h2>
+      <div class="desc">WSL 的坑一百万人都踩过——按报错关键字对号入座，30 秒脱困</div>
+    </div>
+  </div>
+
+  <p class="lead">遇到红色报错先深呼吸：WSL 用户基数巨大，你能遇到的坑几乎全部有标准答案。本章按<b>报错原文关键字</b>索引。</p>
+
+  <div class="tblwrap"><table>
+    <thead><tr><th style="width:32%">报错 / 症状关键字</th><th>它在说什么</th><th>急救方案</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>WslRegisterDistribution failed with error: 0x80370102</code></td>
+        <td>虚拟化没开或「虚拟机平台」没启用（三相电闸没合）</td>
+        <td>① 任务管理器查「虚拟化：已启用」，否则进 BIOS 开 VT-x/SVM（第 2 章）；② 管理员 PowerShell 重跑 <code>wsl --install</code> 自动补功能</td>
+      </tr>
+      <tr>
+        <td><code>error: 0x800701bc</code>（WSL2 需要更新内核组件）</td>
+        <td>WSL2 的 Linux 内核没装或太旧</td>
+        <td><code>wsl --update</code> 一条命令补齐；顽固时去微软官网下 <code>wsl_update_x64.msi</code> 手动装</td>
+      </tr>
+      <tr>
+        <td><code>请启用虚拟机平台功能</code> / <code>Virtual Machine Platform</code></td>
+        <td>系统功能开关没打开</td>
+        <td>管理员 PowerShell 执行第 3 章手动路线的两条 <code>dism</code> 命令，重启电脑</td>
+      </tr>
+      <tr>
+        <td>PowerShell 提示<b>无法识别 wsl 命令</b></td>
+        <td>Windows 太老，或没装 WSL</td>
+        <td><code>winver</code> 查版本：不满足就先升级系统；满足则走第 3 章安装流程</td>
+      </tr>
+      <tr>
+        <td>下载 Ubuntu / 内核时<b>卡住不动</b></td>
+        <td>网络到境外服务器不通畅</td>
+        <td>换个时段重试；或从 Microsoft Store 直接搜「Ubuntu」安装；先 <code>wsl --update</code> 也常能解</td>
+      </tr>
+      <tr>
+        <td>安装时<b>输密码没反应</b></td>
+        <td>不是故障：Linux 输密码从不回显</td>
+        <td>盲敲输完回车即可（第 3 章预警过）</td>
+      </tr>
+      <tr>
+        <td>启动后<b>直接是 root@...</b></td>
+        <td>发行版是 import 恢复的，默认用户没带过来</td>
+        <td>按 4.4 补办：编辑 <code>/etc/wsl.conf</code> 写入 <code>[user]</code> + <code>default=名字</code>，再 <code>wsl -t 发行版名</code> 重启</td>
+      </tr>
+      <tr>
+        <td><b>忘了 Linux 密码</b></td>
+        <td>密码忘了进不去 sudo</td>
+        <td>PowerShell 敲 <code>wsl -u root</code>（以房东身份旁路进入）→ 里面执行 <code>passwd 你的用户名</code> 设新密码 → <code>exit</code> 回普通身份</td>
+      </tr>
+      <tr>
+        <td><b>vmmem 内存占用巨大</b></td>
+        <td>Linux 拿内存当缓存，看着吓人</td>
+        <td>装「水电表」：<code>.wslconfig</code> 写 <code>memory=8GB</code> 限额 + <code>wsl --shutdown</code>（第 12 章）；不用时拉总闸即可释放</td>
+      </tr>
+      <tr>
+        <td>WSL 里<b>ping 不通 / 上不了网</b></td>
+        <td>DNS 配置偶发抽风</td>
+        <td>先 <code>wsl --shutdown</code> 重启网络栈；仍不行临时换 DNS：<code>echo "nameserver 223.5.5.5" | sudo tee /etc/resolv.conf</code></td>
+      </tr>
+      <tr>
+        <td>WSL 里<b>时间不对</b>（常比北京时间慢 8 小时）</td>
+        <td>睡眠唤醒后时钟没跟上</td>
+        <td><code>sudo hwclock -s</code>：把系统时钟同步到硬件时钟，一秒回正</td>
+      </tr>
+      <tr>
+        <td>GUI 程序报 <code>cannot open display</code></td>
+        <td>WSLg 组件未启用或版本过旧</td>
+        <td><code>wsl --update</code> 升级 WSL 本体后 <code>wsl --shutdown</code> 重启再试；Windows 10 老版本可能不支持</td>
+      </tr>
+      <tr>
+        <td><code>/mnt/c</code> 下文件权限全是 777 / 000</td>
+        <td>跨系统挂载的默认宽松权限（正常现象）</td>
+        <td>不影响日常使用；在意可在 <code>/etc/wsl.conf</code> 的 automount 小节加 metadata 选项（进阶，按需搜索）</td>
+      </tr>
+      <tr>
+        <td><code>wsl -l -v</code> 输出「字间有空格」</td>
+        <td>旧版 WSL 的输出编码显示问题</td>
+        <td>内容本身没错；<code>wsl --update</code> 后即恢复正常显示</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <h3>14.1 万能排查三板斧</h3>
+  <ul class="plain">
+    <li><b>第一斧 <code>wsl --update</code></b>：八成怪病（内核、WSLg、显示、网络）都是版本旧了，先升再说；</li>
+    <li><b>第二斧 <code>wsl --shutdown</code></b>：重启大法对 WSL 同样灵验——很多「玄学故障」重启即愈；</li>
+    <li><b>第三斧 搜报错原文</b>：把错误码原样贴进搜索引擎，你永远不是第一个踩坑的人。</li>
+  </ul>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 15 章 ==================== -->
+<section class="chapter" id="ch15">
+  <div class="chap-head">
+    <div class="chap-num">15</div>
+    <div>
+      <h2>最佳实践与进阶路线</h2>
+      <div class="desc">几条让人少走弯路的习惯，以及学完本教程之后该去哪</div>
+    </div>
+  </div>
+
+  <p class="lead">命令层面的知识已经齐了。这一章是「住户守则」——都是不起眼的小习惯，却决定了你的 Linux 生活是顺滑还是灾难。</p>
+
+  <h3>15.1 六条住户守则</h3>
+  <ol class="steps">
+    <li><b>代码安家 Linux（~/）</b>：性能原生，工具链顺畅；Windows 那边只放「成品」（10.3 的性能铁律）；</li>
+    <li><b>大改动前先打包</b>：<code>wsl --export</code> 一次几秒钟，重装系统/折腾失败时救你全家的数据（12.5）；</li>
+    <li><b>下班前可以拉总闸</b>：<code>wsl --shutdown</code> 彻底释放内存，明天打开照常秒进（正在跑的服务会停，注意别打断正在干活的程序）；</li>
+    <li><b>定期 <code>wsl --update</code></b>：WSL 本体在快速迭代，很多「怪病」升级即愈；</li>
+    <li><b>遇到陌生命令先 <code>man</code></b>：说明书永远比搜索结果权威，还能练英语（或安装中文 man 手册包）；</li>
+    <li><b>rm 之前先 ls</b>：Linux 没有回收站，删除前多看一眼路径（6.2 的铁律，值得再说一遍）。</li>
+  </ol>
+
+  <h3>15.2 给终端加一点私人定制（别名）</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Ubuntu 终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">nano ~/.bashrc                 # 编辑你的 shell 个性化配置（每次开终端都会自动执行一遍它）
+# 滚到文件末尾，追加一行（nano：Ctrl+O 回车保存，Ctrl+X 退出）：
+#   alias ll='ls -alF'          # 给「ls -alF」起外号 ll（重开终端或 source ~/.bashrc 后生效）
+ll                             # 试试：一眼看清权限+隐藏文件+类型标记
+source ~/.bashrc               # 让配置立刻生效（source = 「照着执行一遍这个文件」）</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span><code>~/.bashrc</code> 是你家门口的<b>「进门自动执行清单」</b>：每次开门（开终端）都自动跑一遍——贴外号（alias）、设环境变量、欢迎语都写在这里。想怎么布置你家，就怎么编辑它。
+  </div>
+
+  <h3>15.3 接下来去哪？</h3>
+  <ul class="plain">
+    <li><b>Linux 命令深度进阶</b>：在线闯关站 <a href="https://linuxjourney.com" target="_blank">linuxjourney.com</a>（英文，配图友好）；中文经典《鸟哥的 Linux 私房菜》；</li>
+    <li><b>Shell 脚本自动化</b>：把重复操作写成 <code>.sh</code> 脚本——本教程第 8、11 章已埋了伏笔；</li>
+    <li><b>版本控制</b>：在 WSL 里练 Git——配套的《Git 零基础完全教程》整本都能在这里实操；</li>
+    <li><b>Docker 容器</b>：WSL2 是 Windows 上跑 Docker 的官方底座，学完 WSL 正好接上；</li>
+    <li><b>最有效的下一步</b>：把你手头任何一个真实项目（笔记、作业、小工具）搬进 <code>~/</code>，用 VS Code 远程模式开发两周——肌肉记忆自然长成。</li>
+  </ul>
+  <div class="callout analogy">
+    <span class="tag">结语</span>WSL 的本质，是把「<b>一台电脑</b>」升级成「<b>两个世界的一张工位</b>」：左手的 Windows 负责生活与办公，右手 Linux 负责学习与创造，中间那座桥（/mnt/c、localhost、VS Code 远程）永不堵车。房子已经分好——去住吧。
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 16 章 ==================== -->
+<section class="chapter" id="ch16">
+  <div class="chap-head">
+    <div class="chap-num">16</div>
+    <div>
+      <h2>命令速查表</h2>
+      <div class="desc">按使用场景分组的核心命令全集——打印出来贴在显示器旁边</div>
+    </div>
+  </div>
+
+  <p class="lead">16 章旅程的终点。三张表分别覆盖 Windows 侧、Linux 日常与软件管理，外加一组救命快捷键。</p>
+
+  <h3><span class="os win">Windows</span>wsl 命令（PowerShell 敲）</h3>
+  <div class="tblwrap"><table>
+    <tbody>
+      <tr><td><code>wsl --install</code></td><td>一键安装（管理员；可加 <code>-d 发行版名</code>指定）</td></tr>
+      <tr><td><code>wsl --install -d Debian</code></td><td>安装指定发行版</td></tr>
+      <tr><td><code>wsl</code> / <code>wsl -d 名字</code></td><td>进入默认 / 指定发行版</td></tr>
+      <tr><td><code>wsl 命令</code></td><td>不进交互，直接执行一条 Linux 命令</td></tr>
+      <tr><td><code>wsl -l -v</code></td><td>列出发行版及状态、WSL 版本号</td></tr>
+      <tr><td><code>wsl --list --online</code></td><td>列出可在线安装的发行版菜单</td></tr>
+      <tr><td><code>wsl --set-default 名字</code></td><td>设置默认发行版</td></tr>
+      <tr><td><code>wsl --set-version 名字 2</code></td><td>在 WSL1/2 之间转换</td></tr>
+      <tr><td><code>wsl --unregister 名字</code></td><td>彻底删除发行版（不可恢复）</td></tr>
+      <tr><td><code>wsl --export 名字 文件.tar</code></td><td>整体打包备份</td></tr>
+      <tr><td><code>wsl --import 名字 目录 文件.tar</code></td><td>从备份恢复 / 搬家</td></tr>
+      <tr><td><code>wsl -t 名字</code> / <code>wsl --shutdown</code></td><td>停一个 / 全部（总闸）</td></tr>
+      <tr><td><code>wsl -u root</code></td><td>以 root 身份进入（救密码忘专用）</td></tr>
+      <tr><td><code>wsl --update</code> / <code>wsl --version</code> / <code>wsl --status</code></td><td>升级 / 查版本 / 查状态</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3><span class="os linux">WSL·Linux</span>日常命令（Ubuntu 里敲）</h3>
+  <div class="tblwrap"><table>
+    <tbody>
+      <tr><td><code>pwd</code> / <code>ls -lh</code> / <code>cd ~</code> / <code>cd ..</code></td><td>我在哪 / 有什么 / 回家 / 上楼</td></tr>
+      <tr><td><code>mkdir</code> / <code>touch</code> / <code>cat</code> / <code>head</code> / <code>tail</code></td><td>建夹 / 建文件 / 看全部 / 看头 / 看尾</td></tr>
+      <tr><td><code>cp</code> / <code>mv</code> / <code>rm -r</code></td><td>复制 / 移动兼改名 / 删除（无回收站！）</td></tr>
+      <tr><td><code>find ~ -name "*词*"</code> / <code>grep "词" 文件</code></td><td>按名找文件 / 按内容搜行</td></tr>
+      <tr><td><code>sudo 命令</code></td><td>临时借管理员钥匙（输自己密码）</td></tr>
+      <tr><td><code>chmod +x 脚本</code> / <code>./脚本</code></td><td>给执行钥匙 / 运行当前目录脚本</td></tr>
+      <tr><td><code>tar -czvf x.tar.gz 目录</code> / <code>tar -xzvf x.tar.gz</code></td><td>打包 / 解包</td></tr>
+      <tr><td><code>man 命令</code> / <code>命令 --help</code></td><td>说明书 / 速查帮助（Q 退出）</td></tr>
+      <tr><td><code>lsb_release -a</code> / <code>uname -r</code> / <code>free -h</code> / <code>df -h</code></td><td>系统身份 / 内核 / 内存 / 磁盘</td></tr>
+      <tr><td><code>cd /mnt/c/...</code></td><td>走进 Windows 盘（口岸）</td></tr>
+      <tr><td><code>explorer.exe .</code> / <code>notepad.exe 文件</code></td><td>调 Windows 窗口看 Linux 目录 / 编辑文件</td></tr>
+      <tr><td><code>输出 | clip.exe</code></td><td>把输出复制进 Windows 剪贴板</td></tr>
+      <tr><td><code>sudo hwclock -s</code></td><td>时间跑偏了？一键回正</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3><span class="os linux">WSL·Linux</span>apt 软件管理</h3>
+  <div class="tblwrap"><table>
+    <tbody>
+      <tr><td><code>sudo apt update</code></td><td>刷新软件目录（不安装东西！）</td></tr>
+      <tr><td><code>sudo apt upgrade</code></td><td>升级已装软件</td></tr>
+      <tr><td><code>sudo apt install -y 包名</code></td><td>安装（-y 自动确认）</td></tr>
+      <tr><td><code>sudo apt remove / purge 包名</code></td><td>卸载 / 连配置一起卸</td></tr>
+      <tr><td><code>sudo apt autoremove</code></td><td>清理孤儿依赖</td></tr>
+      <tr><td><code>apt search 词</code> / <code>apt show 包名</code></td><td>搜软件 / 看详情</td></tr>
+      <tr><td><code>sudo apt install ./文件.deb</code></td><td>安装本地 deb 包</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3><span class="os both">双世界</span>救命快捷键</h3>
+  <div class="tblwrap"><table>
+    <tbody>
+      <tr><td><kbd>Ctrl</kbd>+<kbd>L</kbd> / <kbd>Ctrl</kbd>+<kbd>C</kbd></td><td>清屏 / 强行中断当前程序（Linux 侧）</td></tr>
+      <tr><td><kbd>Tab</kbd></td><td>命令与路径自动补全（敲两下列出候选）——最被低估的神器</td></tr>
+      <tr><td><kbd>↑</kbd> / <kbd>↓</kbd> / <kbd>Ctrl</kbd>+<kbd>R</kbd></td><td>翻历史命令 / 搜索历史命令</td></tr>
+      <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>C</kbd>/<kbd>V</kbd></td><td>Linux 终端里的复制 / 粘贴（多个 Shift）</td></tr>
+      <tr><td><kbd>Ctrl</kbd>+<kbd>`</kbd>（VS Code）</td><td>呼出/收起集成终端（远程模式下就是 Linux 终端）</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout tip">
+    <span class="tag">最后的建议</span>速查表不用背——用。每次「想干啥来着？」时翻一眼，两周后你会发现这页纸已经长在了手指上。
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<footer class="site-foot">
+  WSL 零基础完全教程 · 全 16 章 · 类比教学 / 每行代码均有注释 / Windows 与 Linux 双世界互通<br>
+  建议配合终端边看边敲 · 速查表可打印贴在工位 · 遇到报错先翻第 14 章急救站
+</footer>
+
+</div>
+</main>
+
+<script>
+(function () {
+  // ---------- 工具：HTML 转义 ----------
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // ---------- 代码高亮：注释上绿色、命令词上蓝色、提示符变暗 ----------
+  document.querySelectorAll('pre.code').forEach(function (pre) {
+    var lines = pre.textContent.split('\n');
+    var out = [];
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      if (line.trim() === '') { out.push(''); continue; }
+      var e = esc(line);
+      var hash = e.indexOf('#');
+      var cmdPart = hash >= 0 ? e.slice(0, hash) : e;
+      var cmtPart = hash >= 0 ? '<span class="cmt">' + e.slice(hash) + '</span>' : '';
+      var m = cmdPart.match(/^(\s*)(\$ )?([A-Za-z][\w.\-\/]*)/);
+      if (m) {
+        cmdPart = m[1] + (m[2] ? '<span class="pr">' + m[2] + '</span>' : '') +
+          '<span class="kw">' + m[3] + '</span>' + cmdPart.slice(m[0].length);
+      }
+      out.push(cmdPart + cmtPart);
+    }
+    pre.innerHTML = out.join('\n');
+  });
+
+  // ---------- 复制按钮 ----------
+  document.querySelectorAll('.codewrap').forEach(function (w) {
+    var btn = w.querySelector('.copybtn');
+    var code = w.querySelector('pre.code');
+    if (!btn || !code) return;
+    btn.addEventListener('click', function () {
+      var txt = code.textContent;
+      function done(ok) {
+        btn.textContent = ok ? '已复制' : '复制失败';
+        setTimeout(function () { btn.textContent = '复制代码'; }, 1600);
+      }
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = txt;
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        done(ok);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(function () { done(true); }, fallback);
+      } else {
+        fallback();
+      }
+    });
+  });
+
+  // ---------- 侧边栏当前章节高亮（滚动侦测） ----------
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav a[href^="#"]'));
+  var map = {};
+  links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  function spy() {
+    var cur = secs.length ? secs[0].id : null;
+    for (var i = 0; i < secs.length; i++) {
+      if (secs[i].getBoundingClientRect().top <= 160) cur = secs[i].id;
+    }
+    links.forEach(function (a) { a.classList.remove('active'); });
+    if (cur && map[cur]) map[cur].classList.add('active');
+  }
+
+  // ---------- 顶部阅读进度条 ----------
+  var bar = document.getElementById('progress');
+  function prog() {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max * 100) : 0) + '%';
+  }
+
+  // ---------- 返回顶部按钮 ----------
+  var topBtn = document.getElementById('totop');
+  topBtn.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ---------- 移动端目录开关 ----------
+  var sidebar = document.getElementById('sidebar');
+  var mask = document.getElementById('mask');
+  var menuBtn = document.getElementById('menu');
+  function closeMenu() { sidebar.classList.remove('open'); mask.classList.remove('show'); }
+  menuBtn.addEventListener('click', function () {
+    sidebar.classList.toggle('open');
+    mask.classList.toggle('show');
+  });
+  mask.addEventListener('click', closeMenu);
+  links.forEach(function (a) { a.addEventListener('click', closeMenu); });
+
+  window.addEventListener('scroll', function () {
+    spy();
+    prog();
+    if (window.scrollY > 600) { topBtn.classList.add('show'); }
+    else { topBtn.classList.remove('show'); }
+  }, { passive: true });
+
+  spy();
+  prog();
+})();
+</script>
+</body>
+</html>

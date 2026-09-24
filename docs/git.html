@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f7f9">
+<meta name="description" content="Git 零基础完全教程：类比讲解、每行代码带注释、Windows 与 Linux 双平台全覆盖。">
+<title>Git 零基础完全教程 · 从入门到团队协作</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  background:#f6f7f9; color:#28303b; font-size:16.5px; line-height:1.95;
+  -webkit-font-smoothing:antialiased;
+}
+::selection { background:#ffd8c7; }
+a { color:#c2410c; text-decoration:none; }
+a:hover { text-decoration:underline; }
+section[id] { scroll-margin-top:24px; }
+code { font-family:"JetBrains Mono",Consolas,"Courier New",monospace; }
+
+/* 顶部进度条 */
+#progress { position:fixed; top:0; left:0; height:3px; width:0; background:linear-gradient(90deg,#e8542f,#f0955c); z-index:1200; }
+
+/* ============ 侧边栏 ============ */
+.sidebar { position:fixed; top:0; left:0; bottom:0; width:282px; background:#fff; border-right:1px solid #e7ebf0; overflow-y:auto; z-index:1100; padding:30px 0 40px; }
+.brand { padding:0 26px 24px; border-bottom:1px solid #eef1f5; margin-bottom:14px; }
+.logo { display:flex; align-items:center; gap:12px; }
+.logo-mark { width:44px; height:44px; border-radius:12px; background:linear-gradient(135deg,#e8542f,#f07a45); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; letter-spacing:.5px; box-shadow:0 6px 14px rgba(232,84,47,.25); }
+.logo-txt b { display:block; font-size:17px; color:#1f2733; }
+.logo-txt span { font-size:12px; color:#8a95a5; letter-spacing:1px; }
+.nav-cap { padding:18px 26px 8px; font-size:12px; color:#9aa5b4; letter-spacing:2px; font-weight:600; }
+.nav a { display:flex; align-items:baseline; gap:10px; padding:8.5px 26px 8.5px 23px; color:#5c6878; font-size:14px; border-left:3px solid transparent; transition:.15s; }
+.nav a .n { font-family:Consolas,monospace; font-size:11.5px; color:#a8b2c1; }
+.nav a:hover { color:#c2410c; background:#fbf3ef; text-decoration:none; }
+.nav a.active { color:#c2410c; border-left-color:#e8542f; background:#fdf1ec; font-weight:600; }
+.nav a.active .n { color:#e0854f; }
+.side-foot { margin-top:26px; padding:16px 26px 0; border-top:1px solid #eef1f5; font-size:12px; color:#9aa5b4; line-height:1.9; }
+
+/* ============ 主区域 ============ */
+main { margin-left:282px; }
+.container { width:100%; max-width:880px; margin:0 auto; padding:0 56px 140px; }
+
+/* ---- 宽屏 / 超宽屏自适应：内容区随屏幕加宽，字号与组件同步放大 ---- */
+@media (min-width:1500px) {
+  body { font-size:17px; }
+  .container { max-width:1100px; }
+  pre.code { font-size:14.5px; }
+}
+@media (min-width:1900px) {
+  body { font-size:18px; }
+  .container { max-width:1360px; padding:0 64px 140px; }
+  .sidebar { width:320px; }
+  main { margin-left:320px; }
+  .nav a { font-size:15px; padding:9.5px 26px 9.5px 23px; }
+  .nav-cap { font-size:13px; }
+  .hero h1 { font-size:56px; }
+  .hero .sub { font-size:19px; max-width:800px; }
+  .chap-head h2 { font-size:32px; }
+  h3 { font-size:23px; }
+  pre.code { font-size:15px; }
+  pre.output { font-size:14px; }
+  .codehead { font-size:13.5px; }
+  .copybtn { font-size:13px; }
+  .callout { font-size:16.5px; }
+  table { font-size:15.5px; }
+  th { font-size:14px; }
+  .os { font-size:13.5px; }
+  kbd { font-size:14px; }
+  .stat b { font-size:30px; }
+  .stat span { font-size:14px; }
+  figure.dg figcaption { font-size:14px; }
+}
+@media (min-width:2500px) {
+  body { font-size:19px; }
+  .container { max-width:1700px; padding:0 80px 140px; }
+  .sidebar { width:344px; }
+  main { margin-left:344px; }
+  .hero h1 { font-size:64px; }
+  .chap-head h2 { font-size:36px; }
+  h3 { font-size:25px; }
+  pre.code { font-size:16px; }
+  pre.output { font-size:15px; }
+  .callout { font-size:18px; }
+  table { font-size:17px; }
+  .stat b { font-size:34px; }
+  .os { font-size:15px; }
+}
+@media (min-width:3300px) {
+  body { font-size:20px; }
+  .container { max-width:2100px; padding:0 96px 140px; }
+  .hero h1 { font-size:74px; }
+}
+
+/* Hero */
+.hero { padding:92px 0 8px; }
+.hero-kicker { display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; letter-spacing:2px; color:#c2410c; background:#fdece5; border:1px solid #f6cdbb; padding:6px 16px; border-radius:999px; }
+.hero h1 { margin:26px 0 18px; font-size:clamp(32px,4.6vw,50px); line-height:1.28; color:#1c2430; letter-spacing:.5px; font-weight:800; }
+.hero h1 em { font-style:normal; color:#e8542f; }
+.hero .sub { font-size:18px; color:#5c6878; max-width:640px; line-height:1.9; }
+.stats { display:flex; flex-wrap:wrap; margin-top:34px; background:#fff; border:1px solid #e7ebf0; border-radius:16px; overflow:hidden; box-shadow:0 4px 16px rgba(24,34,56,.05); }
+.stat { flex:1 1 150px; padding:22px 10px; text-align:center; border-right:1px solid #eef1f5; }
+.stat:last-child { border-right:0; }
+.stat b { display:block; font-size:26px; color:#e8542f; font-weight:800; }
+.stat span { font-size:13px; color:#8a95a5; }
+
+/* 章节 */
+.chapter { margin-top:104px; }
+.chap-head { display:flex; align-items:center; gap:20px; padding-bottom:22px; border-bottom:1px solid #e7ebf0; margin-bottom:34px; }
+.chap-num { flex:none; width:58px; height:58px; border-radius:15px; background:linear-gradient(135deg,#e8542f,#f2834f); color:#fff; font-size:24px; font-weight:800; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(232,84,47,.22); }
+.chap-head h2 { font-size:29px; line-height:1.35; color:#1c2430; font-weight:800; }
+.chap-head .desc { margin-top:6px; font-size:14.5px; color:#8a95a5; font-weight:400; line-height:1.7; }
+
+h3 { margin:54px 0 6px; font-size:21.5px; color:#1c2430; display:flex; align-items:center; gap:10px; font-weight:700; }
+h3::before { content:""; flex:none; width:7px; height:20px; border-radius:3px; background:linear-gradient(#f07a45,#e8542f); }
+h4 { margin:34px 0 4px; font-size:17px; color:#2c3644; font-weight:700; }
+p { margin:16px 0; }
+.lead { font-size:17px; color:#5c6878; }
+ul.plain { margin:14px 0 14px 4px; padding-left:22px; }
+ul.plain li { margin:8px 0; }
+
+p code, li code, td code, th code, .callout code { background:#eef1f5; color:#a03a18; padding:2px 7px; border-radius:6px; font-size:.88em; }
+
+/* ============ 代码块 ============ */
+.codewrap { margin:26px 0; border-radius:14px; overflow:hidden; border:1px solid #232e44; box-shadow:0 10px 30px rgba(18,26,44,.14); }
+.codehead { display:flex; align-items:center; justify-content:space-between; background:#1a2334; color:#8fa0bb; padding:9px 16px; font-size:12.5px; font-family:Consolas,monospace; }
+.codehead .lab { display:flex; align-items:center; gap:10px; }
+.codehead .dots { display:flex; gap:6px; }
+.codehead .dots i { width:10px; height:10px; border-radius:50%; }
+.codehead .dots i:nth-child(1){ background:#ff5f56; }
+.codehead .dots i:nth-child(2){ background:#ffbd2e; }
+.codehead .dots i:nth-child(3){ background:#27c93f; }
+.copybtn { background:#2a3550; color:#aebdd4; border:1px solid #37435f; padding:4px 12px; border-radius:7px; cursor:pointer; font-size:12px; font-family:inherit; transition:.15s; }
+.copybtn:hover { background:#e8542f; border-color:#e8542f; color:#fff; }
+pre.code { background:#151d30; color:#dde6f2; padding:18px 22px; overflow-x:auto; font-size:14px; line-height:1.95; font-family:Consolas,"JetBrains Mono",monospace; margin:0; }
+pre.code .cmt { color:#7ee787; }
+pre.code .kw { color:#82b8ff; }
+pre.code .pr { color:#5c6c86; }
+pre.output { background:#1b2438; color:#9db0ca; padding:14px 22px 16px; overflow-x:auto; font-size:13px; line-height:1.85; font-family:Consolas,monospace; border-top:1px dashed #32405c; margin:0; }
+pre.output::before { content:"运行效果（示意，注释为中文标注）"; display:block; color:#6a7a95; font-size:11.5px; margin-bottom:8px; letter-spacing:1px; }
+pre.code::-webkit-scrollbar, pre.output::-webkit-scrollbar { height:8px; }
+pre.code::-webkit-scrollbar-thumb, pre.output::-webkit-scrollbar-thumb { background:#2e3b57; border-radius:4px; }
+
+/* ============ 提示框 ============ */
+.callout { position:relative; border-radius:13px; padding:20px 22px 20px 64px; margin:28px 0; font-size:15.5px; line-height:1.9; }
+.callout::before { position:absolute; left:18px; top:20px; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; }
+.callout .tag { display:inline-block; font-weight:800; margin-right:6px; }
+.callout.analogy { background:#fff8e9; border:1px solid #f2ddb0; color:#6b5518; }
+.callout.analogy::before { background:#f0a92e; content:"喻"; }
+.callout.tip { background:#ecf8f0; border:1px solid #c2e6cd; color:#1e5c33; }
+.callout.tip::before { background:#2f9e5f; content:"技"; }
+.callout.warn { background:#fdf0eb; border:1px solid #f4c9b8; color:#8a3319; }
+.callout.warn::before { background:#e8542f; content:"警"; }
+.callout.info { background:#edf3fc; border:1px solid #c8d9f2; color:#274a7d; }
+.callout.info::before { background:#4a7fd4; content:"注"; }
+.callout code { background:rgba(255,255,255,.75); color:inherit; }
+
+.practice { border:1.5px dashed #e8a37c; background:#fffaf5; border-radius:13px; padding:20px 24px; margin:30px 0; color:#4a4034; }
+.practice .tag { color:#c2410c; font-weight:800; letter-spacing:1px; font-size:13px; display:block; margin-bottom:8px; }
+.practice ol { padding-left:22px; }
+.practice ol li { margin:6px 0; }
+
+/* ============ 操作系统标签 ============ */
+.os { display:inline-block; padding:3px 12px; border-radius:999px; font-size:12.5px; font-weight:700; letter-spacing:.5px; margin-right:6px; vertical-align:1px; }
+.os.win { background:#e8f1fc; color:#1263c3; border:1px solid #c4d9f4; }
+.os.linux { background:#2c3543; color:#f2c94c; border:1px solid #2c3543; }
+.os.both { background:#edf7ef; color:#227a43; border:1px solid #c8e8d2; }
+.osgrid { display:grid; grid-template-columns:1fr 1fr; gap:22px; margin:26px 0; }
+.oscard { background:#fff; border:1px solid #e7ebf0; border-radius:16px; padding:24px 24px 10px; box-shadow:0 4px 16px rgba(24,34,56,.05); }
+.oscard .os-head { display:flex; align-items:center; margin-bottom:4px; }
+.oscard h4 { margin:0; font-size:16.5px; }
+.oscard .codewrap { margin:16px 0; }
+
+/* ============ 表格 ============ */
+.tblwrap { overflow-x:auto; margin:26px 0; border-radius:13px; border:1px solid #e7ebf0; background:#fff; box-shadow:0 4px 16px rgba(24,34,56,.05); }
+table { width:100%; border-collapse:collapse; font-size:14.5px; line-height:1.85; min-width:520px; }
+th { background:#f2f5f9; color:#3b4656; text-align:left; padding:12px 18px; font-size:13.5px; letter-spacing:.5px; border-bottom:1px solid #e3e9f0; white-space:nowrap; }
+td { padding:13px 18px; border-bottom:1px solid #eef2f6; vertical-align:top; color:#3b4656; }
+tr:last-child td { border-bottom:0; }
+td code { white-space:nowrap; }
+
+/* 步骤列表 */
+ol.steps { list-style:none; counter-reset:s; margin:22px 0; }
+ol.steps li { counter-increment:s; position:relative; padding:0 0 18px 46px; }
+ol.steps li::before { content:counter(s); position:absolute; left:0; top:1px; width:30px; height:30px; border-radius:50%; background:#fdece5; color:#c2410c; border:1.5px solid #f3bfa8; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:14px; }
+ol.steps li b { color:#1c2430; }
+
+/* 图 */
+figure.dg { background:#fff; border:1px solid #e7ebf0; border-radius:18px; padding:30px 26px 18px; margin:30px 0; box-shadow:0 4px 16px rgba(24,34,56,.05); text-align:center; }
+figure.dg svg { max-width:100%; height:auto; }
+figure.dg figcaption { margin-top:14px; font-size:13px; color:#8a95a5; }
+
+kbd { display:inline-block; background:#fff; border:1px solid #cfd7e2; border-bottom-width:2.5px; border-radius:7px; padding:1px 9px; font-size:13px; font-family:inherit; color:#333e4e; margin:0 2px; }
+
+.chapter-end { text-align:center; color:#c3ccd8; letter-spacing:10px; margin:56px 0 0; font-size:15px; }
+
+footer.site-foot { margin-top:90px; padding-top:28px; border-top:1px solid #e7ebf0; color:#9aa5b4; font-size:13.5px; line-height:2; }
+
+/* 返回顶部 */
+#totop { position:fixed; right:26px; bottom:26px; width:46px; height:46px; border-radius:50%; background:#fff; border:1px solid #e0e6ee; color:#5c6878; font-size:18px; cursor:pointer; box-shadow:0 6px 20px rgba(24,34,56,.12); opacity:0; visibility:hidden; transform:translateY(8px); transition:.25s; z-index:900; }
+#totop.show { opacity:1; visibility:visible; transform:none; }
+#totop:hover { color:#c2410c; border-color:#f3bfa8; }
+
+/* 汉堡按钮 & 遮罩 */
+#menu { display:none; position:fixed; top:16px; left:16px; z-index:1300; width:44px; height:44px; border-radius:12px; background:#fff; border:1px solid #e0e6ee; box-shadow:0 6px 20px rgba(24,34,56,.14); cursor:pointer; padding:12px 10px; }
+#menu span { display:block; height:2.5px; background:#3b4656; border-radius:2px; margin:5.5px 0; transition:.25s; }
+#mask { display:none; position:fixed; inset:0; background:rgba(18,26,44,.45); z-index:1050; }
+
+@media (max-width:1180px) {
+  .sidebar { transform:translateX(-100%); transition:.28s; box-shadow:0 0 40px rgba(0,0,0,.2); }
+  .sidebar.open { transform:none; }
+  #menu { display:block; }
+  #mask.show { display:block; }
+  main { margin-left:0; }
+  .container { padding:0 26px 120px; }
+  .hero { padding-top:84px; }
+}
+@media (max-width:760px) {
+  .osgrid { grid-template-columns:1fr; }
+  .chap-head h2 { font-size:24px; }
+  .chap-num { width:48px; height:48px; font-size:20px; }
+  .callout { padding-left:56px; }
+  .stat b { font-size:22px; }
+  body { font-size:15.5px; }
+  .hero .sub { font-size:16px; }
+}
+@media print {
+  .sidebar, #totop, #menu, #mask, #progress, .copybtn { display:none !important; }
+  main { margin:0; }
+  .codewrap { box-shadow:none; }
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<button id="menu" aria-label="打开目录"><span></span><span></span><span></span></button>
+<div id="mask"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="logo">
+      <div class="logo-mark">Git</div>
+      <div class="logo-txt"><b>Git 完全教程</b><span>零基础友好版</span></div>
+    </div>
+  </div>
+  <div class="nav-cap">教程目录</div>
+  <nav class="nav">
+    <a href="#top"><span class="n">00</span>导读 · 如何使用本教程</a>
+    <a href="#ch1"><span class="n">01</span>初识 Git：什么是版本控制</a>
+    <a href="#ch2"><span class="n">02</span>安装 Git（Win / Linux）</a>
+    <a href="#ch3"><span class="n">03</span>初次配置：领一张工作证</a>
+    <a href="#ch4"><span class="n">04</span>核心概念：三大区域</a>
+    <a href="#ch5"><span class="n">05</span>基础操作：第一次提交</a>
+    <a href="#ch6"><span class="n">06</span>撤销与回退：后悔药全集</a>
+    <a href="#ch7"><span class="n">07</span>分支：平行宇宙</a>
+    <a href="#ch8"><span class="n">08</span>远程仓库：连接 GitHub</a>
+    <a href="#ch9"><span class="n">09</span>标签与储藏</a>
+    <a href="#ch10"><span class="n">10</span>进阶操作</a>
+    <a href="#ch11"><span class="n">11</span>完整实战：从零到 GitHub</a>
+    <a href="#ch12"><span class="n">12</span>常见报错急救站</a>
+    <a href="#ch13"><span class="n">13</span>最佳实践与协作</a>
+    <a href="#ch14"><span class="n">14</span>命令速查表</a>
+  </nav>
+  <div class="side-foot">边看边敲，效果最佳。<br>遇到报错，先查第 12 章。</div>
+</aside>
+
+<main>
+<div class="container">
+
+<!-- ==================== HERO ==================== -->
+<section class="hero" id="top">
+  <span class="hero-kicker">零基础友好 · 类比教学 · 双平台</span>
+  <h1>把 <em>Git</em> 一次讲透的<br>完全自学教程</h1>
+  <p class="sub">不需要任何编程基础。我们会把版本控制拆成一个个生活里的比喻——<b>照相馆、游戏存档、平行宇宙</b>，再配上<b>每一行都有中文注释</b>的命令示例，带你从「这到底是啥」一路走到「团队协作」。</p>
+  <div class="stats">
+    <div class="stat"><b>14</b><span>个章节 · 由浅入深</span></div>
+    <div class="stat"><b>100+</b><span>条命令 · 行行有注释</span></div>
+    <div class="stat"><b>30+</b><span>个生活化类比</span></div>
+    <div class="stat"><b>2</b><span>大平台 Win / Linux</span></div>
+  </div>
+  <div class="callout info">
+    <span class="tag">怎么用这份教程</span>
+    ① 按顺序读，尽量别跳过第 4 章的核心概念——它是整份教程的「地图」；② 边看边打开终端亲手敲一遍，光看不练一周就忘；③ 卡住了就去第 12 章「常见报错急救站」对号入座；④ 想快速回忆命令时，翻到最后的第 14 章速查表。
+  </div>
+</section>
+
+<!-- ==================== 第 1 章 ==================== -->
+<section class="chapter" id="ch1">
+  <div class="chap-head">
+    <div class="chap-num">01</div>
+    <div>
+      <h2>初识 Git：什么是版本控制</h2>
+      <div class="desc">用一个「惨案」理解为什么全世界程序员都离不开它</div>
+    </div>
+  </div>
+
+  <p class="lead">在学任何命令之前，先搞清楚两件事：<b>我们到底要解决什么问题</b>，以及 <b>Git 是个什么东西</b>。这一章不讲操作，只讲故事和比喻——但它们会成为你后面理解一切命令的地基。</p>
+
+  <h3>1.1 一个程序员的至暗时刻</h3>
+  <p>先看一个几乎每个人都经历过的场景。小王在写毕业论文，为了「保险」，他每次大改之前都另存一份新文件。三个月后，他的文件夹长这样：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>小王的文件夹（真实的惨案现场）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">论文.doc                 # 第一版，青涩懵懂
+论文-修改版.doc          # 改了一些内容
+论文-最终版.doc          # 自信满满
+论文-最终版2.doc         # 老师说要改第三章
+论文-最终版-真最终版.doc  # 老师又说第五章要改
+论文-最终版-打死不改了.doc # 崩溃边缘
+论文-最终版-打死不改了2.doc # 彻底崩溃
+论文-改回来一点.doc       # 想找回上周删掉的那段话，发现找不回来了</pre>
+  </div>
+  <p>比起文件夹的混乱，更绝望的是这三个问题：</p>
+  <ul class="plain">
+    <li><b>「上周三我删掉的那段话，还能找回来吗？」</b>——不能。文件早被覆盖了。</li>
+    <li><b>「这行数据是谁改的？为什么改？」</b>——不知道。没有任何记录。</li>
+    <li><b>「现在这份和三天前那份，到底差在哪？」</b>——只能靠肉眼一行行比对。</li>
+  </ul>
+  <div class="callout analogy">
+    <span class="tag">类比</span>这就像<b>打游戏没有存档功能</b>：打到最后一关，手一抖死机了，只能从第一关重来；想回到「打 Boss 前的那个状态」？门儿都没有。
+  </div>
+
+  <h3>1.2 版本控制：给你的项目配一位「私人史官」</h3>
+  <p><b>版本控制（Version Control）</b>就是解决上面所有问题的技术：它会自动记录项目中每一次修改的<b>时间、内容、作者和原因</b>，让你可以随时「穿越」回任何一个历史时刻，随时对比任意两个版本的差异。</p>
+  <p>而 <b>Git</b>，就是当今世界上 最流行、最强大 的那个版本控制工具，没有之一。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>装上 Git 之后，你的项目就拥有了<b>游戏级存档系统</b>：
+    <ul class="plain" style="margin:8px 0 0">
+      <li><b>随时存档</b>——每完成一小步就存一次（commit，提交）；</li>
+      <li><b>随时读档</b>——搞砸了就回到任意一个存档点（reset，回退）；</li>
+      <li><b>多个存档槽</b>——同时尝试多种方案互不干扰（branch，分支）；</li>
+      <li><b>云端同步存档</b>——换台电脑也能接着玩（remote，远程仓库）。</li>
+    </ul>
+  </div>
+  <p>同样是刚才那些让人抓狂的场景，用 Git 之后画风突变：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>日常场景</th><th>手动管理文件夹</th><th>用 Git 之后</th></tr></thead>
+    <tbody>
+      <tr><td>想回到上周的版本</td><td>翻遍一堆「最终版」，凭记忆猜</td><td>一条命令，3 秒回去</td></tr>
+      <tr><td>想知道某行为什么这么写</td><td>无人知晓，玄学追溯</td><td>查到是谁、哪天、为什么改的</td></tr>
+      <tr><td>想尝试大改动又怕搞砸</td><td>复制整个文件夹「项目-备份2」</td><td>开个分支随便折腾，失败就删</td></tr>
+      <tr><td>两人同时改一个文件</td><td>互相覆盖，全员抓狂</td><td>自动合并，真冲突了会清楚提示</td></tr>
+      <tr><td>电脑突然坏了</td><td>一切归零，含泪重写</td><td>从远程仓库完整复原</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>1.3 Git 的诞生：被逼出来的神作</h3>
+  <p>2005 年，Linux 之父 <b>Linus Torvalds</b>（就是那个创造了 Linux 内核、养活了全世界服务器的男人）遇到了大麻烦：原本用来管理 Linux 内核代码的商业工具突然不让社区免费用了，而现有的开源工具又慢得没法管理几千万行代码。</p>
+  <p>于是这位大佬做了个符合他风格的决定——<b>自己写一个</b>。据说他只花了大约两周时间就写出了 Git 的雏形，第一个版本就能以惊人的速度管理整个 Linux 内核的代码。如今，Git 已经统治了整个行业：全球绝大多数开源项目、几乎所有互联网公司的代码，都用 Git 管理。</p>
+  <div class="callout info">
+    <span class="tag">小知识</span>「git」在英式俚语里是「讨厌鬼」的意思。Linus 一贯的自嘲风格：「我是个自负的家伙，所有项目都以自己命名——Linux 是我，git 也是我。」
+  </div>
+  <p>Git 是<b>分布式</b>版本控制系统：每个人电脑里都存着一份<b>完整的项目历史</b>，不是只有一个中央服务器。这意味着——<b>断网也能正常提交代码</b>，服务器炸了也几乎不丢数据。</p>
+
+  <h3>1.4 Git、GitHub、Gitee、GitLab 到底啥区别？</h3>
+  <p>新手最容易把这四个名字混为一谈。用一张表 + 一个类比彻底分清：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>名字</th><th>它是什么</th><th>一句话理解</th></tr></thead>
+    <tbody>
+      <tr><td><b>Git</b></td><td>命令行工具，装在你电脑上</td><td>照相机本身，负责拍照和相册管理</td></tr>
+      <tr><td><b>GitHub</b></td><td>存放代码的网站（微软旗下）</td><td>全球最大的「冲印社 + 摄影社区」，大家把相册传上去分享交流</td></tr>
+      <tr><td><b>Gitee（码云）</b></td><td>国内的代码托管网站</td><td>开在你家楼下的分店，国内访问速度快</td></tr>
+      <tr><td><b>GitLab</b></td><td>可自建的代码托管平台</td><td>公司买来放在自己机房的「私人会所」，代码不出门</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="plain">
+    <li><b>Git 可以完全离线、单机使用</b>——不想上传任何东西？一点问题都没有，本教程前 7 章都不需要联网。</li>
+    <li><b>不用 GitHub ≠ 不会 Git</b>——就像不发朋友圈也能用手机拍照一样。</li>
+    <li>GitHub 上也不只是代码：笔记、电子书、课程作业、简历甚至菜谱，只要想留历史记录的东西都能放。</li>
+  </ul>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 2 章 ==================== -->
+<section class="chapter" id="ch2">
+  <div class="chap-head">
+    <div class="chap-num">02</div>
+    <div>
+      <h2>安装 Git</h2>
+      <div class="desc">Windows 与 Linux 双平台安装指南，顺便认识你的「终端」</div>
+    </div>
+  </div>
+
+  <p class="lead">好消息是：<b>Git 装好之后，Windows 和 Linux 上的命令是一模一样的</b>。区别只在安装方式和打开终端的方法，本章就把这两件事一次讲清。</p>
+
+  <h3>2.1 安装前必读：给 Windows 用户的一颗定心丸</h3>
+  <p>在 Windows 上装 Git 时，会附带一个叫 <b>Git Bash</b> 的终端工具，它模拟了 Linux 的命令环境。<b>本教程推荐 Windows 用户统一使用 Git Bash</b>——这样一来，教程里的每一条命令你在两个系统里都能原样运行，不用做任何转换。</p>
+  <div class="callout tip">
+    <span class="tag">技巧</span>Windows 用户用 <b>Git Bash</b>，就能和 Linux 用户「说同一种语言」。当然，你也可以在 CMD / PowerShell 里直接敲 <code>git</code> 命令，只是新建文件、查看文件这类<b>系统自带命令</b>两者写法不同（对照表见 2.5 节）。
+  </div>
+
+  <h3>2.2 <span class="os win">Windows</span>安装 Git</h3>
+  <ol class="steps">
+    <li><b>下载安装包</b>：打开官网 <a href="https://git-scm.com/download/win" target="_blank">git-scm.com/download/win</a>，下载 64 位安装包（文件名类似 <code>Git-2.x.x-64-bit.exe</code>）。官网慢的话，可以搜索「Git 国内镜像」下载。</li>
+    <li><b>运行安装包</b>：双击打开，前几页一路点 <b>Next</b>（安装位置、组件选择都用默认值即可）。</li>
+    <li><b>选择默认编辑器</b>（Select the default editor）：如果电脑上装了 VS Code，建议选 <b>Visual Studio Code</b>；没有也不慌，保持默认的 Vim 完全能用（后文教你如何从 Vim 中「逃生」）。</li>
+    <li><b>调整初始分支名</b>（Adjust the name of the initial branch）：建议选择 <b>Override the default branch name</b>，填 <code>main</code>——这是目前全世界的通行惯例，也和本教程保持一致。</li>
+    <li><b>调整 PATH 环境变量</b>（Adjusting your PATH environment）：选第二项 <b>「Git from the command line and also from 3rd-party software」</b>（推荐项，让你在 CMD 和 PowerShell 里也能用 git）。</li>
+    <li><b>选择 HTTPS 传输后端</b>：默认 OpenSSL，直接 Next。</li>
+    <li><b>配置换行符</b>（Configuring the line ending conversions）：保持第一项 <b>「Checkout Windows-style, commit Unix-style line endings」</b>——这是为 Windows 量身推荐的选项，能避免日后恼人的换行符警告。</li>
+    <li><b>选择终端模拟器</b>（Configuring the terminal emulator）：默认 <b>MinTTY</b> 即可，后面全部 Next 到 <b>Install</b>，等待完成点 Finish。</li>
+    <li><b>验证安装</b>：桌面或开始菜单右键空白处，看到 <b>「Open Git Bash here」</b>（在此处打开 Git Bash）选项，说明安装成功。点击它，弹出的黑色窗口就是你的「驾驶舱」。</li>
+  </ol>
+  <div class="callout warn">
+    <span class="tag">注意</span>不同版本的安装器界面顺序可能略有差异，认准上面的英文标题关键词即可；不确定的选项一律保持默认，Git 的默认值对小白都非常友好。
+  </div>
+
+  <h3>2.3 <span class="os linux">Linux</span>安装 Git</h3>
+  <p>Linux 安装 Git 是全场最轻松的——一条命令搞定。不同发行版用不同的「包管理器」，对号入座即可：</p>
+  <div class="osgrid">
+    <div class="oscard">
+      <div class="os-head"><span class="os win" style="display:none"></span><span class="os linux">Debian 系</span><h4>Ubuntu / Debian / Deepin</h4></div>
+      <div class="codewrap">
+        <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+        <pre class="code">sudo apt update          # 刷新软件源：看看软件列表有没有更新
+sudo apt install git -y  # 安装 Git；-y 表示所有确认询问都自动答「是」</pre>
+      </div>
+    </div>
+    <div class="oscard">
+      <div class="os-head"><span class="os linux">RedHat 系</span><h4>CentOS / Fedora / Rocky</h4></div>
+      <div class="codewrap">
+        <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+        <pre class="code">sudo yum install -y git  # CentOS 7 等老系统用 yum 安装
+sudo dnf install -y git  # Fedora / 新版 RHEL 用新一代的 dnf 安装</pre>
+      </div>
+    </div>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>其他发行版</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">sudo pacman -S git       # Arch / Manjaro 用户
+sudo zypper install git  # openSUSE 用户</pre>
+  </div>
+  <p>如果提示 <code>git: command not found</code>（找不到命令），先按上面的方法安装；多数 Linux 发行版其实<b>自带 Git</b>，早就装好了。</p>
+
+  <h3>2.4 验证安装：让 Git 报个到</h3>
+  <p><span class="os both">双平台通用</span>打开终端（打开方法见下一节），输入下面这条命令：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git --version      # 让 Git 自报版本号；--version 是几乎所有命令行工具的通用「报到」方式</pre>
+    <pre class="output">git version 2.45.1        # Windows 上会显示 git version 2.45.1.windows.1 之类
+# 只要出现「git version x.x.x」，就说明安装成功，可以开始浪了</pre>
+  </div>
+  <p>想顺手确认 Git 装在哪里，可以再敲一条：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">which git         # Linux / Git Bash：显示 git 程序所在的完整路径
+where git         # Windows CMD / PowerShell：与 which 同义，问「git 在哪」</pre>
+    <pre class="output">/usr/bin/git              # Linux 上的常见位置
+C:\Program Files\Git\cmd\git.exe   # Windows 上的常见位置</pre>
+  </div>
+
+  <h3>2.5 认识你的「驾驶舱」：终端</h3>
+  <p><b>终端（Terminal）</b>就是你敲命令的地方，长得像黑客电影里的黑窗口。它不可怕——只是把「点点点」的鼠标操作换成了「打字回车」，而且效率更高。</p>
+  <h4>怎么打开终端</h4>
+  <ul class="plain">
+    <li><span class="os win">Windows</span>三种方式任选：① 在任意文件夹里<b>右键空白处</b> → 「Open Git Bash here」（最推荐，直接定位到当前文件夹）；② 开始菜单搜 <b>Git Bash</b>；③ 桌面右键 → Open Git Bash。</li>
+    <li><span class="os linux">Linux</span>按 <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>，或在应用列表里搜「Terminal / 终端」。</li>
+  </ul>
+  <h4>看懂「提示符」</h4>
+  <p>打开终端后，最先看到的是一行「提示符」——它在告诉你：<b>我现在在哪、等你下指令</b>。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>两种提示符长这样</span><button class="copybtn">复制代码</button></div>
+    <pre class="output">user@ubuntu:~/project$          ← Linux / Git Bash 的提示符：用户名@电脑名:当前路径$
+                                                     最后那个 $ 是「该你说话了」的意思
+PS C:\Users\xiaowang\project>    ← PowerShell 的提示符：PS 路径>
+C:\Users\xiaowang\project>       ← CMD 的提示符：直接就是路径&gt;</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>提示符<b>不需要你自己输入</b>，它自己会出现。教程为了省篇幅，之后所有代码块都不画提示符，你只管敲命令本体、按回车。
+  </div>
+  <h4>终端生存命令对照表</h4>
+  <p>学 Git 之前，先掌握这 8 条「生存命令」，它们是你在终端里走路、开门、开灯的基本功：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>你想做什么</th><th>Linux / macOS / Git Bash</th><th>Windows CMD</th></tr></thead>
+    <tbody>
+      <tr><td>我在哪个文件夹？</td><td><code>pwd</code></td><td><code>cd</code>（不带参数）</td></tr>
+      <tr><td>这个文件夹里有什么？</td><td><code>ls</code>　（<code>ls -a</code> 连隐藏文件一起看）</td><td><code>dir</code>　（<code>dir /a</code> 看隐藏文件）</td></tr>
+      <tr><td>进入某个文件夹</td><td><code>cd 文件夹名</code></td><td><code>cd 文件夹名</code></td></tr>
+      <tr><td>返回上一级</td><td><code>cd ..</code></td><td><code>cd ..</code></td></tr>
+      <tr><td>回到用户主目录</td><td><code>cd ~</code> 或 <code>cd</code></td><td><code>cd %USERPROFILE%</code></td></tr>
+      <tr><td>新建文件夹</td><td><code>mkdir 名字</code></td><td><code>mkdir 名字</code></td></tr>
+      <tr><td>新建空文件</td><td><code>touch 文件名</code></td><td><code>type nul &gt; 文件名</code></td></tr>
+      <tr><td>查看文件内容</td><td><code>cat 文件名</code></td><td><code>type 文件名</code></td></tr>
+    </tbody>
+  </table></div>
+  <div class="practice">
+    <span class="tag">动手练习 01</span>
+    <ol>
+      <li>打开终端（Windows 用 Git Bash）；</li>
+      <li>用 <code>pwd</code> 看看自己在哪，用 <code>ls</code> 看看周围有什么；</li>
+      <li>敲 <code>mkdir git-practice</code> 新建一个练习文件夹，再 <code>cd git-practice</code> 走进去；</li>
+      <li>敲 <code>touch hello.txt</code> 新建一个文件，用 <code>ls</code> 确认它出现了。</li>
+    </ol>
+    <p style="margin:10px 0 0">这四步就是终端的全部日常：看位置 → 进目录 → 建东西 → 确认。练熟它，Git 学习之路已经平坦了一半。</p>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 3 章 ==================== -->
+<section class="chapter" id="ch3">
+  <div class="chap-head">
+    <div class="chap-num">03</div>
+    <div>
+      <h2>初次配置：领一张「工作证」</h2>
+      <div class="desc">装好 Git 后只需做一次的全局配置，从此每笔提交都有你的大名</div>
+    </div>
+  </div>
+
+  <p class="lead">Git 是「多人协作」工具，所以它需要知道<b>你是谁</b>。就像进公司先领工牌——以后你提交的每一行代码，都会自动盖上你的名字和邮箱。这一步<b>每台电脑只需做一次</b>。</p>
+
+  <h3>3.1 设置用户名和邮箱：报上名来</h3>
+  <p><span class="os both">双平台通用</span>在终端里执行下面两条命令（把名字和邮箱换成你自己的）：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git config --global user.name "小王"               # 设置用户名：以后每次提交都署这个名字
+git config --global user.email "xiaowang@qq.com"   # 设置邮箱：身份标识，也是平台给你发通知的地址</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>这两条命令相当于<b>在快递单上填写默认寄件人</b>：填一次，之后每个包裹（提交）都自动带上你的姓名和联系方式，收件人（同事）一看就知道是谁寄的。
+  </div>
+  <div class="callout warn">
+    <span class="tag">注意</span>这里的邮箱<b>不需要注册、不需要验证</b>，写什么都行——但如果你以后要用 GitHub，最好填 GitHub 账号的绑定邮箱，这样你的提交才能被认领到你的账号名下。
+  </div>
+  <p>顺手把新仓库的默认分支名也设为 <code>main</code>（与第 2 章安装时的选择呼应）：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git config --global init.defaultBranch main   # 以后 git init 创建的仓库，默认分支叫 main（新惯例）</pre>
+  </div>
+
+  <h3>3.2 查看与修改配置</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git config --list                    # 列出当前生效的全部 Git 配置（内容较多，滚动查看）
+git config user.name                 # 只查看某一项：这里会打印你的用户名
+git config user.email                # 只查看邮箱这一项
+git config --global --unset user.email  # 删除某项全局配置（比如想换邮箱时，先删再重设）</pre>
+    <pre class="output">user.name=小王                 ← 你的配置都存在这（示意）
+user.email=xiaowang@qq.com
+init.defaultbranch=main</pre>
+  </div>
+  <p>改配置不需要任何「删除」步骤——<b>同名命令再执行一遍就是覆盖</b>。想把名字改成「老王」？直接再敲一次 <code>git config --global user.name "老王"</code> 即可。</p>
+
+  <h3>3.3 配置存在哪：三层「规章制度」</h3>
+  <p>Git 的配置分三层，作用范围从小到大，<b>越具体的越说了算</b>（就近原则）：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>层级</th><th>写法</th><th>作用范围</th><th>类比</th></tr></thead>
+    <tbody>
+      <tr><td>系统级</td><td><code>--system</code></td><td>整台电脑所有用户</td><td>公司规章制度（全员遵守）</td></tr>
+      <tr><td>全局级</td><td><code>--global</code></td><td>你这台电脑上的所有仓库</td><td>部门惯例（本部门都这样）</td></tr>
+      <tr><td>仓库级</td><td><b>（不写参数）</b></td><td>仅当前这一个仓库</td><td>项目组的特别约定（这个项目说了算）</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>日常只管用 <code>--global</code>，一次配置全机生效。只有当你想让<b>某一个项目</b>用不同的署名（比如公司项目用真名、开源项目用网名）时，才在<b>那个项目目录里</b>去掉 <code>--global</code> 单独配置。
+  </div>
+
+  <h3>3.4 给命令起外号：别名配置（可选但超爽）</h3>
+  <p>有些命令又长又常敲，可以给它们起「外号」（alias，别名），大幅减少打字量：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git config --global alias.st "status"        # 之后敲 git st 就等于 git status（查状态）
+git config --global alias.cm "commit -m"     # 之后敲 git cm "说明" 就等于 git commit -m "说明"
+git config --global alias.lg "log --oneline --graph --all"  # git lg = 带图形的一行式历史（超好用）</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>本教程正文<b>一律使用完整命令</b>，保证你查任何资料都能对上号；等你自己敲熟了，再按喜好启用别名不迟。
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 4 章 ==================== -->
+<section class="chapter" id="ch4">
+  <div class="chap-head">
+    <div class="chap-num">04</div>
+    <div>
+      <h2>核心概念：三大区域与四种状态</h2>
+      <div class="desc">全书最重要的一章——看懂这张「地图」，之后所有命令都不再是死记硬背</div>
+    </div>
+  </div>
+
+  <p class="lead">很多新手学 Git 半年还是晕，就是因为跳过了概念直接背命令。请花十分钟读完本章——之后你看到的每条 Git 命令，都能瞬间明白它「在地图上走了哪一步」。</p>
+
+  <h3>4.1 一家「照相馆」：三大区域</h3>
+  <p>Git 管理项目的方式，像极了一家<strong>照相馆</strong>。你的项目文件会流经三个地方：</p>
+  <figure class="dg">
+    <svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Git 三大区域示意图">
+      <defs>
+        <marker id="ar1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#e8542f"/></marker>
+        <marker id="ar2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#8a95a5"/></marker>
+      </defs>
+      <rect x="30" y="70" width="190" height="96" rx="14" fill="#ffffff" stroke="#d5dce6" stroke-width="1.5"/>
+      <text x="125" y="108" text-anchor="middle" font-size="17" font-weight="700" fill="#2c3644">工作区</text>
+      <text x="125" y="134" text-anchor="middle" font-size="11.5" fill="#7b8794">你正在编辑的文件夹</text>
+      <text x="125" y="152" text-anchor="middle" font-size="11.5" fill="#7b8794">（拍照现场）</text>
+      <rect x="265" y="70" width="190" height="96" rx="14" fill="#fff8e9" stroke="#f0d9a8" stroke-width="1.5"/>
+      <text x="360" y="108" text-anchor="middle" font-size="17" font-weight="700" fill="#8a6414">暂存区</text>
+      <text x="360" y="134" text-anchor="middle" font-size="11.5" fill="#9a7c2e">本次要拍进照片的内容</text>
+      <text x="360" y="152" text-anchor="middle" font-size="11.5" fill="#9a7c2e">（上镜名单）</text>
+      <rect x="500" y="70" width="190" height="96" rx="14" fill="#fdf1ec" stroke="#eec4b4" stroke-width="1.5"/>
+      <text x="595" y="108" text-anchor="middle" font-size="17" font-weight="700" fill="#a04123">版本库</text>
+      <text x="595" y="134" text-anchor="middle" font-size="11.5" fill="#b06a4e">永久保存的提交历史</text>
+      <text x="595" y="152" text-anchor="middle" font-size="11.5" fill="#b06a4e">（相册）</text>
+      <line x1="222" y1="100" x2="262" y2="100" stroke="#e8542f" stroke-width="2" marker-end="url(#ar1)"/>
+      <text x="242" y="88" text-anchor="middle" font-size="12.5" font-weight="700" fill="#c2410c" font-family="Consolas,monospace">git add</text>
+      <line x1="457" y1="100" x2="497" y2="100" stroke="#e8542f" stroke-width="2" marker-end="url(#ar1)"/>
+      <text x="477" y="88" text-anchor="middle" font-size="12.5" font-weight="700" fill="#c2410c" font-family="Consolas,monospace">git commit</text>
+      <line x1="265" y1="140" x2="225" y2="140" stroke="#8a95a5" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#ar2)"/>
+      <text x="245" y="162" text-anchor="middle" font-size="11" fill="#7b8794" font-family="Consolas,monospace">restore --staged</text>
+      <line x1="500" y1="152" x2="140" y2="152" stroke="#8a95a5" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#ar2)"/>
+      <text x="320" y="196" text-anchor="middle" font-size="11" fill="#7b8794" font-family="Consolas,monospace">git restore（丢弃工作区改动）　git reset（整体回退）</text>
+      <text x="360" y="250" text-anchor="middle" font-size="13" fill="#5c6878">把想拍的先挑进名单（add），再一起按下快门（commit）——而不是见什么拍什么</text>
+      <text x="360" y="274" text-anchor="middle" font-size="12" fill="#9aa5b4">这就是 Git 设计「暂存区」的初衷：让你能从容地、分批地整理每一次提交</text>
+    </svg>
+    <figcaption>图 4-1 · Git 三大区域与命令流向：工作区 → 暂存区 → 版本库</figcaption>
+  </figure>
+
+  <h4>① 工作区（Working Directory）—— 拍照现场</h4>
+  <p>就是你在电脑上<b>看得见摸得着</b>的那个项目文件夹：你写代码、改文档、删文件，都发生在工作区。此刻它是什么样，打开文件夹看到的就是什么样。</p>
+
+  <h4>② 暂存区（Staging Area）—— 上镜名单</h4>
+  <p>一个看不见的「候场区」。执行 <code>git add</code>，就是把某些改动<b>登记进这次的拍摄名单</b>；名单外的改动，按下快门时<b>不会被拍进去</b>。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>拍毕业合照前，老师会先点名：「小明、小红、小刚，你们三个站到台上来！」——<b>点名就是 <code>git add</code></b>。没被点到名的同学（改动），快门按下时就不在照片里。这样你就能<b>从容地分批提交</b>：比如改了 5 个文件，只把其中 3 个相关的打包成一次干净的提交，剩下 2 个留到下一次。
+  </div>
+
+  <h4>③ 版本库（Repository）—— 相册</h4>
+  <p>执行 <code>git commit</code>（提交），相当于<b>按下快门</b>：把「上镜名单」里的内容定格成一张<b>永不褪色的快照</b>，编上号，存进相册。从此它永远安全——想什么时候翻看、什么时候「读档」回去都行。</p>
+  <div class="callout info">
+    <span class="tag">科普</span>版本库实体就是你项目文件夹里那个隐藏的 <code>.git</code> 文件夹——它就是「相册 + 登记 + 档案室」本身。你可以进去参观（<code>ls -a</code> 可以看到它），但<b>千万别手动修改里面的任何东西</b>，就像别拿剪刀去剪相册的底片。
+  </div>
+
+  <h3>4.2 文件的四种「状态」</h3>
+  <p>Git 眼中，工作区的每个文件永远处于四种状态之一。理解它们，<code>git status</code> 的输出你就能秒懂：</p>
+  <figure class="dg">
+    <svg viewBox="0 0 720 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="文件四种状态流转图">
+      <defs>
+        <marker id="b1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#e8542f"/></marker>
+        <marker id="b2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#8a95a5"/></marker>
+      </defs>
+      <rect x="40" y="30" width="200" height="72" rx="12" fill="#edf3fc" stroke="#c8d9f2" stroke-width="1.5"/>
+      <text x="140" y="60" text-anchor="middle" font-size="15.5" font-weight="700" fill="#274a7d">Untracked 未跟踪</text>
+      <text x="140" y="84" text-anchor="middle" font-size="11.5" fill="#5a7cb0">刚出生：Git 还不认识它</text>
+      <rect x="480" y="30" width="200" height="72" rx="12" fill="#fff8e9" stroke="#f0d9a8" stroke-width="1.5"/>
+      <text x="580" y="60" text-anchor="middle" font-size="15.5" font-weight="700" fill="#8a6414">Staged 已暂存</text>
+      <text x="580" y="84" text-anchor="middle" font-size="11.5" fill="#9a7c2e">已进名单：等待拍照</text>
+      <rect x="260" y="230" width="200" height="72" rx="12" fill="#ecf8f0" stroke="#c2e6cd" stroke-width="1.5"/>
+      <text x="360" y="260" text-anchor="middle" font-size="15.5" font-weight="700" fill="#1e5c33">Unmodified 未修改</text>
+      <text x="360" y="284" text-anchor="middle" font-size="11.5" fill="#4b8563">安分守己：和快照一致</text>
+      <rect x="40" y="230" width="200" height="72" rx="12" fill="#fdf0eb" stroke="#f4c9b8" stroke-width="1.5"/>
+      <text x="140" y="260" text-anchor="middle" font-size="15.5" font-weight="700" fill="#a04123">Modified 已修改</text>
+      <text x="140" y="284" text-anchor="middle" font-size="11.5" fill="#b06a4e">动过了：还没重新登记</text>
+      <line x1="242" y1="66" x2="476" y2="66" stroke="#e8542f" stroke-width="2" marker-end="url(#b1)"/>
+      <text x="360" y="52" text-anchor="middle" font-size="12.5" font-weight="700" fill="#c2410c" font-family="Consolas,monospace">git add</text>
+      <line x1="580" y1="104" x2="420" y2="228" stroke="#e8542f" stroke-width="2" marker-end="url(#b1)"/>
+      <text x="536" y="176" text-anchor="middle" font-size="12.5" font-weight="700" fill="#c2410c" font-family="Consolas,monospace">git commit（拍！)</text>
+      <line x1="300" y1="228" x2="180" y2="104" stroke="#8a95a5" stroke-width="1.8" marker-end="url(#b2)"/>
+      <text x="212" y="176" text-anchor="middle" font-size="11.5" fill="#7b8794">你编辑了文件</text>
+      <line x1="140" y1="104" x2="480" y2="228" stroke="#e8542f" stroke-width="2" marker-end="url(#b1)"/>
+      <text x="240" y="140" text-anchor="middle" font-size="12.5" font-weight="700" fill="#c2410c" font-family="Consolas,monospace">git add（重新登记）</text>
+      <line x1="480" y1="72" x2="244" y2="46" stroke="#8a95a5" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#b2)"/>
+      <text x="360" y="30" text-anchor="middle" font-size="11" fill="#7b8794" font-family="Consolas,monospace">git restore --staged（退回名单外）</text>
+    </svg>
+    <figcaption>图 4-2 · 文件四种状态的流转：一圈「登记 → 拍照 → 再修改 → 再登记」的循环</figcaption>
+  </figure>
+  <div class="tblwrap"><table>
+    <thead><tr><th>状态</th><th>中文</th><th>照相馆类比</th><th>它想告诉你</th></tr></thead>
+    <tbody>
+      <tr><td><code>Untracked</code></td><td>未跟踪</td><td>新面孔站在照相馆门口</td><td>「这是新文件，Git 还没开始管理它」——需要 <code>git add</code> 收编</td></tr>
+      <tr><td><code>Staged</code></td><td>已暂存</td><td>已点名，站上台等着拍照</td><td>「改动已进名单，下次 commit 会拍进去」</td></tr>
+      <tr><td><code>Unmodified</code></td><td>未修改</td><td>拍完照安静坐着</td><td>「和最近一次快照一模一样」，啥也不用做</td></tr>
+      <tr><td><code>Modified</code></td><td>已修改</td><td>把自己弄乱了，还没补拍</td><td>「和快照不一样了」——想存档就重新 <code>add</code> + <code>commit</code></td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout tip">
+    <span class="tag">看色识状态</span><code>git status</code> 的输出里：<b>绿色</b>的文件 = 已进名单（staged），等着拍照；<b>红色</b>的文件 = 还没登记（untracked / modified）。一句话：<b>绿的马上要拍，红的还没安排</b>。
+  </div>
+
+  <h3>4.3 HEAD：相册里夹着的书签</h3>
+  <p>你会经常见到 <b>HEAD</b> 这个词。它就是<b>夹在相册里的书签</b>，标记「你当前所在的位置」——正常情况下，它指向当前分支最新那张照片（最新一次提交）。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"># 「HEAD 指针」的常用写法（后面回退章节会大量用到）
+HEAD          # 书签当前位置：即当前分支的最新一次提交
+HEAD^         # 书签的上一个提交（^ 写几个就往回退几步）
+HEAD^^        # 上上个提交（连续两个 ^）
+HEAD~3        # 往回数第 3 个提交（比 ^^^^ 更省力的写法）</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>看小说时手指总停在当前页——<b>HEAD 就是那根手指</b>。翻到哪页（切换版本），手指跟到哪页；<code>HEAD^</code> 就是「上一页」，<code>HEAD~3</code> 就是「往前翻 3 页」。
+  </div>
+
+  <h3>4.4 一张「命令地图」：想去哪，敲哪条</h3>
+  <p>把本章所有知识压缩成一张表。之后每学一条新命令，先问自己：<b>它在三个区域之间搬运了什么？</b></p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>你想做什么</th><th>命令</th><th>在地图上发生了什么</th></tr></thead>
+    <tbody>
+      <tr><td>把改动登记进拍摄名单</td><td><code>git add 文件</code></td><td>工作区 → 暂存区</td></tr>
+      <tr><td>按下快门，存入相册</td><td><code>git commit</code></td><td>暂存区 → 版本库</td></tr>
+      <tr><td>把文件从名单里撤下来</td><td><code>git restore --staged 文件</code></td><td>暂存区 → 工作区（改动不丢）</td></tr>
+      <tr><td>丢弃工作区的改动</td><td><code>git restore 文件</code></td><td>用快照内容覆盖工作区（改动丢弃）</td></tr>
+      <tr><td>整体回退到某个历史版本</td><td><code>git reset 版本</code></td><td>移动 HEAD 书签，可选是否保留改动</td></tr>
+      <tr><td>查看当前状态</td><td><code>git status</code></td><td>给三个区域拍一张「检查报告」</td></tr>
+      <tr><td>查看具体改了什么</td><td><code>git diff</code></td><td>逐行对比两个区域 / 两个版本</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout tip">
+    <span class="tag">心法</span>背下这张地图，胜过死记 50 条命令。后面每一章，本质上都只是在这张地图上「走更远的路」而已。
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 5 章 ==================== -->
+<section class="chapter" id="ch5">
+  <div class="chap-head">
+    <div class="chap-num">05</div>
+    <div>
+      <h2>基础操作：完成你的第一次提交</h2>
+      <div class="desc">从 git init 到 git log，手把手走完本地仓库的完整一生</div>
+    </div>
+  </div>
+
+  <p class="lead">概念备齐，现在开工。本章从「一个空文件夹」开始，带你走完 <b>建仓库 → 改文件 → 查状态 → 存快照 → 看历史 → 比差异</b> 的完整闭环。<span class="os both">双平台通用</span>每条命令都照着敲一遍，Git 就真正属于你了。</p>
+
+  <h3>5.1 创建仓库：git init</h3>
+  <p><b>仓库（repository）</b> = 被 Git 接管的文件夹 = 一本开始记录的相册。让一个普通文件夹「变身」成仓库，只需一条命令：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">mkdir my-project    # 新建一个练习项目文件夹（名字随意）
+cd my-project       # 进入这个文件夹——Git 命令都作用于「当前所在文件夹」
+git init            # 变身！把当前文件夹初始化为一个 Git 仓库（生成隐藏的 .git 文件夹）
+ls -a               # 查看所有文件，包括隐藏文件（CMD 用户用 dir /a）</pre>
+    <pre class="output">Initialized empty Git repository in .../my-project/.git/   ← 初始化成功
+.  ..  .git         ← 多出来的 .git 就是「相册本体」，从此这个文件夹有了记忆</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">注意</span><code>git init</code> 只需要做<b>一次</b>。如果在一个已经有 <code>.git</code> 的文件夹里（或它的上层）再次执行，不会有伤害但也毫无必要。看到别人项目里的 <code>.git</code> 文件夹，就说明「这是个被 Git 管理的项目」。
+  </div>
+
+  <h3>5.2 查看状态：git status（你最亲密的伙伴）</h3>
+  <p><code>git status</code> 是你用得最多的命令，没有之一——迷路了就敲它，Git 永远会告诉你「现在什么情况、接下来能干什么」。先制造一点「情况」：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">echo "这是我的第一个 Git 项目" &gt; readme.txt  # 创建 readme.txt 并写入一行内容
+                                              # （CMD 用户：echo 这是我的第一个项目&gt;readme.txt，或用记事本直接建）
+git status                                   # 看看 Git 怎么「看待」这个新文件</pre>
+    <pre class="output">On branch main                     ← 当前在 main 分支上
+No commits yet                    ← 相册还是空的：还没有任何提交
+Untracked files:                  ← 「未跟踪」名单：Git 发现了新面孔
+  (use "git add &lt;file&gt;..." to include in what will be committed)
+        readme.txt                ← 新文件站在门口，等你发话
+nothing added to commit but untracked files present   ← 暂存区空空如也</pre>
+  </div>
+  <p>看到了吗？Git 不但报告了状态，还贴心地<b>把下一步命令都写在括号里提示你了</b>。跟着提示走：</p>
+
+  <h3>5.3 登记进名单：git add</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git add readme.txt   # 把 readme.txt 登记进「上镜名单」（暂存区）
+git status           # 再看状态：它应该变绿了（Changes to be committed）</pre>
+    <pre class="output">Changes to be committed:          ← 名单区（绿色）：这些将被拍进下一张照片
+  (use "git rm --cached &lt;file&gt;..." to unstage)
+        new file:   readme.txt    ← 新文件已登记，就等快门</pre>
+  </div>
+  <p><code>git add</code> 还有几个常用变体，一次登记多个文件时很方便：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git add .            # 登记当前目录下「所有」变动（新文件、修改、删除一网打尽，最常用）
+git add *.txt        # 登记所有 .txt 结尾的文件（* 是通配符：任意名字）
+git add -A           # 登记整个仓库中所有的变动（不限当前目录）
+git add 文件1 文件2   # 登记指定的多个文件，空格隔开</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>日常 95% 的场景就是 <code>git add 文件名</code>（精细控制）或 <code>git add .</code>（全都要）。<b>点（.）代表「当前文件夹」</b>，所以这条命令读作「把这里的一切变动都登记上」。
+  </div>
+
+  <h3>5.4 按下快门：git commit</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git commit -m "第一次提交：添加项目说明文件"  # 按下快门！把名单内容定格为一张永久快照
+                                            # -m 是 message（留言）的缩写，引号里写本次提交说明
+git status                                  # 再看状态：干净了（nothing to commit）</pre>
+    <pre class="output">[main (root-commit) a1b2c3d]    ← 提交成功：进入了 main 分支，编号 a1b2c3d（每次提交的唯一指纹）
+ 1 file changed, 1 insertion(+)  ← 变化统计：改了 1 个文件，新增了 1 行
+ create mode 100644 readme.txt</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>提交说明（message）就像<b>写在照片背面的备注</b>：「2026.09.13 全家福，小王第一次下厨」。半年后翻相册时，备注就是唯一的线索——所以要<b>写清楚「这次做了什么」</b>，而不是敷衍地写「修改」「更新」「aaa」。
+  </div>
+  <p>一个进阶变体：<code>-a</code> 能把「已跟踪文件」的修改直接带进名单，省去 add 那一步：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git commit -am "更新说明文件"   # -a：先把所有「已跟踪文件」的改动自动 add，再提交
+                                # 注意：全新文件（未跟踪）不适用，仍需先手动 git add</pre>
+  </div>
+
+  <h3>5.5 翻看相册：git log</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git log                       # 查看完整提交历史：编号、作者、日期、说明，从新到旧
+git log --oneline            # 精简模式：一行一条，只显示短编号和说明（看得最舒服）
+git log --oneline -3         # 只看最近 3 条（-n 数字随意）
+git log --author="小王"      # 只看某位作者的提交
+git log -p readme.txt        # 查看某文件历次提交的具体改动（-p = patch，逐行差异）
+git log --oneline --graph --all  # 用字符图形画出所有分支走向（多分支时一目了然）</pre>
+    <pre class="output">a1b2c3d (HEAD -&gt; main) 第一次提交：添加项目说明文件   ← --oneline 模式示意
+                                     ↑ HEAD 书签指向最新一张，且在 main 分支上</pre>
+  </div>
+  <p>嫌按 <kbd>Q</kbd> 退出长列表太隐蔽？对——<b>当 log 内容超过一屏时，会进入翻页模式</b>：空格键翻页，按 <kbd>Q</kbd> 退出回到终端。</p>
+
+  <h3>5.6 逐行对比：git diff</h3>
+  <p><code>diff</code>（difference，差异）用来回答「到底改了哪几行」。先改点东西再看：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">echo "追加的第二行内容" &gt;&gt; readme.txt  # &gt;&gt; 表示「追加」一行而不覆盖（CMD 写法相同）
+git diff                             # 对比「工作区 vs 暂存区」：刚改了还没 add 的部分
+git diff --staged                    # 对比「暂存区 vs 最近一次提交」：已 add 还没 commit 的部分
+git diff HEAD                        # 对比「工作区 vs 最近一次提交」：改动总账（HEAD 指最新快照）</pre>
+    <pre class="output">diff --git a/readme.txt b/readme.txt    ← 对比的是 readme.txt
++ 追加的第二行内容                     ← 前面是 + 号 = 新增的行
+- 被替换掉的旧行                        ← 前面是 - 号 = 删除/被改掉的行
+                                       ← 上下文行不带头衔，仅作参照</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">记忆</span><b>add 之前看 <code>git diff</code>，add 之后看 <code>git diff --staged</code></b>。判断标准就一条：你想比较的是「没进名单的改动」还是「已进名单的改动」。
+  </div>
+
+  <h3>5.7 禁拍名单：.gitignore</h3>
+  <p>总有些文件不想进相册：临时文件、日志、密钥、体积巨大的依赖文件夹……在项目根目录新建一个名为 <code>.gitignore</code> 的文本文件，把「禁拍规则」写进去：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：.gitignore（放在项目根目录）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"># 井号开头的是注释
+node_modules/      # 忽略整个 node_modules 依赖文件夹（体积大且随时能重新安装）
+*.log              # 忽略所有以 .log 结尾的日志文件（* 通配任意文件名）
+*.tmp              # 忽略所有临时文件
+dist/              # 忽略构建产物文件夹（打包生成的成果，不需要进历史）
+.env               # 忽略环境变量文件——里面常有密码，绝不能上传！
+!important.log     # 感叹号 = 例外：唯独这个文件虽然匹配 *.log 但别忽略它</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span><code>.gitignore</code> 就是贴在照相馆门口的<b>「谢绝入内」名单</b>：名单上的人（文件），<code>git add .</code> 再怎么「见人就拉」也会绕开他们。
+  </div>
+  <div class="callout warn">
+    <span class="tag">注意</span><code>.gitignore</code> 本身应该提交进仓库，让全组共享同一份「禁拍规则」。另外它<b>只对未跟踪的文件生效</b>——如果文件早已被提交过，需先执行 <code>git rm --cached 文件名</code>（取消跟踪但保留硬盘文件）再写进 ignore。
+  </div>
+
+  <h3>5.8 删除与重命名：git rm / git mv</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git rm 旧文件.txt          # 删除文件，并把这个「删除」动作直接登记进暂存区
+                           # （对比：直接 rm 删除后，Git 会显示 deleted 且需要再 git add）
+git mv 旧名字.txt 新名字.txt  # 重命名文件 = mv + git add 一步到位（历史记录会跟随改名）
+git rm --cached 密码文件.txt  # 让 Git 停止跟踪某文件，但文件本身保留在硬盘上（补救误提交）</pre>
+  </div>
+
+  <div class="practice">
+    <span class="tag">动手练习 02</span>
+    <ol>
+      <li>新建 <code>git-practice</code> 文件夹，完成 <code>git init</code>；</li>
+      <li>创建两个文件，分别体验「只 add 其中一个」然后 commit——用 <code>git status</code> 观察另一个文件是否还是红色；</li>
+      <li>再改一次文件，用 <code>git diff</code> 看差异，然后 <code>add</code> + <code>commit</code>；</li>
+      <li>用 <code>git log --oneline</code> 欣赏你的两笔历史；最后新建 <code>.gitignore</code>，随便忽略一种文件试试效果。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 6 章 ==================== -->
+<section class="chapter" id="ch6">
+  <div class="chap-head">
+    <div class="chap-num">06</div>
+    <div>
+      <h2>撤销与回退：Git 的后悔药全集</h2>
+      <div class="desc">人生没有后悔药，Git 有的是——按「后悔的深度」对症下药</div>
+    </div>
+  </div>
+
+  <p class="lead">改乱了想恢复、add 错了想撤回、commit 说明写错了想改、想整个穿越回昨天——这些「后悔」的深度不同，用的药也不同。本章把它们一网打尽。<span class="os both">双平台通用</span></p>
+
+  <div class="tblwrap"><table>
+    <thead><tr><th>你后悔的事</th><th>该吃的药</th><th>见哪节</th></tr></thead>
+    <tbody>
+      <tr><td>只是把工作区改乱了，还没 add</td><td><code>git restore 文件</code></td><td>6.1</td></tr>
+      <tr><td>add 错了 / add 多了</td><td><code>git restore --staged 文件</code></td><td>6.2</td></tr>
+      <tr><td>commit 的说明写错了 / 漏了文件</td><td><code>git commit --amend</code></td><td>6.3</td></tr>
+      <tr><td>想穿越回几个版本之前</td><td><code>git reset</code></td><td>6.4</td></tr>
+      <tr><td>已经推送给别人，想安全地撤销</td><td><code>git revert</code></td><td>6.5</td></tr>
+      <tr><td>reset 错了，想把丢失的找回来</td><td><code>git reflog</code></td><td>6.6</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>6.1 后悔深度 ★：丢弃工作区的改动</h3>
+  <p>场景：你把一段代码改得一团糟，还没 <code>add</code>，只想让文件<b>恢复成上次提交的样子</b>：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git restore readme.txt     # 丢弃该文件在工作区的改动，恢复成「暂存区或最近提交」的样子
+git restore .              # 丢弃当前目录下所有未提交的工作区改动（范围大，想清楚再敲）</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">注意</span>丢弃 = <b>真的没了</b>，没有回收站。敲之前先用 <code>git diff</code> 确认你要丢的东西。老教程里的 <code>git checkout -- 文件名</code> 是同一件事的旧写法，见到别陌生。
+  </div>
+
+  <h3>6.2 后悔深度 ★★：把文件撤出暂存区</h3>
+  <p>场景：手滑 <code>git add</code> 了不想提交的文件（改动本身想留着）：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git restore --staged readme.txt  # 把文件从「上镜名单」里撤下来，改动原样保留在工作区
+                                  # 它只是撤销「登记」这个动作，绝不会动你的文件内容</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>拍照前老师喊错了人：「小刚你先回去坐下」——人还是那个人（改动还在），只是<b>不在下一张照片里</b>了。旧写法是 <code>git reset HEAD 文件名</code>，效果相同。
+  </div>
+
+  <h3>6.3 后悔深度 ★★★：修补最后一次提交</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git commit --amend -m "新的说明"   # 修改最后一次提交的说明文字（照片备注写错了，重新写）
+git commit --amend --no-edit       # 把刚 add 的内容并入最后一次提交，且不改动原说明
+                                   # --no-edit 读作「备注不动，只把新东西塞进这张照片」</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>拍了合照发现小刚闭眼了——不用另拍一张新照片占地方，直接<b>重拍覆盖同一页</b>：照片还是「那张」，只是内容更新了。
+  </div>
+  <div class="callout warn">
+    <span class="tag">注意</span>amend 会「改写历史」。如果那次提交<b>已经 push 给别人看过</b>，就别 amend 了（别人手里的相册会对不上页码）——那要用 6.5 的 <code>revert</code>。
+  </div>
+
+  <h3>6.4 后悔深度 ★★★★：版本回退 git reset</h3>
+  <p>场景：最近几次提交都不想要了，想「穿越」回某个历史版本。<code>reset</code> 有三档火力，区别在于<b>穿越之后，你的改动还剩多少</b>：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>模式</th><th>改动去哪了</th><th>类比</th><th>什么时候用</th></tr></thead>
+    <tbody>
+      <tr><td><code>--soft</code></td><td>完整保留在<b>暂存区</b></td><td>妆都没卸，准备直接重拍</td><td>想把多次提交合并成一次</td></tr>
+      <tr><td><code>--mixed</code><br>（默认）</td><td>保留在<b>工作区</b></td><td>妆卸了，道具都还在桌上</td><td>回退后想重新挑选要提交的内容</td></tr>
+      <tr><td><code>--hard</code></td><td><b>全部丢弃</b>（危险）</td><td>连人带景整个抹掉，回到那天</td><td>确定那些改动全是垃圾</td></tr>
+    </tbody>
+  </table></div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git log --oneline            # 第一步永远是它：找到要回到的版本号（如 a1b2c3d）
+git reset --soft a1b2c3d     # 回到该版本：之后的提交撤销，改动全留在暂存区
+git reset --mixed a1b2c3d    # 回到该版本：改动退回工作区（不带参数时默认就是它）
+git reset --hard a1b2c3d     # 回到该版本：之后的提交和改动全部清空（危险！）
+git reset --hard HEAD^       # 一步回退到上一个版本（^ 的个数 = 回退几步）
+git reset --hard HEAD~3      # 回退到 3 个版本之前（~n 比 ^^^ 写法省力）</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">警告</span><code>--hard</code> 会把<b>未提交的改动和之后的提交一起销毁</b>。三思而后敲：先 <code>git status</code> + <code>git diff</code> 看清楚会失去什么。同样地：<b>已 push 给别人的提交，永远不要 reset</b>。
+  </div>
+
+  <h3>6.5 安全撤销：git revert（公共分支专用）</h3>
+  <p>场景：某次提交已经推送、被同事看到了（甚至大家基于它开工了），现在想撤销它。<b>不能撕别人手里的日记</b>——正确做法是<b>在后面再写一页「更正声明」</b>：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git revert a1b2c3d           # 生成一笔「反向提交」，精确抵消指定提交的所有改动
+                             # Git 会弹出编辑器让你确认说明，保存退出即可（Vim 逃生见第 12 章）
+git revert --no-commit a1b2c3d  # 只应用反向改动、不自动提交，方便和其他内容合并成一笔</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span><code>reset</code> 是把日记撕掉重写——自己的日记随便撕；<code>revert</code> 是在日记后面郑重写一页「第 38 页作废」——<b>历史原封不动，大家手里都多了同一页更正</b>。所以公共分支（别人看得到的）一律用 revert。
+  </div>
+
+  <h3>6.6 后悔药的后悔药：git reflog</h3>
+  <p>场景：<code>reset --hard</code> 敲完一拍脑门——删多了！别慌，Git 没有真销毁任何东西（默认保留 30 天以上）。<code>reflog</code>（reference log，引用日志）记录着 <b>HEAD 书签的每一次移动</b>，堪称行车记录仪：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git reflog                   # 查看书签的每一次移动记录（包括被你 reset 掉的版本）
+# 输出类似：a1b2c3d HEAD@{0}: reset: moving to HEAD~3   ← 你刚才那次鲁莽的回退
+#           e4f5g6h HEAD@{1}: commit: 添加登录功能        ← 「丢失」的提交其实记着地址呢
+git reset --hard e4f5g6h     # 对着记录里的编号，一步穿越回去，一切失而复得</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">定心丸</span>记住这句话：<b>只要提交过（commit 过），就几乎永远找得回来</b>。真正无法挽回的只有一种情况——<b>从未提交过</b>的改动被 <code>restore</code> / <code>reset --hard</code> 丢弃。所以勤 commit，是最便宜的保险。
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 7 章 ==================== -->
+<section class="chapter" id="ch7">
+  <div class="chap-head">
+    <div class="chap-num">07</div>
+    <div>
+      <h2>分支：开启平行宇宙</h2>
+      <div class="desc">大刀阔斧地实验而不伤主线——Git 最优雅的发明</div>
+    </div>
+  </div>
+
+  <p class="lead">如果说「提交」是 Git 的心脏，那「分支」就是 Git 的灵魂。它让你可以<b>同时维护多条互不干扰的时间线</b>，大胆实验、并行开发、紧急救火。<span class="os both">双平台通用</span></p>
+
+  <h3>7.1 为什么需要分支？</h3>
+  <p>想象你要给项目加一个很炫的新功能，要大改两周。没有分支的话，你的项目在这两周里<b>永远处于「半成品」状态</b>——中途线上出了紧急 Bug，你只能在一堆改了一半的代码里修，修完还不知道怎么把功能捡回来。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>分支就是<b>平行宇宙</b>：从今天开始复制出一个「宇宙 B」，你在里面随便折腾新功能，怎么炸都炸不到「主宇宙」；与此同时主宇宙该修 Bug 修 Bug、该发版发版。等宇宙 B 的功能做完验收合格，再把它的成果<b>合并回主宇宙</b>——主宇宙仿佛瞬间学会了新技能，而中间那些试错的烂摊子从不曾存在。
+  </div>
+  <figure class="dg">
+    <svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="分支与合并示意图">
+      <defs>
+        <marker id="c1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#e8542f"/></marker>
+      </defs>
+      <line x1="70" y1="110" x2="560" y2="110" stroke="#e8542f" stroke-width="3"/>
+      <line x1="170" y1="110" x2="240" y2="190" stroke="#4a7fd4" stroke-width="3"/>
+      <line x1="240" y1="190" x2="380" y2="190" stroke="#4a7fd4" stroke-width="3"/>
+      <line x1="380" y1="190" x2="540" y2="112" stroke="#4a7fd4" stroke-width="3"/>
+      <circle cx="70" cy="110" r="12" fill="#fff" stroke="#e8542f" stroke-width="3"/>
+      <circle cx="170" cy="110" r="12" fill="#fff" stroke="#e8542f" stroke-width="3"/>
+      <circle cx="300" cy="110" r="12" fill="#fff" stroke="#e8542f" stroke-width="3"/>
+      <circle cx="430" cy="110" r="12" fill="#fff" stroke="#e8542f" stroke-width="3"/>
+      <circle cx="240" cy="190" r="12" fill="#fff" stroke="#4a7fd4" stroke-width="3"/>
+      <circle cx="380" cy="190" r="12" fill="#fff" stroke="#4a7fd4" stroke-width="3"/>
+      <circle cx="560" cy="110" r="15" fill="#fff8e9" stroke="#f0a92e" stroke-width="3.5"/>
+      <text x="70" y="80" text-anchor="middle" font-size="12.5" font-weight="700" fill="#8a95a5" font-family="Consolas,monospace">c1</text>
+      <text x="170" y="80" text-anchor="middle" font-size="12.5" font-weight="700" fill="#8a95a5" font-family="Consolas,monospace">c2</text>
+      <text x="300" y="80" text-anchor="middle" font-size="12.5" font-weight="700" fill="#8a95a5" font-family="Consolas,monospace">c3</text>
+      <text x="430" y="80" text-anchor="middle" font-size="12.5" font-weight="700" fill="#8a95a5" font-family="Consolas,monospace">c4</text>
+      <text x="240" y="230" text-anchor="middle" font-size="12.5" font-weight="700" fill="#4a7fd4" font-family="Consolas,monospace">f1</text>
+      <text x="380" y="230" text-anchor="middle" font-size="12.5" font-weight="700" fill="#4a7fd4" font-family="Consolas,monospace">f2</text>
+      <text x="560" y="76" text-anchor="middle" font-size="13" font-weight="800" fill="#b07d1e">M 合并</text>
+      <text x="150" y="130" text-anchor="middle" font-size="12.5" font-weight="700" fill="#4a7fd4" font-family="Consolas,monospace">git switch -c feature</text>
+      <text x="470" y="160" text-anchor="middle" font-size="12.5" font-weight="700" fill="#c2410c" font-family="Consolas,monospace">git merge feature</text>
+      <text x="315" y="52" text-anchor="middle" font-size="14" font-weight="700" fill="#c2410c">main 分支（主宇宙）</text>
+      <text x="310" y="258" text-anchor="middle" font-size="14" font-weight="700" fill="#4a7fd4">feature 分支（实验宇宙）</text>
+    </svg>
+    <figcaption>图 7-1 · 从 c2 处岔出 feature 分支，做完 f1、f2 后合并回 main，形成合并提交 M</figcaption>
+  </figure>
+
+  <h3>7.2 分支的增删改查</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git branch                  # 列出所有本地分支；当前所在分支前有 * 号
+git branch feature-login    # 创建一个叫 feature-login 的新分支（创建后人还站在原地）
+git switch feature-login    # 切换过去：从这一刻起，你的所有提交都发生在新宇宙里
+git switch -c feature-pay   # 创建 feature-pay 分支并立刻切换（-c = create，一步到位）
+git checkout -b feature-pay # 与上一条等效的旧写法（老教程里常见，认识即可）
+git switch -                # 切回「刚才」所在的分支（像电视机的返回上一频道）
+git branch -m main          # 把当前分支重命名为 main（比如想把 master 改成 main 时）
+git branch -d feature-login # 删除已合并的分支（Git 会检查，不让误删没合并的成果）
+git branch -D feature-login # 强制删除：连未合并的成果一起扔掉（想清楚了再敲）</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span><code>git branch</code> 是「开宇宙」，<code>git switch</code> 是「穿越过去」。只开不穿，人还在原宇宙——所以新手最常犯的错就是「以为自己在 A 宇宙干活，其实提交到了 B 宇宙」。<b>动手前先 <code>git branch</code> 确认 * 号在哪</b>。
+  </div>
+
+  <h3>7.3 合并宇宙：git merge</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git switch main             # 先切回主分支——想把别人合并进来，自己得先站在主位
+git merge feature-login     # 把 feature-login 的成果合并进「当前所在」的 main 分支
+git merge --no-ff -m "合并登录功能" feature-login  # 强制生成一条合并记录，保留分支拓扑
+                            # （--no-ff = no fast-forward：即使能快进也走正式合并流程）
+git merge --abort           # 合并遇到大麻烦时紧急刹车：恢复到合并开始前的状态</pre>
+  </div>
+  <p>合并分两种情况，了解一下更有底气：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>情况</th><th>发生条件</th><th>Git 的做法</th></tr></thead>
+    <tbody>
+      <tr><td><b>快进合并</b><br>(fast-forward)</td><td>主分支自岔出后<b>没有新提交</b></td><td>直接把指针一挪，追上分支——像两条车道并一条，直接开过去</td></tr>
+      <tr><td><b>三方合并</b><br>(merge commit)</td><td>两边<b>都有各自的新提交</b></td><td>找出共同祖先，综合两边的成果生成一张新的「合并提交」照片</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>7.4 冲突：当两个宇宙记忆不合</h3>
+  <p>合并最怕的就是<b>冲突（conflict）</b>：两个分支改了<b>同一个文件的同一片区域</b>，Git 不知道该听谁的——它没法替你做决定，只能把两个版本都摆出来，请<b>你</b>来当裁判。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>两个人合写一首歌，都在第 8 小节填了不同的旋律。合并时 Git 只能摊手：「第 8 小节 A 写的是红烧肉，B 写的是炸鸡，您定夺。」——它<b>报的不是错误，而是需要人工裁决的事项</b>。
+  </div>
+  <h4>亲手制造并解决一次冲突（强烈建议照做）</h4>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端 · 制造冲突</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git switch -c feature-lunch    # 开一条「午餐宇宙」分支并切换过去
+echo "今天食堂吃炸鸡" &gt; lunch.txt # 在新宇宙里写一份午餐计划
+git add lunch.txt              # 登记这个新文件
+git commit -m "午餐宇宙：决定吃炸鸡"  # 在新宇宙存档
+git switch main                # 穿回主宇宙
+echo "今天食堂吃红烧肉" &gt; lunch.txt # 在主宇宙写一份「内容不同」的午餐计划
+git add lunch.txt              # 同样登记
+git commit -m "主宇宙：决定吃红烧肉"  # 主宇宙也存档——冲突的火药埋好了
+git merge feature-lunch        # 尝试合并 → Git 立刻举手：CONFLICT!</pre>
+    <pre class="output">CONFLICT (add/add): Merge conflict in lunch.txt   ← 冲突发生在 lunch.txt
+Automatic merge failed; fix conflicts and then commit the result.   ← 请修复后手动提交</pre>
+  </div>
+  <p>此时打开 <code>lunch.txt</code>，你会看到 Git 留下的三行「分界标记」：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：lunch.txt（冲突标记长这样）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+今天食堂吃红烧肉        ← ======= 上方：当前分支（HEAD，即 main）的版本
+=======
+今天食堂吃炸鸡          ← ======= 下方：被合并进来的 feature-lunch 的版本
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature-lunch</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端 · 裁决并完成合并</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"># 第一步：打开文件，把七行标记连同两边内容，改成你最终想要的文字
+#         比如改成「今天食堂吃炸鸡和红烧肉」，保存关闭
+git add lunch.txt              # 第二步：告诉 Git「这里我裁决完了」
+git commit -m "解决午餐冲突：都吃"  # 第三步：完成这次合并（相册里从此多一张合并快照）</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">心法</span>解决冲突三板斧：<b>① 改文件</b>（删掉所有标记行、留下最终内容）→ <b>② add 标记解决</b> → <b>③ commit 完成合并</b>。搞砸了随时 <code>git merge --abort</code> 推倒重来。另外，<b>冲突不是事故</b>——多人协作的正常组成部分，遇到不要慌。
+  </div>
+
+  <h3>7.5 团队的「宇宙管理局」：分支策略</h3>
+  <p>分支虽好，也不能乱开。业界最常用的一套简单规范（小团队直接照抄即可）：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>分支名</th><th>角色</th><th>类比</th></tr></thead>
+    <tbody>
+      <tr><td><code>main</code></td><td>正式发布版，永远可用、随时能上线</td><td>店铺的「营业大厅」，只摆验收合格的成品</td></tr>
+      <tr><td><code>develop</code></td><td>日常开发汇总，最新但不完全稳定</td><td>「后厨」，菜做好还没上桌</td></tr>
+      <tr><td><code>feature/xxx</code></td><td>每个新功能一条独立分支，做完合并</td><td>「实验小灶」，一道菜一个灶台互不打扰</td></tr>
+      <tr><td><code>hotfix/xxx</code></td><td>线上紧急修复，从 main 岔出、修完立刻并回</td><td>「消防通道」，救火专用直达快线</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout warn">
+    <span class="tag">铁律</span><code>main</code> 分支<b>永远不直接提交代码</b>——所有改动都走 feature 分支合并进去。这样 main 的每一版都是「验过货的」，出问题随时能安全回退或上线。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 03</span>
+    <ol>
+      <li>在练习仓库里开一条 <code>feature-test</code> 分支，提交一笔，切回 main 看看它「消失」了（其实在新宇宙里）；</li>
+      <li>合并它，用 <code>git log --oneline --graph</code> 欣赏合并拓扑；</li>
+      <li>按 7.4 的步骤亲手制造一次冲突并解决它——<b>这将是你在团队里最值钱的一次练习</b>。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 8 章 ==================== -->
+<section class="chapter" id="ch8">
+  <div class="chap-head">
+    <div class="chap-num">08</div>
+    <div>
+      <h2>远程仓库：连接 GitHub</h2>
+      <div class="desc">把相册存进「云端保险柜」，从此换电脑、找队友都不是问题</div>
+    </div>
+  </div>
+
+  <p class="lead">前 7 章的一切都发生在你自己的电脑上。现在把世界连起来：注册平台、配置「电子门禁卡」、推送、克隆、拉取——走完团队协作的第一公里。<span class="os both">双平台通用</span>（Windows 请全程使用 Git Bash，和 Linux 命令完全一致）</p>
+
+  <h3>8.1 远程仓库是什么？</h3>
+  <p><b>远程仓库（remote repository）</b> = 放在服务器上的仓库副本。它干两件事：<b>云端备份</b>（电脑丢了代码还在）和<b>协作中转</b>（你和同事都对着它推拉代码）。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>本地相册放在你家书柜；远程仓库就像<b>在银行租了个保险柜 + 开了个共享大厅</b>：你把照片复印一份存进去（push），同事把他们拍的也存进去；想看大家最新的成果就去大厅取一份（pull）。<b>GitHub 就是全球最大的那家「共享照相馆」</b>（国内可用 Gitee / 码云，操作完全同理）。
+  </div>
+  <figure class="dg">
+    <svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="团队协作数据流示意图">
+      <defs>
+        <marker id="d1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#e8542f"/></marker>
+        <marker id="d2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#4a7fd4"/></marker>
+      </defs>
+      <rect x="255" y="26" width="210" height="84" rx="14" fill="#fdf1ec" stroke="#eec4b4" stroke-width="1.5"/>
+      <text x="360" y="62" text-anchor="middle" font-size="16.5" font-weight="700" fill="#a04123">远程仓库（GitHub）</text>
+      <text x="360" y="86" text-anchor="middle" font-size="11.5" fill="#b06a4e">云端保险柜 + 共享大厅</text>
+      <rect x="55" y="196" width="200" height="84" rx="14" fill="#ffffff" stroke="#d5dce6" stroke-width="1.5"/>
+      <text x="155" y="232" text-anchor="middle" font-size="15.5" font-weight="700" fill="#2c3644">你的电脑</text>
+      <text x="155" y="256" text-anchor="middle" font-size="11.5" fill="#7b8794">本地仓库（你的相册）</text>
+      <rect x="465" y="196" width="200" height="84" rx="14" fill="#ffffff" stroke="#d5dce6" stroke-width="1.5"/>
+      <text x="565" y="232" text-anchor="middle" font-size="15.5" font-weight="700" fill="#2c3644">同事的电脑</text>
+      <text x="565" y="256" text-anchor="middle" font-size="11.5" fill="#7b8794">他的本地仓库</text>
+      <line x1="185" y1="196" x2="290" y2="112" stroke="#e8542f" stroke-width="2.2" marker-end="url(#d1)"/>
+      <text x="188" y="150" text-anchor="middle" font-size="12.5" font-weight="700" fill="#c2410c" font-family="Consolas,monospace">git push 推送</text>
+      <line x1="335" y1="112" x2="230" y2="192" stroke="#4a7fd4" stroke-width="2.2" marker-end="url(#d2)"/>
+      <text x="330" y="160" text-anchor="middle" font-size="12.5" font-weight="700" fill="#4a7fd4" font-family="Consolas,monospace">git pull 拉取</text>
+      <line x1="535" y1="196" x2="430" y2="112" stroke="#e8542f" stroke-width="2.2" marker-end="url(#d1)"/>
+      <text x="532" y="150" text-anchor="middle" font-size="12.5" font-weight="700" fill="#c2410c" font-family="Consolas,monospace">git push</text>
+      <line x1="385" y1="112" x2="490" y2="192" stroke="#4a7fd4" stroke-width="2.2" marker-end="url(#d2)"/>
+      <text x="390" y="160" text-anchor="middle" font-size="12.5" font-weight="700" fill="#4a7fd4" font-family="Consolas,monospace">git pull</text>
+      <line x1="255" y1="238" x2="465" y2="238" stroke="#8a95a5" stroke-width="1.6" stroke-dasharray="6 5" marker-end="url(#d2)"/>
+      <text x="360" y="226" text-anchor="middle" font-size="11.5" fill="#7b8794">你们从不见面互相传文件，一切经由「大厅」中转</text>
+      <text x="360" y="292" text-anchor="middle" font-size="12" fill="#9aa5b4">第一次加入项目：git clone（把远程仓库整套复印回家）</text>
+    </svg>
+    <figcaption>图 8-1 · 团队协作数据流：所有人只和远程仓库推拉，绝不互相拷贝文件夹</figcaption>
+  </figure>
+
+  <h3>8.2 注册与建仓库</h3>
+  <ol class="steps">
+    <li><b>注册账号</b>：打开 <a href="https://github.com" target="_blank">github.com</a>（国内可用 <a href="https://gitee.com" target="_blank">gitee.com</a>），Sign up 填邮箱、密码、用户名，完成邮箱验证。</li>
+    <li><b>新建仓库</b>：登录后点右上角 <b>+</b> → <b>New repository</b>。</li>
+    <li><b>起名</b>：Repository name 填一个名字（如 <code>my-project</code>），建议小写、用连字符。</li>
+    <li><b>选公开还是私有</b>：Public = 任何人可见（开源精神）；Private = 只有你和你邀请的人可见。</li>
+    <li><b>勾选 README</b>：新手建议勾上「Add a README file」，仓库首页会自动生成说明文档。</li>
+    <li>点 <b>Create repository</b>，跳转到仓库页面——你的「云端保险柜」开张了。先别关网页，地址马上要用。</li>
+  </ol>
+
+  <h3>8.3 配置「电子门禁卡」：SSH 密钥</h3>
+  <p>每次推送都要输密码太烦了。SSH 密钥 = <b>一把永不外借的私钥 + 一把见人就发的挂锁</b>：把「挂锁」（公钥）挂在 GitHub 门口，你口袋里揣着唯一的「钥匙」（私钥），以后 Git 传输自动验明正身、免密通行。</p>
+  <h4>第一步：生成钥匙对</h4>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端（Windows 用 Git Bash 执行）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">ssh-keygen -t ed25519 -C "xiaowang@qq.com"  # 生成一对密钥：-t 指定算法，-C 写备注（通常填邮箱）
+# 接下来连按三次回车：
+#   ① 存放位置 → 直接回车用默认（用户主目录的 .ssh 文件夹）
+#   ②③ 设置口令 → 直接回车留空（小白阶段强烈建议留空，否则每次都要多输一次）</pre>
+  </div>
+  <h4>第二步：把「挂锁」挂到 GitHub 上</h4>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">cat ~/.ssh/id_ed25519.pub   # 查看公钥（挂锁）内容；~ 代表你的用户主目录
+                            # Windows 的实际位置是 C:\Users\你的用户名\.ssh\id_ed25519.pub
+# 复制输出的全部内容（以 ssh-ed25519 开头、以你的邮箱结尾，一整行）
+# 打开 GitHub → 右上角头像 → Settings → SSH and GPG keys → New SSH key
+# Title 随便起（如「我的电脑」），Key 粘贴刚才的内容 → Add SSH key</pre>
+  </div>
+  <h4>第三步：测试门禁</h4>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">ssh -T git@github.com       # 敲门测试：GitHub 会核实你的钥匙
+# 首次连接会问 Are you sure you want to continue connecting? → 输入 yes 回车</pre>
+    <pre class="output">Hi xiaowang! You've successfully authenticated...   ← 看到这句 = 门禁配好了，以后免密通行</pre>
+  </div>
+  <div class="callout info">
+    <span class="tag">小知识</span>Gitee 配置方法一模一样：把公钥贴到 Gitee 的「设置 → SSH 公钥」里即可，两家的钥匙可以通用同一把。
+  </div>
+
+  <h3>8.4 关联远程仓库：git remote</h3>
+  <p>让本地仓库「认识」云端那间保险柜。仓库页面那个以 <code>git@github.com:</code> 开头的地址（SSH 地址）就是它：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git remote add origin git@github.com:xiaowang/my-project.git  # 建立关联：给远程仓库起昵称 origin
+git remote -v               # 查看已关联的远程仓库（-v 显示具体地址，fetch/push 各一行）
+git remote remove origin    # 解除关联（地址填错了就先解除，再重新 add）
+git remote rename origin upstream  # 改昵称：把 origin 改叫 upstream</pre>
+    <pre class="output">origin  git@github.com:xiaowang/my-project.git (fetch)   ← origin 就是个「昵称」，叫啥都行
+origin  git@github.com:xiaowang/my-project.git (push)    ← 但全世界都默认叫它 origin，随大流最省心</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">地址</span>仓库页面上还有个 <code>https://github.com/...</code> 开头的地址也能用，但每次都要输账号密码；<b>SSH 地址配合上一节的门禁才是长期饭票</b>。认准 <code>git@github.com:</code> 开头的。
+  </div>
+
+  <h3>8.5 推送：git push</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git push -u origin main     # 第一次推送：把本地 main 推上云端；-u 顺手记住对应关系
+git push                    # 之后的日常推送只需这四个字母（因为 -u 已经牵好线了）
+git push origin dev         # 把本地 dev 分支推上云端（云端没有就自动创建）</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span><code>-u</code> 相当于和快递公司<b>签了长期合约</b>：第一次把地址电话都登记好，以后只要喊一声「寄！」（<code>git push</code>），什么都不用再填。所以<b>每个分支的第一次推送记得带 <code>-u</code></b>。
+  </div>
+
+  <h3>8.6 克隆：git clone</h3>
+  <p>换新电脑了 / 想参与别人的项目 / 电脑坏了要复原——把远程仓库<b>整套复印</b>到本地：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git clone git@github.com:xiaowang/my-project.git  # 复制整个仓库到当前目录（含全部历史）
+git clone git@github.com:xiaowang/my-project.git mydir  # 复制时顺便给本地文件夹改名 mydir
+cd my-project               # 克隆完记得进去——这就是你的新工作区
+# 克隆是「全自动一条龙」：自动关联 remote、自动建好 main、自动跟踪远程分支</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">冷知识</span>克隆别人的开源项目不需要任何权限（Public 仓库随便克隆）；但你<b>没有权限直接 push</b>——想贡献代码要走 8.8 的 Fork + PR 流程。
+  </div>
+
+  <h3>8.7 拉取：git fetch 与 git pull</h3>
+  <p>同事往云端推了新东西，你要把它取回来。两个命令，性格迥异：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>命令</th><th>它做什么</th><th>类比</th></tr></thead>
+    <tbody>
+      <tr><td><code>git fetch</code></td><td>只把远程新内容<b>取回来看</b>，本地分支一个字都不动</td><td>先取快递单看一眼，不拆包</td></tr>
+      <tr><td><code>git pull</code></td><td>取回并<b>立刻合并</b>进当前分支（= fetch + merge）</td><td>取回来直接拆开装好</td></tr>
+    </tbody>
+  </table></div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git fetch origin            # 取回远程最新动态（内容进入本地，但还没合进你的分支）
+git diff main origin/main   # 看看「我的 main」和「云端的 main」到底差了什么
+git merge origin/main       # 确认没问题后，再把云端改动合并进来（origin/main 叫「远程跟踪分支」）
+git pull                    # 新手日常够用的懒人版：取回 + 合并，一步到位
+git pull --rebase           # 取回并「变基」合并（历史更整洁；团队有约定再用，见第 10 章）</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">节奏</span>团队铁律一句话：<b>push 之前先 pull</b>。就像发朋友圈前先刷一下别人的动态，避免「撞车」被拒绝推送。
+  </div>
+
+  <h3>8.8 参与别人的项目：Fork + Pull Request</h3>
+  <p>直接 push 别人的仓库？不行（谢天谢地）。开源世界的正确姿势是「复印 → 改 → 发合并请求」：</p>
+  <ol class="steps">
+    <li><b>Fork（叉走）</b>：在别人仓库页右上角点 <b>Fork</b>——把整个仓库复印一份到<b>你自己的账号下</b>。</li>
+    <li><b>Clone 你的复印版</b>：照 8.6 克隆你账号下那个仓库到本地，正常建分支、改代码、提交。</li>
+    <li><b>Push 到你的复印版</b>：<code>git push origin feature-xxx</code>，改动上云。</li>
+    <li><b>发起 Pull Request（PR）</b>：回到你的仓库页面，点 <b>Compare &amp; pull request</b>，写清楚「我改了什么、为什么」，提交给原作者。</li>
+    <li><b>等作者审核</b>：作者点头点 Merge，你的改动就正式进入了原仓库——恭喜，你是开源贡献者了。</li>
+  </ol>
+  <div class="callout analogy">
+    <span class="tag">类比</span>Fork = 把书店的书<b>整本复印回家</b>随便做笔记；PR = 把你批注好的版本寄给原作者说「我有些改进建议」；作者觉得好，就吸收进下一版正式发行。Gitee 上同款流程叫「Pull Request / 合并请求」。
+  </div>
+
+  <h3>8.9 远程分支的管理</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git branch -a               # 列出所有分支：-a 含远程分支（红色的 remotes/origin/xxx）
+git switch dev              # 本地没有 dev 时，Git 会自动按同名远程分支创建并跟踪
+git push origin --delete dev  # 删除云端上的 dev 分支（本地分支不受影响）
+git remote show origin      # 查看远程仓库的详细信息（有哪些分支、跟踪关系如何）</pre>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 9 章 ==================== -->
+<section class="chapter" id="ch9">
+  <div class="chap-head">
+    <div class="chap-num">09</div>
+    <div>
+      <h2>标签与储藏</h2>
+      <div class="desc">给里程碑贴金标签，把半成品塞进抽屉——两个日常高频的小神器</div>
+    </div>
+  </div>
+
+  <p class="lead">本章两个工具都不难，却常常被初级教程忽略——而真实工作里你几乎每周都会用到它们。<span class="os both">双平台通用</span></p>
+
+  <h3>9.1 标签 git tag：相册里的金箔书签</h3>
+  <p>某次提交特别重要——「v1.0 正式上线了！」「论文盲审版送出去了！」——给这个时刻贴一张<b>不会移动的标签</b>，以后一喊名字就能瞬间定位，不用去背 <code>a1b2c3d</code> 这种天书编号。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>提交号像图书馆的索书号（精确但没人记得住），<b>标签就是书脊上烫金的书名</b>。分支名会随提交移动，标签永远钉死在那张照片上。
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git tag                              # 列出所有标签（按字母排序）
+git tag v1.0.0                       # 给「当前提交」打一个轻量标签（只是个书签，不带说明）
+git tag -a v1.0.0 -m "第一个正式版！"  # 打「附注标签」：带说明、日期、作者（推荐日常用这种）
+git tag -a v1.2.0 a1b2c3d -m "补打"  # 给历史中的某次提交补打标签（编号来自 git log）
+git show v1.0.0                      # 查看标签指向的那次提交详情
+git tag -d v1.0.0                    # 删除本地标签（打错了随手删，无副作用）</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">注意</span>标签<b>不会随 <code>git push</code> 自动上传</b>！要单独推： <code>git push origin v1.0.0</code> 推一个，或 <code>git push origin --tags</code> 一把全推。
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git push origin v1.0.0               # 把指定标签推送到云端
+git push origin --delete v1.0.0      # 删除云端上的标签
+git checkout v1.0.0                  # 「翻看」历史版本：进入只读的过去（看完记得切回来）
+git switch -                         # 从历史版本切回原来的分支（用完历史，回到当下）</pre>
+  </div>
+
+  <h3>9.2 储藏 git stash：桌面太乱，先塞抽屉</h3>
+  <p>经典场景：功能写到一半、改了一堆文件<b>还没提交</b>，老板突然喊「线上炸了，立刻修！」。这时候既不能把半成品提交上去（脏），也不能切换分支（Git 会拦住你或把改动带过去乱套）。——把它们<b>整个塞进抽屉</b>：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git stash                    # 把工作区和暂存区所有未提交的改动「整体收进抽屉」，桌面瞬间清爽
+git stash push -m "登录页写到一半"  # 收纳时贴个标签，方便之后认领是哪一摊活
+git stash list               # 看看抽屉里收了哪几摊（stash@{0} 是最新塞进去的）
+git stash pop                # 取出「最新那一摊」并从抽屉删除记录（最常用：救完火回来继续干活）
+git stash apply stash@{1}    # 取出指定的一摊，但抽屉里继续保留（想在多处复用同一份改动时）
+git stash drop stash@{0}     # 扔掉抽屉里指定的一摊（确认不要了）
+git stash clear              # 清空抽屉（不可恢复，慎用）</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>客人突然来访，书桌上一堆摊开的手稿：全部<b>原样码进抽屉</b>（stash），桌面立刻体面；客人走了再<b>原样摊回桌面</b>（pop），接着写——一字不差。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 04</span>
+    <ol>
+      <li>随便改两个文件不提交，<code>git stash</code> 后用 <code>git status</code> 感受「桌面突然干净」；</li>
+      <li><code>git stash pop</code> 取回来，确认改动一字不少；</li>
+      <li>给你的 main 分支打上 <code>v0.1-practice</code> 附注标签并推送到远程，去仓库页面看看 Releases 旁边是否亮起了标签。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 10 章 ==================== -->
+<section class="chapter" id="ch10">
+  <div class="chap-head">
+    <div class="chap-num">10</div>
+    <div>
+      <h2>进阶操作</h2>
+      <div class="desc">摘樱桃、整理时间线、追查真凶、二分捉虫——高手都在用的四板斧</div>
+    </div>
+  </div>
+
+  <p class="lead">基础三件套（提交、分支、远程）已经能应付 90% 的日常。剩下 10% 的疑难杂症，靠本章四件兵器。<span class="os both">双平台通用</span></p>
+
+  <h3>10.1 摘樱桃：git cherry-pick</h3>
+  <p>场景：dev 分支上有 5 笔提交，其中只有一笔修 Bug 的改动是 main 现在<b>急需</b>的，其他 4 笔还没做完。整支合并？不行。把那一笔「摘」过来：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git switch main                # 先切到「接收成果」的分支
+git cherry-pick a1b2c3d        # 把那次提交原样复制一份，落到当前分支（新提交、新编号）
+git cherry-pick a1b2c3d e4f5g6h  # 连摘两颗：依次写多个编号，空格隔开
+git cherry-pick -n a1b2c3d     # 只应用改动、不自动提交（-n = --no-commit，方便再加工）</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>别人的果树上结了一颗特别甜的樱桃——不必买下整棵树（merge），只把这一颗<b>嫁接</b>到自家树上（cherry-pick）。紧急修 Bug 时它是救命的快枪。
+  </div>
+
+  <h3>10.2 整理时间线：git rebase</h3>
+  <p>merge 合并会在历史上留下「打结」的轨迹；<code>rebase</code>（变基）则是把你的提交<b>整串摘下来、重新串到对方的最新提交之后</b>，让历史变成一条清爽的直线。</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>对比项</th><th>git merge</th><th>git rebase</th></tr></thead>
+    <tbody>
+      <tr><td>历史形状</td><td>有分叉、有结，真实还原协作过程</td><td>一条直线，干净漂亮</td></tr>
+      <tr><td>做法</td><td>新增一张「合并提交」照片</td><td>把你的提交「搬走重拍」，编号全变</td></tr>
+      <tr><td>安全性</td><td>只加不改，绝对安全</td><td>改写历史——<b>公共分支上禁用</b></td></tr>
+      <tr><td>适用</td><td>合并公共分支（main ← feature）</td><td>同步最新代码、整理自己私人分支</td></tr>
+    </tbody>
+  </table></div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git switch feature-x          # 进入自己的功能分支（rebase 只在自家院子里整）
+git rebase main               # 把本分支的提交整体搬到 main 最新提交之后（时间线变直线）
+git rebase --continue         # 搬家途中遇冲突：解决后用它继续搬（不用手动 commit）
+git rebase --abort            # 搬砸了：一键回到 rebase 开始前的样子（后悔药常备）
+git pull --rebase             # 拉取远程更新时顺便变基：push 前历史自动理顺（推荐习惯）</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">黄金法则</span><b>rebase 只能收拾自己已经摊开、别人还没看过的东西</b>。凡是 push 过、别人可能基于它工作的分支，一律禁止 rebase——否则等于把别人手里的相册抽页重排，天下大乱。
+  </div>
+
+  <h3>10.3 查真凶：git blame</h3>
+  <p>看到一行奇葩代码，想知道<b>谁、什么时候、在哪次提交</b>写的？一行命令，全招了：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git blame readme.txt          # 逐行标注：每行的最后修改者、提交号、日期，一览无余
+git blame -L 5,12 readme.txt # 只看第 5 到 12 行（-L 起,止，聚焦可疑区域）</pre>
+    <pre class="output">a1b2c3d (小王 2026-09-01 10:20:01 +0800  1) 这是我的第一个 Git 项目   ← 第 1 行的「出生证明」</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>blame（直译「怪罪」）是给每一行代码办<b>出生证明</b>。注意礼仪：查明真相是为了理解上下文，不是为了甩锅——很多「凶手」其实是在修更早的坑。
+  </div>
+
+  <h3>10.4 二分捉虫：git bisect</h3>
+  <p>场景：项目突然出 Bug，但最近有 <b>100 笔提交</b>，不知道是哪一笔引入的。逐笔回退测试？太傻。<code>bisect</code> 用<b>二分查找</b>：每次跳到中间版本让你测一下「好坏」，范围对半砍——<b>1000 笔提交最多 10 次</b>就能锁定元凶。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>猜 1~100 之间的数字，每次都猜中间数：「大了」「小了」……七次必中。bisect 就是让 Git 和你玩这个游戏，只不过猜的是「哪笔提交引入了 Bug」。
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git bisect start             # 宣布：捉虫行动开始
+git bisect bad               # 标记当前版本「有虫」（Bug 现在就能复现）
+git bisect good v1.0.0       # 标记 v1.0.0「无虫」（那时还好好的；Git 随即跳到中间版本）
+# —— 你现在测试中间版本，然后继续报告 ——
+git bisect good              # 中间版本没虫 → 元凶在更新的另一半，Git 继续折半
+git bisect bad               # 中间版本有虫 → 元凶在更老的另一半
+# —— 几轮之后，Git 打印出「元凶是 xxxx 提交」——
+git bisect reset             # 收工：回到捉虫前所在的分支（别忘这步！）</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">配合</span>找到元凶提交后，用 <code>git show 提交号</code> 看它改了什么、<code>git blame</code> 找到作者请教，或用 <code>git revert</code> 直接抵消它——组合拳闭环。
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 11 章 ==================== -->
+<section class="chapter" id="ch11">
+  <div class="chap-head">
+    <div class="chap-num">11</div>
+    <div>
+      <h2>完整实战：从零到 GitHub 的一条龙</h2>
+      <div class="desc">把前十章所有知识串成一个真实项目流程——照着敲完，你就出师了</div>
+    </div>
+  </div>
+
+  <p class="lead">本章不引入任何新知识，只是把全部招式按真实工作顺序演练一遍：<b>建项目 → 写代码 → 开分支 → 修完合并 → 打标签 → 上云 GitHub → 模拟同事克隆</b>。全程带注释，一步不跳。<span class="os both">双平台通用</span>（Windows 请用 Git Bash）</p>
+
+  <h3>11.1 第一步：项目初始化（第一次只做一次）</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端 · 阶段 1：起项目</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">mkdir my-app                # 新建项目文件夹
+cd my-app                   # 进入项目
+git init                    # 初始化为 Git 仓库（生成隐藏的 .git，相册开张）
+git config user.name "小王"  # （若已在第 3 章做过全局配置，本行可跳过）
+git config user.email "xiaowang@qq.com"  # 同上：仓库级配置会覆盖全局</pre>
+  </div>
+
+  <h3>11.2 第二步：第一批代码 + 第一次提交</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端 · 阶段 2：第一张快照</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">echo "# 我的项目" &gt; README.md     # 创建 README.md（项目说明书，GitHub 首页会展示它）
+echo "print('hello git')" &gt; main.py  # 创建一个 Python 小脚本凑数当业务代码
+echo -e "*.log\n__pycache__/" &gt; .gitignore  # 顺手建好禁拍名单：忽略日志和缓存目录
+git status                       # 检查：README 和 main.py 是红色未跟踪状态
+git add .                        # 全部登记进上镜名单（.gitignore 里的会自动跳过）
+git commit -m "项目初始化：README 与入口脚本"  # 按下第一张快照
+git log --oneline                # 确认历史：1 条</pre>
+    <pre class="output">a1b2c3d (HEAD -&gt; main) 项目初始化：README 与入口脚本   ← 历史相册正式开张</pre>
+  </div>
+
+  <h3>11.3 第三步：开分支开发新功能</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端 · 阶段 3：平行宇宙开发</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git switch -c feature-greet    # 开辟 feature-greet 宇宙并穿越过去
+echo "print('你好，Git')" &gt;&gt; main.py  # 在 main.py 里追加一行新功能
+git diff                        # 提交前过目：这次改动加了哪行
+git add main.py                 # 登记
+git commit -m "新增：中文问候功能"  # 存档（此刻提交在新宇宙，main 不受影响）
+git switch main                 # 切回主宇宙验证：cat main.py 看看——那行新代码果然不在
+git switch feature-greet       # 再切回来：新代码又回来了——这就是平行宇宙
+git switch main                 # 回主宇宙，准备接收成果
+git merge feature-greet         # 把功能宇宙合并进 main（无冲突，自动完成）
+git branch -d feature-greet     # 功能已合并，实验宇宙功成身退，删掉
+git log --oneline --graph       # 欣赏一下合并后的时间线</pre>
+    <pre class="output">*   e5f6g7h (HEAD -&gt; main) Merge branch 'feature-greet'   ← 合并记录
+|\
+| * b3c4d5e 新增：中文问候功能                           ← 功能宇宙的那笔提交
+|/
+* a1b2c3d 项目初始化：README 与入口脚本                  ← 一切的起点</pre>
+  </div>
+
+  <h3>11.4 第四步：打标签，纪念里程碑</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端 · 阶段 4：贴金标签</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git tag -a v0.1.0 -m "v0.1：问候功能上线"  # 给当前版本打上里程碑标签
+git tag                         # 检查：v0.1.0 已在册</pre>
+  </div>
+
+  <h3>11.5 第五步：上云 GitHub</h3>
+  <p>按第 8 章的方法：注册 GitHub → 新建空仓库（<b>不</b>勾选 README，避免和本地冲突）→ 配好 SSH 门禁 → 然后：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端 · 阶段 5：连接云端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">git remote add origin git@github.com:xiaowang/my-app.git  # 关联云端仓库，昵称 origin
+git push -u origin main        # 第一次推送：main 分支 + 记住跟踪关系
+git push origin v0.1.0         # 标签不随默认推送走，单独推这张金标签
+# —— 刷新 GitHub 仓库页面：代码、提交历史、标签，全都在了 ——</pre>
+  </div>
+
+  <h3>11.6 第六步：模拟「同事」加入（换台电脑/换个目录）</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端 · 阶段 6：协作演练</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">cd ~                           # 回到主目录（模拟换了一台电脑的世界）
+git clone git@github.com:xiaowang/my-app.git  # 同事视角：整套克隆仓库
+cd my-app                      # 进入克隆下来的项目
+echo "print('同事的改动')" &gt;&gt; main.py  # 同事开发了一点点新东西
+git add main.py                # 登记
+git commit -m "同事：追加一行输出"  # 存档
+git push                       # 推上云端（他克隆来的仓库，remote 早已配好）
+# —— 现在换回「你」的世界：原目录 ——
+git pull                       # 拉取同事的新提交并合并
+git log --oneline -3           # 看！同事的提交已进入你的相册</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">检验</span>上面 6 个阶段全程无报错跑通的话——<b>你已经掌握了真实工作里 95% 的 Git 场景</b>。剩下 5% 是配置细节和疑难杂症，交给下一章。
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 12 章 ==================== -->
+<section class="chapter" id="ch12">
+  <div class="chap-head">
+    <div class="chap-num">12</div>
+    <div>
+      <h2>常见报错急救站</h2>
+      <div class="desc">先别慌——你遇到的坑，一百万人都踩过，并且都有标准答案</div>
+    </div>
+  </div>
+
+  <p class="lead">本章是「急救手册」：遇到红色报错时，按关键字对号入座，基本都能 30 秒脱困。<span class="os both">双平台通用</span></p>
+
+  <div class="tblwrap"><table>
+    <thead><tr><th style="width:34%">报错关键字</th><th>它在说什么</th><th>急救方案</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>fatal: not a git repository</code></td>
+        <td>当前文件夹不是 Git 仓库</td>
+        <td>你站错地方了：用 <code>pwd</code> 看看在哪，<code>cd</code> 进正确的项目目录；或者真忘了 <code>git init</code>，就地补一个</td>
+      </tr>
+      <tr>
+        <td><code>Please tell me who you are</code></td>
+        <td>还没配置用户名邮箱</td>
+        <td>回第 3 章补两行 <code>git config --global user.name/email</code>，一次管终身</td>
+      </tr>
+      <tr>
+        <td><code>fatal: remote origin already exists</code></td>
+        <td>重复关联远程仓库</td>
+        <td><code>git remote -v</code> 查看现状；地址错了就 <code>git remote remove origin</code> 后重新 <code>add</code></td>
+      </tr>
+      <tr>
+        <td><code>rejected (fetch first)</code><br><code>failed to push some refs</code></td>
+        <td>云端有你没有的新提交，直接推会把它埋掉</td>
+        <td>标准流程：<code>git pull</code> → 有冲突就解决冲突 → 再 <code>git push</code>。记住口诀「先拉后推」</td>
+      </tr>
+      <tr>
+        <td><code>Permission denied (publickey)</code></td>
+        <td>SSH 钥匙不对 / 没配</td>
+        <td>回 8.3 重做一遍：<code>ssh-keygen</code> 生成 → <code>cat ~/.ssh/id_ed25519.pub</code> 复制 → 贴到平台 SSH 公钥页 → <code>ssh -T</code> 测试</td>
+      </tr>
+      <tr>
+        <td><code>error: Your local changes ... would be overwritten</code></td>
+        <td>切分支/拉取会覆盖你未提交的改动</td>
+        <td>想留：<code>git stash</code> 先塞抽屉，干完活 <code>git stash pop</code>；不要了：<code>git restore .</code> 丢弃</td>
+      </tr>
+      <tr>
+        <td><code>CONFLICT (content)</code></td>
+        <td>合并遇到冲突</td>
+        <td>这是「待裁决」不是事故：回 7.4 三板斧——改文件 → <code>git add</code> → <code>git commit</code></td>
+      </tr>
+      <tr>
+        <td>中文文件名变成 <code>"\346\225\260..."</code></td>
+        <td>Git 默认把非 ASCII 路径转义显示</td>
+        <td><code>git config --global core.quotepath false</code>——中文立刻正常显示</td>
+      </tr>
+      <tr>
+        <td><code>LF will be replaced by CRLF</code> 警告</td>
+        <td>Windows 和 Linux 换行符不同（\n 与 \r\n）</td>
+        <td>只是提醒不是错误。一劳永逸：Windows 下 <code>git config --global core.autocrlf true</code>；Linux/macOS 用 <code>input</code></td>
+      </tr>
+      <tr>
+        <td><code>Your branch is ahead of 'origin/main' by N commits</code></td>
+        <td>状态提示：你比云端多 N 笔提交</td>
+        <td>不是报错！提醒你「本地有 N 笔还没 push」，<code>git push</code> 即可同步</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <h3>12.1 终极自救：卡死在 Vim 编辑器里怎么办</h3>
+  <p>某些命令（如 <code>git commit</code> 不带 <code>-m</code>、<code>git revert</code>）会打开一个黑乎乎的编辑器——那是 Vim，新手的头号噩梦。逃生口诀只有两个：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Vim 逃生口诀</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"># 想保存并退出：
+按 Esc 键        # 先退出「插入模式」，回到「命令模式」
+输入 :wq        # 冒号+w+q：write 写入 + quit 退出
+按回车          # 执行，安全脱险
+
+# 想不保存、什么都没改就跑路：
+按 Esc 键        # 回到命令模式
+输入 :q!        # 冒号+q+感叹号：强行退出，不保存任何修改</pre>
+  </div>
+
+  <h3>12.2 万能排查三板斧</h3>
+  <ul class="plain">
+    <li><b>第一斧 <code>git status</code></b>：90% 的疑问，它的输出里就写着答案（包括建议命令）；</li>
+    <li><b>第二斧 <code>git log --oneline --graph --all</code></b>：看清自己站在哪、各分支什么关系；</li>
+    <li><b>第三斧 搜索报错原文</b>：把报错信息原文贴进搜索引擎——你永远不是第一个踩坑的人。</li>
+  </ul>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 13 章 ==================== -->
+<section class="chapter" id="ch13">
+  <div class="chap-head">
+    <div class="chap-num">13</div>
+    <div>
+      <h2>最佳实践与团队协作</h2>
+      <div class="desc">会敲命令只是及格，这些习惯让你成为队友眼里「靠谱的人」</div>
+    </div>
+  </div>
+
+  <p class="lead">命令层面的知识到这里已经全部讲完。最后这一章是「职业素养」——它们不写在任何报错信息里，却决定着别人愿不愿意和你共用一个仓库。<span class="os both">双平台通用</span></p>
+
+  <h3>13.1 提交的艺术：小步提交 + 走心说明</h3>
+  <p>每笔提交应该是一个<b>独立、完整、能说清自己</b>的最小改动单元。对比一下：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>坏提交（看不懂）</th><th>好提交（一眼看懂）</th></tr></thead>
+    <tbody>
+      <tr><td><code>修改</code></td><td><code>修复：登录页在 Safari 下按钮错位</code></td></tr>
+      <tr><td><code>更新了一些东西</code></td><td><code>新增：用户头像上传并裁剪功能</code></td></tr>
+      <tr><td><code>aaa</code></td><td><code>文档：补充 Linux 安装步骤说明</code></td></tr>
+      <tr><td>一次提交塞了 30 个文件的五件事</td><td>五件小事拆成五笔提交，各自说明</td></tr>
+    </tbody>
+  </table></div>
+  <p>业界广泛使用 <b>Conventional Commits（约定式提交）</b>规范：说明以「类型」开头，一眼分类：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>前缀</th><th>含义</th><th>示例</th></tr></thead>
+    <tbody>
+      <tr><td><code>feat:</code></td><td>新功能</td><td><code>feat: 支持深色模式切换</code></td></tr>
+      <tr><td><code>fix:</code></td><td>修 Bug</td><td><code>fix: 修复首页白屏问题</code></td></tr>
+      <tr><td><code>docs:</code></td><td>只改文档</td><td><code>docs: 更新 README 安装说明</code></td></tr>
+      <tr><td><code>style:</code></td><td>格式调整（不改逻辑）</td><td><code>style: 统一缩进为 4 空格</code></td></tr>
+      <tr><td><code>refactor:</code></td><td>重构（不改功能）</td><td><code>refactor: 抽取登录逻辑为公共模块</code></td></tr>
+      <tr><td><code>test:</code></td><td>测试相关</td><td><code>test: 补充登录接口单元测试</code></td></tr>
+      <tr><td><code>chore:</code></td><td>杂务（依赖、配置）</td><td><code>chore: 升级依赖包版本</code></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>13.2 绝对不要提交的东西</h3>
+  <ul class="plain">
+    <li><b>密码、密钥、 token</b>：提交历史是「永久」的，删掉提交也很难保证清干净（<code>.git</code> 里的旧快照还在）——真泄密了，唯一正解是<b>立刻轮换密钥</b>，而不是删文件；</li>
+    <li><b>依赖文件夹</b>（如 <code>node_modules/</code>）：动辄几万个文件，队友拿到代码自己装即可；</li>
+    <li><b>构建产物</b>（<code>dist/</code>、<code>.exe</code>）：由源码随时生成，进历史纯属浪费；</li>
+    <li><b>日志、临时文件、编辑器私有配置</b>（<code>.idea/</code>、<code>.vscode/</code> 视团队约定）。</li>
+  </ul>
+  <div class="callout tip">
+    <span class="tag">好习惯</span>新项目<b>第一笔提交</b>就放好 <code>.gitignore</code>（各语言模板搜「gitignore templates」现成可抄）——防泄密从第一天开始，成本最低。
+  </div>
+
+  <h3>13.3 团队协作的日常节奏</h3>
+  <div class="callout analogy">
+    <span class="tag">类比</span>把协作想象成「合租一间厨房」：<b>早上进门先看一眼冰箱</b>（pull），<b>做饭勤收拾</b>（小步提交），<b>睡前把公共区域归位</b>（push），<b>想大动灶台先占个标签</b>（开分支）。
+  </div>
+  <ol class="steps">
+    <li><b>开工先拉</b>：<code>git pull</code>，和云端对齐再动手；</li>
+    <li><b>活儿拆小</b>：一个功能一条 <code>feature/</code> 分支，别在 main 上直接写；</li>
+    <li><b>勤提交</b>：完成一小块就 add + commit——commit 是免费的保险，提交越勤「后悔药」越新鲜；</li>
+    <li><b>收工必推</b>：<code>git push</code> 上云——电脑丢失 / 硬盘罢工时，你会感谢今天的自己；</li>
+    <li><b>推送前再拉一次</b>：有人抢先推了就先合并，避免被拒；</li>
+    <li><b>合并走正规流程</b>：功能分支合入 main 前最好过一道 PR / 代码评审，多双眼睛少个 Bug。</li>
+  </ol>
+
+  <h3>13.4 新手最常犯的五个错（附解法）</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>常见错误</th><th>后果</th><th>解法 / 预防</th></tr></thead>
+    <tbody>
+      <tr><td>在错误分支上写代码</td><td>成果提交到了别的宇宙</td><td>动手前 <code>git branch</code> 确认 * 号；已发生？<code>git cherry-pick</code> 摘回去，或 <code>git switch 分支</code> 带着未提交改动走</td></tr>
+      <tr><td>一整天攒成一笔巨型提交</td><td>出问题无法定位、无法回退</td><td>小步提交，参考 13.1</td></tr>
+      <tr><td>改完不 push 就关电脑</td><td>换机/误删时一夜白干</td><td>把 push 当「保存」用，下班必推</td></tr>
+      <tr><td>对公共分支用 reset --hard</td><td>同事历史错乱、仓库分叉</td><td>公共分支只用 revert；reset 仅限本地私活</td></tr>
+      <tr><td>把 .git 文件夹当普通文件夹手动改</td><td>仓库损坏、历史丢失</td><td>相册只通过 Git 命令翻阅，永远别手动动它</td></tr>
+    </tbody>
+  </table></div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 14 章 ==================== -->
+<section class="chapter" id="ch14">
+  <div class="chap-head">
+    <div class="chap-num">14</div>
+    <div>
+      <h2>命令速查表</h2>
+      <div class="desc">打印出来贴在显示器旁边——按场景分组的全部核心命令</div>
+    </div>
+  </div>
+
+  <p class="lead">14 章旅程的终点。这份按<b>使用场景</b>分组的速查表，覆盖了教程里的全部核心命令。</p>
+
+  <h3>配置</h3>
+  <div class="tblwrap"><table>
+    <tbody>
+      <tr><td><code>git config --global user.name "名"</code></td><td>设置全局用户名（工作证）</td></tr>
+      <tr><td><code>git config --global user.email "邮箱"</code></td><td>设置全局邮箱</td></tr>
+      <tr><td><code>git config --global init.defaultBranch main</code></td><td>新仓库默认分支名设为 main</td></tr>
+      <tr><td><code>git config --list</code></td><td>查看全部配置</td></tr>
+      <tr><td><code>git config --global core.quotepath false</code></td><td>中文文件名正常显示</td></tr>
+      <tr><td><code>git config --global core.autocrlf true</code></td><td>换行符自动转换（Windows 用 true，Linux 用 input）</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>基础日常</h3>
+  <div class="tblwrap"><table>
+    <tbody>
+      <tr><td><code>git init</code></td><td>把当前文件夹变成仓库</td></tr>
+      <tr><td><code>git status</code></td><td>查看状态（迷路就敲它）</td></tr>
+      <tr><td><code>git add 文件 / . / -A</code></td><td>登记进暂存区（上镜名单）</td></tr>
+      <tr><td><code>git commit -m "说明"</code></td><td>按下快门，存入相册</td></tr>
+      <tr><td><code>git commit -am "说明"</code></td><td>已跟踪文件直接提交（跳过 add）</td></tr>
+      <tr><td><code>git diff</code></td><td>看工作区改动（add 前用）</td></tr>
+      <tr><td><code>git diff --staged</code></td><td>看暂存区改动（add 后用）</td></tr>
+      <tr><td><code>git log --oneline --graph</code></td><td>一行式图形化历史</td></tr>
+      <tr><td><code>git show 提交号</code></td><td>查看某次提交的完整内容</td></tr>
+      <tr><td><code>git rm / git mv</code></td><td>删除 / 重命名并登记</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>撤销与回退</h3>
+  <div class="tblwrap"><table>
+    <tbody>
+      <tr><td><code>git restore 文件</code></td><td>丢弃工作区改动（慎用）</td></tr>
+      <tr><td><code>git restore --staged 文件</code></td><td>撤出暂存区（改动保留）</td></tr>
+      <tr><td><code>git commit --amend</code></td><td>修补最后一次提交</td></tr>
+      <tr><td><code>git reset --soft / --mixed / --hard</code></td><td>版本回退三档火力</td></tr>
+      <tr><td><code>git revert 提交号</code></td><td>反向提交，安全撤销（公共分支专用）</td></tr>
+      <tr><td><code>git reflog</code></td><td>书签移动全记录（后悔药的后悔药）</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>分支与合并</h3>
+  <div class="tblwrap"><table>
+    <tbody>
+      <tr><td><code>git branch</code> / <code>git branch 名字</code></td><td>列出 / 创建分支</td></tr>
+      <tr><td><code>git switch 名字</code> / <code>git switch -c 名字</code></td><td>切换 / 创建并切换分支</td></tr>
+      <tr><td><code>git merge 分支</code></td><td>把分支合并进当前分支</td></tr>
+      <tr><td><code>git merge --abort</code></td><td>放弃进行中的合并</td></tr>
+      <tr><td><code>git branch -d / -D 名字</code></td><td>删除 / 强制删除分支</td></tr>
+      <tr><td><code>git branch -a</code></td><td>含远程分支的全列表</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>远程协作</h3>
+  <div class="tblwrap"><table>
+    <tbody>
+      <tr><td><code>git remote add origin 地址</code></td><td>关联远程仓库</td></tr>
+      <tr><td><code>git remote -v</code></td><td>查看远程关联</td></tr>
+      <tr><td><code>git push -u origin main</code></td><td>首次推送并建立跟踪</td></tr>
+      <tr><td><code>git push</code></td><td>日常推送</td></tr>
+      <tr><td><code>git clone 地址</code></td><td>整套克隆远程仓库</td></tr>
+      <tr><td><code>git fetch</code></td><td>只取回远程动态不合并</td></tr>
+      <tr><td><code>git pull</code> / <code>git pull --rebase</code></td><td>取回并合并 / 取回并变基</td></tr>
+      <tr><td><code>git push origin --delete 分支</code></td><td>删除远程分支</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>标签与储藏</h3>
+  <div class="tblwrap"><table>
+    <tbody>
+      <tr><td><code>git tag -a v1.0 -m "说明"</code></td><td>打附注标签（里程碑）</td></tr>
+      <tr><td><code>git push origin v1.0</code> / <code>--tags</code></td><td>推送标签（默认不随 push 走！）</td></tr>
+      <tr><td><code>git tag -d v1.0</code></td><td>删除本地标签</td></tr>
+      <tr><td><code>git stash</code> / <code>git stash pop</code></td><td>塞抽屉 / 取回来</td></tr>
+      <tr><td><code>git stash list</code> / <code>apply</code> / <code>drop</code></td><td>抽屉管理三件套</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>进阶兵器</h3>
+  <div class="tblwrap"><table>
+    <tbody>
+      <tr><td><code>git cherry-pick 提交号</code></td><td>从别处摘一颗「樱桃」过来</td></tr>
+      <tr><td><code>git rebase 分支</code> / <code>--abort</code> / <code>--continue</code></td><td>变基整理时间线（仅限私人分支）</td></tr>
+      <tr><td><code>git blame 文件</code></td><td>逐行追查修改者</td></tr>
+      <tr><td><code>git bisect start / good / bad / reset</code></td><td>二分法锁定 Bug 元凶</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>14.1 接下来去哪？</h3>
+  <ul class="plain">
+    <li><b>官方神书《Pro Git》中文版</b>（免费）：<a href="https://git-scm.com/book/zh/v2" target="_blank">git-scm.com/book/zh/v2</a>——本教程之外的每一个细节都在里面；</li>
+    <li><b>可视化闯关游戏 Learn Git Branching</b>：<a href="https://learngitbranching.js.org" target="_blank">learngitbranching.js.org</a>——把分支玩成通关游戏，强烈推荐练手；</li>
+    <li><b>最有效的下一步</b>：把你手头任何一个真实项目（笔记、作业、小工具）用 Git 管起来，坚持两周，肌肉记忆自然长成。</li>
+  </ul>
+  <div class="callout analogy">
+    <span class="tag">结语</span>Git 的本质，是给你的职业生涯配了一台<b>时间机器</b>：走过的每一步都有记录、每个错误都能反悔、每个想法都能安全试错。工具已经在你手里了——去创造，大胆犯错，然后优雅地 <code>git revert</code>。
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<footer class="site-foot">
+  Git 零基础完全教程 · 全 14 章 · 类比教学 / 每行代码均有注释 / Windows 与 Linux 双平台<br>
+  建议配合终端边看边敲 · 命令速查表可打印贴在工位 · 遇到报错先翻第 12 章急救站
+</footer>
+
+</div>
+</main>
+
+<script>
+(function () {
+  // ---------- 工具：HTML 转义 ----------
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // ---------- 代码高亮：注释上绿色、命令词上蓝色、提示符变暗 ----------
+  document.querySelectorAll('pre.code').forEach(function (pre) {
+    var lines = pre.textContent.split('\n');
+    var out = [];
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      if (line.trim() === '') { out.push(''); continue; }
+      var e = esc(line);
+      var hash = e.indexOf('#');
+      var cmdPart = hash >= 0 ? e.slice(0, hash) : e;
+      var cmtPart = hash >= 0 ? '<span class="cmt">' + e.slice(hash) + '</span>' : '';
+      var m = cmdPart.match(/^(\s*)(\$ )?([A-Za-z][\w.\-]*)/);
+      if (m) {
+        cmdPart = m[1] + (m[2] ? '<span class="pr">' + m[2] + '</span>' : '') +
+          '<span class="kw">' + m[3] + '</span>' + cmdPart.slice(m[0].length);
+      }
+      out.push(cmdPart + cmtPart);
+    }
+    pre.innerHTML = out.join('\n');
+  });
+
+  // ---------- 复制按钮 ----------
+  document.querySelectorAll('.codewrap').forEach(function (w) {
+    var btn = w.querySelector('.copybtn');
+    var code = w.querySelector('pre.code');
+    if (!btn || !code) return;
+    btn.addEventListener('click', function () {
+      var txt = code.textContent;
+      function done(ok) {
+        btn.textContent = ok ? '已复制' : '复制失败';
+        setTimeout(function () { btn.textContent = '复制代码'; }, 1600);
+      }
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = txt;
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        done(ok);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(function () { done(true); }, fallback);
+      } else {
+        fallback();
+      }
+    });
+  });
+
+  // ---------- 侧边栏当前章节高亮（滚动侦测） ----------
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav a[href^="#"]'));
+  var map = {};
+  links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  function spy() {
+    var cur = secs.length ? secs[0].id : null;
+    for (var i = 0; i < secs.length; i++) {
+      if (secs[i].getBoundingClientRect().top <= 160) cur = secs[i].id;
+    }
+    links.forEach(function (a) { a.classList.remove('active'); });
+    if (cur && map[cur]) map[cur].classList.add('active');
+  }
+
+  // ---------- 顶部阅读进度条 ----------
+  var bar = document.getElementById('progress');
+  function prog() {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max * 100) : 0) + '%';
+  }
+
+  // ---------- 返回顶部按钮 ----------
+  var topBtn = document.getElementById('totop');
+  topBtn.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ---------- 移动端目录开关 ----------
+  var sidebar = document.getElementById('sidebar');
+  var mask = document.getElementById('mask');
+  var menuBtn = document.getElementById('menu');
+  function closeMenu() { sidebar.classList.remove('open'); mask.classList.remove('show'); }
+  menuBtn.addEventListener('click', function () {
+    sidebar.classList.toggle('open');
+    mask.classList.toggle('show');
+  });
+  mask.addEventListener('click', closeMenu);
+  links.forEach(function (a) { a.addEventListener('click', closeMenu); });
+
+  window.addEventListener('scroll', function () {
+    spy();
+    prog();
+    if (window.scrollY > 600) { topBtn.classList.add('show'); }
+    else { topBtn.classList.remove('show'); }
+  }, { passive: true });
+
+  spy();
+  prog();
+})();
+</script>
+</body>
+</html>

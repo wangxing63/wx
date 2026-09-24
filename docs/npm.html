@@ -1,0 +1,2052 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f7f9">
+<meta name="description" content="npm 零基础完全教程：类比讲解、每行命令与每个标识符（字段、脚本、变量、函数）都带中文注释，从装 Node 到发布自己的包。">
+<title>npm 零基础完全教程 · 一行命令，搬空全球代码商城</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  background:#f6f7f9; color:#28303b; font-size:16.5px; line-height:1.95;
+  -webkit-font-smoothing:antialiased;
+}
+::selection { background:#f5d9d6; }
+a { color:#a82821; text-decoration:none; }
+a:hover { text-decoration:underline; }
+section[id] { scroll-margin-top:24px; }
+code { font-family:"JetBrains Mono",Consolas,"Courier New",monospace; }
+
+/* 顶部进度条 */
+#progress { position:fixed; top:0; left:0; height:3px; width:0; background:linear-gradient(90deg,#cb3837,#e0705f); z-index:1200; }
+
+/* ============ 侧边栏 ============ */
+.sidebar { position:fixed; top:0; left:0; bottom:0; width:282px; background:#fff; border-right:1px solid #e7ebf0; overflow-y:auto; z-index:1100; padding:30px 0 40px; }
+.brand { padding:0 26px 24px; border-bottom:1px solid #eef1f5; margin-bottom:14px; }
+.logo { display:flex; align-items:center; gap:12px; }
+.logo-mark { width:44px; height:44px; border-radius:12px; background:linear-gradient(135deg,#cb3837,#e0705f); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:15px; letter-spacing:0; box-shadow:0 6px 14px rgba(203,56,55,.25); }
+.logo-txt b { display:block; font-size:16px; color:#1f2733; }
+.logo-txt span { font-size:12px; color:#8a95a5; letter-spacing:1px; }
+.nav-cap { padding:18px 26px 8px; font-size:12px; color:#9aa5b4; letter-spacing:2px; font-weight:600; }
+.nav a { display:flex; align-items:baseline; gap:10px; padding:8.5px 26px 8.5px 23px; color:#5c6878; font-size:14px; border-left:3px solid transparent; transition:.15s; }
+.nav a .n { font-family:Consolas,monospace; font-size:11.5px; color:#a8b2c1; }
+.nav a:hover { color:#a82821; background:#fdf1f0; text-decoration:none; }
+.nav a.active { color:#a82821; border-left-color:#cb3837; background:#fcebe9; font-weight:600; }
+.nav a.active .n { color:#d9776b; }
+.side-foot { margin-top:26px; padding:16px 26px 0; border-top:1px solid #eef1f5; font-size:12px; color:#9aa5b4; line-height:1.9; }
+
+/* ============ 主区域 ============ */
+main { margin-left:282px; }
+.container { width:100%; max-width:880px; margin:0 auto; padding:0 56px 140px; }
+
+/* ---- 宽屏 / 超宽屏自适应：内容区随屏幕加宽，字号与组件同步放大 ---- */
+@media (min-width:1500px) {
+  body { font-size:17px; }
+  .container { max-width:1100px; }
+  pre.code { font-size:14.5px; }
+}
+@media (min-width:1900px) {
+  body { font-size:18px; }
+  .container { max-width:1360px; padding:0 64px 140px; }
+  .sidebar { width:320px; }
+  main { margin-left:320px; }
+  .nav a { font-size:15px; padding:9.5px 26px 9.5px 23px; }
+  .nav-cap { font-size:13px; }
+  .hero h1 { font-size:56px; }
+  .hero .sub { font-size:19px; max-width:800px; }
+  .chap-head h2 { font-size:32px; }
+  h3 { font-size:23px; }
+  pre.code { font-size:15px; }
+  pre.output { font-size:14px; }
+  .codehead { font-size:13.5px; }
+  .copybtn { font-size:13px; }
+  .callout { font-size:16.5px; }
+  table { font-size:15.5px; }
+  th { font-size:14px; }
+  .os { font-size:13.5px; }
+  kbd { font-size:14px; }
+  .stat b { font-size:30px; }
+  .stat span { font-size:14px; }
+  figure.dg figcaption { font-size:14px; }
+}
+@media (min-width:2500px) {
+  body { font-size:19px; }
+  .container { max-width:1700px; padding:0 80px 140px; }
+  .sidebar { width:344px; }
+  main { margin-left:344px; }
+  .hero h1 { font-size:64px; }
+  .chap-head h2 { font-size:36px; }
+  h3 { font-size:25px; }
+  pre.code { font-size:16px; }
+  pre.output { font-size:15px; }
+  .callout { font-size:18px; }
+  table { font-size:17px; }
+  .stat b { font-size:34px; }
+  .os { font-size:15px; }
+}
+@media (min-width:3300px) {
+  body { font-size:20px; }
+  .container { max-width:2100px; padding:0 96px 140px; }
+  .hero h1 { font-size:74px; }
+}
+
+/* Hero */
+.hero { padding:92px 0 8px; }
+.hero-kicker { display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; letter-spacing:2px; color:#a82821; background:#fcebe9; border:1px solid #e8b3ac; padding:6px 16px; border-radius:999px; }
+.hero h1 { margin:26px 0 18px; font-size:clamp(32px,4.6vw,50px); line-height:1.28; color:#1c2430; letter-spacing:.5px; font-weight:800; }
+.hero h1 em { font-style:normal; color:#cb3837; }
+.hero .sub { font-size:18px; color:#5c6878; max-width:640px; line-height:1.9; }
+.stats { display:flex; flex-wrap:wrap; margin-top:34px; background:#fff; border:1px solid #e7ebf0; border-radius:16px; overflow:hidden; box-shadow:0 4px 16px rgba(24,34,56,.05); }
+.stat { flex:1 1 150px; padding:22px 10px; text-align:center; border-right:1px solid #eef1f5; }
+.stat:last-child { border-right:0; }
+.stat b { display:block; font-size:26px; color:#cb3837; font-weight:800; }
+.stat span { font-size:13px; color:#8a95a5; }
+
+/* 章节 */
+.chapter { margin-top:104px; }
+.chap-head { display:flex; align-items:center; gap:20px; padding-bottom:22px; border-bottom:1px solid #e7ebf0; margin-bottom:34px; }
+.chap-num { flex:none; width:58px; height:58px; border-radius:15px; background:linear-gradient(135deg,#cb3837,#e0705f); color:#fff; font-size:24px; font-weight:800; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(203,56,55,.22); }
+.chap-head h2 { font-size:29px; line-height:1.35; color:#1c2430; font-weight:800; }
+.chap-head .desc { margin-top:6px; font-size:14.5px; color:#8a95a5; font-weight:400; line-height:1.7; }
+
+h3 { margin:54px 0 6px; font-size:21.5px; color:#1c2430; display:flex; align-items:center; gap:10px; font-weight:700; }
+h3::before { content:""; flex:none; width:7px; height:20px; border-radius:3px; background:linear-gradient(#e0705f,#cb3837); }
+h4 { margin:34px 0 4px; font-size:17px; color:#2c3644; font-weight:700; }
+p { margin:16px 0; }
+.lead { font-size:17px; color:#5c6878; }
+ul.plain { margin:14px 0 14px 4px; padding-left:22px; }
+ul.plain li { margin:8px 0; }
+
+p code, li code, td code, th code, .callout code { background:#eef1f5; color:#a82821; padding:2px 7px; border-radius:6px; font-size:.88em; }
+
+/* ============ 代码块 ============ */
+.codewrap { margin:26px 0; border-radius:14px; overflow:hidden; border:1px solid #232e44; box-shadow:0 10px 30px rgba(18,26,44,.14); }
+.codehead { display:flex; align-items:center; justify-content:space-between; background:#1a2334; color:#8fa0bb; padding:9px 16px; font-size:12.5px; font-family:Consolas,monospace; }
+.codehead .lab { display:flex; align-items:center; gap:10px; }
+.codehead .dots { display:flex; gap:6px; }
+.codehead .dots i { width:10px; height:10px; border-radius:50%; }
+.codehead .dots i:nth-child(1){ background:#ff5f56; }
+.codehead .dots i:nth-child(2){ background:#ffbd2e; }
+.codehead .dots i:nth-child(3){ background:#27c93f; }
+.copybtn { background:#2a3550; color:#aebdd4; border:1px solid #37435f; padding:4px 12px; border-radius:7px; cursor:pointer; font-size:12px; font-family:inherit; transition:.15s; }
+.copybtn:hover { background:#cb3837; border-color:#cb3837; color:#fff; }
+pre.code { background:#151d30; color:#dde6f2; padding:18px 22px; overflow-x:auto; font-size:14px; line-height:1.95; font-family:Consolas,"JetBrains Mono",monospace; margin:0; }
+pre.code .cmt { color:#7ee787; }
+pre.code .kw { color:#82b8ff; }
+pre.code .pr { color:#5c6c86; }
+pre.output { background:#1b2438; color:#9db0ca; padding:14px 22px 16px; overflow-x:auto; font-size:13px; line-height:1.85; font-family:Consolas,monospace; border-top:1px dashed #32405c; margin:0; }
+pre.output::before { content:"运行效果（示意，注释为中文标注）"; display:block; color:#6a7a95; font-size:11.5px; margin-bottom:8px; letter-spacing:1px; }
+pre.code::-webkit-scrollbar, pre.output::-webkit-scrollbar { height:8px; }
+pre.code::-webkit-scrollbar-thumb, pre.output::-webkit-scrollbar-thumb { background:#2e3b57; border-radius:4px; }
+
+/* ============ 提示框 ============ */
+.callout { position:relative; border-radius:13px; padding:20px 22px 20px 64px; margin:28px 0; font-size:15.5px; line-height:1.9; }
+.callout::before { position:absolute; left:18px; top:20px; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; }
+.callout .tag { display:inline-block; font-weight:800; margin-right:6px; }
+.callout.analogy { background:#fff8e9; border:1px solid #f2ddb0; color:#6b5518; }
+.callout.analogy::before { background:#f0a92e; content:"喻"; }
+.callout.tip { background:#ecf8f0; border:1px solid #c2e6cd; color:#1e5c33; }
+.callout.tip::before { background:#2f9e5f; content:"技"; }
+.callout.warn { background:#fdf6ec; border:1px solid #eedfbc; color:#7c4a03; }
+.callout.warn::before { background:#d97706; content:"警"; }
+.callout.info { background:#edf3fc; border:1px solid #c8d9f2; color:#274a7d; }
+.callout.info::before { background:#4a7fd4; content:"注"; }
+.callout code { background:rgba(255,255,255,.75); color:inherit; }
+
+.practice { border:1.5px dashed #eab5ae; background:#fdf6f5; border-radius:13px; padding:20px 24px; margin:30px 0; color:#3c4655; }
+.practice .tag { color:#a82821; font-weight:800; letter-spacing:1px; font-size:13px; display:block; margin-bottom:8px; }
+.practice ol { padding-left:22px; }
+.practice ol li { margin:6px 0; }
+
+/* ============ 标签 ============ */
+.os { display:inline-block; padding:3px 12px; border-radius:999px; font-size:12.5px; font-weight:700; letter-spacing:.5px; margin-right:6px; vertical-align:1px; }
+.os.win { background:#e8f1fc; color:#1263c3; border:1px solid #c4d9f4; }
+.os.linux { background:#e6f7f5; color:#0d7a6e; border:1px solid #bfe8e2; }
+.os.both { background:#edf7ef; color:#227a43; border:1px solid #c8e8d2; }
+
+/* ============ 表格 ============ */
+.tblwrap { overflow-x:auto; margin:26px 0; border-radius:13px; border:1px solid #e7ebf0; background:#fff; box-shadow:0 4px 16px rgba(24,34,56,.05); }
+table { width:100%; border-collapse:collapse; font-size:14.5px; line-height:1.85; min-width:520px; }
+th { background:#f2f5f9; color:#3b4656; text-align:left; padding:12px 18px; font-size:13.5px; letter-spacing:.5px; border-bottom:1px solid #e3e9f0; white-space:nowrap; }
+td { padding:13px 18px; border-bottom:1px solid #eef2f6; vertical-align:top; color:#3b4656; }
+tr:last-child td { border-bottom:0; }
+td code { white-space:nowrap; }
+
+/* 步骤列表 */
+ol.steps { list-style:none; counter-reset:s; margin:22px 0; }
+ol.steps li { counter-increment:s; position:relative; padding:0 0 18px 46px; }
+ol.steps li::before { content:counter(s); position:absolute; left:0; top:1px; width:30px; height:30px; border-radius:50%; background:#fcebe9; color:#a82821; border:1.5px solid #eab5ae; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:14px; }
+ol.steps li b { color:#1c2430; }
+
+/* 图 */
+figure.dg { background:#fff; border:1px solid #e7ebf0; border-radius:18px; padding:30px 26px 18px; margin:30px 0; box-shadow:0 4px 16px rgba(24,34,56,.05); text-align:center; }
+figure.dg svg { max-width:100%; height:auto; }
+figure.dg figcaption { margin-top:14px; font-size:13px; color:#8a95a5; }
+
+kbd { display:inline-block; background:#fff; border:1px solid #cfd7e2; border-bottom-width:2.5px; border-radius:7px; padding:1px 9px; font-size:13px; font-family:inherit; color:#333e4e; margin:0 2px; }
+
+.chapter-end { text-align:center; color:#c3ccd8; letter-spacing:10px; margin:56px 0 0; font-size:15px; }
+
+footer.site-foot { margin-top:90px; padding-top:28px; border-top:1px solid #e7ebf0; color:#9aa5b4; font-size:13.5px; line-height:2; }
+
+/* 返回顶部 */
+#totop { position:fixed; right:26px; bottom:26px; width:46px; height:46px; border-radius:50%; background:#fff; border:1px solid #e0e6ee; color:#5c6878; font-size:18px; cursor:pointer; box-shadow:0 6px 20px rgba(24,34,56,.12); opacity:0; visibility:hidden; transform:translateY(8px); transition:.25s; z-index:900; }
+#totop.show { opacity:1; visibility:visible; transform:none; }
+#totop:hover { color:#cb3837; border-color:#eab5ae; }
+
+/* 汉堡按钮 & 遮罩 */
+#menu { display:none; position:fixed; top:16px; left:16px; z-index:1300; width:44px; height:44px; border-radius:12px; background:#fff; border:1px solid #e0e6ee; box-shadow:0 6px 20px rgba(24,34,56,.14); cursor:pointer; padding:12px 10px; }
+#menu span { display:block; height:2.5px; background:#3b4656; border-radius:2px; margin:5.5px 0; transition:.25s; }
+#mask { display:none; position:fixed; inset:0; background:rgba(18,26,44,.45); z-index:1050; }
+
+@media (max-width:1180px) {
+  .sidebar { transform:translateX(-100%); transition:.28s; box-shadow:0 0 40px rgba(0,0,0,.2); }
+  .sidebar.open { transform:none; }
+  #menu { display:block; }
+  #mask.show { display:block; }
+  main { margin-left:0; }
+  .container { padding:0 26px 120px; }
+  .hero { padding-top:84px; }
+}
+@media (max-width:760px) {
+  .chap-head h2 { font-size:24px; }
+  .chap-num { width:48px; height:48px; font-size:20px; }
+  .callout { padding-left:56px; }
+  .stat b { font-size:22px; }
+  body { font-size:15.5px; }
+  .hero .sub { font-size:16px; }
+}
+@media print {
+  .sidebar, #totop, #menu, #mask, #progress, .copybtn { display:none !important; }
+  main { margin:0; }
+  .codewrap { box-shadow:none; }
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<button id="menu" aria-label="打开目录"><span></span><span></span><span></span></button>
+<div id="mask"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="logo">
+      <div class="logo-mark">npm</div>
+      <div class="logo-txt"><b>npm 教程</b><span>零基础友好版</span></div>
+    </div>
+  </div>
+  <div class="nav-cap">教程目录</div>
+  <nav class="nav">
+    <a href="#top"><span class="n">00</span>导读 · 如何使用本教程</a>
+    <a href="#ch1"><span class="n">01</span>初识 npm：世界快递网</a>
+    <a href="#ch2"><span class="n">02</span>地基与安装：Node 双套装</a>
+    <a href="#ch3"><span class="n">03</span>第一份清单 package.json</a>
+    <a href="#ch4"><span class="n">04</span>装货的艺术 npm install</a>
+    <a href="#ch5"><span class="n">05</span>node_modules 仓库探秘</a>
+    <a href="#ch6"><span class="n">06</span>版本号的哲学 semver</a>
+    <a href="#ch7"><span class="n">07</span>package-lock 采购小票</a>
+    <a href="#ch8"><span class="n">08</span>npm scripts 开工面板</a>
+    <a href="#ch9"><span class="n">09</span>npx：租用不买断</a>
+    <a href="#ch10"><span class="n">10</span>卸载更新与体检</a>
+    <a href="#ch11"><span class="n">11</span>配置与 .npmrc 偏好单</a>
+    <a href="#ch12"><span class="n">12</span>发布自己的包</a>
+    <a href="#ch13"><span class="n">13</span>全局工具与 npm link</a>
+    <a href="#ch14"><span class="n">14</span>安全审计：收货验货</a>
+    <a href="#ch15"><span class="n">15</span>workspaces 一楼多房</a>
+    <a href="#ch16"><span class="n">16</span>综合实战：发布你的包</a>
+    <a href="#ch17"><span class="n">17</span>常见报错急救站</a>
+    <a href="#ch18"><span class="n">18</span>最佳实践与速查表</a>
+  </nav>
+  <div class="side-foot">先装地基（02），再学清单（03）；<br>卡住了直奔第 17 章。</div>
+</aside>
+
+<main>
+<div class="container">
+
+<!-- ==================== HERO ==================== -->
+<section class="hero" id="top">
+  <span class="hero-kicker">零基础友好 · 类比教学 · 标识符全注释</span>
+  <h1>一行命令<br>搬空整座<em>全球代码商城</em></h1>
+  <p class="sub">不需要任何前端或 Node 基础。我们把「包管理」拆成生活里的比喻——<b>商城、采购清单、快递小票、一键开关面板</b>，再配上<b>每条命令、每个字段、每个变量都有中文注释</b>的代码，带你从「npm 是啥」一路走到「把自己的包发布上架，全世界的 npm install 都能装到它」。</p>
+  <div class="stats">
+    <div class="stat"><b>18</b><span>个章节 · 由浅入深</span></div>
+    <div class="stat"><b>60+</b><span>个代码块 · 行行有注释</span></div>
+    <div class="stat"><b>80+</b><span>条命令与字段 · 逐一讲解</span></div>
+    <div class="stat"><b>2</b><span>个发布实战项目</span></div>
+  </div>
+  <div class="callout info">
+    <span class="tag">怎么用这份教程</span>
+    ① 按顺序读，第 3 章「package.json」和第 6 章「版本号」是全书地基，别跳过；② 每章命令照着敲（推荐 VS Code 内置终端），<b>所有命令 Windows / Linux 双平台通用</b>（安装章会分别给出两套装法）；③ 遇到红色报错，去第 17 章「急救站」按关键字对号入座；④ 查命令直达第 18 章速查表；⑤ 第 12、16 章教你发包——发布需要一个 npm 账号，可以边读边注册。
+  </div>
+</section>
+
+<!-- ==================== 第 1 章 ==================== -->
+<section class="chapter" id="ch1">
+  <div class="chap-head">
+    <div class="chap-num">01</div>
+    <div>
+      <h2>初识 npm：世界快递网</h2>
+      <div class="desc">为什么全世界的 JavaScript 程序员，每天都要敲一遍这三个字母</div>
+    </div>
+  </div>
+
+  <p class="lead">npm 是世界上<b>最大的软件包仓库</b>——没有之一。这一章回答三个问题：它解决什么痛？它是什么？它跟 Node.js、yarn、pnpm 什么关系？</p>
+
+  <h3>1.1 没有包管理器的黑暗年代</h3>
+  <p>假设你要在网页里用 jQuery（曾经最火的 JS 工具库）。没有 npm 的年代，流程是这样的：</p>
+  <ol class="steps">
+    <li>打开搜索引擎，搜「jQuery 下载」，祈祷第一个结果不是盗版站；</li>
+    <li>进官网，找到下载页，挑一个版本，下载一个压缩包；</li>
+    <li>解压、把 <code>jquery.min.js</code> 拷进项目的 <code>js/</code> 文件夹；</li>
+    <li>在 HTML 里手写一行 <code>&lt;script src="js/jquery.min.js"&gt;</code> 引入；</li>
+    <li>三个月后要升级？——<b>从第 1 步全部重来</b>。团队成员每人手里版本还各不相同。</li>
+  </ol>
+  <p>一个 jQuery 尚且如此；现代项目动辄依赖几百个包（React、打包器、语法检查、测试框架……），手工管理等于自杀。于是 2010 年，npm 诞生了。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>手工下载 = 装修全靠<b>自己跑建材市场</b>：买水泥要跑一趟、买钉子跑一趟、还价、运货、记小票，全手工；npm = 你把需求写成<b>一张采购清单</b>交给装修公司，第二天一早，所有材料<b>精确到批次</b>地码在你家门口。
+  </div>
+
+  <h3>1.2 npm 到底是什么：三位一体</h3>
+  <p>名字拆开就懂一半：<b>n</b>ode <b>p</b>ackage <b>m</b>anager——「Node 包管理器」。但「npm」这个词其实同时指三样东西：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>它指什么</th><th>是什么</th><th>类比</th></tr></thead>
+    <tbody>
+      <tr><td><b>命令行工具</b></td><td>你在终端里敲的 <code>npm install</code> 那个命令</td><td>采购员（替你跑腿搬货的那位）</td></tr>
+      <tr><td><b>registry 仓库</b></td><td>全球服务器上存放的 200 多万个包</td><td>商城总仓库（货都在这儿）</td></tr>
+      <tr><td><b>npmjs.com 网站</b></td><td>可以浏览、搜索包的官网门面</td><td>商城的展示橱窗与收银台</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>把 npm 想成一座<b>全球建材家具商城 + 配套物流系统</b>：<b>商城</b>（registry，npmjs.com）里挂着 200 多万件商品（packages，包），每件商品有货号（包名）和批次（版本）；你在家写一张<b>采购清单</b>（package.json）交给采购员（npm 命令），他照单<b>进货</b>（install）到你家门口的仓库（node_modules）；将来你也能把自己的产品<b>上架寄卖</b>（publish）。
+  </div>
+  <figure class="dg">
+    <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,sans-serif">
+      <rect x="26" y="60" rx="14" width="170" height="130" fill="#fcebe9" stroke="#e8b3ac" stroke-width="1.5"/>
+      <text x="111" y="94" text-anchor="middle" font-size="14" font-weight="700" fill="#1c2430">你（项目）</text>
+      <text x="111" y="118" text-anchor="middle" font-size="11" fill="#5c6878">写一张采购清单</text>
+      <text x="111" y="138" text-anchor="middle" font-size="10.5" fill="#a82821" font-family="Consolas,monospace">package.json</text>
+      <text x="111" y="160" text-anchor="middle" font-size="10.5" fill="#8a95a5">「我要 React 18」</text>
+      <line x1="196" y1="95" x2="272" y2="95" stroke="#cb3837" stroke-width="1.6"/>
+      <path d="M272 89 L282 95 L272 101 Z" fill="#cb3837"/>
+      <text x="234" y="82" text-anchor="middle" font-size="10.5" fill="#cb3837">① 照单下单</text>
+      <line x1="196" y1="155" x2="272" y2="155" stroke="#cb3837" stroke-width="1.6"/>
+      <path d="M196 149 L186 155 L196 161 Z" fill="#cb3837"/>
+      <text x="234" y="142" text-anchor="middle" font-size="10.5" fill="#cb3837">② 送货上门</text>
+      <rect x="284" y="60" rx="14" width="180" height="130" fill="#fff" stroke="#e0c8c4" stroke-width="1.5"/>
+      <text x="374" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#1c2430">采购员 npm</text>
+      <text x="374" y="116" text-anchor="middle" font-size="11" fill="#5c6878">（你敲的命令行工具）</text>
+      <text x="374" y="140" text-anchor="middle" font-size="10.5" fill="#a82821" font-family="Consolas,monospace">npm install react</text>
+      <text x="374" y="164" text-anchor="middle" font-size="10.5" fill="#8a95a5">跑腿、搬货、记账</text>
+      <line x1="464" y1="125" x2="540" y2="125" stroke="#cb3837" stroke-width="1.6"/>
+      <path d="M540 119 L550 125 L540 131 Z" fill="#cb3837"/>
+      <text x="502" y="112" text-anchor="middle" font-size="10.5" fill="#cb3837">③ 去商城提货</text>
+      <rect x="552" y="60" rx="14" width="104" height="130" fill="#fcebe9" stroke="#e8b3ac" stroke-width="1.5"/>
+      <text x="604" y="90" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1c2430">商城</text>
+      <text x="604" y="110" text-anchor="middle" font-size="10.5" fill="#a82821" font-family="Consolas,monospace">registry</text>
+      <text x="604" y="130" text-anchor="middle" font-size="10.5" fill="#5c6878">npmjs.com</text>
+      <text x="604" y="152" text-anchor="middle" font-size="10.5" fill="#8a95a5">200 万+ 个包</text>
+      <text x="340" y="218" text-anchor="middle" font-size="11" fill="#8a95a5">npm 的世界：你写清单 → npm 跑腿 → 商城发货 —— 全流程不过一行命令</text>
+    </svg>
+    <figcaption>图 1-1 · npm 三位一体：命令行工具（采购员）+ registry（商城）+ npmjs.com（门面）</figcaption>
+  </figure>
+
+  <h3>1.3 「包」到底是什么</h3>
+  <p>包（package）= <b>一个有名字、有版本号、可以被安装的代码文件夹</b>。它的「身份证」是一份叫 <code>package.json</code> 的文件：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>包里的东西</th><th>类比</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><code>package.json</code></td><td>说明书 + 条码</td><td>名字、版本、作者、入口（第 3 章逐字段精讲）</td></tr>
+      <tr><td><code>index.js</code> 等代码</td><td>商品本体</td><td>真正干活的 JS 代码（「入口」由 package.json 指定）</td></tr>
+      <tr><td><code>README.md</code></td><td>包装盒上的介绍</td><td>商城详情页展示的使用说明</td></tr>
+      <tr><td><code>LICENSE</code></td><td>使用许可</td><td>别人能怎么用你的代码（MIT 最宽松常见）</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>1.4 npm vs yarn vs pnpm：三位采购员</h3>
+  <p>用 npm 的人多了，就有人觉得「采购员可以更快更省」。于是出现了竞品。好消息：它们<b>读同一张采购清单（package.json）、去同一家商城（registry）</b>，学会一个，另外两个看文档十分钟就能上手：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>工具</th><th>出身</th><th>性格</th><th>一句话点评</th></tr></thead>
+    <tbody>
+      <tr><td><code>npm</code></td><td>Node 官方自带</td><td>稳重老大哥</td><td>装完 Node 就有，生态默认标准，本教程主角</td></tr>
+      <tr><td><code>yarn</code></td><td>Facebook 2016 年推出</td><td>快而稳</td><td>首创 lockfile（yarn.lock），逼得 npm 也出了 lock</td></tr>
+      <tr><td><code>pnpm</code></td><td>社区黑马</td><td>省空间</td><td>所有项目<b>共用一份</b>全局仓库，硬链接省硬盘</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout tip">
+    <span class="tag">先学谁</span>零基础<b>先学 npm</b>：它随 Node 自带、资料最多、所有项目通用。之后想换 pnpm，命令几乎照抄（<code>npm install</code> → <code>pnpm install</code>），一天就换完。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 01</span>
+    <ol>
+      <li>打开 <a href="https://www.npmjs.com" target="_blank" rel="noopener">npmjs.com</a>，在搜索框搜 <code>chalk</code>（一个给终端文字上色的包）——看看商城详情页长什么样：右侧的版本号、周下载量、README；</li>
+      <li>再搜 <code>react</code>，感受一下「周下载量 2000 万+」是什么概念；</li>
+      <li>思考题：按照本章的类比，<b>采购清单</b>、<b>家门口的仓库</b>、<b>采购小票</b> 分别对应哪三个文件/文件夹？（答案在第 3、5、7 章揭晓）</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 2 章 ==================== -->
+<section class="chapter" id="ch2">
+  <div class="chap-head">
+    <div class="chap-num">02</div>
+    <div>
+      <h2>地基与安装：Node 双套装</h2>
+      <div class="desc">npm 不单独发售——它藏在 Node.js 的工具箱里。装 Node，送 npm</div>
+    </div>
+  </div>
+
+  <p class="lead">这一章把地基打好：认识 Node 与 npm 的关系，在 <b>Windows</b> 和 <b>Linux</b> 上各装一遍，跑通体检命令，最后学会「给 npm 自己升级」。</p>
+
+  <h3>2.1 Node 与 npm：发动机与随车工具箱</h3>
+  <div class="callout analogy">
+    <span class="tag">类比</span>Node.js = <b>发动机</b>（让 JavaScript 能脱离浏览器、在你电脑上直接运行的运行时）；npm = <b>随车工具箱</b>（装车时焊死在发动机旁边，负责管理零件）。所以装 npm 的唯一方式就是——<b>装 Node.js</b>。
+  </div>
+  <p>「LTS」这个词先认识一下：<b>L</b>ong <b>T</b>erm <b>S</b>upport（长期支持版）。Node 官网永远给你两个大按钮，<b>零基础请永远选 LTS</b>——它版本稍旧但稳定维护 30 个月，新版（Current）是尝鲜用的。</p>
+
+  <h3>2.2 Windows 安装</h3>
+  <ol class="steps">
+    <li>打开 <a href="https://nodejs.org" target="_blank" rel="noopener">nodejs.org</a>，点绿色的 <b>「LTS」</b> 下载按钮，得到一个 <code>.msi</code> 安装包；</li>
+    <li>双击运行，一路 <b>Next</b>（安装位置默认即可，组件保持默认勾选——里面那项 <code>npm package manager</code> 就是我们主角）；</li>
+    <li>装完<code>msi</code> 会自动把 <code>node</code> 和 <code>npm</code> 加进系统 PATH（环境变量），开个<b>新的</b>终端就能用。</li>
+  </ol>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os win">Windows</span>命令行（PowerShell 或 cmd）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">node -v          # 命令 node：运行 Node.js；参数 -v（version）：只问「你是哪个版本」→ 输出版本号即安装成功
+npm -v           # 命令 npm：npm 的总入口；-v 同上。npm 与 Node 一起装的，能出版本号就说明工具箱也在了</pre>
+    <pre class="output">v20.17.0         ← Node.js 的版本号（v = version；LTS 大版本号是偶数）
+10.8.2           ← npm 的版本号（注意：npm 的版本号和 Node 完全独立，各自发展）</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">winget 更快</span><span class="os win">Windows</span>懒人一行流：在 PowerShell 里执行 <code>winget install OpenJS.NodeJS.LTS</code>（winget = Windows 官方软件管家；这条命令指名要「OpenJS 组织的 NodeJS 长期支持版」），效果与安装包等同。
+  </div>
+
+  <h3>2.3 Linux 安装</h3>
+  <p>Linux 上有两条路：<b>发行版仓库</b>（简单粗暴）和 <b>nvm</b>（版本车库，推荐）。先看简单版：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os linux">Linux / WSL</span>命令行（Ubuntu / Debian 系）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">sudo apt update          # 命令 sudo：以管理员身份执行；apt 是 Ubuntu 的软件管家；update = 刷新软件目录（先刷新，再安装）
+sudo apt install nodejs npm -y   # 安装两个包：nodejs（发动机）和 npm（工具箱）；-y（yes）：所有确认自动答「是」
+node -v &amp;&amp; npm -v        # &amp;&amp;：前一条成功才执行后一条——两个版本号连着打出来就大功告成</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">apt 版本的坑</span>Ubuntu 仓库里的 Node 常常<b>老好几个大版本</b>（比如你教材需要 20，仓库给 12）。要跑新项目、或者以后需要在多个 Node 版本之间切换，请用下面这位——
+  </div>
+  <h4>nvm：给 Node 建一个「版本车库」</h4>
+  <div class="callout analogy">
+    <span class="tag">类比</span>nvm（<b>N</b>ode <b>V</b>ersion <b>M</b>anager，Node 版本管理器）= 一个<b>车库</b>：里面可以同时停好几辆不同版本的 Node（发动机），一条命令切换「今天开哪辆」。旧项目要 Node 16、新项目要 Node 20？各停一辆，随时换。Windows 用户装 <b>nvm-windows</b>（同思路的另一个实现）。
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os linux">Linux / WSL</span>命令行：安装并使用 nvm</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash   # 命令 curl：下载工具；-o-：把内容吐给屏幕；竖线 |：把下载的脚本直接喂给 bash 执行——nvm 官方安装法（版本号以 nvm 官方 GitHub README 为准）
+
+source ~/.bashrc         # 命令 source：重新加载 bash 配置文件（nvm 刚把自己的配置写进去了）；~ = 你的家目录
+nvm install --lts        # 命令 nvm install：装一个 Node 版本；--lts：指名要「最新的长期支持版」——注意 nvm 装的 Node 自带配套 npm
+nvm use --lts            # 命令 nvm use：切换到这个版本（发动今天要开的那辆车）
+nvm ls                   # 命令 ls（list）：列出车库里所有已装的 Node 版本，当前使用的那行带箭头</pre>
+    <pre class="output">-> v20.17.0          ← 箭头 = 当前开着的这辆
+   system             ← 系统自带/系统仓库装的（2.3 上半段 apt 装的那辆）</pre>
+  </div>
+
+  <h3>2.4 体检三连：版本、位置、医生</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm -v                     # 问版本（前面刚用过）
+npm root -g                # 命令 root：报告「全局包装在哪个文件夹」；-g（global）：问的是全局那份——记下这个路径，日后排查「全局命令为什么找不到」会用到
+npm config get registry    # 命令 config：读写 npm 配置；get registry = 查「默认去哪家商城提货」→ 正常应答官方地址 https://registry.npmjs.org/（换国内镜像见第 11 章）
+npm doctor                 # 命令 doctor（医生）：自动体检——网络通不通、缓存坏没坏、权限对不对，一路打勾就是健康</pre>
+    <pre class="output">10.8.2
+C:\Users\你\AppData\Roaming\npm\node_modules    ← Windows 的全局包位置（Linux 是 /usr/lib/node_modules 或 nvm 目录下）
+https://registry.npmjs.org/                       ← 默认商城地址
+（doctor 会逐项打勾或报告问题）</pre>
+  </div>
+
+  <h3>2.5 给 npm 自己升级</h3>
+  <p>npm 也是个软件，也发新版本。Node 附带的 npm 往往落后几版，一行命令把它拉到最新：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm install -g npm@latest   # 命令 install：装包；-g：装到全局（工具箱自己当然住全局）；npm：要装的包名居然就是 npm 自己；@latest：@ 指定版本，latest = 最新稳定版
+npm -v                      # 再看一眼——版本号变新了</pre>
+  </div>
+  <div class="callout info">
+    <span class="tag">帮助系统</span>任何时候忘了命令：<code>npm help</code> 列出全部命令清单；<code>npm help install</code> 翻 install 的详细说明书；嫌长就 <code>npm install -h</code>（短版帮助）。npm 的说明书都在本地，断网也能查。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 02</span>
+    <ol>
+      <li>装好 Node 后跑体检三连，把你机器上的 <code>node -v</code>、<code>npm -v</code> 抄在本子上——以后看教程对版本心里有数；</li>
+      <li>跑 <code>npm root -g</code> 记住全局包的位置（Windows 用户顺手用资源管理器打开看一眼这个文件夹）；</li>
+      <li>跑 <code>npm help</code> 浏览一遍命令总目录——不用记，混个脸熟即可，本教程会把高频的都教一遍。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 3 章 ==================== -->
+<section class="chapter" id="ch3">
+  <div class="chap-head">
+    <div class="chap-num">03</div>
+    <div>
+      <h2>第一份清单：package.json</h2>
+      <div class="desc">npm init 办出一张「房产证 + 采购清单」——本教程最重要的一个文件</div>
+    </div>
+  </div>
+
+  <p class="lead">每个 npm 项目的根目录都躺着一份 <code>package.json</code>。它<b>既是你项目的身份证，又是采购清单</b>——项目叫什么、版本多少、需要哪些包、有哪些开关，全写在这一个文件里。这一章把它的每一栏都拆给你看。</p>
+
+  <h3>3.1 npm init：办证窗口</h3>
+  <p>新建一个文件夹，进去，敲下人生第一条 npm 命令：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">mkdir my-shop      # 命令 mkdir（make directory）：新建文件夹 my-shop——我们的练手项目
+cd my-shop         # 命令 cd（change directory）：进入这个文件夹（npm 的一切操作都以「当前所在文件夹」为项目）
+npm init           # 命令 npm init（初始化）：办证窗口开始逐项提问——一路回车用默认答案，也可自己输入</pre>
+    <pre class="output">package name: (my-shop) my-shop     ← 提问 1：包名（括号里 = 按回车就用的默认值）
+version: (1.0.0)                    ← 提问 2：版本号
+description: 我的第一个 npm 项目      ← 提问 3：一句话描述
+entry point: (index.js)             ← 提问 4：入口文件
+test command:                       ← 提问 5：测试命令（先留空）
+git repository:                     ← 提问 6：Git 仓库地址（先留空）
+keywords:                           ← 提问 7：搜索关键词（先留空）
+author:                             ← 提问 8：作者（先留空）
+license: (ISC)                      ← 提问 9：许可证
+Is this OK? (yes)                   ← 终审：回车确认，package.json 出炉！</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">-y 快速办证</span><span class="os both">通用</span><code>npm init -y</code>（y = yes）：所有提问全用默认答案，一秒出证——练手、做实验时几乎都用它，需要改哪个字段回头再编辑文件。
+  </div>
+
+  <h3>3.2 逐字段精讲：清单上每一栏都是干嘛的</h3>
+  <p>打开刚生成的 <code>package.json</code>（就是个普通文本文件，VS Code 直接编辑）。下面是<b>逐字段带注释</b>的完整版——注意：JSON 文件<b>真实使用时不能写注释</b>，这里为教学加上（想练手就用复制按钮，去掉注释行再存）：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>文件：package.json（教学示意版 · 真实文件不能写注释）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">{
+  "name": "my-shop",                        // 字段 name：包名——全球唯一的「货号」，发布后别人就靠它 install 你
+  "version": "1.0.0",                       // 字段 version：版本号，格式「主版本.次版本.补丁号」（第 6 章精讲）
+  "description": "我的第一个 npm 项目",      // 字段 description：一句话描述，会显示在商城搜索结果和详情页
+  "main": "index.js",                       // 字段 main：入口文件——别人 import 这个包时，实际加载的那个 JS 文件
+  "scripts": {                              // 字段 scripts：一键开关面板，键 = 开关名，值 = 按下后执行的命令（第 8 章精讲）
+    "test": "echo \"Error: no test specified\" &amp;&amp; exit 1"   // 脚本 test：npm test 时跑的命令（init 自带的占位，第 8 章换成真的）
+  },
+  "keywords": [],                           // 字段 keywords：关键词数组——别人在 npmjs.com 搜「shop」能搜到你的助力器
+  "author": "",                             // 字段 author：作者，可以是名字或「名字 &lt;邮箱&gt; (网址)」的完整格式
+  "license": "ISC"                          // 字段 license：许可证——ISC / MIT 都代表「随便用，出了事别找我」
+}</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>package.json 的<b>双重身份</b>：对内是<b>采购清单</b>（dependencies 一栏写着要进的货）；对外是<b>房产证</b>（name + version + description 是这个项目作为「包」的身份登记）。<b>它永远跟着项目走</b>——克隆代码、拷贝项目，别的都可以不带，这份清单必须带。
+  </div>
+
+  <h3>3.3 name 的取名规矩</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>规矩</th><th>正例</th><th>反例（会被拒）</th></tr></thead>
+    <tbody>
+      <tr><td>全小写</td><td><code>my-shop</code></td><td><code>My_Shop</code>、<code>MyShop</code></td></tr>
+      <tr><td>不能有空格</td><td>用连字符 <code>-</code> 连接</td><td><code>my shop</code></td></tr>
+      <tr><td>发布到 npmjs.com 时必须全局唯一</td><td><code>my-shop-2026</code></td><td><code>express</code>（早被别人注册了）</td></tr>
+      <tr><td>带 @ 前缀 = 「品牌专区」（scope 包）</td><td><code>@alicelv/my-shop</code></td><td>——</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout info">
+    <span class="tag">scope 包</span><code>@用户名/包名</code> 这种写法叫<b>作用域包</b>（scoped package）：斜杠前面是你的 npm 用户名（或组织名），相当于在商城里开了个<b>个人专区</b>——专区里名字随便取，不怕和全商城重名。不打算发布的练习项目，名字随便写，无人检查。
+  </div>
+
+  <h3>3.4 清单会「自己长大」</h3>
+  <p>现在清单还很瘦。从下一章开始，你每装一个包，npm 都会<b>自动</b>往里面追加一栏 <code>dependencies</code>（进货台账）——你不需要手写它，但<b>要看得懂它</b>：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>文件：package.json 片段（装包后自动长出来的部分）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">  "dependencies": {              // 字段 dependencies：进货台账——「生产必需」的包（下一章会亲手写满它）
+    "lodash": "^4.17.21"          // 依赖 lodash：金额是版本范围 ^4.17.21（^ 的意思第 6 章揭晓，别急）
+  },
+  "devDependencies": {            // 字段 devDependencies：施工队工具台账——只在「开发阶段」用的包（打包器、测试器）
+    "vite": "^5.4.8"              // 依赖 vite：只管「把代码加工成成品」，不进最终产品
+  }</pre>
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 03</span>
+    <ol>
+      <li>新建文件夹，用 <code>npm init</code> 走一遍完整问答（每题都自己输入答案），再用 <code>npm init -y</code> 在另一处对比速度；</li>
+      <li>用 VS Code 打开两份 <code>package.json</code>，对照 3.2 的字段表逐行认领：哪个字段管名字？哪个管入口？哪个是开关面板？</li>
+      <li>把 <code>description</code> 改成一句话介绍你自己的项目，保存（JSON 改完记得保存，逗号别多别少）。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 4 章 ==================== -->
+<section class="chapter" id="ch4">
+  <div class="chap-head">
+    <div class="chap-num">04</div>
+    <div>
+      <h2>装货的艺术：npm install</h2>
+      <div class="desc">一条命令的四种用法：单件下单、照单全收、装施工工具、装全局利器</div>
+    </div>
+  </div>
+
+  <p class="lead"><code>npm install</code>（缩写 <code>npm i</code>）是整个 npm 里你敲得最多的命令——没有之一。这一章把它的四种姿势一次讲透，并揭开「按下回车后 npm 都干了什么」。</p>
+
+  <h3>4.1 姿势一：npm install 包名 —— 单件下单</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行（在 my-shop 项目里执行）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm install lodash          # 命令 npm install：装包；参数 lodash：包名——去商城把这件「货」搬回家
+                            # 等价缩写：npm i lodash（i = install，老手都这么敲）</pre>
+    <pre class="output">added 1 package in 3s        ← 战报：added = 新装了几个包；1 package = 就 lodash 自己；3s = 花了 3 秒
+                              ← 注意：装包后悄悄发生了三件事（见下文）</pre>
+  </div>
+  <p>这一行命令背后，npm 同时干了三件事：</p>
+  <ol class="steps">
+    <li><b>进仓库</b>：项目里多了 <code>node_modules</code> 文件夹，<code>lodash</code> 的代码躺在里面（第 5 章进去逛）；</li>
+    <li><b>记台账</b>：<code>package.json</code> 自动多出一栏 <code>"dependencies": { "lodash": "^4.17.21" }</code>；</li>
+    <li><b>开小票</b>：<code>package-lock.json</code> 自动生成/更新，记下精确到个位的版本（第 7 章精讲）。</li>
+  </ol>
+  <div class="callout info">
+    <span class="tag">lodash 是谁</span>最有历史地位的 JS 工具库（一件「万能瑞士军刀」：防抖、深拷贝、数组花式操作……），我们拿它当教学标本——就像物理课的小车。
+  </div>
+
+  <h3>4.2 一次装多个 &amp; 指定版本</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm install dayjs axios     # 一次下单多件：空格隔开多个包名（dayjs = 轻量日期处理；axios = 网络请求库）
+npm install lodash@4.17.20  # @ 精确指定版本：就要 4.17.20 这一批（@ 前面是包名，后面是版本号）
+npm install lodash@4        # @4 = 大版本范围内的最新版（4.x.x 里挑最新，不会蹦到 5）
+npm install lodash@latest   # @latest = 不管三七二十一，最新稳定版</pre>
+  </div>
+
+  <h3>4.3 姿势二：-D / --save-dev —— 施工队工具</h3>
+  <p>同样是装包，有的货是<b>给用户用的</b>（沙发、床），有的是<b>给施工队用的</b>（电钻、脚手架）。装后者要加 <code>-D</code>：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm install --save-dev vite   # 命令 --save-dev（缩写 -D）：装进 devDependencies——登记为「施工队工具」而非「正式家具」
+npm install -D vitest         # 缩写写法（-D）：等价于上面那条；vitest = 测试框架，只在开发时用，上线后不需要</pre>
+  </div>
+  <div class="tblwrap"><table>
+    <thead><tr><th></th><th><code>dependencies</code>（生产依赖）</th><th><code>devDependencies</code>（开发依赖）</th></tr></thead>
+    <tbody>
+      <tr><td><b>类比</b></td><td>正式入住的家具——<b>用户要用的</b></td><td>施工队的工具——<b>装修完就带走</b></td></tr>
+      <tr><td><b>典型成员</b></td><td>react、axios、lodash、dayjs</td><td>vite、vitest、eslint、sass</td></tr>
+      <tr><td><b>装的时候</b></td><td><code>npm i xxx</code></td><td><code>npm i -D xxx</code></td></tr>
+      <tr><td><b>上线时要不要</b></td><td>要——缺了软件跑不起来</td><td>不要——打包工具已把活干完</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout tip">
+    <span class="tag">历史包袱</span>老教程里常见 <code>npm install --save lodash</code>（装进 dependencies 要显式写 --save）——那是 npm 5 之前的规矩。现在<b>默认就是 --save</b>，裸写 <code>npm i xxx</code> 即可；看到 <code>--save</code> 就当它不存在。
+  </div>
+
+  <h3>4.4 姿势三：npm install（不带包名）—— 照单全收</h3>
+  <p>当 <code>npm install</code> 后面<b>什么都不写</b>，npm 会读当前项目的 <code>package.json</code>，把台账上所有货<b>全部补齐</b>。这是它最常用却最少被讲的姿势——<b>同事之间交接项目、服务器上部署项目</b>，全靠它：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm install        # 无参数版：读 package.json 的 dependencies + devDependencies，把缺的包一次装齐
+                   # 场景：刚 git clone 了同事的项目？第一件事就是敲它
+npm install --omit=dev   # 参数 --omit=dev（omit = 省略）：跳过施工队工具，只装生产依赖——服务器部署用，又快又干净（旧写法 --production）</pre>
+    <pre class="output">added 24 packages in 6s        ← 台账上 2 个直接依赖 + 它们各自依赖的 22 个包 = 共 24 件，一次到货</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">比喻</span>无参数 <code>npm install</code> = 把采购清单递给采购员说<b>「按单子全买齐」</b>；<code>--omit=dev</code> = 「<b>只买家具，施工工具就别买了</b>」（新房都交付了，要电钻干嘛）。
+  </div>
+
+  <h3>4.5 姿势四：-g —— 装进全局工具区</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm install -g cowsay   # 参数 -g（global）：装到「全局工具区」而不是某个项目——全机任何文件夹都能用
+cowsay 你好 npm         # cowsay（牛说）：装完立即可用的命令行玩具，让它替你说话</pre>
+    <pre class="output"> ________
+&lt; 你好 npm &gt;
+ --------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||</pre>
+  </div>
+  <div class="tblwrap"><table>
+    <thead><tr><th></th><th>项目级（默认）</th><th>全局级（<code>-g</code>）</th></tr></thead>
+    <tbody>
+      <tr><td><b>装到哪</b></td><td>项目的 <code>node_modules</code></td><td>系统的全局工具目录（第 2 章 <code>npm root -g</code> 查到的那个）</td></tr>
+      <tr><td><b>记到哪个清单</b></td><td>该项目的 <code>package.json</code></td><td><b>哪儿都不记</b>——换台电脑没人知道你装过啥</td></tr>
+      <tr><td><b>谁能用</b></td><td>只有这个项目</td><td>整台电脑任何位置</td></tr>
+      <tr><td><b>适合装什么</b></td><td>代码要 import 的库</td><td>命令行工具（cowsay、typescript 的 tsc、http-server）</td></tr>
+      <tr><td><b>代码里能 import 吗</b></td><td>能</td><td><b>不能</b>——全局包不给代码用（避免「我这能跑你那不能跑」）</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout warn">
+    <span class="tag">全局洁癖</span>全局包是「哪儿都不记账」的裸装——装多了就是暗债。原则：<b>能项目级就项目级</b>；真正全局的只有「像 cowsay 这种走到哪都想用的命令行小工具」。装了后悔？第 10 章教你卸。
+  </div>
+
+  <h3>4.6 按下回车之后：install 的完整旅程</h3>
+  <figure class="dg">
+    <svg viewBox="0 0 680 230" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,sans-serif">
+      <rect x="24" y="46" rx="12" width="118" height="118" fill="#fcebe9" stroke="#e8b3ac" stroke-width="1.5"/>
+      <text x="83" y="86" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1c2430">① 看清单</text>
+      <text x="83" y="110" text-anchor="middle" font-size="10" fill="#5c6878">读 package.json</text>
+      <text x="83" y="126" text-anchor="middle" font-size="10" fill="#5c6878">算出要装什么</text>
+      <text x="83" y="148" text-anchor="middle" font-size="9.5" fill="#a82821" font-family="Consolas,monospace">版本范围→具体版</text>
+      <line x1="142" y1="105" x2="176" y2="105" stroke="#cb3837" stroke-width="1.5"/>
+      <path d="M176 99 L186 105 L176 111 Z" fill="#cb3837"/>
+      <rect x="188" y="46" rx="12" width="118" height="118" fill="#fff" stroke="#e0c8c4" stroke-width="1.5"/>
+      <text x="247" y="86" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1c2430">② 翻缓存</text>
+      <text x="247" y="110" text-anchor="middle" font-size="10" fill="#5c6878">本地中转仓先找</text>
+      <text x="247" y="126" text-anchor="middle" font-size="10" fill="#5c6878">买过→直接用</text>
+      <text x="247" y="148" text-anchor="middle" font-size="9.5" fill="#a82821" font-family="Consolas,monospace">npm cache</text>
+      <line x1="306" y1="105" x2="340" y2="105" stroke="#cb3837" stroke-width="1.5"/>
+      <path d="M340 99 L350 105 L340 111 Z" fill="#cb3837"/>
+      <rect x="352" y="46" rx="12" width="118" height="118" fill="#fcebe9" stroke="#e8b3ac" stroke-width="1.5"/>
+      <text x="411" y="86" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1c2430">③ 去商城</text>
+      <text x="411" y="110" text-anchor="middle" font-size="10" fill="#5c6878">缓存没有才下载</text>
+      <text x="411" y="126" text-anchor="middle" font-size="10" fill="#5c6878">registry 提货</text>
+      <text x="411" y="148" text-anchor="middle" font-size="9.5" fill="#a82821" font-family="Consolas,monospace">https://registry…</text>
+      <line x1="470" y1="105" x2="504" y2="105" stroke="#cb3837" stroke-width="1.5"/>
+      <path d="M504 99 L514 105 L504 111 Z" fill="#cb3837"/>
+      <rect x="516" y="46" rx="12" width="140" height="118" fill="#fff" stroke="#e0c8c4" stroke-width="1.5"/>
+      <text x="586" y="86" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1c2430">④ 入库记账</text>
+      <text x="586" y="110" text-anchor="middle" font-size="10" fill="#5c6878">搬进 node_modules</text>
+      <text x="586" y="126" text-anchor="middle" font-size="10" fill="#5c6878">写 package.json</text>
+      <text x="586" y="148" text-anchor="middle" font-size="10" fill="#5c6878">开 lock 小票</text>
+      <text x="340" y="200" text-anchor="middle" font-size="11" fill="#8a95a5">install 的四步旅程：先翻本地缓存，缺的才去商城——所以第二次装同样的包会快得多</text>
+    </svg>
+    <figcaption>图 4-1 · npm install 的四步旅程：看清单 → 翻缓存 → 去商城 → 入库记账</figcaption>
+  </figure>
+  <div class="callout tip">
+    <span class="tag">缓存</span>npm 在你家门口有个<b>中转仓库</b>（cache，Windows 在 <code>%LocalAppData%\npm-cache</code>）——买过的货先存这儿，下次同款<b>秒到货</b>。这就是「第一次装 React 要 30 秒、删了重装只要 3 秒」的秘密。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 04</span>
+    <ol>
+      <li>在 <code>my-shop</code> 里装 <code>lodash</code> 和 <code>dayjs</code>，然后打开 <code>package.json</code> 看 dependencies 长出了什么；</li>
+      <li>再装一个 <code>-D</code> 的 <code>vite</code>，对比 dependencies 和 devDependencies 两栏的区别；</li>
+      <li>体验缓存威力：删掉整个 <code>node_modules</code> 文件夹（对，全删），再跑 <code>npm install</code> 照单全收——看这次快不快；</li>
+      <li>装个全局玩具 <code>npm i -g cowsay</code>，然后任意文件夹里 <code>cowsay 我学会了</code>。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 5 章 ==================== -->
+<section class="chapter" id="ch5">
+  <div class="chap-head">
+    <div class="chap-num">05</div>
+    <div>
+      <h2>node_modules：家门口的仓库</h2>
+      <div class="desc">所有到货的包都堆在这——进去逛一圈，你会发现仓库比想象中深</div>
+    </div>
+  </div>
+
+  <p class="lead"><code>node_modules</code> 是 npm 自动创建的文件夹——<b>你从不清点它、从不编辑它、也从不提交它</b>，但理解它的脾气，能帮你解开日后一半的灵异故障。</p>
+
+  <h3>5.1 进仓库看一眼</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行（my-shop 项目里）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">dir node_modules        # 命令 dir（Windows）：列出文件夹内容；Linux/macOS 用 ls node_modules——看看仓库里都堆了谁
+npm ls lodash           # 命令 npm ls（list）：画出「lodash 的收货链」——从谁手里装来的、版本多少</pre>
+    <pre class="output">my-shop@1.0.0 C:\Users\你\Desktop\my-shop     ← 收货人：项目名 + 项目路径
+`-- lodash@4.17.21                            ← 货：包名@精确版本（反引号画出的树形，一级一级往里缩）</pre>
+  </div>
+
+  <h3>5.2 依赖的依赖：仓库为什么这么深</h3>
+  <p>你只下单了 2 个包，为什么 <code>node_modules</code> 里躺着一堆陌生的名字？因为<b>包自己也下单</b>：</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>你买了一套<b>衣柜</b>（vite），厂家发货时并不只寄衣柜——里面还带着<b>螺丝、滑轨、内衬板</b>（vite 的依赖 rollup、esbuild……），而滑轨厂又附带自己的小零件。<b>传递依赖</b>（transitive dependencies）就是「货里有货」：你的清单只写了直接依赖（direct dependencies），仓库里却是整整一棵<b>供应链树</b>。
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm ls --all            # 参数 --all：画出完整供应链树（直接依赖 + 传递依赖全展开）
+npm ls vite             # 只看 vite 这条供应链——它一个人就拖家带口拖来一串</pre>
+    <pre class="output">my-shop@1.0.0
+`-- vite@5.4.8
+  |-- esbuild@0.21.5          ← vite 的依赖：超快的编译器
+  |-- rollup@4.21.2           ← vite 的依赖：打包器
+  `-- postcss@8.4.45          ← vite 的依赖：CSS 处理器
+      `-- nanoid@5.0.7        ← postcss 的依赖……货里有货，层层套娃</pre>
+  </div>
+
+  <h3>5.3 货架的玄机：扁平化与幽灵依赖</h3>
+  <p>早期 npm 会把每个包的依赖<b>藏在各自文件夹里</b>（嵌套式），结果同一个 lodash 在仓库里出现 8 份、路径长到 Windows 都喊疼。于是 npm 3 起<b>尽量拍扁</b>：能共用的包全提到仓库<b>第一层</b>，像超市把爆款商品全部陈列到门口货架。</p>
+  <div class="callout warn">
+    <span class="tag">幽灵依赖</span>拍扁带来一个暗坑：你没买过的包，也躺在第一层货架上——代码里 <code>import 'nanoid'</code> 居然能成功！但它<b>没写进你的 package.json</b>：哪天 vite 升级不再需要 nanoid，它一夜消失，你的代码当场崩掉。<b>军规：代码里 import 的每个包，都必须亲手装进 dependencies</b>——哪怕知道仓库里已经有了。
+  </div>
+
+  <h3>5.4 仓库里的暗门：.bin 文件夹</h3>
+  <p>细看 <code>node_modules</code> 里面还有个 <code>.bin</code> 文件夹（bin = binary，可执行程序）——装 vite 时，它自带一个同名的命令行程序，就被安放在这里。这是第 8 章「npm scripts 能直接喊 vite」和第 9 章「npx」的秘密伏笔。</p>
+
+  <h3>5.5 仓库不搬家：node_modules 为什么不进 Git</h3>
+  <div class="callout analogy">
+    <span class="tag">类比</span>搬家时你带走<b>采购清单和小票</b>（package.json + package-lock.json），不带走<b>满仓库的货</b>（node_modules）——到了新家照单再买一份就是了。原因有三：① 仓库动辄几百 MB 到几个 GB，塞进 Git 仓库臃肿到没法协作；② 里面有大量<b>二进制文件</b>（编译过的、平台专属的），Git 没法高效处理；③ <b>清单在，货随时精确复原</b>（这正是小票存在的意义）。
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>文件：.gitignore（放在项目根目录，Git 会照它忽略清单上的东西）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">node_modules        # 仓库不搬家：Git 忽略整个 node_modules 文件夹
+dist                # 打包产物（第 8 章会讲到 build 的输出）也不进 Git——它能随时重新生成
+.env                # 环境变量文件里有密钥，绝对不进 Git（安全红线）</pre>
+  </div>
+  <div class="callout info">
+    <span class="tag">串门</span>Git 本身不熟的话，这里有同目录的姊妹篇《Git 零基础完全教程》，第 6 章「.gitignore 禁拍名单」把这事讲得极细。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 05</span>
+    <ol>
+      <li>跑 <code>npm ls --all</code>，数一数你的仓库一共躺了多少个包（结尾有汇总行）；</li>
+      <li>对比实验：新建项目 A 只装 <code>lodash</code>（0 个传递依赖），项目 B 只装 <code>vite</code>——用 <code>npm ls --all</code> 感受供应链的差距；</li>
+      <li>给自己的 <code>my-shop</code> 建一个 <code>.gitignore</code>，写上 <code>node_modules</code>。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 6 章 ==================== -->
+<section class="chapter" id="ch6">
+  <div class="chap-head">
+    <div class="chap-num">06</div>
+    <div>
+      <h2>版本号的哲学：semver</h2>
+      <div class="desc">^ 和 ~ 这两个小帽子，是 npm 世界最重要的两个符号——一次讲透</div>
+    </div>
+  </div>
+
+  <p class="lead">「我们用的是 React 18」——这句话太粗糙了：18.0.0 和 18.3.1 是两个有明显差距的版本。npm 世界的版本有一整套国际公约，叫<b>语义化版本</b>（<b>Sem</b>antic <b>Ver</b>sioning，简称 <b>semver</b>）。看不懂它，就看不懂 package.json 里的天书。</p>
+
+  <h3>6.1 三段式：主版本.次版本.补丁号</h3>
+  <div class="callout analogy">
+    <span class="tag">类比</span>版本号 <code>4.17.21</code> 读作「<b>第 4 代产品的第 17 次添功能、第 21 次补小洞</b>」：<b>主版本</b>（major）= 换代——产品推倒重来，旧用法可能<b>不兼容</b>；<b>次版本</b>（minor）= 添新功能——旧用法照旧，多了新玩具；<b>补丁号</b>（patch）= 补小洞——只修 bug，不改任何接口。
+  </div>
+  <div class="tblwrap"><table>
+    <thead><tr><th>变化</th><th>术语</th><th>意味着</th><th>举例（lodash）</th></tr></thead>
+    <tbody>
+      <tr><td><code>4.17.21 → 5.0.0</code></td><td>主版本升级（breaking）</td><td><b>破坏性变更</b>：可能有 API 被删改——升级前要读迁移指南</td><td>4.x 的老代码不一定还能跑</td></tr>
+      <tr><td><code>4.17.21 → 4.18.0</code></td><td>次版本升级</td><td>新增功能，<b>向后兼容</b>——放心升</td><td>多了个新函数而已</td></tr>
+      <tr><td><code>4.17.21 → 4.17.22</code></td><td>补丁升级</td><td>只修 bug，<b>绝对安全</b>——闭眼升</td><td>某个边界 bug 修了</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>6.2 范围符号：^ 与 ~ 两个小帽子</h3>
+  <p>package.json 里几乎从没见过裸的 <code>"4.17.21"</code>，而是 <code>"^4.17.21"</code>——帽子才是主角：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>写法</th><th>名字</th><th>允许装的版本</th><th>一句话性格</th></tr></thead>
+    <tbody>
+      <tr><td><code>^4.17.21</code></td><td>插入号（caret，默认）</td><td>4.17.21 ～ 4.99.99（<b>不越 4</b>）</td><td>「换代不行，添功能随便」</td></tr>
+      <tr><td><code>~4.17.21</code></td><td>波浪号（tilde）</td><td>4.17.21 ～ 4.17.99（<b>不越 4.17</b>）</td><td>「添功能也不行，只准补洞」</td></tr>
+      <tr><td><code>4.17.21</code></td><td>精确版本（裸数字）</td><td>只有 4.17.21</td><td>「批号锁死，一格都不动」</td></tr>
+      <tr><td><code>*</code> 或 <code>latest</code></td><td>通配</td><td>任意最新版</td><td>「随便来，出事算我输」——<b>别用</b></td></tr>
+      <tr><td><code>&gt;=4.0.0 &lt;5.0.0</code></td><td>区间表达式</td><td>大于等于 4、小于 5</td><td>高级区间语法，偶尔在老项目里见到</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout analogy">
+    <span class="tag">帽子哲学</span>默认的 <code>^</code> 是<b>乐观主义</b>：相信次版本升级不出事，让新功能有机会进来；<code>~</code> 是<b>保守主义</b>；裸版本是<b>锁死主义</b>。<b>主版本永远是一道闸门</b>——不管多乐观，npm 都绝不自动帮你跨过 5.0 这道坎（破坏性变更必须人工点头）。这就是为什么 <code>^4.17.21</code> 永远不会装出 5.x。
+  </div>
+
+  <h3>6.3 想锁死？--save-exact</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm install lodash --save-exact   # 参数 --save-exact（缩写 -E）：记台账时不要帽子，写死精确版本 4.17.21
+npm config set save-exact true    # 命令 config set：把「默认精确」设为个人偏好——以后每次 install 都自动 -E</pre>
+  </div>
+
+  <h3>6.4 侦查版本：npm view</h3>
+  <p>下单前先看看货架上有几批货：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm view lodash version          # 命令 view：查包的「档案」；参数 version：只看最新版本号这一项
+npm view lodash versions          # versions（复数）：这个包发布过的全部版本清单——一路从 0.1 排到今天的长龙
+npm view vite dependencies        # dependencies：看 vite 自己的清单（它拖着谁）——下单前先看货里有货</pre>
+    <pre class="output">4.17.21                          ← 最新版
+[ '0.1.0', '0.2.0', … '4.17.20', '4.17.21' ]   ← 发布史长龙（节选）
+{ esbuild: '^0.21.3', rollup: '^4.20.0', … }   ← vite 的依赖（它自己清单上的一栏）</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">0.x 时代的特殊性</span>主版本是 0（如 <code>^0.5.3</code>）意味着「产品还没定型」——公约规定此时<b>次版本就可能有破坏性变更</b>，所以 <code>^0.5.3</code> 实际只允许 0.5.x（跟 <code>~</code> 一样保守）。看到 0 开头的依赖，升级更要看仔细。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 06</span>
+    <ol>
+      <li>用 <code>npm view react versions</code> 看 React 的版本长龙，找到 18 系列的第一个版本号；</li>
+      <li>口算测验：<code>^2.3.4</code> 会接受 2.9.9 吗？3.0.0 呢？<code>~2.3.4</code> 会接受 2.4.0 吗？（答案：会 / 不会 / 不会）；</li>
+      <li>在项目里分别用默认和 <code>-E</code> 各装一个包，对比 package.json 里两行记录的写法差异。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 7 章 ==================== -->
+<section class="chapter" id="ch7">
+  <div class="chap-head">
+    <div class="chap-num">07</div>
+    <div>
+      <h2>package-lock：采购小票</h2>
+      <div class="desc">清单只写「要沙发」，小票写死「哪厂哪批」——团队所有人拿到一模一样的货</div>
+    </div>
+  </div>
+
+  <p class="lead">如果只有 package.json，会发生可怕的事：<b>同一份清单，不同时间补货，收到的货不完全一样</b>。这一章讲 npm 如何用一张「小票」终结这种漂移。</p>
+
+  <h3>7.1 漂移事故现场</h3>
+  <p>假设清单上写着 <code>"dayjs": "^1.11.0"</code>：</p>
+  <ol class="steps">
+    <li>周一，小明初始化项目——商城里 1.11 系最新是 1.11.10，装上了，顺手记进小票；</li>
+    <li>周三，dayjs 发布 1.11.11（修了个 bug）；</li>
+    <li>周五，小红拿到同一份<b>清单</b>（没有小票）重新补货——装到的是 1.11.11；</li>
+    <li>周六，线上出了个只在 1.11.11 出现的 bug——小明机器上却复现不了。「<b>在我电脑上是好的啊</b>」，史诗级甩锅现场。</li>
+  </ol>
+  <div class="callout analogy">
+    <span class="tag">类比</span>package.json 写的是<b>「要一张北欧风沙发」</b>（范围）；package-lock.json 记的是<b>「X 牌 Y 型号 Z 批次，单价 899，生产日期 2026-09-01」</b>（精确到个位）。有小票在，<b>任何时候任何机器</b>照票补货，到手的都是<b>同一批货</b>。
+  </div>
+
+  <h3>7.2 小票长什么样</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>文件：package-lock.json 片段（教学示意 · 真实文件不能写注释）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">{
+  "name": "my-shop",                    // 锁文件也记着项目名（和 package.json 对应）
+  "version": "1.0.0",                   // 项目版本
+  "lockfileVersion": 3,                 // 字段 lockfileVersion：小票的格式版本（npm 自己的格式编号，v3 是 npm 9+ 的现行格式）
+  "requires": true,                     // 字段 requires：历史遗留标记，意为「本小票覆盖所有子依赖」，固定 true
+  "packages": {                         // 字段 packages：小票的正文——整棵供应链树，每个包一条记录
+    "": {                               // 空字符串键 = 「项目自己」这一条
+      "name": "my-shop",                // 项目名
+      "dependencies": {                 // 项目直接依赖的精确版本（比清单更细）
+        "dayjs": "^1.11.10"             // 清单上写的范围照抄在此
+      }
+    },
+    "node_modules/dayjs": {             // 键 = 货物在仓库中的位置：每个包对应 node_modules 里的一条路径
+      "version": "1.11.10",             // 字段 version：锁死的精确版本——小票的灵魂！周一装的 1.11.10 就锁在这儿
+      "resolved": "https://registry.npmjs.org/dayjs/-/dayjs-1.11.10.tgz",   // 字段 resolved：这批货的「提货地址」——从哪个 URL 下载
+      "integrity": "sha512-…"           // 字段 integrity：防伪钢印（内容哈希）——下载后重新算一遍，对不上就拒收
+    }
+  }
+}</pre>
+  </div>
+
+  <h3>7.3 integrity：防伪钢印</h3>
+  <div class="callout info">
+    <span class="tag">哈希</span><code>integrity</code> 的值是下载内容的<b>指纹</b>（sha512 哈希算法算出的一串十六进制）：文件哪怕被篡改一个字节，重算的指纹就完全不同。npm 每次下载都会<b>验印</b>——这就是「供应链投毒」最难攻破的一环。你几乎不用管它，但要知道小票里这串乱码是<b>保命的</b>，别手贱删改。
+  </div>
+
+  <h3>7.4 npm ci：照小票精确补货</h3>
+  <p>有个专门「严格照票办事」的命令——<b>ci</b>（clean install，干净安装）：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm ci                 # 命令 ci：① 先把现有 node_modules 整个删掉；② 照 package-lock.json 一字不改地精确复原整棵供应链树
+                       # 铁规矩：package.json 和 lock 对不上时它直接拒绝工作（宁可报错，不要漂移）
+npm ci --omit=dev      # ci 也支持省略施工队工具——服务器部署的黄金组合</pre>
+  </div>
+  <div class="tblwrap"><table>
+    <thead><tr><th></th><th><code>npm install</code></th><th><code>npm ci</code></th></tr></thead>
+    <tbody>
+      <tr><td><b>听谁的</b></td><td>package.json 为主，lock 为辅——范围允许时<b>顺手升到范围内最新</b></td><td>lock 为唯一圣旨——<b>一字不改</b></td></tr>
+      <tr><td><b>会改文件吗</b></td><td>可能更新 package.json 和 lock</td><td><b>只读不写</b>，两份文件一个字不动</td></tr>
+      <tr><td><b>速度</b></td><td>较慢（要算范围、查最新）</td><td>更快（照票搬货就行）</td></tr>
+      <tr><td><b>使用场合</b></td><td><b>开发机</b>日常增删依赖</td><td><b>服务器 / CI</b> 部署、同事接手项目首次装依赖</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>7.5 两条铁律</h3>
+  <div class="callout warn">
+    <span class="tag">记进 Git</span>① <b>package-lock.json 必须提交进 Git</b>（它和 node_modules 相反——小票要跟人走，货不用）；② 永远不要<b>手动编辑</b> lock 文件——它由 npm 自动维护，你改它等于在小票上涂改批号。改版本的正道是：装/升指定的包，让 npm 自己刷新小票。
+  </div>
+  <div class="callout tip">
+    <span class="tag">别的采购员</span>yarn 的小票叫 <code>yarn.lock</code>，pnpm 的叫 <code>pnpm-lock.yaml</code>——格式不同、使命相同。一个项目里<b>只应存在一种</b>采购员的小票；混用两位采购员，等于两本账，迟早打架。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 07</span>
+    <ol>
+      <li>打开你项目的 <code>package-lock.json</code>，找到 <code>"node_modules/lodash"</code> 那条记录，看清 version / resolved / integrity 三件套；</li>
+      <li>删掉 node_modules，分别体验 <code>npm install</code> 和 <code>npm ci</code> 的恢复过程，对比耗时与输出（ci 会报告 added N packages，且绝不改 lock）；</li>
+      <li>做个小实验：手动把 package.json 里 lodash 的版本改成 <code>^999.0.0</code> 再跑 <code>npm ci</code>——欣赏它「宁可报错不要漂移」的暴脾气（记得改回来）。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 8 章 ==================== -->
+<section class="chapter" id="ch8">
+  <div class="chap-head">
+    <div class="chap-num">08</div>
+    <div>
+      <h2>npm scripts：开工面板</h2>
+      <div class="desc">把常用命令做成一排开关——按下 npm run dev，后面一长串命令全自动执行</div>
+    </div>
+  </div>
+
+  <p class="lead">项目要跑开发服务器、要打包、要跑测试……这些命令又长又难记。<code>scripts</code> 一栏就是你的<b>一键开工面板</b>：把长命令接在短开关后面，从此只按开关。</p>
+
+  <h3>8.1 第一个开关：npm run + 名字</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>文件：package.json 的 scripts 一栏（教学示意 · 真实文件不能写注释）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">  "scripts": {                    // 字段 scripts：开关面板，键 = 开关名，值 = 按下后真正执行的命令
+    "hello": "echo 你好，npm！"     // 开关 hello：接的命令是 echo（打印一句话）——用最简单的命令练手感
+  },</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm run hello          # 命令 npm run + 开关名：按下 hello 这个开关——echo 被执行，屏幕打印一句话
+npm run                # 不带名字：列出面板上所有开关——忘了有哪些开关就敲它</pre>
+    <pre class="output">&gt; my-shop@1.0.0 hello             ← npm 先报幕：哪个项目的哪个开关
+&gt; echo 你好，npm！                  ← 接着复述：实际执行的命令
+你好，npm！                          ← 命令的真正输出</pre>
+  </div>
+
+  <h3>8.2 两个特权开关：start 与 test</h3>
+  <p>绝大多数开关都要 <code>npm run 名字</code>，唯独两个是「贵族」，<b>run 都能省</b>：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行 vs scripts 一栏</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm start              # 等价于 npm run start——「启动项目」的官方保留开关
+npm test               # 等价于 npm run test——「跑测试」的官方保留开关
+npm run dev            # 自己起名的开关没有特权，必须带 run（dev = development 开发的常用缩写）</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">社区默契</span>开关名是一套<b>行业暗号</b>：克隆任何项目，先看它的 scripts——<code>dev</code>（起开发服务器）、<code>build</code>（打包成品）、<code>test</code>（跑测试）、<code>lint</code>（查代码风格）、<code>preview</code>（预览打包结果）。你自己的项目照这个默契起名，别人（和未来的你）零成本上手。
+  </div>
+
+  <h3>8.3 scripts 的隐藏超能力：免路径直呼命令</h3>
+  <p>这是 scripts 最重要的设计——<b>没有它整个面板就不成立</b>：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行对比</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">vite --version         # 直接敲 vite？报错！——系统 PATH 里根本没有这个命令（它藏在项目仓库的 .bin 暗门里）
+npm run build          # 但在 scripts 里写 "build": "vite build"，npm run 时一切正常——为什么？</pre>
+  </div>
+  <div class="callout info">
+    <span class="tag">答案</span>每次 <code>npm run</code>，npm 都会先给这条命令的 PATH 里<b>注入本项目的 <code>node_modules/.bin</code></b>（第 5 章那个暗门文件夹）——所以 scripts 里可以<b>裸写 vite、eslint、vitest</b>，不用写一长串路径。这就是「装在项目里的命令行工具」的正确打开方式。
+  </div>
+
+  <h3>8.4 钩子：pre 与 post</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>scripts 一栏（教学示意 · 真实文件不能写注释）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">  "scripts": {
+    "prebuild": "echo ① 先清场地",     // 开关 prebuild：魔法前缀 pre——按 build 时它自动先执行
+    "build": "echo ② 正式施工",        // 主开关 build
+    "postbuild": "echo ③ 收工播报"     // 开关 postbuild：前缀 post——build 结束后自动跟上
+  },</pre>
+    <pre class="output">$ npm run build           ← 只按了 build 一个开关……
+① 先清场地               ← prebuild 被自动带出
+② 正式施工               ← build 本尊
+③ 收工播报               ← postbuild 自动收尾</pre>
+  </div>
+
+  <h3>8.5 传参：两个减号是「交接棒」</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm run dev -- --host   # 空格 + 两个减号 --：交接棒——它后面的参数原样递给 dev 开关接的那条命令
+                       # 假设 "dev": "vite"，最终执行的就是 vite --host（对外暴露开发服务器）</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">为什么要两个减号</span>不写 <code>--</code> 的话，npm 会以为 <code>--host</code> 是给<b>npm 自己</b>的参数而不认识、直接报错；写了 <code>--</code>，npm 就明白「后面这些是给开关里那条命令的，别拆包装，原样转交」。一根交接棒，避免两边抢包裹。
+  </div>
+
+  <h3>8.6 实战：给 my-shop 配齐四件套</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>文件：package.json（教学示意 · 真实文件不能写注释）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">  "scripts": {
+    "dev": "node server.js",                 // 开关 dev：用 node 直接跑 server.js（起个本地服务）
+    "build": "echo 打包完成",                 // 开关 build：真实项目里这里是 vite build 之类的打包命令
+    "test": "node test.js",                  // 开关 test：跑测试脚本
+    "greet": "cowsay 一键开工！"              // 开关 greet：调个乐子——记得先 npm i -g cowsay（或者删掉这行）
+  },</pre>
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 08</span>
+    <ol>
+      <li>给 <code>my-shop</code> 加 <code>hello</code> 开关并跑通；再加一对 <code>prehello / posthello</code>，观察执行顺序；</li>
+      <li>写一个 <code>"tools": "npm ls --all"</code> 开关，体会「开关里也能嵌 npm 命令」；</li>
+      <li>挑战：做一个 <code>greet</code> 开关，命令为 <code>node -e "console.log(process.version)"</code>（<code>-e</code> = 直接执行引号里的 JS 代码）——按开关打印出你的 Node 版本。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 9 章 ==================== -->
+<section class="chapter" id="ch9">
+  <div class="chap-head">
+    <div class="chap-num">09</div>
+    <div>
+      <h2>npx：租用不买断</h2>
+      <div class="desc">只想用一次的工具，何必买回家占地方——扫码租用，用完即走</div>
+    </div>
+  </div>
+
+  <p class="lead"><code>npx</code>（<b>N</b>ode <b>P</b>ackage e<b>X</b>ecute）是 npm 自带的双胞胎兄弟：npm 管<b>买</b>，npx 管<b>租</b>。它是现代前端工作流里出镜率最高的两个字母。</p>
+
+  <h3>9.1 痛点：为了切一次菜，买台切菜机？</h3>
+  <p>想体验一个脚手架工具（比如 create-vite，一辈子可能就用十次）。老办法：先 <code>npm i -g create-vite</code> 装进全局——<b>占地方、难升级、换电脑全没</b>。npx 的方案：<b>临时下载、立即运行、用完扔掉</b>：</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>全局安装 = <b>买断</b>一台占地方的家伙什；npx = <b>扫码租用</b>：出门扫码即用，用完人家自己收走。第一次租要现场调货（慢），第二次租从缓存中转仓直接取（快）。
+  </div>
+
+  <h3>9.2 两个经典用法</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npx cowsay 租来的牛      # 命令 npx + 包名 + 参数：先找本地有没有 cowsay——没有就临时下载一份来执行这条命令
+npx create-vite my-app   # 经典场景：脚手架「租用」——不用装任何东西，直接现场调来 create-vite 创建一个新项目 my-app</pre>
+    <pre class="output">Need to install the following packages:    ← 第一次租：npx 先打招呼「这货本地没有，我临时下一份」
+create-vite@6.1.0                          ← 临时下载的包名与版本（从缓存/商城取）
+
+Ok to proceed? (y)                        ← 出于安全要你点头——回车或 y 同意（这就是下一节的 --yes）</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npx cowsay --yes 再租一次  # 参数 --yes（缩写 -y）：跳过「确认租用」的提问——写自动化脚本时必备
+npx create-vite@5 my-app   # @5：连租都指定大版本——确保工具行为可预期（5 和 6 的交互可能不同）</pre>
+  </div>
+
+  <h3>9.3 npx 的两副面孔：本地优先</h3>
+  <p>很多介绍只讲「租」，漏了 npx 的另一半性格：<b>本地有，绝不外租</b>：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>情况</th><th>npx 的行为</th><th>例子</th></tr></thead>
+    <tbody>
+      <tr><td>项目 <code>node_modules/.bin</code> 里有这个命令</td><td><b>直接用本地的</b>（绝不外借）——这就是为什么项目里 <code>npx vite</code> 永远跑你项目装的版本</td><td><code>npx vite</code></td></tr>
+      <tr><td>本地没有</td><td>临时下载执行，完事走人（缓存放中转仓）</td><td><code>npx create-vite</code></td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout tip">
+    <span class="tag">两兄弟分工</span>一句话记牢：<b>要装回家用 package.json 管的 → <code>npm i</code>；只想跑一次、或者想用「本项目这一版」的 → <code>npx</code></b>。此外 scripts 里其实不用 npx（第 8 章讲过：npm run 自动注入 .bin 路径）——scripts 里裸写命令才是最优雅的。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 09</span>
+    <ol>
+      <li><code>npx cowsay 我是租来的</code>，观察第一次的「临时下载提示」；紧接着再跑一遍——感受缓存提速；</li>
+      <li>在 my-shop 里装了 vite（第 4 章装过）后跑 <code>npx vite --version</code>——它跑的是本地版（输出里没有下载提示）；</li>
+      <li>挑战：<code>npx http-server</code>（一个零配置静态服务器）在你任意文件夹里起一个网站，浏览器访问它给的地址（Ctrl+C 关闭）。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 10 章 ==================== -->
+<section class="chapter" id="ch10">
+  <div class="chap-head">
+    <div class="chap-num">10</div>
+    <div>
+      <h2>卸载、更新与体检</h2>
+      <div class="desc">退货、换新、盘点——让仓库始终保持「台账与货架一致」</div>
+    </div>
+  </div>
+
+  <p class="lead">装只是开始。这一章补齐包管理的日常运营：不想要的<b>退掉</b>（uninstall）、旧了的<b>盘点换新</b>（outdated + update）、仓库里<b>来历不明的清走</b>（prune）。</p>
+
+  <h3>10.1 退货：npm uninstall</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm uninstall lodash         # 命令 uninstall（缩写 un / remove / rm 都认）：退货——从 node_modules 搬走，同时从 package.json 台账划掉，lock 同步更新
+npm uninstall -D vite        # -D：从 devDependencies 台账划掉（装的时候挂哪本账，退的时候也找那本）
+npm uninstall -g cowsay      # -g：退全局的货——第 4 章装的全局玩具，玩腻了就还回去</pre>
+    <pre class="output">removed 1 package in 2s      ← 战报：removed = 退掉几个包</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">手动删除 ≠ 退货</span>直接删 <code>node_modules/lodash</code> 文件夹或手动改 package.json，都是<b>黑箱操作</b>——lock 小票上仍记着这货在册，下次 <code>npm install</code> 它又回来了。退货请走柜台（uninstall），一次办三件事：撤货、销账、改小票。
+  </div>
+
+  <h3>10.2 盘点：npm outdated</h3>
+  <p>项目跑久了，货架上的包都有新版了。盘点一下：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm outdated                 # 命令 outdated：盘点表——列出所有「有新款可换」的依赖；没输出 = 全是最新，谢天谢地</pre>
+    <pre class="output">Package  Current  Wanted  Latest  Location  Depended by
+dayjs     1.11.10  1.11.11 1.11.11  dayjs    my-shop
+vite      5.4.8    5.4.8   6.0.0    vite     my-shop
+           ↑现在装的   ↑帽子允许的  ↑商城最新
+           （Current）（Wanted） （Latest）</pre>
+  </div>
+  <div class="tblwrap"><table>
+    <thead><tr><th>列名</th><th>含义</th><th>类比</th></tr></thead>
+    <tbody>
+      <tr><td><b>Current</b></td><td>现在装着的精确版本</td><td>家里这台的出厂批号</td></tr>
+      <tr><td><b>Wanted</b></td><td>按 package.json 的帽子（^/~）允许升到的版本</td><td>保修条款内可免费换到的新款</td></tr>
+      <tr><td><b>Latest</b></td><td>商城上的最新版（可能已越过大版本）</td><td>展示厅里最新一代</td></tr>
+    </tbody>
+  </table></div>
+  <p>看懂这张表就懂了升级的两种境界：<b>Wanted ≠ Latest</b> 时（如 vite 那行），说明新版跨了<b>大版本</b>——帽子拦着，得人工决策。</p>
+
+  <h3>10.3 换新：npm update</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm update                   # 命令 update：把所有依赖升到各自的 Wanted 版本——帽子内的免费换新，安全
+npm update dayjs             # 只给 dayjs 换新
+npm install vite@latest      # 想跨大版本？update 不越雷池——改用 install 指定 @latest，等于重新下单最新款（台账帽子同步改写）</pre>
+  </div>
+  <div class="callout info">
+    <span class="tag">升级军规</span>跨大版本（Current 4.x → Latest 5.x）= 有<b>破坏性变更</b>的可能。升级前：① 去该包的 GitHub/官网看 <b>Migration Guide</b>（迁移指南）；② 跑一遍项目测试；③ 小步快跑——别一次升五个大版本，出了问题都不知道谁干的。
+  </div>
+
+  <h3>10.4 清仓：npm prune 与杂项</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm prune                    # 命令 prune（修剪）：清掉「躺在仓库里但台账上没有」的包——手动删过 package.json 里的行？用它收尾
+npm fund                     # 命令 fund：看看你的依赖里哪些作者在寻求资助（开源不易，有余力支持一下）
+npm cache verify             # 命令 cache verify：校验中转仓的存货完整性（哪天安装总报怪错，先验货）
+npm cache clean --force      # 命令 cache clean：清空中转仓；--force = 强制（npm 怕你误删特意加的门）——网络问题百药无效时的最后三板斧之一</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">灵异故障的万能起手式</span>遇到「明明装了却找不到」「报错和昨天不一样」：① 删 <code>node_modules</code>；② <code>npm ci</code> 照小票复原。九成的「薛定谔依赖」一招治愈——<b>货架可以随时重建，这是 npm 体系给你的底气</b>。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 10</span>
+    <ol>
+      <li>装个 <code>axios</code> 再 <code>npm uninstall axios</code>，对比前后 package.json 和 lock 的变化；</li>
+      <li>跑 <code>npm outdated</code> 看看你的 my-shop 有没有落后于时代的包；</li>
+      <li>完整体验万能起手式：删 node_modules → <code>npm ci</code>——记住这两步，够你吃十年。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 11 章 ==================== -->
+<section class="chapter" id="ch11">
+  <div class="chap-head">
+    <div class="chap-num">11</div>
+    <div>
+      <h2>配置与 .npmrc：偏好单</h2>
+      <div class="desc">告诉采购员你的长期偏好：常去哪家分仓、要不要开发票（精确版本）</div>
+    </div>
+  </div>
+
+  <p class="lead">npm 的每个习惯都可以调：默认去哪家商城提货、全局包装在哪、要不要永远锁死版本……这些偏好就存在 <code>.npmrc</code> 文件里（rc = run commands，Unix 世界「运行配置」的老传统后缀）。</p>
+
+  <h3>11.1 读写配置的三板斧</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm config get registry     # 命令 config get：读一项配置——现在默认去哪家商城（registry = 注册表/仓库地址）
+npm config set registry https://registry.npmmirror.com   # 命令 config set：写一项——把默认商城换成 npmmirror（阿里维护的国内镜像站）
+npm config list              # 命令 config list：把当前生效的配置整页打出来，逐行核对
+npm config delete registry   # 命令 config delete：删掉这项自定义——恢复官方默认值 https://registry.npmjs.org</pre>
+  </div>
+
+  <h3>11.2 registry：官方仓 vs 国内分仓</h3>
+  <div class="callout analogy">
+    <span class="tag">类比</span>registry = <b>提货点地址</b>。官方仓（registry.npmjs.org）远在国外，国内直连常常龟速；<b>npmmirror</b>（原淘宝镜像）是阿里在国内开的<b>分仓</b>——货一样（每隔几分钟同步一次），路近了快十倍。<b>发布自己的包时记得换回官方仓</b>（镜像一般只进不出）。
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm install lodash --registry=https://registry.npmmirror.com   # 单次用法：--registry=地址 只对这一条命令生效——不想改全局偏好时的临时方案
+npm ping                      # 命令 ping：测试与当前 registry 的连通性（像网络医生的听诊器），排查网络问题第一步</pre>
+  </div>
+
+  <h3>11.3 三张偏好单：优先级分明</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>层级</th><th>文件位置</th><th>影响范围</th><th>典型用途</th></tr></thead>
+    <tbody>
+      <tr><td><b>项目级</b>（优先级最高）</td><td>项目根目录 <code>.npmrc</code></td><td>只影响这个项目</td><td>团队统一镜像源、统一 registry</td></tr>
+      <tr><td><b>用户级</b></td><td><code>~/.npmrc</code>（家目录）</td><td>影响这台机器上的你</td><td>个人镜像偏好、登录令牌</td></tr>
+      <tr><td><b>全局级</b>（优先级最低）</td><td>Npm 安装目录内</td><td>影响所有用户</td><td>极少改动</td></tr>
+    </tbody>
+  </table></div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>文件：项目里的 .npmrc（真实可用 · 这个文件本来就支持 # 注释）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">registry=https://registry.npmmirror.com    # 配置项 registry：本项目一律去国内分仓提货（随项目提交进 Git，全团队共享）
+save-exact=true                            # 配置项 save-exact：本项目装包默认锁死精确版本（第 6 章的 -E 变成常态）</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">查找顺序</span>npm 找配置就像穿衣服：<b>项目级穿最里层</b>（贴身生效），用户级套外面，全局级最外。同一项冲突时，<b>里层覆盖外层</b>。所以「公司项目必须走内网仓库」写项目级、「我自己爱走镜像」写用户级，互不打架。
+  </div>
+
+  <h3>11.4 常用配置速查</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>配置项</th><th>管什么</th><th>示例</th></tr></thead>
+    <tbody>
+      <tr><td><code>registry</code></td><td>默认提货点</td><td><code>npm config set registry https://registry.npmmirror.com</code></td></tr>
+      <tr><td><code>save-exact</code></td><td>装包默认锁精确版本</td><td><code>npm config set save-exact true</code></td></tr>
+      <tr><td><code>prefix</code></td><td>全局包安装位置</td><td><code>npm config get prefix</code>（排查「全局命令找不到」看它）</td></tr>
+      <tr><td><code>proxy / https-proxy</code></td><td>公司内网代理</td><td><code>npm config set proxy http://proxy.company.com:8080</code></td></tr>
+      <tr><td><code>engine-strict</code></td><td>强制检查 Node 版本要求</td><td><code>npm config set engine-strict true</code></td></tr>
+    </tbody>
+  </table></div>
+  <div class="practice">
+    <span class="tag">动手练习 11</span>
+    <ol>
+      <li>跑 <code>npm config list</code> 通读一遍你机器的生效配置（重点关注 registry 指向哪）；</li>
+      <li>体验优先级：用户级设 <code>save-exact true</code>，再在项目级 <code>.npmrc</code> 里写 <code>save-exact=false</code>，装个包看台账里帽子在不在；</li>
+      <li>跑 <code>npm ping</code> 确认你的 registry 通畅。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 12 章 ==================== -->
+<section class="chapter" id="ch12">
+  <div class="chap-head">
+    <div class="chap-num">12</div>
+    <div>
+      <h2>发布自己的包：上架全球商城</h2>
+      <div class="desc">让全世界的 npm install 都能装到你的代码——这一章你从顾客变成商家</div>
+    </div>
+  </div>
+
+  <p class="lead">前面 11 章你都是<b>顾客</b>。这一章角色互换：写一个包，发布到 npmjs.com，从此任何人（包括未来的你）一条 <code>npm install</code> 就能用上它。</p>
+
+  <h3>12.1 开店手续：注册与登录</h3>
+  <ol class="steps">
+    <li>去 <a href="https://www.npmjs.com/signup" target="_blank" rel="noopener">npmjs.com/signup</a> 注册一个免费账号（记住用户名——它就是你店面的招牌，也是 scope 包的前缀）；</li>
+    <li>开启两步验证（2FA，账号安全设置里）——官方强烈建议，发布会要求输入动态验证码（OTP）；</li>
+    <li>回到终端登录：</li>
+  </ol>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm login          # 命令 login：登录——打开浏览器完成 npmjs.com 的账号验证，成功后终端自动续上
+npm whoami         # 命令 whoami（我是谁）：验证登录状态——打出你的用户名就是登录成功</pre>
+    <pre class="output">alicelv           ← 你的 npm 用户名（打出来的是谁，将来发布就以谁的名义）</pre>
+  </div>
+
+  <h3>12.2 备货：一个最小可发布的包</h3>
+  <p>发布需要的家当少得惊人：<b>package.json + 入口文件 + README</b>，三样齐就能上架。新建项目 <code>lucky-utils</code>（一个「幸运抽奖」小工具包）：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>文件：index.js（包的入口 · 每个函数、变量都有注释）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">// 文件：index.js —— 包的入口（package.json 的 main 字段指向它）
+// 这个包对外提供两个函数：randomLucky（幸运数）、pickOne（抽一个）
+
+/**
+ * 函数 randomLucky：返回一个 1 到 max 之间的随机整数（含两端）。
+ * 形参 max：随机数上限，不传时默认 100。
+ */
+function randomLucky(max = 100) {              // 函数名 randomLucky（幸运数）；形参 max（上限）带默认值 100
+  return Math.floor(Math.random() * max) + 1   // Math.random()：JS 内置方法，产生 [0, 1) 的随机小数；乘 max 得 [0, max)；Math.floor() 向下取整得 0 ~ max-1；+1 平移成 1 ~ max
+}
+
+/**
+ * 函数 pickOne：从数组里随机抽出一个元素。
+ * 形参 arr：待抽取的数组。
+ */
+function pickOne(arr) {                        // 函数名 pickOne（抽一个）；形参 arr（数组）
+  const index = randomLucky(arr.length) - 1    // 常量 index（随机下标）：arr.length 是数组长度（JS 里合法下标是 0 ~ 长度-1），用 randomLucky 取 1~长度 再减 1 刚好对上
+  return arr[index]                            // 返回：用随机下标从数组里取出元素
+}
+
+/**
+ * 对象 lucky：把两个函数打包成一个对象对外提供（使用者可以 lucky.randomLucky(66) 这样点着用）。
+ */
+const lucky = { randomLucky, pickOne }         // 常量 lucky：ES6 简写——键名和函数同名时可只写一个（等价于 { randomLucky: randomLucky, pickOne: pickOne }）
+
+module.exports = lucky                         // 变量 module.exports：CommonJS 导出机制——require() 这个包的人拿到的就是 lucky 这个对象</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>文件：package.json 关键字段（教学示意 · 真实文件不能写注释）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">{
+  "name": "@alicelv/lucky-utils",     // 字段 name：务必用 scope 包（@你的用户名/包名）——普通名字早被抢光了，专区里随便起
+  "version": "1.0.0",                 // 字段 version：首次发布从 1.0.0 开始
+  "description": "幸运抽奖小工具：随机数与随机抽取",   // 字段 description：商城搜索结果里的一句话介绍
+  "main": "index.js",                 // 字段 main：入口——使用者 require 的就是这个文件（module.exports 就在它里面）
+  "keywords": ["random", "lucky", "utils"],          // 字段 keywords：搜索关键词，帮助顾客搜到你
+  "license": "MIT",                   // 字段 license：MIT = 最宽松的「随便用」协议
+  "files": ["index.js"]               // 字段 files：上架清单——发布时只带上这些文件（README 和 package.json 永远自动带上）
+}</pre>
+  </div>
+
+  <h3>12.3 上架：npm publish</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行（在 lucky-utils 项目根目录）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm publish --access public   # 命令 publish：发布上架；参数 --access public：scope 包首次发布必须声明「公开」（npm 默认以为你想发私有包——那是付费功能）
+                               # 开了 2FA 的话会要一次动态验证码（OTP），从验证器 App 里抄六位数进来</pre>
+    <pre class="output">+ @alicelv/lucky-utils@1.0.0    ← 出现「包名@版本」即发布成功！去 npmjs.com 搜你的包名，详情页已经在了</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">发布前自检</span>① 名字没被占（scope 包不用查）；② <code>version</code> 比上次发布<b>大</b>（同版本重复发布会被拒，npm 不允许覆盖已发布的版本）；③ <code>files</code> 字段别把测试脚本、笔记全传上去；④ 本地先 <code>npm link</code> 自测过（第 13 章教）。用 <code>npm pack --dry-run</code> 可以<b>预览</b>将要上传的文件清单而不真发布。
+  </div>
+
+  <h3>12.4 发新款：npm version</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm version patch   # 命令 version patch（补丁）：把 package.json 的版本号 1.0.0 → 1.0.1，并自动打一个 Git 提交（若在 Git 仓库里）
+npm version minor   # minor（次版本）：1.0.1 → 1.1.0——加了新功能但没破坏旧接口
+npm version major   # major（主版本）：1.1.0 → 2.0.0——破坏性变更，提醒使用者「升级要看文档了」
+npm publish         # 版本号改好，再发一次——新款上架，老顾客 npm update 便能收到</pre>
+  </div>
+
+  <h3>12.5 后悔药与召回</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm unpublish @alicelv/lucky-utils@1.0.0 --force   # 命令 unpublish：召回某个版本；--force：确认强制——只在发布后 72 小时内可行，且名下安装量过多会被拒
+npm deprecate @alicelv/lucky-utils@1.0.0 "有 bug，请升级到 1.0.1"   # 命令 deprecate（弃用告示）：不召回，但在商城详情页和安装时打上「此版本已弃用」的黄色警告——温和方案</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">发布即公开</span>发上去的代码<b>全世界可见、可下载</b>：密钥、密码、内网地址绝对不能出现在包里；72 小时之后想撤也撤不回——发布前多看一眼 <code>npm pack --dry-run</code> 的清单，养成良好的「上架前验货」习惯。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 12</span>
+    <ol>
+      <li>注册 npm 账号并 <code>npm login</code>；</li>
+      <li>照 12.2 做出自己的 <code>@用户名/xxx-utils</code> 包（函数随便写：掷骰子、抛硬币、洗牌都行），<code>npm pack --dry-run</code> 预览清单后 <code>npm publish --access public</code> 发布；</li>
+      <li>发布成功后，到商城搜自己的包；再开个新文件夹 <code>npm install 你的包名</code>，写两行代码调用它——<b>亲手完成「发布 → 被安装」的闭环</b>。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 13 章 ==================== -->
+<section class="chapter" id="ch13">
+  <div class="chap-head">
+    <div class="chap-num">13</div>
+    <div>
+      <h2>全局工具与 npm link</h2>
+      <div class="desc">命令行利器的正确养法，以及「边写边测」的本地联调神器</div>
+    </div>
+  </div>
+
+  <p class="lead">两类进阶玩法：一是<b>全局 CLI 工具</b>（装一次、满机跑），二是 <b>npm link</b>——你在写自己的包时，不用反复发布就能在真实项目里试用的「临时直通车」。</p>
+
+  <h3>13.1 CLI 工具是怎么变成命令的：bin 字段</h3>
+  <p>为什么装完 <code>http-server</code> 就多了个同名命令？秘密在包清单的 <code>bin</code> 字段：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>文件：某个 CLI 工具的 package.json 片段（教学示意 · 真实文件不能写注释）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">  "bin": {                          // 字段 bin：声明「我提供一个命令行程序」
+    "http-server": "./bin/http-server"   // 键 http-server = 注册的命令名；值 = 命令背后真正执行的 JS 文件路径
+  },</pre>
+  </div>
+  <p>安装时（无论 <code>-g</code> 还是项目级），npm 把这个程序链接到「命令可达」的位置——全局装就链到系统 PATH，项目装就链进 <code>node_modules/.bin</code>。体验几个经典全局工具：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm install -g typescript    # 全局装 TypeScript（给 JS 加类型的语言）；它带一个 bin 命令 tsc（编译器）
+tsc --version                # tsc：TypeScript 编译器命令；--version 报版本——全局命令在任意文件夹可用
+npm ls -g --depth=0          # 命令 ls -g：列出全局已装的包；--depth=0（深度 0）：只看第一层，别把传递依赖也倒出来</pre>
+    <pre class="output">Version 5.6.2               ← tsc 活了
+C:\Users\你\AppData\Roaming\npm   ← 全局仓库位置（第 2 章查过的那个）
+├── cowsay@1.7.0             ← depth=0：一层清单，清爽
+└── typescript@5.6.2</pre>
+  </div>
+
+  <h3>13.2 npm link：开发中包的「直通车」</h3>
+  <p>场景：你在写 <code>lucky-utils</code>（第 12 章的包），想在 <code>my-shop</code> 项目里试试效果。老办法要 <b>发布 → 安装 → 发现 bug → 改 → 再发布</b>，一天发八个版本，商城变成你的草稿纸。<code>npm link</code> 的解法：<b>把开发中的包直接「接线」到项目里</b>：</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>npm link = 在「新品研发台」和「你的货架」之间拉一条<b>传送带</b>：研发台上改一版，货架上<b>立刻同步</b>——不用走「上架→下单→物流」的完整流程。测满意了再正式发布，传送带一撤，换上正经货。
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行：link 两步走</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">cd lucky-utils            # 第一步：进入「正在开发中的包」的目录
+npm link                  # 命令 link：把这个包登记为本机的「研发中新品」——在全局区挂一个指向当前文件夹的链接
+
+cd ../my-shop             # 第二步：切到「要试用它的项目」
+npm link @alicelv/lucky-utils   # link + 包名：把研发台的新品接进本项目——node_modules 里出现一个「活的」链接（不是拷贝）</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>文件：my-shop 里试用（test-lucky.js）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">// 文件：test-lucky.js —— 在项目里直接试用开发中的包
+const lucky = require('@alicelv/lucky-utils')   // 函数 require：CommonJS 加载机制——括号里写包名，拿到的就是包里 module.exports 的那个对象
+
+console.log(lucky.randomLucky(66))              // 方法 randomLucky（第 12 章写的）：打印 1~66 的随机整数——此刻调用的是「研发台上」的实时代码
+console.log(lucky.pickOne(['A', 'B', 'C']))     // 方法 pickOne：从数组里随机抽一个打印</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">node test-lucky.js               # 跑一下——好使！现在去 lucky-utils 源码里改点东西（比如把 +1 改成 +100），再跑：立即生效，无需任何安装动作
+
+npm unlink @alicelv/lucky-utils  # 撤线（在 my-shop 里执行）：把链接从项目里拆掉
+npm uninstall -g @alicelv/lucky-utils --no-save   # 撤登记（全局区那条链接也清掉）——传送带全拆，恢复原状</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">link 的坑</span>① link 进来的包<b>不写进 package.json</b>（它是「活的链接」不是「到货」），所以<b>换台电脑就失效</b>；② 忘了 unlink 又 <code>npm install</code>，可能出现「一半链接一半真货」的混血状态，症状诡异——排查口诀：<code>npm ls 包名</code>，看它是不是 <code>LINK</code> 标记。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 13</span>
+    <ol>
+      <li>全局装 <code>typescript</code>，任意文件夹跑 <code>tsc --version</code>；</li>
+      <li>把自己的 <code>lucky-utils</code> link 到 <code>my-shop</code>，跑通 <code>test-lucky.js</code>；改源码再跑，体会「即时生效」；</li>
+      <li>用 <code>npm ls -g --depth=0</code> 看全局清单里多了什么，最后完整撤线收工。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 14 章 ==================== -->
+<section class="chapter" id="ch14">
+  <div class="chap-head">
+    <div class="chap-num">14</div>
+    <div>
+      <h2>安全审计：收货验货</h2>
+      <div class="desc">货是别人送的——进货前验一验，供应链时代的安全必修课</div>
+    </div>
+  </div>
+
+  <p class="lead">你的项目 = 你的代码 + 几百个<b>陌生人的代码</b>。万一供应链上某个环节被投毒呢？npm 内置了验货员 <code>npm audit</code>——这一章学会读它的报告，也学会四条保命军规。</p>
+
+  <h3>14.1 风险从哪来</h3>
+  <div class="callout analogy">
+    <span class="tag">类比</span>供应链投毒不只是小说：历史上真实发生过某热门包的维护权被转让给陌生人、新「维护者」在里面塞了偷密钥的代码（著名的 event-stream 事件）；也有包名「傍大款」（typosquatting，拼错一两个字母的山寨包）骗安装。你的防线：<b>小票锁批（lock 的 integrity）+ 定期验货（audit）+ 不乱装冷门包</b>。
+  </div>
+
+  <h3>14.2 npm audit：验货报告</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm audit            # 命令 audit（审计）：把整棵供应链树逐包对照「已知漏洞数据库」，出一份体检报告
+npm audit --json     # --json：输出机器可读的 JSON 格式（写自动化检查时用）</pre>
+    <pre class="output">found 2 vulnerabilities (1 moderate, 1 high)    ← 总评：发现 2 个漏洞（1 个中危 + 1 个高危）
+
+# Run npm audit fix to fix them, or npm audit for details    ← 提示：跑 audit fix 可自动修</pre>
+  </div>
+  <div class="tblwrap"><table>
+    <thead><tr><th>严重级别</th><th>含义</th><th>应对</th></tr></thead>
+    <tbody>
+      <tr><td><code>low</code>（低危）</td><td>理论可利用，条件苛刻</td><td>记录在案，不慌</td></tr>
+      <tr><td><code>moderate</code>（中危）</td><td>特定场景下可被利用</td><td>排期修复</td></tr>
+      <tr><td><code>high</code>（高危）</td><td>常见场景即可利用</td><td>尽快修</td></tr>
+      <tr><td><code>critical</code>（危急）</td><td>可直接远程执行/泄密</td><td><b>立刻</b>修</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout info">
+    <span class="tag">看懂漏洞链条</span>audit 详情会画出「<b>谁 → 引入了谁 → 谁有毒</b>」的链条：你的清单里只有 vite，但 vite 的依赖 X 的依赖 Y 有洞——这条链告诉你<b>该催谁升级</b>（通常是升最上游的 vite，让它甩掉旧 X）。
+  </div>
+
+  <h3>14.3 npm audit fix：自动验货员动手修</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm audit fix            # 命令 audit fix：在「帽子允许的范围内」自动升级有洞的包——安全，小票同步更新
+npm audit fix --force    # 参数 --force：连大版本也敢跨——可能引入破坏性变更，先备份再跑，跑完立刻全量测试</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">为什么 --force 危险</span>自动跨大版本 = 自动接受别人的破坏性变更。npm 把这个选择权强制留给人——它知道「能跑」和「行为没变」是两回事。--force 前先确认项目有测试、且代码已提交 Git（随时可回滚）。
+  </div>
+
+  <h3>14.4 四条保命军规</h3>
+  <ol class="steps">
+    <li><b>装前看三样</b>：周下载量（过万的才靠谱）、最近发布时间（三年没动的要警惕）、依赖它的知名项目；</li>
+    <li><b>小票必进 Git + 部署用 npm ci</b>：integrity 钢印防掉包（第 7 章）；</li>
+    <li><b>不装用不上的包</b>：每加一个依赖 = 多签一份安全合同；<code>npm install --ignore-scripts</code> 可禁止包的安装脚本乱跑（更硬核的保险栓）；</li>
+    <li><b>定期 <code>npm audit</code></b>：把它加进 CI（持续集成）流水线，漏洞自动报警。</li>
+  </ol>
+  <div class="practice">
+    <span class="tag">动手练习 14</span>
+    <ol>
+      <li>在你的 <code>my-shop</code> 里跑 <code>npm audit</code>，逐行读懂报告（没有漏洞也是一种输出：found 0 vulnerabilities）；</li>
+      <li>去 npmjs.com 随便打开几个包的详情页，练习「装前三看」：周下载量、发布时间、依赖关系；</li>
+      <li>思考题：为什么说 package-lock.json 的 integrity 字段是「防投毒钢印」？（提示：第 7.3 节）</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 15 章 ==================== -->
+<section class="chapter" id="ch15">
+  <div class="chap-head">
+    <div class="chap-num">15</div>
+    <div>
+      <h2>workspaces：一栋楼多个房间</h2>
+      <div class="desc">几个项目共享一套基建——monorepo 的 npm 原生玩法</div>
+    </div>
+  </div>
+
+  <p class="lead">做产品常常是「一栋楼」：官网 + 管理后台 + 共享的组件库 + 工具函数库。每栋「房间」各自一份 node_modules 各自一份清单？<b>workspaces</b>（工作区）让你整栋楼<b>统一采购、共享仓库</b>。</p>
+
+  <h3>15.1 多仓库的痛 vs 一栋楼的爽</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th></th><th>多仓库（multi-repo）</th><th>一栋楼（monorepo + workspaces）</th></tr></thead>
+    <tbody>
+      <tr><td><b>类比</b></td><td>每户各自买车、各自车库</td><td>整栋楼<b>共享一部货梯、一个大仓库</b></td></tr>
+      <tr><td><b>改一处公共代码</b></td><td>发版 → 各仓库挨个升级</td><td>改完立即全楼生效</td></tr>
+      <tr><td><b>重复安装</b></td><td>同一份 lodash 装 N 遍</td><td>全楼一份，省时省硬盘</td></tr>
+      <tr><td><b>适合</b></td><td>互不相关的项目</td><td>关系紧密的产品矩阵（App + 后台 + 共享库）</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>15.2 搭一栋楼</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>目录结构 + 根 package.json（教学示意 · 真实文件不能写注释）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">my-tower/                    # 「楼」的根目录（monorepo 的根）
+├── package.json             # 楼总的清单：声明哪些房间属于这栋楼
+└── packages/                # packages：约定俗成的「房间」集中营
+    ├── web/                 # 房间一：官网
+    │   └── package.json     # 房间自己的小清单
+    ├── admin/               # 房间二：管理后台
+    │   └── package.json
+    └── shared-ui/           # 房间三：全楼共享的组件库
+        └── package.json</pre>
+    <pre class="code">{
+  "name": "my-tower",              // 楼名（根项目一般不发布，名字随意）
+  "private": true,                 // 字段 private：true——根项目是「自住房」，永不发布上架（避免误发整栋楼）
+  "workspaces": [                  // 字段 workspaces：房号登记簿——数组里列出「哪些文件夹算我的房间」
+    "packages/*"                   // 通配写法：packages 下面每个文件夹都是一个房间（web、admin、shared-ui 全认领）
+  ]
+}</pre>
+  </div>
+  <p>整栋楼只跑<b>一次</b> <code>npm install</code>（在楼根目录）：所有房间的依赖统一采购，全部搬进<b>楼根的一个 node_modules</b>——这就是「共享大仓库」。</p>
+
+  <h3>15.3 房间之间互相「串门」</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>文件：packages/web/package.json（教学示意 · 真实文件不能写注释）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">{
+  "name": "@my-tower/web",                // 房间也有自己的名字（用楼名当 scope 前缀，整齐）
+  "version": "1.0.0",
+  "dependencies": {
+    "@my-tower/shared-ui": "^1.0.0"       // 声明依赖「同楼的另一个房间」——npm 发现这个名字就是自家房间，直接用符号链接接通（相当于全自动 npm link），改组件库立刻在官网生效
+  }
+}</pre>
+  </div>
+
+  <h3>15.4 分房间操作：-w 参数</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行（都在楼根目录执行）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm install dayjs -w web              # 参数 -w（workspace）+ 房间名：把 dayjs 装进「web 这个房间」的清单（而不是楼根的）
+npm run build -w web                   # 跑 web 房间的 build 开关——不用 cd 进房间
+npm run build --workspaces             # 遍历所有房间，挨个跑 build——整栋楼流水线一键启动（某房间没这个开关会跳过）
+npm run build --workspaces --if-present # --if-present：没有该开关的房间安静跳过，不报错（更文明的遍历）</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">生态位置</span>workspaces 是 npm 原生的「一楼多房」方案，够用且零门槛；楼上还有两位管家——<b>lerna</b>（老牌，管发版编排）和 <b>turborepo</b>（新贵，管构建缓存提速），它们<b>不替代</b> workspaces 而是叠加其上。先用原生的，痛了再请管家。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 15</span>
+    <ol>
+      <li>搭一个三房间的楼（root + web + admin + shared-ui），根目录 <code>npm install</code>，看看 node_modules 是不是只在楼根出现一份；</li>
+      <li>让 web 依赖 shared-ui，在 web 里改用组件库的代码，验证「即时生效」；</li>
+      <li>练习 <code>-w</code>：从楼根给 admin 装一个包、跑 web 的开关。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 16 章 ==================== -->
+<section class="chapter" id="ch16">
+  <div class="chap-head">
+    <div class="chap-num">16</div>
+    <div>
+      <h2>综合实战：发布你的包</h2>
+      <div class="desc">两个完整的端到端项目——一个函数库、一个命令行工具，走完「从 mkdir 到全世界可安装」</div>
+    </div>
+  </div>
+
+  <p class="lead">前面 15 章的兵器全部上阵。实战一发布<b>函数包</b>（给别的代码调），实战二发布 <b>CLI 工具</b>（给人在终端敲）——两种包是 npm 世界的两大物种，发布流程一致，「插座」长得不同。</p>
+
+  <h3>16.1 实战一：函数包 fortune-num（骰子·硬币·洗牌）</h3>
+  <h4>第 1 步：立项与清单</h4>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">mkdir fortune-num &amp;&amp; cd fortune-num    # 建项目文件夹并进入（&amp;&amp; = 前一条成功才执行后一条）
+npm init -y                            # 快速办证：默认答案生成 package.json，稍后手工修缮</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>文件：package.json（教学示意 · 真实文件不能写注释）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">{
+  "name": "@你的用户名/fortune-num",   // 字段 name：scope 包（@用户名/包名）——普通名字大概率被占，专区随便起
+  "version": "1.0.0",                 // 字段 version：首发从 1.0.0 起步
+  "description": "桌面游戏三件套：掷骰子、抛硬币、洗牌",   // 字段 description：商城里的一句话卖点
+  "main": "index.js",                 // 字段 main：入口文件（使用者 require 到的就是它导出的东西）
+  "keywords": ["random", "dice", "shuffle", "game"],   // 字段 keywords：搜索关键词，多填几个被搜到的机会更大
+  "author": "你的名字",                // 字段 author：作者大名
+  "license": "MIT",                   // 字段 license：MIT 最宽松，开源小包标配
+  "files": ["index.js"]               // 字段 files：上架清单——只带 index.js（README 与本文件自动附带）
+}</pre>
+  </div>
+  <h4>第 2 步：写核心代码（三个函数，逐个有注释）</h4>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>文件：index.js</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">// 文件：index.js —— fortune-num 包的入口。对外提供三个函数：rollDice / flipCoin / shuffle
+
+/**
+ * 函数 rollDice：掷骰子。返回 1 到 sides 之间的随机整数（含两端）。
+ * 形参 sides：骰子有几面，默认 6。
+ */
+function rollDice(sides = 6) {                 // 函数 rollDice（掷骰子）；形参 sides（面数）默认值 6
+  return Math.floor(Math.random() * sides) + 1 // Math.random()：内置方法，[0, 1) 随机小数；乘 sides 得 [0, sides)；Math.floor() 向下取整；+1 平移成 1 ~ sides
+}
+
+/**
+ * 函数 flipCoin：抛硬币。随机返回字符串「正面」或「反面」。
+ */
+function flipCoin() {                          // 函数 flipCoin（抛硬币），无参数
+  return Math.random() &lt; 0.5 ? '正面' : '反面'  // 三元表达式「条件 ? 真结果 : 假结果」：随机数小于 0.5 走正面，否则反面
+}
+
+/**
+ * 函数 shuffle：洗牌。返回顺序打乱的新数组，不修改传入的原数组。
+ * 形参 arr：待打乱的数组。
+ */
+function shuffle(arr) {                        // 函数 shuffle（洗牌）；形参 arr（数组）
+  const copy = [...arr]                        // 常量 copy：展开运算符 ... 把 arr 的元素逐个抄进新数组（浅拷贝）——原数组毫发无损
+  for (let i = copy.length - 1; i &gt; 0; i--) {  // 变量 i：从最后一位下标（长度-1）倒着循环到 1——Fisher-Yates 经典洗牌的骨架
+    const j = Math.floor(Math.random() * (i + 1))   // 常量 j：0 ~ i 之间随机一个下标（要交换的搭档）
+    ;[copy[i], copy[j]] = [copy[j], copy[i]]   // 数组解构交换：右边先打包成 [值A, 值B]，再拆开分别赋给左边的两个位置——行首分号是防止上一行被误拼接的保险栓
+  }
+  return copy                                  // 返回打乱后的新数组
+}
+
+module.exports = { rollDice, flipCoin, shuffle }   // 变量 module.exports：CommonJS 导出——require() 的人拿到 { rollDice, flipCoin, shuffle } 这个对象</pre>
+  </div>
+  <h4>第 3 步：写说明书 README</h4>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>文件：README.md（商城详情页就是它渲染出来的）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"># fortune-num                       ← 一级标题：包名（# 是 Markdown 的一级标题语法）
+
+桌面游戏三件套：掷骰子、抛硬币、洗牌。零依赖，拿来就用。
+
+## 安装                            ← 二级标题（##）：安装章节
+
+npm install @你的用户名/fortune-num  ← 代码块里的安装命令——顾客复制粘贴用的
+
+## 用法                            ← 二级标题：用法章节
+
+const { rollDice, flipCoin, shuffle } = require('@你的用户名/fortune-num')
+                                   ← 解构 require：一次取出三个函数
+rollDice(20)                       ← 掷一颗 20 面骰
+flipCoin()                         ← 抛硬币
+shuffle([1, 2, 3, 4, 5])           ← 洗牌</pre>
+  </div>
+  <h4>第 4 步：验货上架</h4>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm pack --dry-run                # 命令 pack --dry-run：模拟打包并列出将上传的文件清单（验货，不上架）——确认没把杂物带上去
+node -e "console.log(require('./index.js').rollDice(20))"   # 自测一行：node -e 直接执行字符串代码；require('./index.js') 加载自己的包；掷一次 20 面骰看输出正常
+npm publish --access public       # 上架！（scope 包首次发布记得 --access public；2FA 用户输一次动态码）</pre>
+    <pre class="output">npm notice === Tarball Contents ===        ← 验货清单：三个文件——正好
+1.9kB LICENSE
+1.1kB README.md
+1.8kB index.js
+npm notice === Packaged Files ===
++ @你的用户名/fortune-num@1.0.0            ← 发布成功！全世界现在都能装到它了</pre>
+  </div>
+
+  <h3>16.2 实战二：CLI 工具 lucky-roll（终端掷骰器）</h3>
+  <p>函数包的「插座」是 <code>require</code>；CLI 工具的插座是 <b>bin 字段</b>——把一个 JS 文件注册成人见人用的命令：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>文件：package.json 关键新增字段（教学示意 · 真实文件不能写注释）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">  "bin": {                              // 字段 bin：CLI 的注册表——声明「我提供一个命令」
+    "lucky-roll": "./bin/lucky-roll.js"  // 键 lucky-roll：命令名（用户以后敲的就是它）；值：命令背后执行的文件
+  },</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>文件：bin/lucky-roll.js（每个变量、方法都有注释）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">#!/usr/bin/env node                       // shebang 行（#!）：告诉操作系统「用 node 执行本文件」；/usr/bin/env node = 「去 PATH 里找 node」——跨平台通用写法
+
+const fortune = require('../index.js')     // 常量 fortune：require 加载上一级目录的 index.js（rollDice 就在里面）——CLI 直接复用函数包的代码
+
+const args = process.argv.slice(2)         // 变量 process.argv：Node 内置对象 process 的 argv 属性——命令行参数数组（第 0 项 node 路径、第 1 项脚本路径）；方法 slice(2)：砍掉前两项，只剩用户传的参数
+const max = Number(args[0]) || 6           // 变量 max：Number() 把字符串 '20' 转成数字 20；|| 6（逻辑或）：转换失败（NaN）或没传参时兜底用 6 面骰
+
+console.log(`掷出 ${fortune.rollDice(max)} 点（${max} 面骰）`)   // 模板字符串（反引号）：${} 里嵌变量；调 rollDice 掷骰并打印结果</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行：本地测试 → 发布 → 全球可用</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm link                      # 本地测试：登记研发中新品（第 13 章）——bin 声明的命令也会被临时注册进 PATH
+lucky-roll 20                 # 直接敲命令试跑：掷一颗 20 面骰！（"lucky-roll" 不带参数则用默认 6 面）
+lucky-roll                    # 默认模式
+npm unlink -g                 # 测试满意，撤线
+
+npm publish --access public   # 上架！
+npm install -g @你的用户名/fortune-num   # 任何人在任何机器：全局装上你的工具</pre>
+    <pre class="output">掷出 14 点（20 面骰）
+掷出 5 点（6 面骰）</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">两种包的关系</span>实战二直接复用了实战一的 <code>index.js</code>——真实世界里 CLI 工具的内核常常就是一层函数包，bin 文件只是「翻译官」：把用户敲的命令和参数翻译成对函数的调用。分两个包发布（函数包给开发者、CLI 给普通用户）是常见的产品分法。
+  </div>
+
+  <h3>16.3 通关之后，往哪走？</h3>
+  <ol class="steps">
+    <li><b>package.json 的进阶字段</b>——<code>exports</code>（现代导出地图，控制每个子路径暴露什么）、<code>types</code>（TypeScript 类型文件入口）、<code>engines</code>（声明需要的 Node 版本）、<code>repository</code>（GitHub 地址，商城会自动展示）；</li>
+    <li><b>试试别的采购员</b>——pnpm（省硬盘黑科技）与 yarn，命令高度相似，一上午就能迁移；</li>
+    <li><b>CI/CD 集成</b>——把 <code>npm ci</code> + <code>npm audit</code> + <code>npm publish</code> 编排进 GitHub Actions，实现「推个 tag 自动发版」；</li>
+    <li><b>姊妹篇</b>——同目录的《Vite 零基础完全教程》（npm 的最经典实战战场）、《Git 零基础完全教程》（lock 该提交进哪）、《WSL 零基础完全教程》（Linux 侧的 Node 环境）。</li>
+  </ol>
+  <div class="practice">
+    <span class="tag">动手练习 16（毕业设计）</span>
+    <ol>
+      <li>完整跟做实战一：发布自己的函数包，并在全新文件夹里安装、调用成功（这是你的第一个「全球可安装」作品）；</li>
+      <li>完整跟做实战二：给函数包加一个 bin 命令再发一版（记得先 <code>npm version minor</code>）；</li>
+      <li>毕业大挑战：做一个「倒计时 CLI」——<code>my-timer 10</code> 打印 10 秒倒计时后响铃（提示：<code>setInterval</code> 计时器 + <code>process.argv</code> 取秒数），发布上架。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 17 章 ==================== -->
+<section class="chapter" id="ch17">
+  <div class="chap-head">
+    <div class="chap-num">17</div>
+    <div>
+      <h2>常见报错急救站</h2>
+      <div class="desc">红色报错不可怕——按错误代码对号入座，三分钟破案</div>
+    </div>
+  </div>
+
+  <p class="lead">npm 的报错信息出了名的长——但<b>有用的永远是最顶上那几行</b>：错误代码（code）+ 场景。这一章把最高频的十个病例挂墙，照方抓药。</p>
+
+  <h3>17.1 十大高频病例总表</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>报错关键字</th><th>病因</th><th>药方</th></tr></thead>
+    <tbody>
+      <tr><td><code>E404 Not Found</code></td><td>包名拼错；或包太新、镜像还没同步到；或版本号不存在</td><td>① 去 npmjs.com 搜正确拼法；② 官方仓验证 <code>npm view 包名</code>；③ 换回官方源重试（见 17.2 病例一）</td></tr>
+      <tr><td><code>EACCES permission denied</code></td><td>Linux/macOS 全局安装没权限写系统目录</td><td>根治：<b>改装 nvm</b>（全局包进自己家目录，永无权限问题）；应急：<code>sudo</code> 只用于 <code>-g</code> 安装（治标）</td></tr>
+      <tr><td><code>ERESOLVE unable to resolve dependency tree</code></td><td>peer 依赖打架：两个包各自要求的 React 版本互不兼容</td><td>读报错里的版本要求，升级/降级真凶包；应急：<code>npm install --legacy-peer-deps</code>（按 npm 6 老规矩忽略 peer 冲突）</td></tr>
+      <tr><td><code>ETIMEDOUT / EAI_AGAIN / ECONNREFUSED</code></td><td>网络不通或官方仓龟速</td><td><code>npm ping</code> 听诊 → 换国内镜像 <code>npm config set registry https://registry.npmmirror.com</code> → 公司内网配 proxy（第 11 章）</td></tr>
+      <tr><td><code>EBADENGINE / engine Not compatible</code></td><td>包要求更高版本的 Node（比如要 18 你是 16）</td><td>报错里写着要什么：<code>nvm install 20 &amp;&amp; nvm use 20</code> 换发动机再装</td></tr>
+      <tr><td><code>gyp ERR! / MSBuild 错误</code></td><td>包含 C++ 原生代码，需要本机编译器（Windows 上最常见）</td><td>优先找该包的<b>预编译替代</b>；确要编译：Windows 装 VS Build Tools（<code>npm i -g windows-build-tools</code> 已过时，按微软官网装 VS 安装器的 C++ 工作负载）；Linux 装 <code>sudo apt install build-essential</code></td></tr>
+      <tr><td><code>Cannot find module 'xxx'</code></td><td>三种可能：忘装了 / 幽灵依赖（第 5 章）/ 拼错路径</td><td>① <code>npm ls xxx</code> 看它在不在册；② 不在就 <code>npm i xxx</code> 亲手装；③ 代码里路径大小写逐字符检查</td></tr>
+      <tr><td><code>EPERM / EBUSY（删 node_modules 失败）</code></td><td>Windows：文件被编辑器、终端、杀毒软件占着</td><td>关掉 VS Code 和所有占用进程重试；仍不行就重启再删；杀软实时扫描是隐形常客</td></tr>
+      <tr><td><code>Unexpected token / JSON.parse</code></td><td>package.json 被手改坏了：多了/少了逗号、引号</td><td>用 VS Code 打开它——语法错误处有红波浪线；或 <code>node -e "require('./package.json')"</code> 定位行号（17.2 病例二）</td></tr>
+      <tr><td><code>ELIFECYCLE Command failed</code></td><td>scripts 里那条命令<b>自己</b>崩了（不是 npm 的锅）</td><td>看报错里「哪条命令退出码非 0」，手动复制那行命令裸跑——真实错误自然现形（17.2 病例三）</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout warn">
+    <span class="tag">读报错的姿势</span>npm 报错动辄几十行，<b>从上往下找三样</b>：① <code>code</code>（错误代码，本表的挂墙号）；② <code>while</code> 字样那行（出事时在干什么）；③ <code>errno</code>（底层错误号）。中间大片 debug 日志 99% 是噪音——<b>别从头读起，会被吓到放弃</b>。
+  </div>
+
+  <h3>17.2 三个病例详解</h3>
+  <h4>病例一：E404 —— 「这货不存在」</h4>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行：破案三连</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm view loadsh              # 「loadsh」是拼错的 lodash——view 也报 404，证明商城压根没这号货
+npm config get registry     # 查当前提货点：若是镜像站，可能是「官方已发布、镜像还没来得及同步」（新包发布后几分钟内的常见现象）
+npm install lodash --registry=https://registry.npmjs.org   # 临时走官方仓装一次，绕过镜像延迟</pre>
+  </div>
+  <h4>病例二：JSON 改坏了 —— 一个逗号引发的血案</h4>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">node -e "require('./package.json')"   # 借 Node 的 JSON 解析器给 package.json 做心电图：坏了会精确报出「第几行第几列 Unexpected token」——拎着坐标去改
+npm pkg fix                 # 命令 pkg fix：npm 自带的清单修复器——能修常见的格式小伤（顺序、空白），修不了少逗号（那要人眼）</pre>
+  </div>
+  <h4>病例三：ELIFECYCLE —— 甩锅放大器</h4>
+  <p><code>ELIFECYCLE</code> 只是快递员告诉你「包裹里的东西碎了」——碎因在包裹本身。破案法：把报错里那句「<code>&gt; 命令名</code>」下面的真实命令抠出来<b>手动裸跑</b>：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm run build                # 报 ELIFECYCLE？记下报错幕布上的实际命令（比如是 vite build）
+npx vite build               # 手动裸跑同一命令——vite 自己的报错立刻现形（多半是代码语法错、缺文件、端口占用）
+                             # 修好真凶，npm run build 自然痊愈——npm 只是无辜的传令兵</pre>
+  </div>
+
+  <h3>17.3 万能起手式：三分钟自检流</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span><span class="os both">通用</span>命令行：顺序执行，多数怪病止步于第二步</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm doctor                   # 第一步：全面体检（网络、缓存、权限、Node 版本一目了然）
+npm ls --all                 # 第二步：对照台账——看有没缺货、幽灵依赖（npm ls 会把「UNMET」「invalid」标出来）
+rm -rf node_modules &amp;&amp; npm ci   # 第三步：删仓库 + 照小票精确复原（Windows PowerShell 用：Remove-Item -Recurse -Force node_modules）
+                             # 「货架可随时重建」——这一招是 npm 世界的重启大法</pre>
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 17</span>
+    <ol>
+      <li>故意拼错包名装一次（<code>npm i loadsh</code>），欣赏 E404 的长相——以后见到它就不慌；</li>
+      <li>故意在 package.json 里删一个逗号跑 <code>npm install</code>，再用病例二的方法定位坐标；</li>
+      <li>把三分钟自检流完整跑一遍（在能正常工作的项目上），熟悉「重启大法」的手感。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 18 章 ==================== -->
+<section class="chapter" id="ch18">
+  <div class="chap-head">
+    <div class="chap-num">18</div>
+    <div>
+      <h2>最佳实践与速查表</h2>
+      <div class="desc">十条军规保平安，四张速查表管全年——从入门到熟练的最后一站</div>
+    </div>
+  </div>
+
+  <p class="lead">最后一章是两样东西：<b>军规</b>（新项目开工前扫一眼）和<b>速查表</b>（忘了命令时直奔这里）。</p>
+
+  <h3>18.1 十条军规</h3>
+  <ol class="steps">
+    <li><b>清单必进 Git，仓库绝不进</b>——package.json + package-lock.json 提交，node_modules 写进 .gitignore；</li>
+    <li><b>部署用 npm ci，开发才 install</b>——服务器要的是「一字不差」，不是「范围内最新」；</li>
+    <li><b>装必记账</b>——代码里 import 的每个包都必须出现在 package.json 里（防幽灵依赖暴雷）；</li>
+    <li><b>生产依赖不加帽子也行，但心里要有帽子</b>——读懂 ^ 和 ~（第 6 章），跨大版本升级前必读迁移指南；</li>
+    <li><b>能项目级，就不全局</b>——全局只留真正全机通用的 CLI 工具；</li>
+    <li><b>用 npx 试用，用 scripts 日常</b>——一次性工具 npx 租用，常用命令接进开关面板；</li>
+    <li><b>发布三查</b>——查名字、查版本递增、查 <code>npm pack --dry-run</code> 清单（别把密钥发上去）；</li>
+    <li><b>换机器先想 .npmrc</b>——镜像、代理、精确版本偏好都在配置里，项目级配置随仓库走；</li>
+    <li><b>定期 audit</b>——本地月检，CI 每次构建必检；高危漏洞不过夜；</li>
+    <li><b>怪病先重启</b>——删 node_modules + npm ci，九成灵异依赖一招治愈，别急着网上乱试偏方。</li>
+  </ol>
+
+  <h3>18.2 命令速查表</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>分类</th><th>命令</th><th>一句话用途</th><th>详见</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="4"><b>装</b></td><td><code>npm i &lt;包&gt;</code> / <code>npm i &lt;包&gt; -D</code></td><td>装生产依赖 / 装开发依赖</td><td>第 4 章</td></tr>
+      <tr><td><code>npm i &lt;包&gt;@版本</code>（<code>@latest</code> / <code>@4</code>）</td><td>指定版本安装</td><td>第 4、6 章</td></tr>
+      <tr><td><code>npm install</code>（无参数）/ <code>--omit=dev</code></td><td>照清单全收 / 略过开发依赖</td><td>第 4 章</td></tr>
+      <tr><td><code>npm i -g &lt;包&gt;</code> / <code>npm ci</code></td><td>全局安装 / 照小票精确复原</td><td>第 4、7 章</td></tr>
+      <tr><td rowspan="3"><b>卸·更</b></td><td><code>npm uninstall &lt;包&gt;</code>（<code>-D</code> / <code>-g</code>）</td><td>退货（三处同步清理）</td><td>第 10 章</td></tr>
+      <tr><td><code>npm outdated</code> / <code>npm update</code></td><td>盘点落后版本 / 帽子内换新</td><td>第 10 章</td></tr>
+      <tr><td><code>npm prune</code> / <code>npm cache clean --force</code></td><td>清未登记的包 / 清空缓存</td><td>第 10 章</td></tr>
+      <tr><td rowspan="3"><b>查</b></td><td><code>npm ls</code>（<code>--all</code> / <code>-g --depth=0</code>）</td><td>看供应链树 / 全局清单</td><td>第 5、13 章</td></tr>
+      <tr><td><code>npm view &lt;包&gt; version / versions / dependencies</code></td><td>查包档案</td><td>第 6 章</td></tr>
+      <tr><td><code>npm audit</code> / <code>npm audit fix</code></td><td>安全体检 / 自动修复</td><td>第 14 章</td></tr>
+      <tr><td rowspan="3"><b>跑</b></td><td><code>npm run &lt;开关&gt;</code> / <code>npm start</code> / <code>npm test</code></td><td>按开关（后两个免 run）</td><td>第 8 章</td></tr>
+      <tr><td><code>npm run &lt;开关&gt; -- --参数</code></td><td>向开关里的命令传参</td><td>第 8 章</td></tr>
+      <tr><td><code>npx &lt;包&gt;</code> / <code>npx &lt;包&gt; -y</code></td><td>租用执行（本地优先）</td><td>第 9 章</td></tr>
+      <tr><td rowspan="3"><b>发</b></td><td><code>npm login</code> / <code>npm whoami</code></td><td>登录 / 验明身份</td><td>第 12 章</td></tr>
+      <tr><td><code>npm publish --access public</code> / <code>npm version patch|minor|major</code></td><td>上架 / 自动改版本号</td><td>第 12 章</td></tr>
+      <tr><td><code>npm pack --dry-run</code> / <code>npm unpublish</code> / <code>npm deprecate</code></td><td>验货 / 召回（72h 内）/ 弃用告示</td><td>第 12 章</td></tr>
+      <tr><td rowspan="2"><b>配·联</b></td><td><code>npm config get|set|list|delete</code> / <code>npm ping</code></td><td>读写偏好单 / 测连通</td><td>第 11 章</td></tr>
+      <tr><td><code>npm link</code> / <code>npm unlink</code> / <code>npm i &lt;包&gt; -w &lt;房间&gt;</code></td><td>本地联调 / 撤线 / workspaces 定向安装</td><td>第 13、15 章</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>18.3 package.json 字段速查</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>字段</th><th>管什么</th><th>备注</th></tr></thead>
+    <tbody>
+      <tr><td><code>name</code> / <code>version</code></td><td>货号 / 批次</td><td>发布必填；scope 名 <code>@用户名/包名</code></td></tr>
+      <tr><td><code>main</code> / <code>bin</code></td><td>函数包入口 / CLI 命令注册</td><td>main 给 require 用；bin 的键 = 命令名</td></tr>
+      <tr><td><code>scripts</code></td><td>开工面板</td><td>start / test 免 run；pre/post 自动钩子</td></tr>
+      <tr><td><code>dependencies</code> / <code>devDependencies</code></td><td>家具台账 / 施工工具台账</td><td><code>npm i</code> / <code>npm i -D</code> 自动登记</td></tr>
+      <tr><td><code>files</code></td><td>上架清单</td><td>README 与 package.json 永远自动带</td></tr>
+      <tr><td><code>keywords</code> / <code>description</code> / <code>author</code> / <code>license</code></td><td>搜索关键词 / 卖点 / 作者 / 许可</td><td>营销四件套</td></tr>
+      <tr><td><code>private</code></td><td>永不发布</td><td>monorepo 根、练习项目写 true 防手滑</td></tr>
+      <tr><td><code>workspaces</code></td><td>一楼多房的房号簿</td><td><code>["packages/*"]</code> 通配认领</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>18.4 版本符号速查（撕下来贴墙上版）</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>写法</th><th>允许范围</th><th>性格</th></tr></thead>
+    <tbody>
+      <tr><td><code>^4.17.21</code></td><td>4.17.21 ~ 4.x（不越大版本）</td><td>乐观（npm 默认）</td></tr>
+      <tr><td><code>~4.17.21</code></td><td>4.17.21 ~ 4.17.x（只准补洞）</td><td>保守</td></tr>
+      <tr><td><code>4.17.21</code></td><td>只有 4.17.21</td><td>锁死（<code>-E</code> / save-exact）</td></tr>
+      <tr><td><code>4.x</code> / <code>&gt;=4 &lt;5</code></td><td>大版本内 / 区间</td><td>进阶语法</td></tr>
+      <tr><td><code>0.x.y</code> + <code>^</code></td><td>实际锁到 0.x</td><td>0 开头 = 未定型，semver 特殊条款</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>18.5 毕业自检清单</h3>
+  <div class="callout info">
+    <span class="tag">对答如流即毕业</span>
+    ① <b>npm、Node、registry 谁是谁？</b>——发动机 / 随车工具箱 / 商城仓库；② <b>package.json、node_modules、package-lock 三者关系？</b>——清单（进 Git）、仓库（不进 Git）、小票（进 Git 且锁死批次）；③ <b>^ 和 ~ 差在哪？</b>——次版本可不可进；④ <b>同事 clone 了你的项目，他要敲什么？</b>——<code>npm ci</code>；⑤ <b>服务器部署该用 install 还是 ci？</b>——ci（只读不写、一字不差）；⑥ <b>写自己的包时怎么边写边测？</b>——npm link；⑦ <b>16 章两个实战，能独立重做吗？</b>——能，就出师了。
+  </div>
+
+  <h3>18.6 写在最后</h3>
+  <p>还记得开场那个比喻吗？npm 是一座<b>全球代码商城</b>。现在你已经会办证（init）、写清单（package.json）、下订单（install）、开小票（lock）、按开关（scripts）、租工具（npx）、退货换新（uninstall/update）、验货（audit）、开分仓（.npmrc）、甚至<b>把自己写的货摆上全球货架</b>（publish）——这座商城的每个柜台，你都逛过了一遍。</p>
+  <p>别停在「读过」：挑一个第 16 章的实战，发布<b>你自己真正会用到</b>的包。从你敲下 <code>npm publish</code> 那一刻起，全世界 200 万个包的目录里，有一个是你写的。</p>
+  <div class="chapter-end">· 完 ·</div>
+</section>
+
+<footer class="site-foot">
+  <b>npm 零基础完全教程</b> · 全 18 章 · 类比教学 · 每个命令、字段、变量都有中文注释<br>
+  姊妹篇：<a href="Git零基础完全教程.html">Git 零基础完全教程</a> · <a href="WSL零基础完全教程.html">WSL 零基础完全教程</a> · <a href="Vite零基础完全教程.html">Vite 零基础完全教程</a> · <a href="pywin32零基础完全教程.html">pywin32 零基础完全教程</a> —— 同一套版式，同一条学习路线
+</footer>
+</div>
+</main>
+<button id="totop" aria-label="回到顶部">↑</button>
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- 工具：文本转义（防止代码里的 < > & 被误当标签） ---------- */
+  function esc(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  /* ---------- 1. 代码注释高亮：支持 # （bash）与 // （JS / JSON 教学示意）两种注释 ----------
+     逐字符跟踪引号状态，只在「字符串外面」的注释符才生效；
+     // 还要求前面是行首/空白/分号/右括号——这样 https:// 里的 // 不会被误判成注释。 */
+  function findComment(line) {
+    var inD = false, inS = false, i, c, prev;
+    for (i = 0; i < line.length; i++) {
+      c = line.charAt(i);
+      if (c === '"' && !inS) { inD = !inD; continue; }
+      if (c === "'" && !inD) { inS = !inS; continue; }
+      if (inD || inS) { continue; }
+      if (c === "#") { return i; }
+      if (c === "/" && line.charAt(i + 1) === "/") {
+        prev = i === 0 ? "" : line.charAt(i - 1);
+        if (i === 0 || prev === " " || prev === "\t" || prev === ";" || prev === ")") { return i; }
+      }
+    }
+    return -1;
+  }
+
+  document.querySelectorAll("pre.code").forEach(function (pre) {
+    var lines = pre.textContent.split("\n");
+    var html = lines.map(function (line) {
+      var cut = findComment(line);
+      if (cut === -1) { return esc(line); }
+      return esc(line.slice(0, cut)) + '<span class="cmt">' + esc(line.slice(cut)) + "</span>";
+    }).join("\n");
+    pre.innerHTML = html;
+  });
+
+  /* ---------- 2. 一键复制 ---------- */
+  document.querySelectorAll(".codewrap").forEach(function (wrap) {
+    var btn = wrap.querySelector(".copybtn");
+    var pre = wrap.querySelector("pre.code");
+    if (!btn || !pre) { return; }
+    btn.addEventListener("click", function () {
+      var text = pre.textContent;
+      function feedback() {
+        var old = btn.textContent;
+        btn.textContent = "已复制 ✓";
+        setTimeout(function () { btn.textContent = old; }, 1600);
+      }
+      function fallback() {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(ta);
+        feedback();
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(feedback, fallback);
+      } else { fallback(); }
+    });
+  });
+
+  /* ---------- 3. 进度条 + 返回顶部 + 侧栏滚动高亮 ---------- */
+  var progress = document.getElementById("progress");
+  var totop = document.getElementById("totop");
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll(".nav a"));
+  var sections = navLinks.map(function (a) {
+    return document.querySelector(a.getAttribute("href"));
+  }).filter(Boolean);
+
+  function onScroll() {
+    var st = window.scrollY || document.documentElement.scrollTop;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    if (progress) { progress.style.width = (h > 0 ? (st / h) * 100 : 0) + "%"; }
+    if (totop) { totop.classList.toggle("show", st > 600); }
+
+    var active = 0, i;
+    for (i = 0; i < sections.length; i++) {
+      if (sections[i].getBoundingClientRect().top <= 140) { active = i; }
+    }
+    navLinks.forEach(function (a, idx) { a.classList.toggle("active", idx === active); });
+  }
+
+  var ticking = false;
+  window.addEventListener("scroll", function () {
+    if (!ticking) {
+      window.requestAnimationFrame(function () { onScroll(); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+  onScroll();
+
+  if (totop) {
+    totop.addEventListener("click", function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
+  /* ---------- 4. 移动端汉堡菜单 ---------- */
+  var menu = document.getElementById("menu");
+  var mask = document.getElementById("mask");
+  var sidebar = document.getElementById("sidebar");
+  function closeMenu() {
+    if (sidebar) { sidebar.classList.remove("open"); }
+    if (mask) { mask.classList.remove("show"); }
+  }
+  if (menu && mask && sidebar) {
+    menu.addEventListener("click", function () {
+      sidebar.classList.toggle("open");
+      mask.classList.toggle("show");
+    });
+    mask.addEventListener("click", closeMenu);
+    navLinks.forEach(function (a) { a.addEventListener("click", closeMenu); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") { closeMenu(); }
+    });
+  }
+
+  /* ---------- 5. 平滑跳转 ---------- */
+  document.querySelectorAll('.nav a[href^="#"]').forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      var id = a.getAttribute("href").slice(1);
+      var target = id && document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

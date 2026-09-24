@@ -1,0 +1,1760 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f7f9">
+<meta name="description" content="Vite 零基础完全教程：类比讲解、每行代码带注释，Windows 与 Linux 双平台全覆盖。">
+<title>Vite 零基础完全教程 · 前端世界的闪电餐厅</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  background:#f6f7f9; color:#28303b; font-size:16.5px; line-height:1.95;
+  -webkit-font-smoothing:antialiased;
+}
+::selection { background:#e9defc; }
+a { color:#6d28d9; text-decoration:none; }
+a:hover { text-decoration:underline; }
+section[id] { scroll-margin-top:24px; }
+code { font-family:"JetBrains Mono",Consolas,"Courier New",monospace; }
+
+/* 顶部进度条 */
+#progress { position:fixed; top:0; left:0; height:3px; width:0; background:linear-gradient(90deg,#7c3aed,#a855f7); z-index:1200; }
+
+/* ============ 侧边栏 ============ */
+.sidebar { position:fixed; top:0; left:0; bottom:0; width:282px; background:#fff; border-right:1px solid #e7ebf0; overflow-y:auto; z-index:1100; padding:30px 0 40px; }
+.brand { padding:0 26px 24px; border-bottom:1px solid #eef1f5; margin-bottom:14px; }
+.logo { display:flex; align-items:center; gap:12px; }
+.logo-mark { width:44px; height:44px; border-radius:12px; background:linear-gradient(135deg,#7c3aed,#a855f7); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:22px; letter-spacing:.5px; box-shadow:0 6px 14px rgba(124,58,237,.25); }
+.logo-txt b { display:block; font-size:17px; color:#1f2733; }
+.logo-txt span { font-size:12px; color:#8a95a5; letter-spacing:1px; }
+.nav-cap { padding:18px 26px 8px; font-size:12px; color:#9aa5b4; letter-spacing:2px; font-weight:600; }
+.nav a { display:flex; align-items:baseline; gap:10px; padding:8.5px 26px 8.5px 23px; color:#5c6878; font-size:14px; border-left:3px solid transparent; transition:.15s; }
+.nav a .n { font-family:Consolas,monospace; font-size:11.5px; color:#a8b2c1; }
+.nav a:hover { color:#6d28d9; background:#f7f3ff; text-decoration:none; }
+.nav a.active { color:#6d28d9; border-left-color:#7c3aed; background:#f1eaff; font-weight:600; }
+.nav a.active .n { color:#9b6ef0; }
+.side-foot { margin-top:26px; padding:16px 26px 0; border-top:1px solid #eef1f5; font-size:12px; color:#9aa5b4; line-height:1.9; }
+
+/* ============ 主区域 ============ */
+main { margin-left:282px; }
+.container { width:100%; max-width:880px; margin:0 auto; padding:0 56px 140px; }
+
+/* ---- 宽屏 / 超宽屏自适应：内容区随屏幕加宽，字号与组件同步放大 ---- */
+@media (min-width:1500px) {
+  body { font-size:17px; }
+  .container { max-width:1100px; }
+  pre.code { font-size:14.5px; }
+}
+@media (min-width:1900px) {
+  body { font-size:18px; }
+  .container { max-width:1360px; padding:0 64px 140px; }
+  .sidebar { width:320px; }
+  main { margin-left:320px; }
+  .nav a { font-size:15px; padding:9.5px 26px 9.5px 23px; }
+  .nav-cap { font-size:13px; }
+  .hero h1 { font-size:56px; }
+  .hero .sub { font-size:19px; max-width:800px; }
+  .chap-head h2 { font-size:32px; }
+  h3 { font-size:23px; }
+  pre.code { font-size:15px; }
+  pre.output { font-size:14px; }
+  .codehead { font-size:13.5px; }
+  .copybtn { font-size:13px; }
+  .callout { font-size:16.5px; }
+  table { font-size:15.5px; }
+  th { font-size:14px; }
+  .os { font-size:13.5px; }
+  kbd { font-size:14px; }
+  .stat b { font-size:30px; }
+  .stat span { font-size:14px; }
+  figure.dg figcaption { font-size:14px; }
+}
+@media (min-width:2500px) {
+  body { font-size:19px; }
+  .container { max-width:1700px; padding:0 80px 140px; }
+  .sidebar { width:344px; }
+  main { margin-left:344px; }
+  .hero h1 { font-size:64px; }
+  .chap-head h2 { font-size:36px; }
+  h3 { font-size:25px; }
+  pre.code { font-size:16px; }
+  pre.output { font-size:15px; }
+  .callout { font-size:18px; }
+  table { font-size:17px; }
+  .stat b { font-size:34px; }
+  .os { font-size:15px; }
+}
+@media (min-width:3300px) {
+  body { font-size:20px; }
+  .container { max-width:2100px; padding:0 96px 140px; }
+  .hero h1 { font-size:74px; }
+}
+
+/* Hero */
+.hero { padding:92px 0 8px; }
+.hero-kicker { display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; letter-spacing:2px; color:#6d28d9; background:#f1eaff; border:1px solid #d7c5f7; padding:6px 16px; border-radius:999px; }
+.hero h1 { margin:26px 0 18px; font-size:clamp(32px,4.6vw,50px); line-height:1.28; color:#1c2430; letter-spacing:.5px; font-weight:800; }
+.hero h1 em { font-style:normal; color:#7c3aed; }
+.hero .sub { font-size:18px; color:#5c6878; max-width:640px; line-height:1.9; }
+.stats { display:flex; flex-wrap:wrap; margin-top:34px; background:#fff; border:1px solid #e7ebf0; border-radius:16px; overflow:hidden; box-shadow:0 4px 16px rgba(24,34,56,.05); }
+.stat { flex:1 1 150px; padding:22px 10px; text-align:center; border-right:1px solid #eef1f5; }
+.stat:last-child { border-right:0; }
+.stat b { display:block; font-size:26px; color:#7c3aed; font-weight:800; }
+.stat span { font-size:13px; color:#8a95a5; }
+
+/* 章节 */
+.chapter { margin-top:104px; }
+.chap-head { display:flex; align-items:center; gap:20px; padding-bottom:22px; border-bottom:1px solid #e7ebf0; margin-bottom:34px; }
+.chap-num { flex:none; width:58px; height:58px; border-radius:15px; background:linear-gradient(135deg,#7c3aed,#a855f7); color:#fff; font-size:24px; font-weight:800; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(124,58,237,.22); }
+.chap-head h2 { font-size:29px; line-height:1.35; color:#1c2430; font-weight:800; }
+.chap-head .desc { margin-top:6px; font-size:14.5px; color:#8a95a5; font-weight:400; line-height:1.7; }
+
+h3 { margin:54px 0 6px; font-size:21.5px; color:#1c2430; display:flex; align-items:center; gap:10px; font-weight:700; }
+h3::before { content:""; flex:none; width:7px; height:20px; border-radius:3px; background:linear-gradient(#a855f7,#7c3aed); }
+h4 { margin:34px 0 4px; font-size:17px; color:#2c3644; font-weight:700; }
+p { margin:16px 0; }
+.lead { font-size:17px; color:#5c6878; }
+ul.plain { margin:14px 0 14px 4px; padding-left:22px; }
+ul.plain li { margin:8px 0; }
+
+p code, li code, td code, th code, .callout code { background:#eef1f5; color:#6d28d9; padding:2px 7px; border-radius:6px; font-size:.88em; }
+
+/* ============ 代码块 ============ */
+.codewrap { margin:26px 0; border-radius:14px; overflow:hidden; border:1px solid #232e44; box-shadow:0 10px 30px rgba(18,26,44,.14); }
+.codehead { display:flex; align-items:center; justify-content:space-between; background:#1a2334; color:#8fa0bb; padding:9px 16px; font-size:12.5px; font-family:Consolas,monospace; }
+.codehead .lab { display:flex; align-items:center; gap:10px; }
+.codehead .dots { display:flex; gap:6px; }
+.codehead .dots i { width:10px; height:10px; border-radius:50%; }
+.codehead .dots i:nth-child(1){ background:#ff5f56; }
+.codehead .dots i:nth-child(2){ background:#ffbd2e; }
+.codehead .dots i:nth-child(3){ background:#27c93f; }
+.copybtn { background:#2a3550; color:#aebdd4; border:1px solid #37435f; padding:4px 12px; border-radius:7px; cursor:pointer; font-size:12px; font-family:inherit; transition:.15s; }
+.copybtn:hover { background:#7c3aed; border-color:#7c3aed; color:#fff; }
+pre.code { background:#151d30; color:#dde6f2; padding:18px 22px; overflow-x:auto; font-size:14px; line-height:1.95; font-family:Consolas,"JetBrains Mono",monospace; margin:0; }
+pre.code .cmt { color:#7ee787; }
+pre.code .kw { color:#82b8ff; }
+pre.code .pr { color:#5c6c86; }
+pre.output { background:#1b2438; color:#9db0ca; padding:14px 22px 16px; overflow-x:auto; font-size:13px; line-height:1.85; font-family:Consolas,monospace; border-top:1px dashed #32405c; margin:0; }
+pre.output::before { content:"运行效果（示意，注释为中文标注）"; display:block; color:#6a7a95; font-size:11.5px; margin-bottom:8px; letter-spacing:1px; }
+pre.code::-webkit-scrollbar, pre.output::-webkit-scrollbar { height:8px; }
+pre.code::-webkit-scrollbar-thumb, pre.output::-webkit-scrollbar-thumb { background:#2e3b57; border-radius:4px; }
+
+/* ============ 提示框 ============ */
+.callout { position:relative; border-radius:13px; padding:20px 22px 20px 64px; margin:28px 0; font-size:15.5px; line-height:1.9; }
+.callout::before { position:absolute; left:18px; top:20px; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; }
+.callout .tag { display:inline-block; font-weight:800; margin-right:6px; }
+.callout.analogy { background:#fff8e9; border:1px solid #f2ddb0; color:#6b5518; }
+.callout.analogy::before { background:#f0a92e; content:"喻"; }
+.callout.tip { background:#ecf8f0; border:1px solid #c2e6cd; color:#1e5c33; }
+.callout.tip::before { background:#2f9e5f; content:"技"; }
+.callout.warn { background:#fdf0eb; border:1px solid #f4c9b8; color:#8a3319; }
+.callout.warn::before { background:#e8542f; content:"警"; }
+.callout.info { background:#edf3fc; border:1px solid #c8d9f2; color:#274a7d; }
+.callout.info::before { background:#4a7fd4; content:"注"; }
+.callout code { background:rgba(255,255,255,.75); color:inherit; }
+
+.practice { border:1.5px dashed #c4aef5; background:#faf8ff; border-radius:13px; padding:20px 24px; margin:30px 0; color:#443c55; }
+.practice .tag { color:#6d28d9; font-weight:800; letter-spacing:1px; font-size:13px; display:block; margin-bottom:8px; }
+.practice ol { padding-left:22px; }
+.practice ol li { margin:6px 0; }
+
+/* ============ 操作系统标签 ============ */
+.os { display:inline-block; padding:3px 12px; border-radius:999px; font-size:12.5px; font-weight:700; letter-spacing:.5px; margin-right:6px; vertical-align:1px; }
+.os.win { background:#e8f1fc; color:#1263c3; border:1px solid #c4d9f4; }
+.os.linux { background:#2c3543; color:#f2c94c; border:1px solid #2c3543; }
+.os.both { background:#f1eaff; color:#6d28d9; border:1px solid #d7c5f7; }
+.osgrid { display:grid; grid-template-columns:1fr 1fr; gap:22px; margin:26px 0; }
+.oscard { background:#fff; border:1px solid #e7ebf0; border-radius:16px; padding:24px 24px 10px; box-shadow:0 4px 16px rgba(24,34,56,.05); }
+.oscard .os-head { display:flex; align-items:center; margin-bottom:4px; }
+.oscard h4 { margin:0; font-size:16.5px; }
+.oscard .codewrap { margin:16px 0; }
+
+/* ============ 表格 ============ */
+.tblwrap { overflow-x:auto; margin:26px 0; border-radius:13px; border:1px solid #e7ebf0; background:#fff; box-shadow:0 4px 16px rgba(24,34,56,.05); }
+table { width:100%; border-collapse:collapse; font-size:14.5px; line-height:1.85; min-width:520px; }
+th { background:#f2f5f9; color:#3b4656; text-align:left; padding:12px 18px; font-size:13.5px; letter-spacing:.5px; border-bottom:1px solid #e3e9f0; white-space:nowrap; }
+td { padding:13px 18px; border-bottom:1px solid #eef2f6; vertical-align:top; color:#3b4656; }
+tr:last-child td { border-bottom:0; }
+td code { white-space:nowrap; }
+
+/* 步骤列表 */
+ol.steps { list-style:none; counter-reset:s; margin:22px 0; }
+ol.steps li { counter-increment:s; position:relative; padding:0 0 18px 46px; }
+ol.steps li::before { content:counter(s); position:absolute; left:0; top:1px; width:30px; height:30px; border-radius:50%; background:#f1eaff; color:#6d28d9; border:1.5px solid #cbb5f2; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:14px; }
+ol.steps li b { color:#1c2430; }
+
+/* 图 */
+figure.dg { background:#fff; border:1px solid #e7ebf0; border-radius:18px; padding:30px 26px 18px; margin:30px 0; box-shadow:0 4px 16px rgba(24,34,56,.05); text-align:center; }
+figure.dg svg { max-width:100%; height:auto; }
+figure.dg figcaption { margin-top:14px; font-size:13px; color:#8a95a5; }
+
+kbd { display:inline-block; background:#fff; border:1px solid #cfd7e2; border-bottom-width:2.5px; border-radius:7px; padding:1px 9px; font-size:13px; font-family:inherit; color:#333e4e; margin:0 2px; }
+
+.chapter-end { text-align:center; color:#c3ccd8; letter-spacing:10px; margin:56px 0 0; font-size:15px; }
+
+footer.site-foot { margin-top:90px; padding-top:28px; border-top:1px solid #e7ebf0; color:#9aa5b4; font-size:13.5px; line-height:2; }
+
+/* 返回顶部 */
+#totop { position:fixed; right:26px; bottom:26px; width:46px; height:46px; border-radius:50%; background:#fff; border:1px solid #e0e6ee; color:#5c6878; font-size:18px; cursor:pointer; box-shadow:0 6px 20px rgba(24,34,56,.12); opacity:0; visibility:hidden; transform:translateY(8px); transition:.25s; z-index:900; }
+#totop.show { opacity:1; visibility:visible; transform:none; }
+#totop:hover { color:#7c3aed; border-color:#cbb5f2; }
+
+/* 汉堡按钮 & 遮罩 */
+#menu { display:none; position:fixed; top:16px; left:16px; z-index:1300; width:44px; height:44px; border-radius:12px; background:#fff; border:1px solid #e0e6ee; box-shadow:0 6px 20px rgba(24,34,56,.14); cursor:pointer; padding:12px 10px; }
+#menu span { display:block; height:2.5px; background:#3b4656; border-radius:2px; margin:5.5px 0; transition:.25s; }
+#mask { display:none; position:fixed; inset:0; background:rgba(18,26,44,.45); z-index:1050; }
+
+@media (max-width:1180px) {
+  .sidebar { transform:translateX(-100%); transition:.28s; box-shadow:0 0 40px rgba(0,0,0,.2); }
+  .sidebar.open { transform:none; }
+  #menu { display:block; }
+  #mask.show { display:block; }
+  main { margin-left:0; }
+  .container { padding:0 26px 120px; }
+  .hero { padding-top:84px; }
+}
+@media (max-width:760px) {
+  .osgrid { grid-template-columns:1fr; }
+  .chap-head h2 { font-size:24px; }
+  .chap-num { width:48px; height:48px; font-size:20px; }
+  .callout { padding-left:56px; }
+  .stat b { font-size:22px; }
+  body { font-size:15.5px; }
+  .hero .sub { font-size:16px; }
+}
+@media print {
+  .sidebar, #totop, #menu, #mask, #progress, .copybtn { display:none !important; }
+  main { margin:0; }
+  .codewrap { box-shadow:none; }
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<button id="menu" aria-label="打开目录"><span></span><span></span><span></span></button>
+<div id="mask"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="logo">
+      <div class="logo-mark">V</div>
+      <div class="logo-txt"><b>Vite 完全教程</b><span>零基础友好版</span></div>
+    </div>
+  </div>
+  <div class="nav-cap">教程目录</div>
+  <nav class="nav">
+    <a href="#top"><span class="n">00</span>导读 · 如何使用本教程</a>
+    <a href="#ch1"><span class="n">01</span>初识 Vite：为什么需要它</a>
+    <a href="#ch2"><span class="n">02</span>地基：Node.js 与 npm</a>
+    <a href="#ch3"><span class="n">03</span>十秒创建第一个项目</a>
+    <a href="#ch4"><span class="n">04</span>项目结构逐房间参观</a>
+    <a href="#ch5"><span class="n">05</span>启动与热更新 HMR</a>
+    <a href="#ch6"><span class="n">06</span>工作原理：为什么这么快</a>
+    <a href="#ch7"><span class="n">07</span>样式与静态资源</a>
+    <a href="#ch8"><span class="n">08</span>vite.config.js 设置面板</a>
+    <a href="#ch9"><span class="n">09</span>环境变量与模式</a>
+    <a href="#ch10"><span class="n">10</span>代理：与后端联调</a>
+    <a href="#ch11"><span class="n">11</span>框架实战：Vue 与 React</a>
+    <a href="#ch12"><span class="n">12</span>插件生态</a>
+    <a href="#ch13"><span class="n">13</span>生产构建与部署</a>
+    <a href="#ch14"><span class="n">14</span>进阶：分包与懒加载</a>
+    <a href="#ch15"><span class="n">15</span>常见报错急救站</a>
+    <a href="#ch16"><span class="n">16</span>最佳实践与速查表</a>
+  </nav>
+  <div class="side-foot">先装地基（02），再开餐厅（03）；<br>卡住了直奔第 15 章。</div>
+</aside>
+
+<main>
+<div class="container">
+
+<!-- ==================== HERO ==================== -->
+<section class="hero" id="top">
+  <span class="hero-kicker">零基础友好 · 类比教学 · 双平台</span>
+  <h1>开一家快得像闪电的<br>前端<em>餐厅</em></h1>
+  <p class="sub">不需要任何前端工程化基础。我们把「构建工具」拆成一个个厨房里的比喻——<b>现点现做、净菜预处理、出餐打包区</b>，再配上<b>每一行都有中文注释</b>的代码，带你从「Vite 到底是啥」一路走到「项目打包部署上线」。</p>
+  <div class="stats">
+    <div class="stat"><b>16</b><span>个章节 · 由浅入深</span></div>
+    <div class="stat"><b>40+</b><span>个代码块 · 行行有注释</span></div>
+    <div class="stat"><b>30+</b><span>个生活化类比</span></div>
+    <div class="stat"><b>2</b><span>大平台 Win / Linux</span></div>
+  </div>
+  <div class="callout info">
+    <span class="tag">怎么用这份教程</span>
+    ① 按顺序读，第 2 章的「地基体检」决定后面一切是否顺利；② 教程全程用<b>纯 JS 模板</b>举例（最贴近零基础），第 11 章再带你玩 Vue / React 模板；③ 代码照着敲，别只看——每章末尾有「动手练习」；④ 遇到红色报错，去第 15 章「急救站」按关键字对号入座；⑤ 想查命令时直达第 16 章速查表。
+  </div>
+</section>
+
+<!-- ==================== 第 1 章 ==================== -->
+<section class="chapter" id="ch1">
+  <div class="chap-head">
+    <div class="chap-num">01</div>
+    <div>
+      <h2>初识 Vite：为什么需要它</h2>
+      <div class="desc">用「开餐厅」理解构建工具存在的理由，再看 Vite 凭什么火遍前端圈</div>
+    </div>
+  </div>
+
+  <p class="lead">写网页不就是写 HTML + CSS + JavaScript 吗？为什么还要一个「构建工具」？这一章不讲任何操作，只回答两个问题：<b>没有它会怎样</b>，以及 <b>Vite 凭什么取代老前辈</b>。</p>
+
+  <h3>1.1 浏览器的「菜单」其实很挑剔</h3>
+  <p>浏览器是全世界最挑剔的食客：它<b>只认三道原汁原味的菜</b>——HTML、CSS、原生 JavaScript。可现代前端厨房里的食材早就五花八门了：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>你实际想用的「食材」</th><th>浏览器直接吃会怎样</th></tr></thead>
+    <tbody>
+      <tr><td>Vue 的 <code>.vue</code> 单文件组件</td><td>❌ 完全不认识，直接报语法错误</td></tr>
+      <tr><td>JSX（React 的写法）</td><td>❌ 同上，浏览器没有这道菜</td></tr>
+      <tr><td>最新的 JS 语法（在老浏览器上）</td><td>❌ 老食客咬不动新菜</td></tr>
+      <tr><td>SCSS / Less（样式预处理语言）</td><td>❌ 不在菜单上</td></tr>
+      <tr><td>项目里几百个互相 import 的文件</td><td>⚠️ 能吃，但端菜速度慢得离谱</td></tr>
+      <tr><td>没压缩的源码、带注释的大文件</td><td>⚠️ 用户流量白白多花几倍</td></tr>
+    </tbody>
+  </table></div>
+  <p>于是需要一间<b>中央厨房</b>：把你爱用的食材统一<b>加工</b>成浏览器认的三大件，顺手做<b>优化</b>（压缩、合并、按需加载）和<b>适配</b>（翻译成老浏览器也懂的语法）。这间中央厨房，就叫<b>构建工具（build tool）</b>。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>构建工具就是餐厅里的<b>后厨加工车间</b>：食客（浏览器）只点「三道经典菜」，但你仓库里堆着全世界的食材（Vue/JSX/SCSS/新语法）——车间负责洗切烹调，把一切翻译成食客能入口的形态端出去。
+  </div>
+
+  <h3>1.2 旧时代之痛：等满汉全席上齐才开饭</h3>
+  <p>Vite 之前的老构建工具（以 Webpack 为代表）的工作方式是：<b>无论你改哪道菜，都把整桌满汉全席从头重新做一遍</b>——项目一大，开发时的「冷启动」要等十几秒甚至几分钟；你只是把按钮颜色从蓝改成红，也要等整锅重新炖。</p>
+  <figure class="dg">
+    <svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="传统打包与 Vite 工作方式对比图">
+      <defs>
+        <marker id="v1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#8a95a5"/></marker>
+        <marker id="v2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#7c3aed"/></marker>
+      </defs>
+      <rect x="26" y="22" width="330" height="196" rx="14" fill="#f7f9fc" stroke="#d8dfea" stroke-width="1.6"/>
+      <text x="191" y="50" text-anchor="middle" font-size="15" font-weight="800" fill="#4a5568">旧时代 · 先做好满汉全席再开席</text>
+      <rect x="52" y="66" width="278" height="38" rx="9" fill="#ffffff" stroke="#ccd6e2" stroke-width="1.3"/>
+      <text x="191" y="90" text-anchor="middle" font-size="12" fill="#4a5568">所有源文件（几百个，无论是否用到）</text>
+      <line x1="191" y1="106" x2="191" y2="126" stroke="#8a95a5" stroke-width="1.8" marker-end="url(#v1)"/>
+      <rect x="52" y="128" width="278" height="38" rx="9" fill="#fff8e9" stroke="#f0d9a8" stroke-width="1.3"/>
+      <text x="191" y="152" text-anchor="middle" font-size="12" font-weight="700" fill="#8a6414">全部打成一个 bundle（炖一锅）</text>
+      <line x1="191" y1="168" x2="191" y2="186" stroke="#8a95a5" stroke-width="1.8" marker-end="url(#v1)"/>
+      <rect x="52" y="188" width="278" height="26" rx="9" fill="#e0ecf9" stroke="#bcd4f0" stroke-width="1.3"/>
+      <text x="191" y="205" text-anchor="middle" font-size="12" fill="#41608f">浏览器才能开饭 ⏳ 冷启动数十秒起</text>
+      <rect x="364" y="22" width="330" height="196" rx="14" fill="#f6f2fe" stroke="#d7c5f7" stroke-width="1.6"/>
+      <text x="529" y="50" text-anchor="middle" font-size="15" font-weight="800" fill="#6d28d9">Vite · 现点现做，先开席再说</text>
+      <rect x="390" y="66" width="278" height="38" rx="9" fill="#ffffff" stroke="#e2d6f9" stroke-width="1.3"/>
+      <text x="529" y="90" text-anchor="middle" font-size="12" fill="#5b4a86">开发服务器先开门（毫秒级）</text>
+      <line x1="529" y1="106" x2="529" y2="126" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#v2)"/>
+      <rect x="390" y="128" width="278" height="38" rx="9" fill="#f1eaff" stroke="#cbb5f2" stroke-width="1.3"/>
+      <text x="529" y="152" text-anchor="middle" font-size="12" font-weight="700" fill="#6d28d9">浏览器点哪道，才现场加工哪道</text>
+      <line x1="529" y1="168" x2="529" y2="186" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#v2)"/>
+      <rect x="390" y="188" width="278" height="26" rx="9" fill="#ede4fd" stroke="#c4aef5" stroke-width="1.3"/>
+      <text x="529" y="205" text-anchor="middle" font-size="12" fill="#5b4a86">⚡ 页面秒开；改哪道立即换哪道</text>
+      <text x="360" y="252" text-anchor="middle" font-size="12.5" fill="#5c6878">项目越大，差距越夸张——这正是 Vite 名字的由来：法语「快」</text>
+      <text x="360" y="278" text-anchor="middle" font-size="12" fill="#9aa5b4">（读音近似「维特」；作者取这个名字就是想让你记住它快）</text>
+    </svg>
+    <figcaption>图 1-1 · 传统打包工具「全量炖一锅」；Vite「现点现做按需加工」</figcaption>
+  </figure>
+
+  <h3>1.3 Vite 的身世：Vue 作者的「副业」</h3>
+  <p>2020 年，<b>尤雨溪（Evan You）</b>——框架 <b>Vue.js</b> 的作者——受够了每次改一行代码等半天编译，动手写了 Vite。因为作者身份，Vite 与 Vue 天生一对；但它<b>完全不绑定 Vue</b>：React、Svelte、Solid、原生 JS 项目全都官方支持。如今主流框架的新项目脚手架几乎都默认用它，生态插件数以千计。</p>
+  <div class="callout info">
+    <span class="tag">名字冷知识</span>Vite 在法语里就是「快」，国际音标 /vit/，中文圈普遍读「维特」。别读成「外特」——虽然大家听得懂，但面试官可能会心一笑。它还有个小彩蛋：官方吉祥物是一台<b>闪电滑板上的咖啡机</b>。
+  </div>
+
+  <h3>1.4 双模式：白天的餐厅与深夜的中央厨房</h3>
+  <p>Vite 有两种工作模式，对应餐厅的两种营业状态——这是全书最重要的「地图」，后面所有命令都在这张图上：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>模式</th><th>命令</th><th>类比</th><th>它做什么</th></tr></thead>
+    <tbody>
+      <tr><td><b>开发模式</b></td><td><code>npm run dev</code></td><td>营业中的餐厅：现点现做，追求<b>快</b>和<b>即改即见</b></td><td>起一个本地开发服务器，代码改完浏览器<b>瞬间</b>更新（热更新 HMR），不压缩不打包</td></tr>
+      <tr><td><b>生产构建</b></td><td><code>npm run build</code></td><td>深夜打烊后的中央厨房：批量精加工，追求<b>小</b>和<b>稳</b></td><td>把整个项目优化、压缩、打包成几个带指纹的成品文件，放进 <code>dist</code> 目录，随时可部署上线</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout tip">
+    <span class="tag">一句话记住</span><b>开发用 dev，上线用 build，验收用 preview</b>（第三条命令第 13 章讲）。整个教程 16 章，本质上都在讲怎么把这张表玩明白。
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 2 章 ==================== -->
+<section class="chapter" id="ch2">
+  <div class="chap-head">
+    <div class="chap-num">02</div>
+    <div>
+      <h2>地基：Node.js 与 npm</h2>
+      <div class="desc">Vite 这台机器的供电与物流系统——装好它们，后面每一步都顺</div>
+    </div>
+  </div>
+
+  <p class="lead">Vite 本体是个用 JavaScript 写的程序，而「在电脑上直接运行 JS 程序」需要 Node.js。本章把地基打牢：安装、验证、加速，还有三个绕不开的概念。</p>
+
+  <h3>2.1 三层关系：电、快递、餐厅</h3>
+  <figure class="dg">
+    <svg viewBox="0 0 720 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Node、npm、Vite 关系图">
+      <rect x="40" y="130" width="640" height="84" rx="14" fill="#edf3fc" stroke="#c8d9f2" stroke-width="1.6"/>
+      <text x="360" y="162" text-anchor="middle" font-size="15" font-weight="700" fill="#274a7d">Node.js —— 供电系统</text>
+      <text x="360" y="188" text-anchor="middle" font-size="12" fill="#41608f">让 JavaScript 脱离浏览器、在电脑上直接运行的引擎（Vite 靠它供电）</text>
+      <rect x="40" y="70" width="300" height="44" rx="11" fill="#fff8e9" stroke="#f0d9a8" stroke-width="1.6"/>
+      <text x="190" y="97" text-anchor="middle" font-size="14" font-weight="700" fill="#8a6414">npm —— 随电开通的快递物流</text>
+      <rect x="380" y="70" width="300" height="44" rx="11" fill="#f6f2fe" stroke="#d7c5f7" stroke-width="1.6"/>
+      <text x="530" y="97" text-anchor="middle" font-size="14" font-weight="700" fill="#6d28d9">Vite —— 你要开的闪电餐厅</text>
+      <text x="190" y="52" text-anchor="middle" font-size="11.5" fill="#8a95a5">安装 Vite、下载各种依赖包，全靠它跑腿</text>
+      <text x="530" y="52" text-anchor="middle" font-size="11.5" fill="#8a95a5">地基之上经营，开发服务器与构建全在此发生</text>
+    </svg>
+    <figcaption>图 2-1 · Node（电）→ npm（物流）→ Vite（餐厅）：地基与楼阁的关系</figcaption>
+  </figure>
+  <div class="callout analogy">
+    <span class="tag">类比</span>Node.js 是<b>供电</b>（没电餐厅开不了门），npm 是<b>随电开通的物流系统</b>（全球最大的 JS 软件仓库 + 快递员，收发包裹不要钱）。装好 Node，npm 就自动到岗——它俩是绑定的。
+  </div>
+
+  <h3>2.2 <span class="os win">Windows</span>安装 Node.js</h3>
+  <ol class="steps">
+    <li><b>下载</b>：打开 <a href="https://nodejs.org" target="_blank">nodejs.org</a>，选左边绿色的 <b>LTS（长期支持版）</b>——「稳」字当头，Vite 对它支持最好（主力功能版本号是偶数或标 LTS 的那颗）；</li>
+    <li><b>安装</b>：双击 <code>msi</code> 安装包，一路 Next（安装位置、组件全默认即可），最后 Finish；</li>
+    <li><b>验证</b>：新开一个 PowerShell（开始菜单搜 PowerShell），敲下面两条命令。</li>
+  </ol>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>PowerShell（或 CMD）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">node -v                        # 查看 Node 版本号：出现 v22.x.x 之类即安装成功（-v = version）
+npm -v                         # 查看 npm 版本号：随 Node 附带，出现 10.x.x 之类即物流系统在岗</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">多版本需求（可选）</span>以后若要在多个 Node 版本间切换（比如老项目要旧版），Windows 可装 <b>nvm-windows</b>（GitHub 搜 nvm-windows，有图形安装器）。零基础阶段先用官方安装包 + 一个 LTS 版本完全够用。
+  </div>
+
+  <h3>2.3 <span class="os linux">Linux</span>安装 Node.js</h3>
+  <div class="osgrid">
+    <div class="oscard">
+      <div class="os-head"><span class="os linux">Ubuntu / Debian 系</span><h4>apt 路线</h4></div>
+      <div class="codewrap">
+        <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+        <pre class="code">sudo apt update                # 刷新软件目录（老规矩：先看价目表）
+sudo apt install -y nodejs npm # 安装 Node 与 npm（-y 自动确认）
+node -v &amp;&amp; npm -v              # 双验证：两个版本号都能打出来即成功</pre>
+      </div>
+      <p style="font-size:13.5px;color:#8a95a5;margin:8px 0 14px">注：部分发行版仓库里的 Node 偏旧，若低于 Vite 要求，用右侧 nvm 路线装新版。</p>
+    </div>
+    <div class="oscard">
+      <div class="os-head"><span class="os linux">通用</span><h4>nvm 路线（推荐）</h4></div>
+      <div class="codewrap">
+        <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+        <pre class="code">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash   # 下载并运行 nvm 安装脚本（版本号以其 GitHub README 最新为准）
+source ~/.bashrc               # 重载配置，让 nvm 命令立刻可用（或重开终端）
+nvm install --lts              # 安装最新长期支持版 Node
+nvm use --lts                  # 当前终端切换到 LTS 版（node -v 验证）</pre>
+      </div>
+      <p style="font-size:13.5px;color:#8a95a5;margin:8px 0 14px">nvm 是「Node 版本车库」：多版本并存、随手切换——WSL 用户对这套流程应该很眼熟。</p>
+    </div>
+  </div>
+  <div class="callout warn">
+    <span class="tag">版本红线</span>Vite 新版本要求<b>较新的 Node</b>（以你安装时 Vite 官方文档标注为准，大致 18 或 20+）。版本太老会在创建项目时直接报错退出——这是新手第一坑，急救站第 15 章有对照表。装 LTS 版本即可高枕无忧。
+  </div>
+
+  <h3>2.4 给物流提速：换国内镜像（可选但真香）</h3>
+  <p><span class="os both">双平台通用</span>npm 默认从境外仓库发货，国内网络偶尔「快递龟速」。一行命令把发货仓搬到国内：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端（PowerShell / CMD / Linux 通用）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm config set registry https://registry.npmmirror.com   # 把默认仓库地址换成国内镜像（npmmirror，原淘宝源）
+npm config get registry        # 查看当前生效的仓库地址：确认已换成功
+# 想换回官方源时：
+npm config set registry https://registry.npmjs.org      # 恢复默认官方仓库地址</pre>
+  </div>
+
+  <h3>2.5 三个绕不开的概念：清单、仓库、快捷键</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>名字</th><th>它是什么</th><th>类比</th></tr></thead>
+    <tbody>
+      <tr><td><code>package.json</code></td><td>项目根目录的小文件：记录项目信息、依赖清单、命令脚本</td><td><b>采购清单 + 菜谱封面</b>——用什么食材（依赖）、按什么流程做（脚本）全写在上面</td></tr>
+      <tr><td><code>node_modules/</code></td><td>所有已下载依赖包真实存放的文件夹，通常几万个文件</td><td><b>食材仓库</b>——按清单自动进货并码放整齐；体积巨大，<b>永远不手动改、不上传 Git</b></td></tr>
+      <tr><td><code>scripts</code></td><td>package.json 里的一段，把长命令起短别名</td><td><b>后厨快捷键面板</b>——<code>npm run dev</code> 一按，等于替你敲完整的长命令</td></tr>
+    </tbody>
+  </table></div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：package.json（脚手架生成的样子，节选）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">{
+  "name": "my-app",             // 项目名字（快递单上的寄件人）
+  "private": true,              // 私有项目：npm 拒绝误发布到公共仓库（保险栓）
+  "version": "0.0.0",           // 版本号（还没上线，零蛋起步）
+  "type": "module",             // 声明本项目用 ES 模块规范（import/export 那一套）
+  "scripts": {                  // 「快捷键面板」：左边是别名，右边是真实命令
+    "dev": "vite",              // npm run dev = 启动开发服务器（营业！）
+    "build": "vite build",      // npm run build = 生产构建（打烊精加工）
+    "preview": "vite preview"   // npm run preview = 本地预览构建产物（出餐前试吃）
+  },
+  "devDependencies": {          // 开发期依赖清单：只在后厨用、不给食客的「厨具」
+    "vite": "^5.4.8"            // Vite 本体；^ 表示「允许 5.x 内的小版本升级」
+  }
+}</pre>
+  </div>
+  <div class="practice">
+    <span class="tag">地基体检清单</span>
+    <ol>
+      <li><code>node -v</code> 能出版本号，且是 LTS 大版本；</li>
+      <li><code>npm -v</code> 能出版本号；</li>
+      <li>（可选）<code>npm config get registry</code> 已指向国内镜像。</li>
+    </ol>
+    <p style="margin:10px 0 0">三项全绿，下一章十秒开店。</p>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 3 章 ==================== -->
+<section class="chapter" id="ch3">
+  <div class="chap-head">
+    <div class="chap-num">03</div>
+    <div>
+      <h2>十秒创建第一个项目</h2>
+      <div class="desc">npm create vite 一条命令开店——含「免提问直出」与三步点火流程</div>
+    </div>
+  </div>
+
+  <p class="lead">地基打好，开张只需一条命令。<span class="os both">双平台通用</span>（Windows 用 PowerShell，Linux 用终端，命令一字不差）。</p>
+
+  <h3>3.1 交互式开店：一问一答</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端（先 cd 到你想放项目的目录）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm create vite@latest        # 官方脚手架：拉取 create-vite 问你几个问题后生成项目骨架
+                              # @latest = 用最新版脚手架（create 后面跟的就是「开店向导」这个小程序）</pre>
+    <pre class="output">? Project name: › vite-project        ← 问题 1：项目叫什么（敲 my-app 回车）
+? Select a framework: › - Vanilla     ← 问题 2：用什么框架（方向键选择）
+  Vanilla / Vue / React / Preact / Svelte / Solid / Lit / Others
+? Select a variant: › JavaScript     ← 问题 3：要不要 TypeScript（零基础先选 JavaScript）
+
+Scaffolding project in ...\my-app...  ← 正在生成骨架
+Done. Now run:                        ← 生成完毕，它把「点火三步」也告诉你了：
+  cd my-app
+  npm install
+  npm run dev</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span><code>npm create vite</code> 像商场里的<b>开店向导机</b>：投一句命令，它问三个问题（店名、菜系、用不用新式厨具），然后「啪」地吐出一间<b>精装修到能直接营业的空店铺</b>——招牌、后厨、电路全接好，你只管往里填菜。
+  </div>
+  <div class="callout info">
+    <span class="tag">本教程的选择</span>问题 2 选 <b>Vanilla（香草 = 纯原生 JS）</b>、问题 3 选 <b>JavaScript</b>——没有框架干扰，最适合零基础看清 Vite 本身。第 11 章再用同样一条命令开 Vue / React 分店，流程完全一致。
+  </div>
+
+  <h3>3.2 免提问直出：--template 一条龙</h3>
+  <p>已知要什么时，可以跳过问答，把答案直接写进命令（注意 npm 的传参要<b>两个横线</b> <code>--</code> 打头）：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm create vite@latest my-app -- --template vanilla   # 店名 my-app + 纯 JS 模板，一步直出不再提问
+npm create vite@latest vue-app -- --template vue       # 开一家 Vue 分店（.vue 单文件组件版）
+npm create vite@latest react-app -- --template react   # 开一家 React 分店（JSX 版）</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">两个横线别丢</span>npm 用 <code>--</code> 把后面的参数<b>原样转交</b>给脚手架程序。少了它，Windows 的 PowerShell/CMD 会把 <code>--template</code> 当成 npm 自己的参数而报错——「命令不对劲」时先检查这个。
+  </div>
+
+  <h3>3.3 点火三步：进店、进货、开业</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">cd my-app                     # 第一步：走进新店铺（所有后续命令都在项目目录里敲）
+npm install                    # 第二步：按 package.json 清单进货（生成 node_modules 仓库；首次约几十秒）
+npm run dev                    # 第三步：点火开业！开发服务器启动，浏览器即将有货可看</pre>
+    <pre class="output">added 36 packages in 12s                    ← 进货完成（包的数量因版本而异）
+
+  VITE v5.4.8  ready in 381 ms               ← 开业成功：381 毫秒就绪（这就是「闪电」）
+
+  ➜  Local:   http://localhost:5173/         ← 本机访问地址：按住 Ctrl 单击（终端里）或复制到浏览器
+  ➜  Network: use --host to expose           ← 想让同 WiFi 的手机/别的电脑访问？见第 5 章 --host
+  ➜  press h + enter to show help            ← 按 h 回车可查看内置帮助（按 q 断开返回终端提示）</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>三步分别是<b>进店 → 进货 → 开业</b>。特别提醒：店铺是精装修空壳，<b>食材得现场进</b>（npm install 只需在「换新电脑 / 首次克隆项目」时做，node_modules 从不入库随行——所以别人的项目拿到手第一件事永远是它）。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 01</span>
+    <ol>
+      <li>用交互式向导建一个 <code>my-app</code>（Vanilla + JavaScript）；</li>
+      <li>走完点火三步，浏览器打开 <code>http://localhost:5173</code> 看到 Vite 欢迎页；</li>
+      <li>试试 <kbd>Ctrl</kbd>+<kbd>C</kbd> 停掉服务器（终端问 Terminate batch job 就按 Y），再 <code>npm run dev</code> 重新点亮——熟悉「关店/开店」的手感。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 4 章 ==================== -->
+<section class="chapter" id="ch4">
+  <div class="chap-head">
+    <div class="chap-num">04</div>
+    <div>
+      <h2>项目结构逐房间参观</h2>
+      <div class="desc">每个文件和文件夹是餐厅里的哪个房间——先认门牌，后面才不迷路</div>
+    </div>
+  </div>
+
+  <p class="lead">脚手架生成的文件不多，但每个都身居要职。本章带你逐房间走一遍——之后所有章节的操作，你都能立刻定位「发生在哪个房间」。</p>
+
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端 · 看看店铺全景</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">cd my-app                     # （如果还没进去）走进项目
+ls -l                          # Linux / macOS / Git Bash：列出文件详情（Windows CMD 用 dir）
+# 想连隐藏文件一起看：ls -a（.gitignore 是隐藏文件）</pre>
+    <pre class="output">index.html          ← 大门：浏览器打开项目的唯一入口（在根目录！）
+package.json        ← 采购清单 + 快捷键面板（第 2 章讲过）
+vite.config.js      ← 后厨设置面板（第 8 章专门伺候它）
+node_modules/       ← 食材仓库（自动管理，别手动动）
+public/             ← 免加工直达货架（原样拷贝的静态文件）
+src/                ← 后厨本体：你的代码几乎全住这里
+.gitignore          ← 给 Git 的「谢绝入内」名单（node_modules、dist 上榜）</pre>
+  </div>
+
+  <h3>4.1 index.html：餐厅大门（注意：在根目录！）</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：index.html（骨架原文）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;!doctype html&gt;                        &lt;!-- HTML5 文档声明：告诉浏览器「用现代模式读我」 --&gt;
+&lt;html lang="en"&gt;                         &lt;!-- 网页根元素；lang 建议改成 zh-CN（中文站） --&gt;
+  &lt;head&gt;                                  &lt;!-- 「头部」：给浏览器和搜索引擎看的元信息 --&gt;
+    &lt;meta charset="UTF-8" /&gt;              &lt;!-- 字符编码：UTF-8 才能正确显示中文 --&gt;
+    &lt;link rel="icon" type="image/svg+xml" href="/vite.svg" /&gt;   &lt;!-- 网站小图标：指向 public 里的 vite.svg --&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;   &lt;!-- 移动端适配：宽度随设备、初始不缩放 --&gt;
+    &lt;title&gt;Vite App&lt;/title&gt;               &lt;!-- 浏览器标签页上的标题，改成你的项目名 --&gt;
+  &lt;/head&gt;
+  &lt;body&gt;                                 &lt;!-- 「身体」：真正显示给用户的内容 --&gt;
+    &lt;div id="app"&gt;&lt;/div&gt;                  &lt;!-- 挂载点：一个空盘子，JS 会把整个应用端上来摆在这里 --&gt;
+    &lt;script type="module" src="/src/main.js"&gt;&lt;/script&gt;   &lt;!-- 点火开关：以 ES 模块方式加载后厨主入口 --&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+  </div>
+  <div class="callout info">
+    <span class="tag">和直觉最大的不同</span>老工具的入口藏在构建产物深处；<b>Vite 的 index.html 就光明正大躺在项目根目录</b>——开发时它就是真实入口（开发服务器直接伺候这个文件），构建时它也是打包起点。改标题、加字体、调 favicon，直接编辑它。
+  </div>
+
+  <h3>4.2 src/：后厨本体</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件夹：src/（Vanilla 模板的初始内容）</span><button class="copybtn">复制代码</button></div>
+    <pre class="output">src/
+├── main.js           ← 主厨点火：整个应用的入口文件（大门 script 指向它）
+├── style.css         ← 全局样式表：app 容器居中、配色等基础装修
+├── counter.js        ← 示例模块：一个「计数器」小菜（演示模块化导入导出）
+├── javascript.svg    ← 示例图片素材（被 CSS 引用）
+└── assets/           ← （部分模板有）需要加工的静态资源存放处：图片、字体等</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：src/main.js（骨架原文，逐行注释）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">import './style.css'          // 导入全局样式：CSS 也能被 import！Vite 会把它注入页面（第 7 章）
+import javascriptLogo from './javascript.svg'   // 导入一张图片：拿到的是它的「可用地址」（构建后自动优化，见第 7 章）
+import { setupCounter } from './counter.js'     // 从兄弟模块按名导入函数（花括号 = 精准点名）
+
+document.querySelector('#app').innerHTML = `    // 找到大门里那个空盘子(#app)，把一整段 HTML 摆进去
+  &lt;img src="${javascriptLogo}" class="logo" /&gt;   &lt;!-- 插入刚导入的图片，地址用模板字符串填入 --&gt;
+  &lt;h1&gt;Hello Vite!&lt;/h1&gt;                          &lt;!-- 大标题：动手改成你的店名试试（保存即变！） --&gt;
+  &lt;div class="card"&gt;
+    &lt;button id="counter" type="button"&gt;&lt;/button&gt;  &lt;!-- 计数按钮：文字由下面的逻辑填 --&gt;
+  &lt;/div&gt;
+`                                               // 反引号模板字符串结束
+setupCounter(document.querySelector('#counter'))   // 把计数器逻辑挂到按钮上：点一下数字 +1</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：src/counter.js（骨架原文，逐行注释）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">function setupCounter(element) {   // 定义函数：接收一个按钮元素作为参数
+  let counter = 0                  // 计数从 0 开始（let = 可变的局部变量）
+  const setCounter = (count) =&gt; {  // 定义一个内部小函数：负责把数字写到按钮上（箭头函数写法）
+    counter = count                // 记住最新数字
+    element.innerHTML = `count is ${counter}`   // 把「count is N」写进按钮文字
+  }
+  element.addEventListener('click', () =&gt; setCounter(counter + 1))   // 每次点击：数字加一并刷新显示
+  setCounter(0)                    // 初始化：页面一打开就先显示 count is 0
+}
+
+export { setupCounter }            // 把函数「挂牌」导出：别的文件才能 import 它（main.js 正是这么干的）</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span><code>main.js</code> 是<b>主厨点火</b>：一开场就摆盘（innerHTML）、挂菜（setupCounter）；<code>counter.js</code> 是<b>独立档口</b>：自己写好自己的手艺，挂上 <code>export</code> 招牌等主厨来点。这就是「ES 模块」——每个文件一间档口，<code>import</code> 点菜、<code>export</code> 挂牌。
+  </div>
+
+  <h3>4.3 public/ 与 vite.config.js：货架与设置面板</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>房间</th><th>作用</th><th>怎么被处理</th></tr></thead>
+    <tbody>
+      <tr><td><code>public/</code></td><td>放「不需要加工」的静态文件：favicon、robots.txt、大图等</td><td>开发时原样伺服、构建时<b>原样拷贝</b>进 dist 根部；引用时写<b>绝对路径</b> <code>/vite.svg</code>（第 7 章对比 assets）</td></tr>
+      <tr><td><code>vite.config.js</code></td><td>餐厅的设置面板：改端口、配代理、装插件、设别名</td><td>Node 启动时读取一次；<b>改动需重启 dev 服务器</b>（第 8 章）</td></tr>
+      <tr><td><code>node_modules/</code></td><td>依赖包仓库</td><td>npm 全权管理；删了可以用 <code>npm install</code> 重新进货</td></tr>
+      <tr><td><code>dist/</code>（暂不存在）</td><td>出餐打包区</td><td>只有执行 <code>npm run build</code> 才会生成（第 13 章揭开面纱）</td></tr>
+    </tbody>
+  </table></div>
+  <div class="practice">
+    <span class="tag">动手练习 02</span>
+    <ol>
+      <li>把 <code>index.html</code> 的 <code>&lt;title&gt;</code> 改成自己的店名，保存看标签页变化；</li>
+      <li>把 <code>main.js</code> 里的 <code>Hello Vite!</code> 改成任意文字，保存——<b>感受 0.x 秒的刷新</b>；</li>
+      <li>打开 <code>counter.js</code> 把 <code>count is</code> 改成「已点击」，按钮立刻变脸。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 5 章 ==================== -->
+<section class="chapter" id="ch5">
+  <div class="chap-head">
+    <div class="chap-num">05</div>
+    <div>
+      <h2>启动与热更新 HMR</h2>
+      <div class="desc">开发服务器全解读：秒开、热更新、错误蒙层、局域网访问、换端口</div>
+    </div>
+  </div>
+
+  <p class="lead">开发模式是 Vite 的招牌。本章把 <code>npm run dev</code> 的每个细节讲透——包括那只「改完即见」的魔法之手到底怎么运作。</p>
+
+  <h3>5.1 再看一眼启动横幅：每个字都有含义</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm run dev                   # 启动开发服务器（= 执行 package.json 里 "dev": "vite" 这条快捷键）</pre>
+    <pre class="output">  VITE v5.4.8  ready in 381 ms   ← 版本 + 就绪耗时：冷启动毫秒级（对比老工具动辄十几秒）
+  ➜  Local:   http://localhost:5173/   ← 本机门牌：localhost = "本机自己"，5173 是 Vite 默认端口号
+  ➜  Network: use --host to expose    ← 提示：想开放给同网络的设备访问，加 --host（见 5.4）
+  ➜  press h + enter to show help     ← 服务器运行中按 h 回车：查看快捷指令（v 重启 / q 停止等）</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span><code>localhost:5173</code> 是你餐厅的<b>内部门牌</b>：<code>localhost</code> = 「本机」，<code>5173</code> = 门牌号。这台「营业中的服务器」不止吐页面——你保存的每一份代码，它都<b>即刻现做成浏览器能吃的形态</b>递过去，这才是「开发服务器」的真身。
+  </div>
+
+  <h3>5.2 热更新 HMR：只换那盘菜，不动整桌</h3>
+  <p><b>HMR（Hot Module Replacement，热模块替换）</b>是 Vite 的成名绝技：改代码保存的<b>一瞬间</b>，浏览器不刷新整页、不丢当前状态，只把改动涉及的那「一盘菜」原位换新。</p>
+  <figure class="dg">
+    <svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="HMR 热更新流程图">
+      <defs>
+        <marker id="h1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#7c3aed"/></marker>
+        <marker id="h2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#8a95a5"/></marker>
+      </defs>
+      <rect x="40" y="60" width="200" height="84" rx="13" fill="#f6f2fe" stroke="#d7c5f7" stroke-width="1.5"/>
+      <text x="140" y="96" text-anchor="middle" font-size="14.5" font-weight="700" fill="#6d28d9">你：保存 counter.js</text>
+      <text x="140" y="122" text-anchor="middle" font-size="11.5" fill="#8a75b5">（Ctrl+S 的瞬间）</text>
+      <rect x="300" y="60" width="200" height="84" rx="13" fill="#f6f2fe" stroke="#d7c5f7" stroke-width="1.5"/>
+      <text x="400" y="96" text-anchor="middle" font-size="14.5" font-weight="700" fill="#6d28d9">Vite：定位受影响模块</text>
+      <text x="400" y="122" text-anchor="middle" font-size="11.5" fill="#8a75b5">只重做这一间档口</text>
+      <rect x="560" y="60" width="130" height="84" rx="13" fill="#edf3fc" stroke="#c8d9f2" stroke-width="1.5"/>
+      <text x="625" y="96" text-anchor="middle" font-size="14" font-weight="700" fill="#274a7d">浏览器</text>
+      <text x="625" y="122" text-anchor="middle" font-size="11.5" fill="#41608f">原位换新</text>
+      <line x1="242" y1="102" x2="296" y2="102" stroke="#7c3aed" stroke-width="2.2" marker-end="url(#h1)"/>
+      <line x1="502" y1="102" x2="556" y2="102" stroke="#7c3aed" stroke-width="2.2" marker-end="url(#h1)"/>
+      <line x1="625" y1="146" x2="625" y2="182" stroke="#8a95a5" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#h2)"/>
+      <text x="625" y="205" text-anchor="middle" font-size="11.5" fill="#6a7686">页面不整刷、输入框不清空、弹窗不关闭</text>
+      <text x="300" y="205" text-anchor="middle" font-size="12.5" fill="#5c6878">传统方式：整桌撤了重上（全页刷新，状态全丢）</text>
+    </svg>
+    <figcaption>图 5-1 · HMR 热更新：改动 → 定位 → 原位替换，全程不打扰整桌</figcaption>
+  </figure>
+  <p>亲手做个实验，体会「状态不丢」有多爽：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>操作 · 在浏览器里做实验</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"># ① 打开 http://localhost:5173 ，把 count 按钮点到 7        ← 制造一个「页面状态」
+# ② 回编辑器打开 src/style.css，把 :hover 的颜色改成红色，保存
+#    → 鼠标悬停按钮立刻变红；再看 count ——还是 7，纹丝不动！
+# ③ 打开 src/counter.js，把 'count is' 改成 '已点击'，保存
+#    → 按钮文字立即换新；这个模块更新了，整页仍没有刷新
+# ④ 结论：样式/组件级改动走热替换；某些影响面大的改动（如改 main.js 入口）会整页刷新——属正常行为</pre>
+  </div>
+
+  <h3>5.3 错误蒙层：出餐口的质检报警器</h3>
+  <p>代码写错了（语法错误、找不到模块）会怎样？Vite 不会让问题溜到控制台里让你翻找——它直接在页面上<b>盖一层红色大蒙层</b>：报错文件、行号、原因一目了然。改好保存，蒙层自动消失、页面自动恢复。</p>
+  <div class="callout analogy">
+    <span class="tag">类比</span>红色蒙层是<b>出餐口上方的质检报警灯</b>：菜品有问题（代码报错），整条传送带亮红灯暂停出餐——但后厨（你的编辑器）不受影响，改好那一刻灯灭复产。<b>报错信息本身就是线索</b>：先看第一行和行号，九成问题当场解决。
+  </div>
+
+  <h3>5.4 进阶驾驶术：换端口、局域网开放、CLI 直传参数</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm run dev -- --host         # 开放局域网：启动后 Network 行给出 192.168.x.x 地址
+                              # 同一 WiFi 下的手机/平板/同事电脑都能访问你的开发页（真机调试神器）
+npm run dev -- --port 3000    # 换门牌：把默认的 5173 换成 3000（5173 被占用时的急救法之一）
+npm run dev -- --open         # 自动帮你打开默认浏览器并直达页面（懒人福音）
+npm run dev -- --host --port 8080   # 参数可叠加：开放局域网 + 指定端口</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">又是两个横线</span>CLI 参数要经由 npm 转交给 Vite，所以同样要 <code>--</code> 打头：<code>npm run dev -- --host</code>。如果你直接运行 <code>vite --host</code>（不经 npm，见第 16 章的 npx 说明）则不需要。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 03</span>
+    <ol>
+      <li>重复 5.2 的「count=7 改样式」实验，亲眼确认状态不丢；</li>
+      <li>故意把 <code>main.js</code> 里 <code>import</code> 的文件名改错一个字母保存，欣赏红色蒙层；改回来再看它自动愈合；</li>
+      <li>用 <code>npm run dev -- --host</code> 启动，用手机（同 WiFi）访问 Network 地址。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 6 章 ==================== -->
+<section class="chapter" id="ch6">
+  <div class="chap-head">
+    <div class="chap-num">06</div>
+    <div>
+      <h2>工作原理：为什么这么快</h2>
+      <div class="desc">两条流水线的秘密：白天的「按需现做」与备菜间的「净菜预处理」</div>
+    </div>
+  </div>
+
+  <p class="lead">不深挖源码，只用厨房比喻把 Vite 的速度讲明白——理解这一章，你对 Vite 的所有「怪行为」（如依赖缓存、--force）都会豁然开朗。</p>
+
+  <h3>6.1 白天：原生 ESM 按需现做</h3>
+  <p>现代浏览器其实<b>原生支持 ES 模块</b>（<code>import</code>/<code>export</code> 那套语法）。Vite 开发模式的聪明之处就在于：<b>干脆不打包</b>——你写的每个模块，浏览器请求到哪个，服务器现场加工哪个、原样递过去：</p>
+  <figure class="dg">
+    <svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="开发与构建双流水线图">
+      <defs>
+        <marker id="i1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#7c3aed"/></marker>
+        <marker id="i2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#f0a92e"/></marker>
+      </defs>
+      <rect x="26" y="20" width="330" height="176" rx="14" fill="#f6f2fe" stroke="#d7c5f7" stroke-width="1.6"/>
+      <text x="191" y="48" text-anchor="middle" font-size="14.5" font-weight="800" fill="#6d28d9">白天 · 开发模式（npm run dev）</text>
+      <rect x="50" y="62" width="282" height="34" rx="9" fill="#ffffff" stroke="#e2d6f9" stroke-width="1.3"/>
+      <text x="191" y="84" text-anchor="middle" font-size="11.5" fill="#5b4a86">你的源码：保持原样，一个不打包</text>
+      <line x1="191" y1="98" x2="191" y2="116" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#i1)"/>
+      <rect x="50" y="118" width="282" height="34" rx="9" fill="#f1eaff" stroke="#cbb5f2" stroke-width="1.3"/>
+      <text x="191" y="140" text-anchor="middle" font-size="11.5" font-weight="700" fill="#6d28d9">浏览器点到哪个模块，现场翻译哪个</text>
+      <line x1="191" y1="154" x2="191" y2="170" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#i1)"/>
+      <rect x="50" y="172" width="282" height="26" rx="9" fill="#ede4fd" stroke="#c4aef5" stroke-width="1.3"/>
+      <text x="191" y="189" text-anchor="middle" font-size="11.5" fill="#5b4a86">冷启动毫秒级；改哪补哪（HMR）</text>
+      <rect x="364" y="20" width="330" height="176" rx="14" fill="#fff8e9" stroke="#f0d9a8" stroke-width="1.6"/>
+      <text x="529" y="48" text-anchor="middle" font-size="14.5" font-weight="800" fill="#8a6414">深夜 · 生产构建（npm run build）</text>
+      <rect x="388" y="62" width="282" height="34" rx="9" fill="#ffffff" stroke="#f0e3c4" stroke-width="1.3"/>
+      <text x="529" y="84" text-anchor="middle" font-size="11.5" fill="#7a5f24">全部源码 + 依赖，交给 Rollup 打包</text>
+      <line x1="529" y1="98" x2="529" y2="116" stroke="#f0a92e" stroke-width="1.8" marker-end="url(#i2)"/>
+      <rect x="388" y="118" width="282" height="34" rx="9" fill="#fdf3dd" stroke="#ecd9a4" stroke-width="1.3"/>
+      <text x="529" y="140" text-anchor="middle" font-size="11.5" font-weight="700" fill="#8a6414">摇树 + 压缩 + 指纹改名 + 智能分包</text>
+      <line x1="529" y1="154" x2="529" y2="170" stroke="#f0a92e" stroke-width="1.8" marker-end="url(#i2)"/>
+      <rect x="388" y="172" width="282" height="26" rx="9" fill="#fbf0d7" stroke="#e8d294" stroke-width="1.3"/>
+      <text x="529" y="189" text-anchor="middle" font-size="11.5" fill="#7a5f24">产出 dist/：极小、极快、可上线</text>
+      <text x="360" y="234" text-anchor="middle" font-size="12.5" fill="#5c6878">开发求「快」（伺候你写代码），构建求「小」（伺候用户加载）——两套标准，两条流水线</text>
+      <text x="360" y="258" text-anchor="middle" font-size="12" fill="#9aa5b4">生产模式使用的打包内核是 Rollup：一个成熟的老牌打包器，Vite 把它安排在深夜中央厨房</text>
+    </svg>
+    <figcaption>图 6-1 · 双流水线：白天原生 ESM 现点现做，深夜 Rollup 精加工出餐</figcaption>
+  </figure>
+  <div class="callout analogy">
+    <span class="tag">类比</span>旧工具是「<b>不管你点不点，先把全菜单做好</b>」；Vite 是「<b>菜单先摆上桌（index.html 原样伺服），点哪道现做哪道</b>」——页面打开只加载当前用到的模块，没点的菜一个字节都不浪费。项目越大，这份「懒」省得越多。
+  </div>
+
+  <h3>6.2 备菜间：依赖预打包（esbuild）</h3>
+  <p>有个例外：你 <code>npm install</code> 的大量第三方依赖（如 vue、react）通常是 CommonJS 老格式、且内部几百个小文件。浏览器按需现做时「现切几百刀」就太慢了——所以 Vite 在<b>首次启动时</b>用超快的 <b>esbuild</b> 把它们一次性<b>预处理成「净菜」</b>：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm install lodash             # 示例：装一个常用工具库（之后 import 才有得吃）
+npm run dev                    # 启动：首次会看到 "new dependencies optimized: lodash"
+                              # ← 这就是「净菜预处理」：esbuild 把 lodash 转成单文件 ESM 净菜
+# 净菜被缓存进 node_modules/.vite/ 文件夹：
+#   下次启动直接取缓存，秒起；只有「依赖变了」或「缓存失效」才重新预处理</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>这就是法餐里的 <b>mise en place（开档备菜）</b>：葱姜蒜提前洗好切好装盒（依赖预打包），客人点单时主厨随手抓取（浏览器 import）——「现做」依然快如闪电的底气全在备菜间。esbuild 是用 Go 语言写的<b>切菜机器人</b>，比传统 JS 工具快一个数量级。
+  </div>
+
+  <h3>6.3 缓存与急救：--force 重备菜</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm run dev -- --force        # 强制丢弃预打包缓存、重新备菜（一切从零切起）
+                              # 使用场景：依赖更新后行为诡异、缓存疑似损坏、排障时「先重启再说」的进阶版</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">排查心法</span>遇到「明明改了却不生效」的玄学问题，按顺序三板斧：<b>硬刷新浏览器</b>（<kbd>Ctrl</kbd>+<kbd>F5</kbd>）→ <b>重启 dev 服务器</b>（<kbd>Ctrl</kbd>+<kbd>C</kbd> 后再 dev）→ <b><code>--force</code> 重备菜</b>。九成玄学止步于第二斧。
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 7 章 ==================== -->
+<section class="chapter" id="ch7">
+  <div class="chap-head">
+    <div class="chap-num">07</div>
+    <div>
+      <h2>样式与静态资源</h2>
+      <div class="desc">CSS 导入、Sass、CSS Modules、图片处理——assets 与 public 的关键区别</div>
+    </div>
+  </div>
+
+  <p class="lead">Vite 把「样式」和「图片」也当模块对待：都能 <code>import</code>、都会被优化。本章讲清四件事：全局样式、预处理器、防串味的 CSS Modules、两个资源文件夹的分野。</p>
+
+  <h3>7.1 在 JS 里导入 CSS</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：src/main.js（相关行）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">import './style.css'          // 一行导入全局样式：Vite 负责把它注入页面 &lt;head&gt; 里
+                              // 开发时即时生效（改颜色保存立即变，走 HMR）；构建时抽取成独立 .css 文件
+// 想拆细点也随意：建 src/base.css，再在 main.js 里 import './base.css' —— 全凭口味</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>CSS 文件像<b>餐厅的整体装修方案</b>：在入口（main.js）登记一次，全店生效。老时代要在 HTML 里手写 <code>&lt;link&gt;</code> 标签、还要操心顺序——现在<b>谁 import、什么顺序</b>，JS 里一目了然。
+  </div>
+
+  <h3>7.2 升级装备：Sass（嵌套写法）</h3>
+  <p>原生 CSS 不能「嵌套」写选择器，写多了容易「起火」。装上 Sass 就能享受嵌套、变量等进阶语法——Vite <b>零配置</b>支持，只要装包：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm install -D sass           # 安装 Sass 编译器（-D = devDependency：只给后厨用的「厨具」，不进成品）</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：src/style.scss（新建后把 main.js 的导入改成它）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">$主色: #7c3aed;               // 定义变量：$ 开头；一处定义处处使用（换主题只改这里）
+.card {                        // 外层：卡片容器
+  border-radius: 12px;         // 嵌套写在里面——自动编译成 .card { border-radius: 12px }
+  button {                     // 嵌套：相当于 .card button，不用重复写前缀
+    color: $主色;              // 使用变量：颜色统一管理
+    &amp;:hover {                  // &amp; 指代父级自身：相当于 .card button:hover
+      scale: 1.05;             // 悬停放大一点点
+    }
+  }
+}
+// 保存即编译即生效——Vite 全程自动，不需要任何配置</pre>
+  </div>
+  <div class="callout info">
+    <span class="tag">同理可得</span>Less（装 <code>less</code>）、Stylus（装 <code>stylus</code>）也一样：装了对应包，<code>.less</code> / <code>.styl</code> 文件直接 import 即用。Vite 的哲学：<b>「文件后缀即协议」</b>——后缀对上就自动处理。
+  </div>
+
+  <h3>7.3 防串味神器：CSS Modules</h3>
+  <p>多人协作时最怕「类名撞车」：你写 <code>.title</code>，我也写 <code>.title</code>，样式互相污染。命名文件为 <code>xxx.module.css</code>，Vite 自动开启「防串味」：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：src/card.module.css（新建）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">.title {                      // 看似普通的类名……
+  font-size: 20px;            // 但它只属于「导入它的那个文件」
+}</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：src/main.js（使用方式）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">import styles from './card.module.css'   // 注意：带返回值地导入——得到一个「类名对照表」
+// styles.title 的真实值类似 "_title_1a2b3"：Vite 自动加了独一无二的指纹前缀！
+document.querySelector('#app').innerHTML = `
+  &lt;h1 class="${styles.title}"&gt;我不怕撞名&lt;/h1&gt;   &lt;!-- 用对照表里的真实类名，别人写的 .title 管不着我 --&gt;
+`</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>CSS Modules = <b>同姓客人挂牌制</b>：两个都叫「.title」的客人进店，系统自动给他们挂上「.title_1a2b」「.title_3c4d」的号码牌——同名不同人，永不串味。构建后还会进一步哈希混淆，天然防冲突。
+  </div>
+
+  <h3>7.4 图片与两个文件夹的分野：assets vs public</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>对比项</th><th><code>src/assets/</code>（加工区）</th><th><code>public/</code>(直达货架)</th></tr></thead>
+    <tbody>
+      <tr><td>怎么引用</td><td>在 JS/CSS 里 <code>import</code>（或相对路径）</td><td>写<b>绝对路径</b>，如 <code>/logo.png</code></td></tr>
+      <tr><td>被处理吗</td><td>✅ 参与优化：小图变 data 内联、名字加指纹、可被压缩</td><td>❌ 原样伺服、原样拷贝，一个字节不动</td></tr>
+      <tr><td>名字会变吗</td><td>构建后变 <code>logo.a1b2c3.png</code>（指纹防缓存）</td><td>永远叫 <code>logo.png</code></td></tr>
+      <tr><td>适合放</td><td>和代码强相关的图：组件图标、会被替换的素材</td><td> favicon、robots.txt、约定俗成固定路径的文件</td></tr>
+    </tbody>
+  </table></div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：src/main.js（两种引用方式对照）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">import logoUrl from './assets/logo.png'    // 方式一（推荐）：import 得到「加工后的地址」
+// 构建时 Vite 自动完成：小图转成 data: 内联（省一次请求）、大图改名加指纹、并写进产物
+// 方式二：public 里的文件不 import，直接写绝对路径：
+//   &lt;img src="/vite.svg"&gt;    ← 引用的是 public/vite.svg，开发与构建都原样可用</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">选择口诀</span><b>「要优化、跟代码走」放 assets；「要稳定、固定地址」放 public。</b>拿不准就放 assets——优化的便宜不占白不占。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 04</span>
+    <ol>
+      <li>装 Sass，把 <code>style.css</code> 换成 <code>.scss</code> 并用嵌套 + 变量重写卡片样式；</li>
+      <li>建一个 <code>card.module.css</code>，在 main.js 里用 <code>styles.title</code> 挂到标题上；</li>
+      <li>往 <code>src/assets/</code> 放一张自己的图片并 import 展示；再往 <code>public/</code> 放一张，用绝对路径展示——两种通道各走一遍。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 8 章 ==================== -->
+<section class="chapter" id="ch8">
+  <div class="chap-head">
+    <div class="chap-num">08</div>
+    <div>
+      <h2>vite.config.js：设置面板</h2>
+      <div class="desc">一台咖啡机的设置屏：端口、自动开浏览器、路径别名、插件插槽</div>
+    </div>
+  </div>
+
+  <p class="lead">想改默认行为（端口 5173 太顺手被占？想 <code>@</code> 代替 <code>src</code> 长路径？），都在这个文件里说。它是<b>唯一</b>的设置面板——改完记得重启 dev 服务器。</p>
+
+  <h3>8.1 最小可用面板</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：vite.config.js（骨架自带，几乎是空的）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">import { defineConfig } from 'vite'   // 导入「带提示的包装函数」：写配置时编辑器会自动补全提示
+
+export default defineConfig({         // 把配置对象包一层导出——Vite 启动时会来读取它
+  // 这里就是面板本体：下面所有小节都往这个对象里添东西
+})</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span><code>defineConfig</code> 像设置面板的<b>防呆边框</b>：内容不填错位置、按键按错名字都会被编辑器当场标红（TS 提示）。空面板 = 全部用出厂默认值——Vite 的默认值已经调得极好，<b>没有需求就别加配置</b>。
+  </div>
+
+  <h3>8.2 server 小节：营业参数</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：vite.config.js（常用配置逐行注释）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">import { defineConfig } from 'vite'    // 依旧先导入包装函数
+
+export default defineConfig({
+  server: {                           // 「营业参数」小节：开发服务器的行为
+    port: 3000,                       // 固定门牌号：默认 5173，改成 3000（被占时的根治法）
+    open: true,                       // 启动后自动打开默认浏览器并直达页面
+    host: true,                       // 等价于命令行 --host：开放给局域网设备访问
+    // proxy: { ... }                 // 后端联调代理（第 10 章专门讲，此处先留个念想）
+  },
+})</pre>
+  </div>
+
+  <h3>8.3 resolve.alias：给长地址起简称</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：vite.config.js（续）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">import { defineConfig } from 'vite'
+import { fileURLToPath, URL } from 'node:url'   // Node 自带工具：用来把「文件网址」翻译成「磁盘路径」
+
+export default defineConfig({
+  resolve: {                          // 「路径解析」小节
+    alias: {                          // 别名表：左边是简称，右边是真实地址
+      '@': fileURLToPath(new URL('./src', import.meta.url)),  // @ = 项目里的 src 文件夹
+    },
+  },
+})
+// 效果：以前 import x from '../../assets/logo.png'（跨三层目录的相对路径地狱）
+// 现在 import x from '@/assets/logo.png'（永远从 src 出发的绝对感觉，搬文件不用改路径）</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>alias 是给仓库货架贴<b>楼层导览牌</b>：「@ = 三楼 src」。写地址时不用再数「上两层左转」，一句「去 @ 的 assets 区」直达——文件搬家、目录重构时，引用一行都不用改。
+  </div>
+
+  <h3>8.4 plugins 插槽与 base 出厂铭牌</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：vite.config.js（续）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'   // 示例：Vue 官方插件（第 11、12 章详讲；纯 JS 项目不需要）
+
+export default defineConfig({
+  plugins: [vue()],                   // 「电器插槽」：想加功能就往数组里插一个插件
+  base: '/my-app/',                   // 成品挂载的「子目录铭牌」：部署到 https://xx.com/my-app/ 时必配
+                                     // 不配（默认 '/'）+ 部署到子目录 = 线上白屏（第 15 章急救站常见案）
+})</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">重启提醒</span>vite.config.js 在<b>启动时读一次</b>。改了它却不生效？先 <kbd>Ctrl</kbd>+<kbd>C</kbd> 停掉再 <code>npm run dev</code>——「改配置不重启」是新手玄学问题的第一大来源。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 05</span>
+    <ol>
+      <li>把端口改成 3000、<code>open: true</code>，重启验证「自动开浏览器 + 新端口号」；</li>
+      <li>配好 <code>@</code> 别名，把 main.js 里某个相对路径 import 改成 <code>@/...</code> 试效果；</li>
+      <li>体会一遍「改配置 → 不重启 → 不生效 → 重启 → 生效」的完整流程，形成肌肉记忆。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 9 章 ==================== -->
+<section class="chapter" id="ch9">
+  <div class="chap-head">
+    <div class="chap-num">09</div>
+    <div>
+      <h2>环境变量与模式</h2>
+      <div class="desc">开发用测试服、上线用正式服——把「随环境变化」的信息贴在冰箱便签上</div>
+    </div>
+  </div>
+
+  <p class="lead">同一个项目，开发时连测试接口、上线后连正式接口——这类「随场合变化的配置」不该写死在代码里。Vite 的答案是：几张贴在冰箱上的便签（.env 文件）。</p>
+
+  <h3>9.1 三张便签：默认、开发、生产</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>项目根目录新建三个文件</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"># 文件 1：.env                  —— 通用便签：任何模式都会读
+VITE_API_URL = https://default.example.com   # 变量名必须 VITE_ 开头（规则见下节）
+VITE_APP_NAME = 我的外卖店                    # 顺手放个店名：页面标题、页脚都能用
+
+# 文件 2：.env.development     —— 开发便签：只在 npm run dev 时叠加生效
+VITE_API_URL = http://localhost:3000         # 开发时后端跑在本地 3000（联调见第 10 章）
+
+# 文件 3：.env.production      —— 生产便签：只在 npm run build 时叠加生效
+VITE_API_URL = https://api.myshop.com        # 上线后的正式接口地址</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>三张便签都贴在同一台冰箱上：<b>先读通用便签，再按「今天开哪种店」叠读对应那张</b>——同名的以后读的为准（专属便签覆盖通用便签）。dev 读「开发」、build 读「生产」，<b>切换全自动</b>，代码一行不改。
+  </div>
+
+  <h3>9.2 前缀规则：为什么必须叫 VITE_xxx</h3>
+  <p>出于安全，Vite <b>只把 <code>VITE_</code> 开头的变量</b>递交给前端代码——别的（比如没加前缀的 <code>SECRET_KEY</code>）一律留在 Node 侧、不进浏览器。这防止你不小心把密钥打包给全世界看。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：src/main.js（读取便签）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">console.log(import.meta.env.VITE_API_URL)   // 在代码里读便签：import.meta.env 是 Vite 注入的「环境变量包」
+console.log(import.meta.env.VITE_APP_NAME)  // 同理读取店名
+console.log(import.meta.env.DEV)            // 内置布尔值：当前是否开发模式（true/false）
+console.log(import.meta.env.PROD)            // 内置布尔值：当前是否生产模式（与 DEV 互补）
+console.log(import.meta.env.MODE)            // 内置字符串：当前模式名（'development' 或 'production'）
+// 用起来很自然：只在开发时打印调试信息——
+if (import.meta.env.DEV) {                  // 开发模式才进这个分支
+  console.log('调试：当前接口是', import.meta.env.VITE_API_URL)   // 上线的包里不会带这行输出
+}</pre>
+  </div>
+
+  <h3>9.3 自定义模式 + 安全清单</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端 · 想要更多场合？自造便签</span><button class="copybtn">复制代码</button></div>
+    <pre class="code"># 场景：给测试同事打一个「连测试服」的包——自造一个 test 模式：
+npm run build -- --mode test   # build 时指定自定义模式：Vite 会去找 .env.test 便签叠加读取
+# （记得配套新建 .env.test 文件，写上测试环境的 VITE_API_URL）</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">安全清单</span>① <b>密钥永远不要</b>写进任何 <code>.env</code>——<code>VITE_</code> 开头的一切都会被打包进成品，等于公开；真正机密的值应放后端。② 改了 <code>.env</code> 文件<b>必须重启 dev 服务器</b>（和 vite.config.js 同款待遇）。③ 团队共享的「示例模板」可以提交 Git（惯用名 <code>.env.example</code>），真实 <code>.env</code> 视内容决定是否进 <code>.gitignore</code>。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 06</span>
+    <ol>
+      <li>建三张便签，dev 模式下 <code>console.log</code> 出开发地址；</li>
+      <li><code>npm run build</code> 后用第 13 章学的 <code>npm run preview</code> 打开，F12 控制台确认已切换成生产地址；</li>
+      <li>试试不加 <code>VITE_</code> 前缀的变量，验证读取结果是 <code>undefined</code>（被拦在门外）。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 10 章 ==================== -->
+<section class="chapter" id="ch10">
+  <div class="chap-head">
+    <div class="chap-num">10</div>
+    <div>
+      <h2>代理：与后端联调</h2>
+      <div class="desc">浏览器的小区门禁（同源策略）与前台转接员（server.proxy）</div>
+    </div>
+  </div>
+
+  <p class="lead">前后端分家开发时，网页在 5173、接口在 3000——浏览器会以「跨域」为由拦下请求。Vite 的代理功能让你在开发期优雅绕过它，一行后端代码都不用改。</p>
+
+  <h3>10.1 先懂规矩：同源策略</h3>
+  <div class="callout analogy">
+    <span class="tag">类比</span>浏览器有个铁规矩叫<b>同源策略</b>：只允许「同一家公司」（协议 + 域名 + 端口全相同）的 JS 互取数据——像小区门禁：<b>5173 栋</b>的住户（你的页面）不能直接闯 <b>3000 栋</b>（后端）拿东西。这是防坏人的安全设计，但开发时也把自家同事拦在门外了。
+  </div>
+  <p>生产环境通常由后端/网关配置 CORS（给浏览器「发通行证」）解决。但开发期最优雅的办法，是让 <b>Vite 自己当前台转接员</b>：</p>
+  <figure class="dg">
+    <svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="代理转发示意图">
+      <defs>
+        <marker id="j1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#7c3aed"/></marker>
+        <marker id="j2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#f0a92e"/></marker>
+      </defs>
+      <rect x="46" y="90" width="180" height="90" rx="13" fill="#edf3fc" stroke="#c8d9f2" stroke-width="1.5"/>
+      <text x="136" y="126" text-anchor="middle" font-size="14.5" font-weight="700" fill="#274a7d">浏览器页面</text>
+      <text x="136" y="150" text-anchor="middle" font-size="11.5" fill="#41608f">localhost:5173</text>
+      <rect x="270" y="90" width="180" height="90" rx="13" fill="#f6f2fe" stroke="#d7c5f7" stroke-width="1.5"/>
+      <text x="360" y="126" text-anchor="middle" font-size="14.5" font-weight="700" fill="#6d28d9">Vite 开发服务器</text>
+      <text x="360" y="150" text-anchor="middle" font-size="11.5" fill="#5b4a86">前台转接员（proxy）</text>
+      <rect x="494" y="90" width="180" height="90" rx="13" fill="#fff8e9" stroke="#f0d9a8" stroke-width="1.5"/>
+      <text x="584" y="126" text-anchor="middle" font-size="14.5" font-weight="700" fill="#8a6414">后端接口</text>
+      <text x="584" y="150" text-anchor="middle" font-size="11.5" fill="#7a5f24">localhost:3000</text>
+      <line x1="228" y1="118" x2="264" y2="118" stroke="#7c3aed" stroke-width="2.2" marker-end="url(#j1)"/>
+      <text x="246" y="106" text-anchor="middle" font-size="11" fill="#6d28d9">/api/xxx</text>
+      <line x1="452" y1="162" x2="488" y2="162" stroke="#f0a92e" stroke-width="2.2" marker-end="url(#j2)"/>
+      <text x="470" y="150" text-anchor="middle" font-size="11" fill="#8a6414">转交</text>
+      <text x="360" y="216" text-anchor="middle" font-size="12.5" fill="#5c6878">浏览器眼里全程只跟 5173「同一家」打交道——门禁根本不会拦</text>
+      <text x="360" y="242" text-anchor="middle" font-size="12" fill="#9aa5b4">服务器之间的转交不受浏览器同源策略管辖（那是管浏览器的规矩，不是管服务器的）</text>
+    </svg>
+    <figcaption>图 10-1 · 代理转发：页面请求发给 Vite，Vite 转交给后端，再把结果原路带回</figcaption>
+  </figure>
+
+  <h3>10.2 配置示范：五分钟接入真实后端</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：vite.config.js（proxy 小节）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">import { defineConfig } from 'vite'     // 老朋友：配置包装函数
+
+export default defineConfig({
+  server: {                            // 营业参数小节（第 8 章的老房间）
+    proxy: {                           // 「前台转接规则」表：左边是拦截前缀，右边是转交目标
+      '/api': {                        // 规则一：凡是以 /api 开头的请求……
+        target: 'http://localhost:3000',   // ……都转交给本机 3000 端口的后端
+        changeOrigin: true,            // 转交时把请求的「来源」改写成目标服务器自己（很多后端的鉴权需要）
+        rewrite: (path) =&gt; path.replace(/^\/api/, ''),  // 改写路径：把开头的 /api 削掉再转交
+        // ↑ 场景：前端写 /api/users，后端实际路由是 /users —— 削掉前缀刚好对上
+      },
+    },
+  },
+})</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：src/main.js（前端这样请求）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">fetch('/api/users')                  // 页面里只写「自家门牌」的相对路径：/api/users
+  .then(res =&gt; res.json())            // 把响应翻译成 JSON（fetch 的固定套路）
+  .then(data =&gt; console.log(data))     // 拿到后端真实数据！全程无跨域报错
+// 实际链路：/api/users → Vite 削成 /users → 转给 localhost:3000 → 响应原路带回页面</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">注意</span>改 proxy 配置要<b>重启 dev 服务器</b>（老规矩）。另外代理只服务开发期；上线后的跨域由部署架构（同域部署 / 网关 / 后端 CORS）解决——两套阶段，两套方案，别混。
+  </div>
+  <div class="practice">
+    <span class="tag">动手练习 07</span>
+    <ol>
+      <li>配一条 <code>/api</code> 代理指向 <code>http://localhost:3000</code>；</li>
+      <li>没有后端？用第 9 章便签里的 <code>jsonplaceholder.typicode.com</code> 当假后端，代理 target 填它、把 <code>rewrite</code> 削掉 <code>/api</code>，页面里 fetch <code>/api/users</code> 试试真数据。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 11 章 ==================== -->
+<section class="chapter" id="ch11">
+  <div class="chap-head">
+    <div class="chap-num">11</div>
+    <div>
+      <h2>框架实战：Vue 与 React</h2>
+      <div class="desc">同一条开店命令的两家分店——各看一眼招牌菜，感受 HMR 的精准度</div>
+    </div>
+  </div>
+
+  <p class="lead">前十章的招式（dev/build、配置、样式、代理）对任何框架都原样有效。本章用同样的命令开两家「框架分店」，看看 Vite 与它们怎么配合。</p>
+
+  <h3>11.1 开一家 Vue 分店</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm create vite@latest vue-app -- --template vue   # 老命令、新模板：直出 Vue 分店（免问答）
+cd vue-app                     # 进店
+npm install                    # 进货（注意：框架模板的依赖更多，首次稍慢）
+npm run dev                    # 开业：浏览器看到 Vue + Vite 的欢迎页</pre>
+  </div>
+  <h4>看懂 Vue 的招牌菜：单文件组件（.vue）</h4>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：vue-app/src/App.vue（改造的计数器示例）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;                  &lt;!-- 「逻辑区」：setup 是 Vue3 的组合式 API 写法，代码更少 --&gt;
+import { ref } from 'vue'       // 从 Vue 借来 ref：把普通数字变成「响应式」的——它一变，页面自动跟着变
+const count = ref(0)            // 声明响应式计数器，初始 0；JS 里要用 count.value 读写
+function add() {                // 定义点击回调
+  count.value++                 // 响应式数据 +1 ——页面上的数字自动刷新，无需操作 DOM！
+}
+&lt;/script&gt;
+
+&lt;template&gt;                      &lt;!-- 「摆盘区」：长得像 HTML，里面的 {{ }} 会填入实时数据 --&gt;
+  &lt;h1&gt;Vue 分店：count is {{ count }}&lt;/h1&gt;   &lt;!-- 双花括号插值：count 一变这里立即变 --&gt;
+  &lt;button @click="add"&gt;加一&lt;/button&gt;            &lt;!-- @click 绑定点击事件到 add 函数 --&gt;
+&lt;/template&gt;
+
+&lt;style scoped&gt;                  &lt;!-- 「装修区」：scoped = 样式只作用于本组件（自带防串味） --&gt;
+button { padding: 8px 16px; }   /* 本组件的按钮样式，别的组件的按钮管不着 */
+&lt;/style&gt;</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>一个 <code>.vue</code> 文件 = <b>一间独立档口</b>：逻辑（script）、摆盘（template）、装修（style）三位一体，全写在一张纸上。Vite 的 Vue 插件负责把这张「三段式菜谱」现切成浏览器认识的三道菜——保存的瞬间只重做这一间档口（HMR 精准到组件级）。
+  </div>
+
+  <h3>11.2 开一家 React 分店</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm create vite@latest react-app -- --template react   # 同款命令开出 React 分店
+cd react-app                   # 进店
+npm install                    # 进货
+npm run dev                    # 开业：React + Vite 欢迎页</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：react-app/src/App.jsx（改造的计数器示例）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">import { useState } from 'react'   // 从 React 借 useState 钩子：给函数组件装上「记忆」（状态）
+function App() {                    // 每个组件就是一个函数，返回要显示的内容
+  const [count, setCount] = useState(0)   // 解构出「当前值 + 专用修改器」，初始 0
+  return (                          // 返回 JSX：长得像 HTML 的 JS 扩展语法
+    &lt;div&gt;
+      &lt;h1&gt;React 分店：count is {count}&lt;/h1&gt;   {/* 单花括号填入实时数据（JSX 用 {}，不是 {{}}） */}
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;加一&lt;/button&gt;   {/* 点击调用专用修改器，页面自动刷新 */}
+    &lt;/div&gt;
+  )
+}
+export default App                 // 挂牌导出：main.jsx 里 import App 用的就是它</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">Fast Refresh</span>React 模板里的热更新叫 <b>Fast Refresh</b>：改组件保存，<b>连组件里的 state 都尽量保留</b>——你把弹窗开着改样式，弹窗不会啪地消失。这是 Vite + React 日常开发的隐形福利。
+  </div>
+
+  <h3>11.3 选哪个起步？</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>对比项</th><th>Vue</th><th>React</th></tr></thead>
+    <tbody>
+      <tr><td>上手亲和度</td><td>模板像 HTML、中文资料极多，<b>零基础友好度更高</b></td><td>JSX = 「在 JS 里写 HTML」，要先啃透 JS 本身</td></tr>
+      <tr><td>写法口味</td><td>约定清晰：三段式单文件组件</td><td>自由度高：「一切皆 JS」</td></tr>
+      <tr><td>就业面</td><td>国内中小厂、外包普遍</td><td>国内外大厂、跨端生态（React Native）</td></tr>
+      <tr><td>共同点</td><td colspan="2">在 Vite 眼里只是<b>换一块模板</b>：dev / build / 配置 / 代理 / env 全部照旧——前十章技能 100% 复用</td></tr>
+    </tbody>
+  </table></div>
+  <div class="practice">
+    <span class="tag">动手练习 08</span>
+    <ol>
+      <li>各开一家分店，把两个计数器都跑起来；</li>
+      <li>Vue：改 <code>&lt;style scoped&gt;</code> 里的颜色保存——组件原地换肤、count 不丢；</li>
+      <li>React：改 App.jsx 的标题文字保存——Fast Refresh 下 state 同样不丢。两家都体验「组件级热替换」。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 12 章 ==================== -->
+<section class="chapter" id="ch12">
+  <div class="chap-head">
+    <div class="chap-num">12</div>
+    <div>
+      <h2>插件生态</h2>
+      <div class="desc">给咖啡机装扩展配件——四个最常用的官方/明星插件</div>
+    </div>
+  </div>
+
+  <p class="lead">Vite 的本事可以无限扩展：兼容老浏览器、自动导入 API、按需引入组件库……全都靠往 <code>plugins: []</code> 数组里「插电器」。</p>
+
+  <h3>12.1 插件是什么：面板上的电器插槽</h3>
+  <div class="callout analogy">
+    <span class="tag">类比</span>Vite 是一台<b>标准的商用咖啡机</b>，正面留了一排<b>插槽</b>（plugins 数组）：磨豆机、奶泡机、糖浆泵……每个插件是一台「即插即用的电器」，插上就多一种饮品能力。你在第 11 章其实早就见过它——Vue/React 模板的 vite.config.js 里躺着 <code>plugins: [vue()]</code>，那正是让 <code>.vue</code> / JSX 被看懂的<b>标配电器</b>。
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：vite.config.js（插槽的标准用法）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'       // 第一步：import 插件本体（先 npm install 它）
+
+export default defineConfig({
+  plugins: [                              // 第二步：插进插槽（数组可以插多台，顺序有讲究的按文档来）
+    vue(),                                 // Vue 电器：让 .vue 文件被正确编译
+  ],
+})</pre>
+  </div>
+
+  <h3>12.2 四台最值得认识的电器</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>插件</th><th>它干嘛</th><th>类比</th></tr></thead>
+    <tbody>
+      <tr><td><code>@vitejs/plugin-vue</code> / <code>plugin-react</code></td><td>让 .vue / JSX 被编译（模板自带）</td><td>标配磨豆机——没有它，框架菜谱读不了</td></tr>
+      <tr><td><code>@vitejs/plugin-legacy</code></td><td>构建时生成「老浏览器兼容包」</td><td>老年食客套餐：同一道菜做成软烂版</td></tr>
+      <tr><td><code>unplugin-auto-import</code></td><td>省掉手写 <code>import { ref } from 'vue'</code> 这类样板</td><td>自动补货机械臂：常用食材自动上灶台</td></tr>
+      <tr><td><code>vite-plugin-compression</code></td><td>构建时生成 .gz 预压缩文件</td><td>真空包装机：出货体积更小、运输更快</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>12.3 实装一台：legacy 老浏览器兼容包</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm install -D @vitejs/plugin-legacy terser   # 安装 legacy 插件及其依赖 terser（老语法压缩器）</pre>
+  </div>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：vite.config.js</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">import { defineConfig } from 'vite'
+import legacy from '@vitejs/plugin-legacy'   // 导入刚装的插件
+
+export default defineConfig({
+  plugins: [
+    legacy({                               // 插入并配置：
+      targets: ['defaults', 'not IE 11'],  // 目标浏览器：主流默认集合，明确排除 IE11（上古遗物）
+    }),
+  ],
+})
+// 效果：npm run build 后 dist 里会多出带 -legacy 字样的 JS + 一段自动加载旧浏览器的兜底</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">去哪找插件</span>① Vite 官方文档的 plugins 页（<b>权威</b>，优先级最高）；② GitHub 搜 <code>awesome-vite</code>——社区精选清单，按分类挑。装任何插件前看一眼它的 README：写明支持哪个 Vite 大版本，再动手。
+  </div>
+  <div class="callout warn">
+    <span class="tag">克制</span>电器不是越多越好：每台都会拖慢一点启动、增加一点复杂度。原则——<b>有明确需求才插</b>，为「可能用到」而装是反模式。
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 13 章 ==================== -->
+<section class="chapter" id="ch13">
+  <div class="chap-head">
+    <div class="chap-num">13</div>
+    <div>
+      <h2>生产构建与部署</h2>
+      <div class="desc">深夜中央厨房开工：dist 出餐打包区、指纹命名、试吃与上线</div>
+    </div>
+  </div>
+
+  <p class="lead">开发得心应手之后，「把菜做成能上桌的成品」就差一条命令。本章讲 build 的产物长什么样、为什么文件名都带乱码、以及上线前最后一道试吃。</p>
+
+  <h3>13.1 一条命令：npm run build</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm run build                  # 触发生产构建：Rollup 打包整个项目 → 产出 dist/ 目录</pre>
+    <pre class="output">vite v5.4.8 building for production...   ← 深夜中央厨房开工
+✓ 42 modules transformed.                 ← 共加工了 42 个模块（数字因项目而异）
+dist/index.html                          0.46 kB │ gzip:  0.30 kB   ← 成品清单：大门
+dist/assets/index-a1b2c3d4.js          142.31 kB │ gzip:  46.28 kB   ← 全部 JS（原 142K，压缩后仅 46K！）
+dist/assets/index-e5f6g7h8.css          12.05 kB │ gzip:  2.94 kB   ← 全部 CSS
+✓ built in 1.23s                          ← 1.23 秒完工</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span><code>dist</code> 是<b>出餐打包区</b>（distribution 的缩写）：深夜中央厨房把白天所有散装的菜<b>真空压缩、合并装箱、贴好防伪码</b>，码放整齐等你发运。它和 node_modules 一样是「生成物」——<b>不手动改、不进 Git</b>（想重做随时再 build）。
+  </div>
+
+  <h3>13.2 看懂成品：指纹、摇树、压缩</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>产物特征</th><th>为什么这么做</th><th>类比</th></tr></thead>
+    <tbody>
+      <tr><td>文件名带哈希指纹<br><code>index-a1b2c3d4.js</code></td><td>内容一变指纹就变：浏览器可以<b>放心永久缓存</b>旧文件；发新版时指纹不同，用户自动拿到新文件</td><td>每批成品的<b>防伪批号</b>——批号没变=没过期，直接用库存（缓存）</td></tr>
+      <tr><td>体积大幅缩水<br>（142K → 46K）</td><td>去掉注释空格、变量名压短、语法压扁（minify），再产出 gzip 参考值</td><td>真空压缩包装：内容不变、体积暴跌，运输（下载）更快</td></tr>
+      <tr><td>没用的代码消失</td><td><b>摇树（tree-shaking）</b>：import 了但没用的导出，构建时被「摇」下来扔掉</td><td>装箱前抖一抖树，枯叶（死代码）全落掉，只装活枝</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>13.3 出餐前试吃：npm run preview</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>终端</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">npm run preview               # 起一个「静态试吃服务器」：原样伺服 dist 里的成品
+                              # 地址默认 http://localhost:4173 ——跑的就是你线上将呈现的一切</pre>
+    <pre class="output">  ➜  Local:   http://localhost:4173/    ← 试吃窗口：请务必在这里做上线前最后验收
+  ➜  press h + enter to show help</pre>
+  </div>
+  <div class="callout warn">
+    <span class="tag">别跳过试吃</span>dev 快是因为「现点现做」；build 后的产物走了完全另一条流水线——<b>路径、环境变量、代码分割</b>都可能在这里暴露问题。<b>验收铁律：每次 build 后 preview 一遍再发版</b>。白屏？直奔第 15 章急救站（八成是 base 没配）。
+  </div>
+
+  <h3>13.4 发货上线：dist 怎么变成网址</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>方式</th><th>适合</th><th>要点</th></tr></thead>
+    <tbody>
+      <tr><td><b>静态托管平台</b><br>Netlify / Vercel / Cloudflare Pages</td><td>个人项目、作业、简历站（最省心）</td><td>平台连 Git 仓库自动构建部署；或直接拖拽 dist 文件夹上传</td></tr>
+      <tr><td><b>GitHub Pages</b></td><td>免费的个人主页/项目演示</td><td>注意：站点在 <code>用户名.github.io/仓库名/</code> 子路径下 → 必须配 <code>base: '/仓库名/'</code>（第 8 章）</td></tr>
+      <tr><td><b>自己的服务器</b><br>Nginx / Apache</td><td>正式产品</td><td>把 dist 全部内容传到服务器网站根目录；路由模式与 try_files 配置按框架文档来</td></tr>
+    </tbody>
+  </table></div>
+  <div class="practice">
+    <span class="tag">动手练习 09</span>
+    <ol>
+      <li><code>npm run build</code> 看成品清单，找到带指纹的 JS 文件名；</li>
+      <li><code>npm run preview</code> 试吃验收；顺手改一行代码重新 build，观察指纹变了（缓存原理眼见为实）；</li>
+      <li>把 dist 文件夹拖进 Netlify 的拖拽区（免费注册），收获你的第一个线上网址。</li>
+    </ol>
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 14 章 ==================== -->
+<section class="chapter" id="ch14">
+  <div class="chap-head">
+    <div class="chap-num">14</div>
+    <div>
+      <h2>进阶：分包与懒加载</h2>
+      <div class="desc">按需上菜的艺术：路由级懒加载、手动分包、多页应用</div>
+    </div>
+  </div>
+
+  <p class="lead">项目变大后，「所有代码装一个箱子」会让首屏背着全店的重量。本章三招让浏览器「先吃到凉菜，硬菜慢慢炖」。</p>
+
+  <h3>14.1 懒加载：import() 动态上菜</h3>
+  <p>普通 <code>import</code> 是「点菜时全店备货」；而<b>动态 <code>import()</code></b> 返回一个 Promise——<b>菜在客人真的点的时候才下锅</b>，Vite 自动把它切成独立的小包裹（chunk）：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：src/main.js（对比两种导入）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">import { setupCounter } from './counter.js'   // 静态导入：构建时必然进「主包裹」，页面一打开就加载
+// ↓ 动态导入：构建时切成独立小包裹，下面这行执行的那一刻才去下载
+import('./counter.js')                        // 调用返回 Promise（一个「稍后送达」的承诺）
+  .then(module =&gt; {                           // 包裹送达（module 就是那个文件的全部导出）
+    module.setupCounter(document.querySelector('#counter'))   // 这时才挂上计数器
+  })
+// 实战最常见的用法是「路由级懒加载」：访问哪个页面，才下载哪个页面的包裹
+// （Vue Router / React Router 里的写法长得就是这样：component: () =&gt; import('./views/About.vue')）</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>静态 import 是<b>婚宴全席提前备好</b>；动态 import() 是<b>零点菜单</b>：客人翻到「关于页」那一页，后厨才开火——没点过的页一个字节都不下载。首屏速度立竿见影。
+  </div>
+
+  <h3>14.2 手动分包：把「万年不变的」单独装箱</h3>
+  <p>业务代码天天改（指纹天天变），而 vue/react 这类依赖几乎不动——分开装箱，用户就<b>几乎永远命中缓存</b>：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：vite.config.js（build.rollupOptions）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">export default defineConfig({
+  build: {                                   // 「深夜厨房」小节：构建行为参数
+    rollupOptions: {                         // 透传给打包内核 Rollup 的选项
+      output: {                              // 产物相关设置
+        manualChunks: {                      // 手动分箱表：左边是箱子名，右边是「装进去的东西」
+          vendor: ['vue'],                   // 名为 vendor（供应商）的箱子：装框架这类万年不变的重物
+        },
+      },
+    },
+  },
+})
+// 效果：dist 里多出一个独立 vendor-xxxx.js —— 业务改动重新发版时，它的指纹不变、用户缓存命中</pre>
+  </div>
+
+  <h3>14.3 多页应用：不止一扇大门</h3>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>文件：vite.config.js（MPA 配置示意）</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">import { defineConfig } from 'vite'
+import { resolve } from 'node:path'          // Node 的路径工具：拼接出各入口的磁盘地址
+
+export default defineConfig({
+  build: {
+    rollupOptions: {
+      input: {                               // 多入口 = 多扇大门：每个入口各出一套成品
+        main: resolve(__dirname, 'index.html'),       // 大门一：主页（默认就有）
+        about: resolve(__dirname, 'about/index.html'),// 大门二：关于页（按需访问 about.html）
+      },
+    },
+  },
+})
+// 场景：传统企业站、活动页合集——每个页面独立 HTML，互不依赖；访问时才加载对应包裹</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">节奏建议</span>零基础阶段<b>先不碰</b>本章配置——Vite 默认已经做了合理的自动分包（动态 import 自动切块）。等项目明显变大、首屏变慢了，再回来按需取用。提前优化是万恶之源。
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 15 章 ==================== -->
+<section class="chapter" id="ch15">
+  <div class="chap-head">
+    <div class="chap-num">15</div>
+    <div>
+      <h2>常见报错急救站</h2>
+      <div class="desc">Vite 的坑一百万人都踩过——按报错关键字对号入座，30 秒脱困</div>
+    </div>
+  </div>
+
+  <p class="lead">遇到红色报错先深呼吸。本章按<b>报错原文关键字</b>索引，覆盖新手最常撞的 14 类墙。</p>
+
+  <div class="tblwrap"><table>
+    <thead><tr><th style="width:32%">报错 / 症状关键字</th><th>它在说什么</th><th>急救方案</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>创建项目时报 <b>Node 版本不满足</b><br><code>engine</code> / <code>not supported</code></td>
+        <td>Node 太老，Vite 不伺候</td>
+        <td><code>node -v</code> 对照 Vite 官方文档的版本要求；去 nodejs.org 装 LTS 版（Linux 用 nvm，第 2 章）</td>
+      </tr>
+      <tr>
+        <td><code>npm install</code> 卡住不动 / 龟速</td>
+        <td>默认境外仓库发货慢</td>
+        <td>换国内镜像（第 2 章 2.4）；仍卡则 <kbd>Ctrl</kbd>+<kbd>C</kbd> 中断，删掉 <code>node_modules</code> 与 <code>package-lock.json</code> 后重装</td>
+      </tr>
+      <tr>
+        <td><code>EADDRINUSE</code> / 端口被占用<br>（5173 起不来或自动跳 5174）</td>
+        <td>别的程序占着门牌号</td>
+        <td>最简单：让它自动换号（看启动横幅里的实际端口）；要固定端口就加 <code>server.port</code>；或按下面平台命令揪出占门者：<br>
+        <span class="os win">Win</span> <code>netstat -ano | findstr :5173</code> → <code>taskkill /F /PID 进程号</code><br>
+        <span class="os linux">Linux</span> <code>lsof -i :5173</code> → <code>kill -9 进程号</code></td>
+      </tr>
+      <tr>
+        <td>页面<b>空白</b> + 控制台 404 / MIME 错误<br>（直接双击 index.html 打开）</td>
+        <td>file:// 协议不是开发服务器</td>
+        <td><b>必须 <code>npm run dev</code> 用服务器伺服</b>——双击打开的静态文件没有模块加工能力，这是原理不是故障</td>
+      </tr>
+      <tr>
+        <td><code>Failed to resolve import</code><br>「./xxx」不能被解析</td>
+        <td>路径写错或大小写不对</td>
+        <td>对照文件名逐字母检查（<b>Linux 上大小写敏感</b>：Counter.js ≠ counter.js）；文件真不存在就补上</td>
+      </tr>
+      <tr>
+        <td>改了 <code>.env</code> / <code>vite.config.js</code> <b>不生效</b></td>
+        <td>它们只在启动时读一次</td>
+        <td><kbd>Ctrl</kbd>+<kbd>C</kbd> 停掉，重新 <code>npm run dev</code>——80% 的「玄学」到这就好了</td>
+      </tr>
+      <tr>
+        <td>依赖疑似抽风：装了新包行为诡异</td>
+        <td>预打包缓存过期</td>
+        <td><code>npm run dev -- --force</code> 强制重新备菜（第 6 章）；再不行删 <code>node_modules/.vite</code> 重启</td>
+      </tr>
+      <tr>
+        <td><code>Cannot find module 'esbuild'</code><br>或平台二进制缺失</td>
+        <td>跨平台拷贝 node_modules / 安装中断</td>
+        <td>删掉整个 <code>node_modules</code> 与 <code>package-lock.json</code>，重新 <code>npm install</code>（Windows 与 Linux 的二进制不同，<b>别互拷仓库</b>）</td>
+      </tr>
+      <tr>
+        <td><code>ERESOLVE</code> 依赖版本冲突</td>
+        <td>两个包要求的第三方版本打架</td>
+        <td>优先按报错提示对齐版本；应急用 <code>npm install --legacy-peer-deps</code>（放松同行版本检查，先跑起来再说）</td>
+      </tr>
+      <tr>
+        <td><b>build 后线上白屏</b>（本地 preview 却正常？不，preview 也白）</td>
+        <td>多半是 base 路径没配</td>
+        <td>部署在子目录（如 GitHub Pages 的 <code>/仓库名/</code>）必须配 <code>base: '/仓库名/'</code>（第 8 章）；对照 preview 是否正常逐项排查 env 与路径</td>
+      </tr>
+      <tr>
+        <td>手机访问 <code>--host</code> 地址<b>打不开</b></td>
+        <td>不同 WiFi / 防火墙拦截</td>
+        <td>确认手机与电脑<b>同一 WiFi</b>；Windows 首次开放会弹防火墙询问，点「允许」；公司网络可能隔离设备，换手机热点试</td>
+      </tr>
+      <tr>
+        <td>HMR「失效」：改动触发<b>整页刷新</b></td>
+        <td>不一定是故障</td>
+        <td>影响入口/依赖结构的改动本来就会整页刷新；组件级改动应走热替换——若全部整刷，检查是否有语法错误（红色蒙层挡着）</td>
+      </tr>
+      <tr>
+        <td>Sass 报 <code>Cannot find module 'sass'</code></td>
+        <td>没装预处理器</td>
+        <td><code>npm install -D sass</code>（第 7 章）；Less/Stylus 同理装对应包</td>
+      </tr>
+      <tr>
+        <td>代理转交后 <b>404</b> / 接口路径对不上</td>
+        <td>rewrite 削多了或削少了</td>
+        <td>打印后端实际收到的路径核对：<code>rewrite</code> 只该削掉约定前缀（<code>/api</code>），后端路由本身需要的前缀别削（第 10 章）</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <h3>15.1 万能排查三板斧</h3>
+  <ul class="plain">
+    <li><b>第一斧 看报错原文</b>：红色蒙层/终端输出的<b>第一行 + 文件名 + 行号</b>就是答案所在地，别跳着读；</li>
+    <li><b>第二斧 重启三部曲</b>：硬刷新浏览器（<kbd>Ctrl</kbd>+<kbd>F5</kbd>）→ 重启 dev 服务器 → <code>--force</code> 重备菜；</li>
+    <li><b>第三斧 搜错误原文</b>：整段贴进搜索引擎（加上 vite 关键词）——你永远不是第一个踩坑的人。</li>
+  </ul>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<!-- ==================== 第 16 章 ==================== -->
+<section class="chapter" id="ch16">
+  <div class="chap-head">
+    <div class="chap-num">16</div>
+    <div>
+      <h2>最佳实践与速查表</h2>
+      <div class="desc">几条让人少走弯路的习惯，外加贴在工位的核心命令全表</div>
+    </div>
+  </div>
+
+  <p class="lead">命令与配置到此全部讲完。这一章是「店长守则」+ 一页速查——用两周，它们会长在你的手指上。</p>
+
+  <h3>16.1 七条店长守则</h3>
+  <ol class="steps">
+    <li><b>node_modules 和 dist 永远当它们不存在</b>：不手动改、不进 Git、不跨平台拷贝；坏了就删掉重装/重构建；</li>
+    <li><b>改配置必重启</b>：vite.config.js 与 .env 是「启动时读一次」的档案，改完不重启等于没改；</li>
+    <li><b>先 preview 再发版</b>：build 之后本地试吃（4173），确认无恙再上线——双流水线的行为差异都在这一步暴露；</li>
+    <li><b>密钥不进 VITE_</b>：凡 <code>VITE_</code> 开头的都会被打包公开；真正的机密放后端（第 9 章安全清单）；</li>
+    <li><b>项目尽早交给 Git</b>：脚手架自带的 <code>.gitignore</code> 已把该忽略的列好——配合本目录的《Git 零基础完全教程》第 5 章，五分钟完成首笔提交；</li>
+    <li><b>玄学问题三板斧</b>：硬刷新 → 重启 dev → <code>--force</code>；止不住再删 node_modules 重装（终极手段）；</li>
+    <li><b>遇到新需求先查官方文档</b>：<a href="https://cn.vitejs.dev" target="_blank">cn.vitejs.dev</a>（中文版）结构清晰，配置项一搜即达——比道听途说可靠一百倍。</li>
+  </ol>
+
+  <h3>16.2 命令速查表</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>命令</th><th>作用</th><th>备注</th></tr></thead>
+    <tbody>
+      <tr><td><code>npm create vite@latest</code></td><td>交互式创建项目</td><td>回答店名/框架/变体三连问</td></tr>
+      <tr><td><code>npm create vite@latest 名字 -- --template vanilla</code></td><td>免问答直出项目</td><td>模板：vanilla / vue / react / …（ts 后缀=TypeScript）</td></tr>
+      <tr><td><code>cd 项目名</code> → <code>npm install</code></td><td>进店 + 进货</td><td>克隆来的项目永远从 install 开始</td></tr>
+      <tr><td><code>npm run dev</code></td><td>启动开发服务器</td><td>默认 localhost:5173，HMR 热更新</td></tr>
+      <tr><td><code>npm run dev -- --host</code></td><td>开放局域网访问</td><td>手机/同事设备真机调试</td></tr>
+      <tr><td><code>npm run dev -- --port 3000</code></td><td>指定端口</td><td>参数可叠加：<code>--host --port 8080</code></td></tr>
+      <tr><td><code>npm run dev -- --open</code></td><td>自动打开浏览器</td><td>懒人福音</td></tr>
+      <tr><td><code>npm run dev -- --force</code></td><td>强制重备菜</td><td>清空依赖预打包缓存（第 6 章）</td></tr>
+      <tr><td><code>npm run build</code></td><td>生产构建</td><td>产出 dist/；可 <code>-- --mode test</code> 指定自定义模式</td></tr>
+      <tr><td><code>npm run preview</code></td><td>本地预览成品</td><td>默认 localhost:4173；上线前必试吃</td></tr>
+      <tr><td><code>npm install 包名</code> / <code>npm i -D 包名</code></td><td>安装依赖</td><td>-D = 只装进后厨（devDependencies）</td></tr>
+      <tr><td><code>npm config set registry …</code></td><td>换源加速</td><td>国内镜像见 2.4</td></tr>
+      <tr><td><code>node -v</code> / <code>npm -v</code></td><td>查版本</td><td>一切开始前的地基体检</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>16.3 配置速查（vite.config.js 高频片段）</h3>
+  <div class="tblwrap"><table>
+    <tbody>
+      <tr><td><code>server.port / open / host</code></td><td>端口 / 自动开浏览器 / 开放局域网（第 8 章）</td></tr>
+      <tr><td><code>server.proxy: { '/api': { target, changeOrigin, rewrite } }</code></td><td>后端联调代理（第 10 章）</td></tr>
+      <tr><td><code>resolve.alias: { '@': …/src }</code></td><td>路径别名（第 8 章）</td></tr>
+      <tr><td><code>plugins: [vue(), legacy()]</code></td><td>插件插槽（第 12 章）</td></tr>
+      <tr><td><code>base: '/子路径/'</code></td><td>子目录部署铭牌（第 8 / 13 章）</td></tr>
+      <tr><td><code>build.rollupOptions.output.manualChunks</code></td><td>手动分包（第 14 章）</td></tr>
+      <tr><td><code>.env</code> / <code>.env.development</code> / <code>.env.production</code></td><td>三张环境便签，<code>VITE_</code> 前缀 + <code>import.meta.env</code> 读取（第 9 章）</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>16.4 接下来去哪？</h3>
+  <ul class="plain">
+    <li><b>Vite 官方中文文档</b>：<a href="https://cn.vitejs.dev" target="_blank">cn.vitejs.dev</a>——「指南」读一遍、「配置」当字典查，本教程的一切细节它都有更权威的版本；</li>
+    <li><b>框架主线</b>：选了 Vue 就进 <a href="https://cn.vuejs.org" target="_blank">cn.vuejs.org</a> 官方教程，选了 React 就进 <a href="https://zh-hans.react.dev" target="_blank">zh-hans.react.dev</a>——Vite 只是「厨房」，菜还要跟框架学；</li>
+    <li><b>工程化下一步</b>：TypeScript（模板加 <code>-ts</code> 后缀即可体验）、ESLint + Prettier（代码规范）、Vitest（Vite 官方同门测试框架）；</li>
+    <li><b>配套食用</b>：本目录的《Git 零基础完全教程》管版本、《WSL 零基础完全教程》管 Linux 环境——三份教程的命令在两个平台通用。</li>
+  </ul>
+  <div class="callout analogy">
+    <span class="tag">结语</span>Vite 把「前端工程化」从一门玄学变成一台<b>开机即用的闪电咖啡机</b>：白天现点现做伺候你写代码，深夜真空打包伺候用户加载。餐厅已经开业——去炒你的第一盘菜吧。
+  </div>
+  <div class="chapter-end">· · ·</div>
+</section>
+
+<footer class="site-foot">
+  Vite 零基础完全教程 · 全 16 章 · 类比教学 / 每行代码均有注释 / Windows 与 Linux 双平台<br>
+  建议配合终端边看边敲 · 速查表可打印贴在工位 · 遇到报错先翻第 15 章急救站
+</footer>
+
+</div>
+</main>
+
+<script>
+(function () {
+  // ---------- 工具：HTML 转义 ----------
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // ---------- 代码高亮：注释上绿色、命令词上蓝色、提示符变暗 ----------
+  document.querySelectorAll('pre.code').forEach(function (pre) {
+    var lines = pre.textContent.split('\n');
+    var out = [];
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      if (line.trim() === '') { out.push(''); continue; }
+      var e = esc(line);
+      var hash = e.indexOf('#');
+      var cmdPart = hash >= 0 ? e.slice(0, hash) : e;
+      var cmtPart = hash >= 0 ? '<span class="cmt">' + e.slice(hash) + '</span>' : '';
+      var m = cmdPart.match(/^(\s*)(\$ )?([A-Za-z][\w.\-\/]*)/);
+      if (m) {
+        cmdPart = m[1] + (m[2] ? '<span class="pr">' + m[2] + '</span>' : '') +
+          '<span class="kw">' + m[3] + '</span>' + cmdPart.slice(m[0].length);
+      }
+      out.push(cmdPart + cmtPart);
+    }
+    pre.innerHTML = out.join('\n');
+  });
+
+  // ---------- 复制按钮 ----------
+  document.querySelectorAll('.codewrap').forEach(function (w) {
+    var btn = w.querySelector('.copybtn');
+    var code = w.querySelector('pre.code');
+    if (!btn || !code) return;
+    btn.addEventListener('click', function () {
+      var txt = code.textContent;
+      function done(ok) {
+        btn.textContent = ok ? '已复制' : '复制失败';
+        setTimeout(function () { btn.textContent = '复制代码'; }, 1600);
+      }
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = txt;
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        done(ok);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(function () { done(true); }, fallback);
+      } else {
+        fallback();
+      }
+    });
+  });
+
+  // ---------- 侧边栏当前章节高亮（滚动侦测） ----------
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav a[href^="#"]'));
+  var map = {};
+  links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  function spy() {
+    var cur = secs.length ? secs[0].id : null;
+    for (var i = 0; i < secs.length; i++) {
+      if (secs[i].getBoundingClientRect().top <= 160) cur = secs[i].id;
+    }
+    links.forEach(function (a) { a.classList.remove('active'); });
+    if (cur && map[cur]) map[cur].classList.add('active');
+  }
+
+  // ---------- 顶部阅读进度条 ----------
+  var bar = document.getElementById('progress');
+  function prog() {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max * 100) : 0) + '%';
+  }
+
+  // ---------- 返回顶部按钮 ----------
+  var topBtn = document.getElementById('totop');
+  topBtn.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ---------- 移动端目录开关 ----------
+  var sidebar = document.getElementById('sidebar');
+  var mask = document.getElementById('mask');
+  var menuBtn = document.getElementById('menu');
+  function closeMenu() { sidebar.classList.remove('open'); mask.classList.remove('show'); }
+  menuBtn.addEventListener('click', function () {
+    sidebar.classList.toggle('open');
+    mask.classList.toggle('show');
+  });
+  mask.addEventListener('click', closeMenu);
+  links.forEach(function (a) { a.addEventListener('click', closeMenu); });
+
+  window.addEventListener('scroll', function () {
+    spy();
+    prog();
+    if (window.scrollY > 600) { topBtn.classList.add('show'); }
+    else { topBtn.classList.remove('show'); }
+  }, { passive: true });
+
+  spy();
+  prog();
+})();
+</script>
+</body>
+</html>

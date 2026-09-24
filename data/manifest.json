@@ -6,5 +6,53 @@
     "tags": ["Python", "FastAPI", "Web", "API"],
     "path": "docs/fastapi.html",
     "date": "2026-09-23"
+  },
+  {
+    "title": "Git 零基础完全教程",
+    "desc": "从入门到团队协作：仓库、提交、分支、远程仓库与 GitHub Pages 部署，含命令实战示例。",
+    "category": "版本控制",
+    "tags": ["Git", "GitHub", "版本控制"],
+    "path": "docs/git.html",
+    "date": "2026-09-24"
+  },
+  {
+    "title": "jQuery 4 零基础完全教程",
+    "desc": "jQuery 4 从零入门：选择器、事件、DOM 操作、AJAX 与动画，快速上手前端开发。",
+    "category": "前端开发",
+    "tags": ["jQuery", "JavaScript", "Web"],
+    "path": "docs/jquery.html",
+    "date": "2026-09-24"
+  },
+  {
+    "title": "npm 零基础完全教程",
+    "desc": "一行命令，搬空全球代码商城：包管理器、常用命令、package.json 与发布流程。",
+    "category": "前端开发",
+    "tags": ["npm", "Node.js", "工具"],
+    "path": "docs/npm.html",
+    "date": "2026-09-24"
+  },
+  {
+    "title": "pywin32 零基础完全教程",
+    "desc": "给 Windows 请一位 Python 翻译官：COM、注册表、进程与系统交互等 Windows 自动化能力。",
+    "category": "Python 后端",
+    "tags": ["Python", "pywin32", "Windows"],
+    "path": "docs/pywin32.html",
+    "date": "2026-09-24"
+  },
+  {
+    "title": "Vite 零基础完全教程",
+    "desc": "Vite 快速入门：秒级启动的开发服务器、HMR 热更新、构建优化与现代前端工作流。",
+    "category": "前端开发",
+    "tags": ["Vite", "Node.js", "构建工具"],
+    "path": "docs/vite.html",
+    "date": "2026-09-24"
+  },
+  {
+    "title": "WSL 零基础完全教程",
+    "desc": "WSL 实战：在 Windows 里运行 Linux 子系统，安装、配置、文件互通与开发环境搭建。",
+    "category": "开发工具",
+    "tags": ["WSL", "Linux", "Windows"],
+    "path": "docs/wsl.html",
+    "date": "2026-09-24"
   }
 ]

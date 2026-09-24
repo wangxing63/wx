@@ -123,16 +123,25 @@
   }
 
   function cardHTML(item) {
+    // 首字母图标块（取分类/标题首字符），避免依赖外部图标库
+    var label = (item.category || '讲义').replace('后端', '').trim();
+    var initial = (label.charAt(0) || 'C').toUpperCase();
     return '<a class="card" href="' + escapeAttr(item.path) + '" target="_blank" rel="noopener">' +
-             '<div class="card-title">' + escapeHtml(item.title) + '</div>' +
-             '<div class="card-desc">' + escapeHtml(item.desc || '') + '</div>' +
-             '<div class="card-meta">' +
-               '<span class="chip cat">' + escapeHtml(item.category || '未分类') + '</span>' +
-               (item.tags || []).slice(0, 3).map(function (t) {
-                 return '<span class="chip">' + escapeHtml(t) + '</span>';
-               }).join('') +
-               (item.date ? '<span class="card-date">' + escapeHtml(item.date) + '</span>' : '') +
+             '<span class="card-icon">' + escapeHtml(initial) + '</span>' +
+             '<div class="card-body">' +
+               '<div class="card-topline">' +
+                 '<span class="card-cat">' + escapeHtml(item.category || '未分类') + '</span>' +
+                 (item.date ? '<span class="card-date">' + escapeHtml(item.date) + '</span>' : '') +
+               '</div>' +
+               '<div class="card-title">' + escapeHtml(item.title) + '</div>' +
+               '<div class="card-desc">' + escapeHtml(item.desc || '') + '</div>' +
+               '<div class="card-meta">' +
+                 (item.tags || []).slice(0, 3).map(function (t) {
+                   return '<span class="chip">' + escapeHtml(t) + '</span>';
+                 }).join('') +
+               '</div>' +
              '</div>' +
+             '<span class="card-arrow">→</span>' +
            '</a>';
   }
 

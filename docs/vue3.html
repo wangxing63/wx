@@ -528,7 +528,7 @@ const hour = new Date().getHours()      <span class="cmt">// 当前小时数</sp
   <span class="cmt">// 支持任何能算出值的表达式（算术、三元、字符串拼接都可以）：</span>
   &lt;p&gt;你今年 {{ user.age + 1 }} 岁（虚岁）&lt;/p&gt;   <span class="cmt">// 19</span>
   &lt;p&gt;{{ hour &lt; 12 ? '上午' : '下午' }}好&lt;/p&gt;    <span class="cmt">// 三元：判断是上午还是下午</span>
-  &lt;p&gt;{完整名字：'' }}&lt;/p&gt;  <span class="cmt">// 字符串拼接</span>
+  &lt;p&gt;{{ user.name + ' 同学' }}&lt;/p&gt;           <span class="cmt">// 字符串拼接：Hello，小明 同学</span>
 &lt;/template&gt;</pre>
   </div>
   <div class="callout warn">
@@ -572,6 +572,60 @@ const styleObj = { color: 'red' }          <span class="cmt">// 一个 CSS 样�
   </table></div>
   <div class="callout analogy">
     <span class="tag">类比</span>Vue 的指令就像家电上的<b>电源开关</b>：<code>v-if</code> 是"这条灯亮不亮"，<code>v-for</code> 是"这排开关循环控制多个灯"，<code>v-on:click</code> 是"人按开关时触发动作"，<code>v-bind</code> 是"把遥控器上的数据传到设备上"。
+  </div>
+
+  <h3>3.4 v-bind 的更多形态：整包扩散、动态参数</h3>
+  <p>除了 <code>v-bind:名字="值"</code>（简写 <code>:名字</code>），v-bind 还有两个很实用的形态，真正项目里经常用：</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>v-bind 不写参数 / 动态参数</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+<span class="cmt">// 一个"对象"，里面装了好几个属性——想把它们一口气全塞给元素</span>
+const attrs = { id: 'box-1', title: '我是一个盒子', 'data-size': 'L' }
+<span class="cmt">// 一个"变量名"，用于动态参数：哪个属性名由 key 决定</span>
+const key = 'title'
+const value = '动态标题'
+&lt;/script&gt;
+
+&lt;template&gt;
+  <span class="cmt">// ① 一个 v-bind 不写具体属性名：把整个对象"摊开"成多个属性</span>
+  &lt;div v-bind="attrs"&gt;我有 id、title、data-size 三个属性&lt;/div&gt;
+
+  <span class="cmt">// ② 动态参数：[key] 表示属性名不写死，key 是 'title' 就绑 title</span>
+  &lt;p :[key]="value"&gt;这段的 title 属性是动态的&lt;/p&gt;
+&lt;/template&gt;</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">实用点</span><code>v-bind="对象"</code> 很适合把后端返回的一整包属性批量交给一个组件或元素，不用一个个拆开写。动态参数 <code>:[key]</code> 适合"属性名本身也要程序控制"的场景（比较少见，知道即可）。
+  </div>
+
+  <h3>3.5 class 与 style 的进阶绑定</h3>
+  <p>给元素加 CSS 类、改内联样式是最常见的需求，Vue 为 <code>class</code> 和 <code>style</code> 提供了<b>对象语法</b>和<b>数组语法</b>两种特别写法，能让类名"跟着数据走"。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>class / style 的对象与数组语法</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+const isActive = true        <span class="cmt">// 控制是否高亮</span>
+const activeClass = 'active' <span class="cmt">// 类名字符串</span>
+const errClass = 'error'     <span class="cmt">// 错误类名</span>
+const styleObj = { color: 'red', fontWeight: 'bold' } <span class="cmt">// 样式对象</span>
+const extraStyle = { fontSize: '20px' }               <span class="cmt">// 另一个样式对象</span>
+&lt;/script&gt;
+
+&lt;template&gt;
+  <span class="cmt">// ① 对象语法：键是类名，值是布尔。true 才加这个类，false 不加</span>
+  &lt;p :class="{ active: isActive }"&gt;isActive 为 true 才有 active 类&lt;/p&gt;
+
+  <span class="cmt">// ② 数组语法：把多个类名(或条件类)拼起来，用逗号分隔</span>
+  &lt;p :class="[activeClass, { error: true }]"&gt;同时有 active 和 error 两个类&lt;/p&gt;
+
+  <span class="cmt">// ③ style 对象语法：直接把样式写进对象，键用驼峰(如 fontWeight)</span>
+  &lt;p :style="styleObj"&gt;红色加粗，由 styleObj 控制&lt;/p&gt;
+
+  <span class="cmt">// ④ style 数组语法：多个样式对象合并</span>
+  &lt;p :style="[styleObj, extraStyle]"&gt;红色加粗 且 20px 字&lt;/p&gt;
+&lt;/template&gt;</pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>对象语法 = 一张<b>开关清单</b>（哪个开关合上，哪个类就生效）；数组语法 = 一张<b>购物车清单</b>（把想用的类名一件件放进去，可重复、可叠加）。
   </div>
 
   <div class="practice">
@@ -688,6 +742,92 @@ function happyBirthday() {
 &lt;/template&gt;</pre>
   </div>
 
+  <h3>4.5 深层响应式：改到「最里层」也会动</h3>
+  <p>不管是 <code>ref</code> 还是 <code>reactive</code>，它们默认都是<b>深层侦听</b>——哪怕你改的是对象"最里面"的一个字段，只要这个字段被模板用到，界面都会跟着更新。你不用声明"要监听多深"，Vue 自动帮你监控到底。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>深层响应：改嵌套字段也生效</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { ref } from 'vue'
+
+<span class="cmt">// 一个嵌套很深的 ref 对象</span>
+const team = ref({
+  leader: { name: '张队', skills: ['配送', '修车'] }
+})
+&lt;/script&gt;
+
+&lt;template&gt;
+  <span class="cmt">// 页面上显示"最里层"的 skills[0] —— 它也是响应式的</span>
+  &lt;p&gt;队长擅长：{{ team.leader.skills[0] }}&lt;/p&gt;
+&lt;/template&gt;
+
+<span class="cmt">// 在任何地方修改，哪怕改最深层：</span>
+<span class="cmt">// team.value.leader.skills.push('谈判')  → 页面自动多显示一项</span></pre>
+  </div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>深层响应就像<b>整栋楼的电路</b>：你在一楼工作室拧开一盏灯，整栋楼每个房间的面板都知道"灯亮了"。Vue 默认监听整棵"数据树"，任何一个叶子节点变了，都会广播出去。
+  </div>
+
+  <h3>4.6 解构时会丢响应性：toRefs 的用武之地</h3>
+  <p>新手常踩的坑：把 <code>reactive</code> 对象的字段"解构"（<code>const { name } = user</code>）出来，得到的是一个<b>普通值快照</b>，之后就再也不会更新了。这就像把一句话<b>复印下来</b>贴在墙上——原件改了，复印件不会变。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>toRefs 解构仍保持响应式</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { reactive, toRefs, toRef } from 'vue'
+
+const user = reactive({ name: '小明', age: 18 })
+
+<span class="cmt">// ✗ 错误做法：直接解构出来的 name 是"复印件"，不再响应式</span>
+<span class="cmt">// const { name } = user   // 之后改 user.name 页面不变</span>
+
+<span class="cmt">// ✓ 正确做法：用 toRefs 把整个对象拆成"一连串 ref"</span>
+const { name, age } = toRefs(user)
+<span class="cmt">// 解构出来的 name、age 都是响应式 ref，用的时候要 name.value</span>
+
+<span class="cmt">// 只想取单个字段，用 toRef：</span>
+const theAge = toRef(user, 'age')
+&lt;/script&gt;
+
+&lt;template&gt;
+  <span class="cmt">// 模板里 name 自动解包，能实时更新</span>
+  &lt;p&gt;{{ name }} {{ age }} 岁&lt;/p&gt;
+&lt;/template&gt;</pre>
+  </div>
+  <div class="callout tip">
+    <span class="tag">记忆</span>「<b>解构会断响应</b>，想保留就用 <code>toRefs</code>」。这也是为什么 Vue 官方更推荐<span class="cmt">统一用 ref</span>——ref 大对象本来就要先写 <code>.value</code>，没有"解构断链"这种意外。
+  </div>
+
+  <h3>4.7 readonly：让数据"只读"，防止误改</h3>
+  <p>有时候一份数据是"官方定死的"，不希望别人改到它。<code>readonly</code> 会给数据做一层<b>只读外壳</b>：读没问题，一旦尝试写，Vue 会发出警告。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>readonly 只读示例</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { ref, readonly } from 'vue'
+
+const version = readonly(ref('3.4'))   <span class="cmt">// 把 ref 包成只读，里面读出来 3.4</span>
+<span class="cmt">// version.value = '4.0'  // ✗ 会警告：只读，不能改</span>
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;p&gt;当前 Vue 版本：{{ version }}&lt;/p&gt;
+&lt;/template&gt;</pre>
+  </div>
+
+  <h3>4.8 shallowRef / shallowReactive：只想监听「表层」</h3>
+  <p>大多数情况你希望 Deep（深层）响应。但如果数据是个<b>特别大的数组或对象</b>，每次深层监听性能开销大。这时可以用 <code>shallowRef</code> / <code>shallowReactive</code>——它们只监听<b>第一层</b>，深层变化不触发。属于进阶性能优化点，了解一下存在即可。</p>
+  <div class="codewrap">
+    <div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>shallowRef 只监听表层的整体替换</span><button class="copybtn">复制代码</button></div>
+    <pre class="code">&lt;script setup&gt;
+import { shallowRef } from 'vue'
+
+const bigList = shallowRef([1, 2, 3])
+<span class="cmt">// bigList.value[0] = 99   // ✗ 不触发更新（深层改动，shallow 不监听）</span>
+<span class="cmt">// bigList.value = [9, 9]  // ✓ 触发更新（整体替换第一层，shallow 会监听）</span>
+&lt;/script&gt;</pre>
+  </div>
+  <div class="callout info">
+    <span class="tag">一句话总结</span><b>ref / reactive</b> = 深层响应（日常主力）；<b>shallowRef / shallowReactive</b> = 只监听表层（性能优化）；<b>readonly</b> = 只读外壳（防改）；<b>toRefs / toRef</b> = 解构时保住响应性。
+  </div>
+
   <div class="practice">
     <span class="tag">动手练习 4·1</span>
     <ol>
@@ -785,6 +925,95 @@ watch(() =&gt; user.value.age, (newAge, oldAge) =&gt; {
 
   <div class="callout warn">
     <span class="tag">注意</span>像 <code>watch</code> 会被「对象被整体替换」或链式引用搞晕，本教程只需掌握两种最常用形态：<b>① watch(ref变量, ...)</b> 监听单个；<b>② watch(()=>obj.字段, ...)</b> 监听某字段。复杂场景（深度监听）进阶再学。
+  </div>
+
+  <h3>5.4 computed 也能「可写」：getter 和 setter</h3>
+  <p>前面学的 computed 是<b>只读</b>的——只能算，不能手动改。但有些场景你希望"改这个，连带着改另一个"，比如输入框显示成美元金额，改它时自动换算出人民币存起来。</p>
+  <p>这时可以给 computed 传一个<b>对象</b>，里面放 <code>get()</code>（取值时怎么算）和 <code>set()</code>（赋值时怎么办）。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>可写的 computed</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// options 表示我们要传一个「配置对象」进去</span>
+<span class="cmt">// 里面同时写了：怎么「取」和怎么「给」</span>
+<span class="cmt">// getter：你「读」这个值时，我返回什么</span>
+<span class="cmt">// setter：你「写」这个值时，我要做的事</span>
+&lt;span class="cmt"&gt;// 注意：是对象写法 { get, set }&lt;/span&gt;
+const rmb = ref(100)                <span class="cmt">// 真正存底的人民币数字</span>
+const dollar = computed({           <span class="cmt">// 一个「可写」的计算属性</span>
+  <span class="cmt">// 读 dollar 时把人民币换算成美元</span>
+  get() { return rmb.value / 7.2 },
+  <span class="cmt">// 往 dollar 赋值时，反推回人民币存好</span>
+  set(val) { rmb.value = val * 7.2 },
+})
+&lt;template&gt;
+  &lt;span class="cmt"&gt;&lt;!-- 输入框直接绑 dollar，双向读写 --&gt;&lt;/span&gt;
+  &lt;input v-model="dollar" /&gt;  美元
+  &lt;span class="cmt"&gt;&lt;!-- 下面是真实的人民币金额 --&gt;&lt;/span&gt;
+  &lt;p&gt;人民币：{{ rmb }}&lt;/p&gt;
+&lt;/template&gt;</pre></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>只读 computed 是<b>一面"只出不进"的镜子</b>——你只能看，不能对着镜子改现实。可写 computed 像是一个<b>"带换算的存钱罐口"</b>：你投美元进去，它自动折算成人民币存到底仓。
+  </div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>大部分场景用<b>只读 computed 就够了</b>。可写形式只在"改派生值也想同步回源数据"时用，别图新鲜到处写，容易绕晕。
+  </div>
+
+  <h3>5.5 watch 的进阶选项：deep / immediate / once / flush</h3>
+  <p>watch 除了"监听变量、变化了去干活"，还支持几个<b>开关选项</b>，解决不同场景。它们是 watch 的第三、第四个参数。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>四个常用选项</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 先准备一个「对象」：下面演示怎么监听它内部的变化</span>
+const user = ref({ name: '小王', age: 20 })
+
+<span class="cmt">// 1. deep: 监听对象的「内部」——任何角落变了都算</span>
+watch(user, () =&gt; {
+  console.log(<span class="cmt">'user 的内部发生了变化'</span>)
+}, { deep: true })   <span class="cmt">// 打开「深层」开关</span>
+
+<span class="cmt">// 2. immediate: 一上来就先执行一次，不等它变化</span>
+watch(() =&gt; user.value.age, (v) =&gt; {
+  console.log(<span class="cmt">'当前年龄'</span>, v)
+}, { immediate: true })  <span class="cmt">// 立刻跑一次（适合初始化）</span>
+
+<span class="cmt">// 3. once: 只响应「第一次」变化，之后就不管了</span>
+watch(() =&gt; user.value.name, () =&gt; {
+  <span class="cmt">// 只打印一次</span>
+}, { once: true })
+
+<span class="cmt">// 4. flush: 控制回调「什么时候」跑</span>
+<span class="cmt">//   'pre'   组件更新「前」跑（默认）</span>
+<span class="cmt">//   'post'  组件更新「后」跑（此时 DOM 已是最新，能读到新 DOM）</span>
+<span class="cmt">//   'sync'  数据一变就同步跑（尽量别用，性能差）</span>
+watch(count, (v) =&gt; {
+  console.log(<span class="cmt">'更新后的 DOM 高度'</span>, el.offsetHeight)
+}, { flush: <span class="cmt">'post'</span> })</pre></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span><code>deep</code> 像<b>住进整栋楼里</b>，某间房换灯泡也报告；不写 deep 只<b>守在单元门口</b>，整栋楼换栋名牌才报告。<code>immediate</code> 像<b>上岗第一天先述职一次</b>，后面有变化再汇报；<code>once</code> 像"只关注第一次开门"。
+  </div>
+  <div class="callout warn">
+    <span class="tag">注意</span>监听<b>对象内部</b>（<code>deep: true</code>）或直接 <code>watch(user, cb)</code> 时，性能略差。推荐写法：<b>改监听 <code>() =&gt; user.value.name</code> 这种具体字段</b>，既精确又不用开 deep。
+  </div>
+
+  <h3>5.6 watchEffect：不用手动指定"监听谁"</h3>
+  <p><code>watch</code> 需要你<b>指明监听哪个变量</b>。而 <code>watchEffect</code> 聪明：它<b>先跑一次你的回调，遇到哪个变量就自动记住哪个</b>，之后这些变量一变，回调就自动重跑。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>watchEffect 自动收集依赖</span><button class="copybtn">复制代码</button></div><pre class="code">const keyword = ref(<span class="cmt">''</span>)    <span class="cmt">// 搜索词</span>
+const list    = ref([])     <span class="cmt">// 搜索结果</span>
+
+<span class="cmt">// 不用写监听谁！里面用到的变量都会自动被盯上</span>
+watchEffect(() =&gt; {
+  console.log(<span class="cmt">'当前搜索词是'</span>, keyword.value)
+  <span class="cmt">// 如果还用到了 list，list 变了也会重跑</span>
+  console.log(<span class="cmt">'共'</span>, list.value.length, <span class="cmt">'条结果'</span>)
+})</pre></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span><code>watch</code> 像"你<b>点名</b>谁，我就只盯着谁"；<code>watchEffect</code> 像"你在<b>画圈</b>时用到谁，我自然认得谁——你圈的人一变，我重新画圈。
+  </div>
+  <div class="tblwrap"><table>
+    <thead><tr><th>对比项</th><th>watch</th><th>watchEffect</th></tr></thead>
+    <tbody>
+      <tr><td>要不要写监听对象</td><td>要，必须指定</td><td>不用，自动收集</td></tr>
+      <tr><td>首次要不要先跑</td><td>默认不跑（可加 immediate）</td><td>每次都先跑一次</td></tr>
+      <tr><td>拿不拿得到「旧值」</td><td>能拿到 (新值, 旧值)</td><td>拿不到旧值</td></tr>
+      <tr><td>典型场景</td><td>数据变化去请求/存盘</td><td>副作用同步（日志、DOM 同步、联动）</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>需要<b>旧值对比</b>、或只监听<b>单个</b>指定数据 → 用 <code>watch</code>；只想"数据变了就顺带干点活、且不用管旧值" → 用 <code>watchEffect</code>。两者逻辑不要混着乱用。
   </div>
 
   <div class="practice">
@@ -899,6 +1128,90 @@ function submit() {
   </div>
   <div class="callout info">
     <span class="tag">注</span>这里出现了 <code>v-model</code>（第 8 章详细讲），它让输入框和 <code>msg</code> 双向绑定——输入什么，<code>msg</code> 就存什么。这章先带着感觉看，下一章就会系统讲。
+  </div>
+
+  <h3>6.4 事件修饰符「全家桶」：.stop .prevent .self .capture .once .passive</h3>
+  <p>上一节你见过 <code>.stop</code> 和 <code>.prevent</code> 这两个修饰符。其实事件修饰符还有好几兄弟，专门对付"浏览器事件默认行为"这类麻烦。它们可以让你的模板<b>更干净</b>，不用在 JS 里手动 <code>e.stopPropagation()</code>。</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>修饰符</th><th>作用</th><th>生活类比</th></tr></thead>
+    <tbody>
+      <tr><td><code>.stop</code></td><td>阻止事件继续「往上传」（停止冒泡）</td><td>孩子关上门，不再惊动楼上的家长</td></tr>
+      <tr><td><code>.prevent</code></td><td>阻止浏览器的「默认行为」（如表单自动提交、链接跳转、右键菜单）</td><td>按下开关前先拔掉插头</td></tr>
+      <tr><td><code>.self</code></td><td>只有点「这个元素本身」才触发，点它里面的子元素不触发</td><td>只认本人签名，代签不算</td></tr>
+      <tr><td><code>.capture</code></td><td>在「捕获阶段」触发（从外往里先执行）</td><td>门口安检先于包内检查</td></tr>
+      <tr><td><code>.once</code></td><td>只触发一次，之后自动失效</td><td>只允许按一次的门铃</td></tr>
+      <tr><td><code>.passive</code></td><td>告诉浏览器"我不打算阻止滚轮事件"，让滚动更顺滑</td><td>提前报备"我不会拦"，通行更顺畅</td></tr>
+      <tr><td><code>.exact</code></td><td>精确匹配按键，只有「单独按这个键」才触发（不是同时按了 Ctrl 等）</td><td>只有考试的同学，助教不算</td></tr>
+    </tbody>
+  </table></div>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>修饰符可以连用，顺序无关</span><button class="copybtn">复制代码</button></div><pre class="code">&lt;span class="cmt"&gt;&lt;!-- 点按钮：既挡住冒泡，又防止默认行为 --&gt;&lt;/span&gt;
+&lt;button @click.stop.prevent="onClick"&gt;点我&lt;/button&gt;
+
+&lt;span class="cmt"&gt;&lt;!-- 只有点遮罩「本身」才关闭，点里面的弹窗内容不关闭 --&gt;&lt;/span&gt;
+&lt;div class="mask" @click.self="close"&gt;
+  &lt;div class="modal"&gt;弹窗内容，点我不会关&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;span class="cmt"&gt;&lt;!-- 只按一次就自动再也不会触发 --&gt;&lt;/span&gt;
+&lt;button @click.once="submit"&gt;只允许提交一次&lt;/button&gt;
+
+&lt;span class="cmt"&gt;&lt;!-- 精确：只有单独按 Enter，不带 Ctrl，才触发 --&gt;&lt;/span&gt;
+&lt;input @keydown.enter.exact="send" /&gt;</pre></div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>说面试题常问"<code>.stop</code> 和 <code>.prevent</code> 区别"：<code>.stop</code> 管的是**事件传播路径**（往上冒），<code>.prevent</code> 管的是**浏览器默认动作**（表单提交 / 链接跳转）。两者常常一起用，就写 <code>@click.stop.prevent</code>。
+  </div>
+
+  <h3>6.5 键盘按键修饰符：按哪个键才响应</h3>
+  <p>想让"回车键提交" "Esc 关闭"，手写查 <code>e.key === 'Enter'</code> 太啰嗦。Vue 给了<b>按键修饰符</b>：<code>@keyup.enter</code> 就代表"松开回车键才触发"。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>按键修饰符</span><button class="copybtn">复制代码</button></div><pre class="code">&lt;span class="cmt"&gt;&lt;!-- 输入框里按「回车」就提交 --&gt;&lt;/span&gt;
+&lt;input @keyup.enter="submit" placeholder="回车提交" /&gt;
+
+&lt;span class="cmt"&gt;&lt;!-- 按「Esc」就关闭弹窗 --&gt;&lt;/span&gt;
+&lt;div @keyup.esc="close" tabindex="0"&gt;按 Esc 关掉我&lt;/div&gt;
+
+&lt;span class="cmt"&gt;&lt;!-- 同时按「Ctrl + S」保存，esc 表示不用额外键 --&gt;&lt;/span&gt;
+&lt;textarea @keydown.ctrl.s.prevent="save"&gt;&lt;/textarea&gt;
+
+&lt;span class="cmt"&gt;&lt;!-- 自定义别名：把别的键也起一个好记的名字 --&gt;&lt;/span&gt;
+&lt;span class="cmt"&gt;// 在 JS 里：Vue 默认已内置 enter/tab/delete/esc/space/up/down/left/right&lt;/span&gt;
+&lt;span class="cmt"&gt;// 其它键用它的物理 key 名，如 @keyup.page-down&lt;/span&gt;</pre></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>修饰符像<b>门锁的钥匙齿</b>——普通点击是"随便谁来都开"，而 <code>.enter</code> 这把钥匙<b>只有对应齿形</b>（恰好是回车）才转得开锁。
+  </div>
+
+  <h3>6.6 $event：把「原生事件对象」递进函数里</h3>
+  <p>有时候你要在函数里拿到<b>这次事件本身</b>（比如鼠标坐标、被填的输入框），而不是 Vue 给你准备的数据。这时模板里有个神秘变量 <code>$event</code> 可以代表"这个原生事件对象"。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>无参 vs 传 $event</span><button class="copybtn">复制代码</button></div><pre class="code">&lt;span class="cmt"&gt;&lt;!-- 写法1：不带括号，Vue 自动把事件对象作为第一个参数传 --&gt;&lt;/span&gt;
+&lt;button @click="onClick"&gt;点我&lt;/button&gt;
+
+&lt;span class="cmt"&gt;&lt;!-- 写法2：带括号，自己把一个自定义参数传进去 --&gt;&lt;/span&gt;
+&lt;button @click="onClick('你好')"&gt;带参数&lt;/button&gt;
+
+&lt;span class="cmt"&gt;&lt;!-- 写法3：又要自定义参数，又要事件对象 → 用 $event --&gt;&lt;/span&gt;
+&lt;button @click="onClick('你好', $event)"&gt;两样都要&lt;/button&gt;
+
+&lt;span class="cmt"&gt;&lt;!-- 配合修饰符：拿到坐标、又阻止默认 --&gt;&lt;/span&gt;
+&lt;div @mousemove.stop="onMouse($event)"&gt;看我坐标&lt;/div&gt;</pre></div>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>对应的 JS 逻辑</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 写法1：第一个参数直接就是事件对象</span>
+function onClick(e) {
+  console.log(<span class="cmt">'触发了事件'</span>, e)   <span class="cmt">// e 是原生 MouseEvent</span>
+}
+
+<span class="cmt">// 写法3：前面是自定义消息，最后一个是事件对象</span>
+function onClick(msg, e) {
+  console.log(msg, <span class="cmt">'鼠标X'</span>, e.clientX, <span class="cmt">'Y'</span>, e.clientY)
+}
+
+<span class="cmt">// 搬输入框内容出来，比如看用户到底选了哪个选项</span>
+function onMouse(e) {
+  <span class="cmt">// e.target 是真正被点的那个元素</span>
+  console.log(e.target.textContent)
+}</pre></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span><code>$event</code> 是<b>事件现场的"执法记录仪"</b>——记录下了这次点击发生在哪、坐标多少、目标是谁。你需要做"事后取证"（读坐标、读输入框值）时，就把这盘录像带（$event）拿进函数里看。
+  </div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>什么时候用 $event？<b>当你既想传自己的参数、又想拿到事件本身</b>时。只拿事件就"不带括号"白嫖 Vue 的自动传参；只传自定义参数就带普通括号。
   </div>
 
   <div class="practice">
@@ -1039,6 +1352,72 @@ function removeTodo(id) {
 &lt;/template&gt;</pre>
   </div>
 
+  <h3>7.5 key 的作用：为什么列表项一定要"身份证"</h3>
+  <p>用 <code>v-for</code> 时，Vue 会<b>尽量复用已有的 DOM 元素</b>来提升性能。但复用时它怎么知道"这一项对应哪一行"？靠的就是 <code>:key</code>——它是一行的<b>身份证号</b>。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>有 key vs 无 key 的差别</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 好写法：用数据自带的 id 当 key</span>
+&lt;li v-for="item in list" :key="item.id"&gt;{{ item.name }}&lt;/li&gt;
+
+<span class="cmt">// 坏写法：用下标 index 当 key —— 一旦排序/增删，Vue 会“认错人”</span>
+&lt;span class="cmt"&gt;&lt;!-- :key="index" 常见，但只适合静态不动列表 --&gt;&lt;/span&gt;
+&lt;li v-for="(item, index) in list" :key="index"&gt;{{ item.name }}&lt;/li&gt;</pre></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>想象一排<b>快递柜</b>。key 是<b>每个格子的收货人姓名</b>。没有 key，快递员只按"第 1 格、第 2 格"记位置；一旦顺序一变（有人插队、有人取走），他就把货放错柜。用 id 当 key，快递员<b>认人送货</b>，怎么重排都错不了。
+  </div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>key 还有<b>强制刷新</b>的用法：想"硬性重做个组件"（比如换题目后重新播放动画、重新计时），就给组件换一个不同的 key。key 一变 = 这个人全换新的，DOM 会被销毁重建。
+  </div>
+
+  <h3>7.6 数组"变更方法" vs "整体替换"：哪些能触发更新</h3>
+  <p>操作响应式数组，有的写法 Vue 能"自动发现变化"，有的写法要手动替换。区分好这两类，告别"改了数组界面没反应"。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>能自动发现变化的写法</span><button class="copybtn">复制代码</button></div><pre class="code">const todos = ref([<span class="cmt">'买菜'</span>, <span class="cmt">'做菜'</span>])
+
+<span class="cmt">// 这些「变更方法」会自动触发页面更新：</span>
+todos.value.push(<span class="cmt">'拖地'</span>)      <span class="cmt">// 末尾加</span>
+todos.value.pop()              <span class="cmt">// 去掉末尾</span>
+todos.value.unshift(<span class="cmt">'晨跑'</span>)  <span class="cmt">// 开头加</span>
+todos.value.shift()            <span class="cmt">// 去掉开头</span>
+todos.value.splice(1, 1)       <span class="cmt">// 从位置1删1个</span>
+todos.value.reverse()          <span class="cmt">// 倒序</span>
+todos.value.sort()             <span class="cmt">// 排序</span></pre></div>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>要「整体替换」才能触发</span><button class="copybtn">复制代码</button></div><pre class="code">const arr = ref([1, 2, 3])
+
+<span class="cmt">// 直接按下标改 —— 这样改 Vue 可能“看不见”</span>
+arr.value[0] = 99    <span class="cmt">// ← 不推荐，可能不更新页面</span>
+
+<span class="cmt">// 正确姿势1：用 splice 改</span>
+arr.value.splice(0, 1, 99)
+
+<span class="cmt">// 正确姿势2：整体替换（重新生成新数组再赋回去）—— 强制刷新</span>
+arr.value = arr.value.map((n, i) =&gt; i === 0 ? 99 : n)
+
+<span class="cmt">// 正确姿势3：filter 出新的再赋回去（删除某些项）</span>
+arr.value = arr.value.filter(n =&gt; n &gt;= 2)</pre></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>有的改动像<b>在货架原位补货</b>（push / splice），Vue 一眼就看出少了。有的改动像是<b>你把货架上第 3 层的盒子悄悄换了个</b>，却没做"登记"——Vue 以为没动。想让负责人知道，就<b>整托重新摆一次</b>（整体替换新数组）。
+  </div>
+  <div class="callout warn">
+    <span class="tag">注意</span>用 <code>ref</code> 包裹数组时，操作要写 <code>arr.value.push(...)</code>（带 <code>.value</code>）。用 <code>reactive</code> 包数组才可以直接 <code>arr.push(...)</code>。别弄混了。
+  </div>
+
+  <h3>7.7 v-for 与 v-if 不要用在同一元素上</h3>
+  <p>同一个元素上同时写 <code>v-for</code> 和 <code>v-if</code>，Vue 会<b>先执行 v-for 再判断 v-if</b>。也就是说：<b>每一项都先被渲染出来、再逐个过滤</b>，永远达不到"先判断再循环"的省性能目的，反而浪费。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>不要这样写（会被当作普通 HTML 属性处理）</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// ❌ 别这样：每个 li 都会先创建，再判断是否隐藏，浪费</span>
+&lt;li v-for="item in items" v-if="item.visible"&gt;{{ item.text }}&lt;/li&gt;</pre></div>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>推荐：先过滤再循环，或包一层 template</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 方案A：先在 JS 里过滤好，再只循环一次（最推荐）</span>
+<span class="cmt">// const visibleItems = computed(() =&gt; items.value.filter(i =&gt; i.visible))</span>
+&lt;li v-for="item in visibleItems" :key="item.id"&gt;{{ item.text }}&lt;/li&gt;
+
+<span class="cmt">// 方案B：用 template 包一层，让 v-if 在「外层」先判断</span>
+&lt;template v-for="item in items" :key="item.id"&gt;
+  &lt;li v-if="item.visible"&gt;{{ item.text }}&lt;/li&gt;
+&lt;/template&gt;</pre></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>像<b>送礼名单 vs 筛选</b>：先全发一遍礼物再把人删掉，不如先按名单筛出要送的人，再一次性送。前者白忙活，后者一步到位。
+  </div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>记住口诀：<b>v-for 负责"产生"，v-if 负责"过滤"</b>。想同时用它俩，就把 v-if 挪到<b>外层 template</b> 上，或用 computed 先过滤。
+  </div>
+
   <div class="practice">
     <span class="tag">动手练习 7·1</span>
     <ol>
@@ -1129,6 +1508,91 @@ const keyword = ref('') <span class="cmt">// 加 .trim 后自动去除首尾空�
   </div>
   <div class="callout tip">
     <span class="tag">技巧</span>`.number`、`.trim` 这类叫<b>修饰符</b>，可以直接加在 v-model 后面。遇到"输入框明明存的是字符串却当数字用"的坑，多半是忘了加 <code>v-model.number</code>。
+  </div>
+
+  <h3>8.4 v-model 的修饰符：.lazy .number .trim</h3>
+  <p>v-model 后面还能接修饰符，让数据存进去的时候<b>自动加工</b>一下，省得你再去控制台看"类型不对""有一堆空格"。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>三个常用修饰符</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 1. .lazy：从「每打一个字就同步」改成「失焦/回车时才同步」</span>
+<span class="cmt">//    适合搜索框，避免每按一下都去请求一次</span>
+&lt;input v-model.lazy="keyword" /&gt;
+
+<span class="cmt">// 2. .number：自动把存进去的「字符串」转成「数字」</span>
+<span class="cmt">//    前面 8.3 的坑，这里直接根治</span>
+&lt;input v-model.number="age" type="number" /&gt;
+&lt;span class="cmt"&gt;&lt;!-- 这时 age 是数字 20，而不是字符串 "20" --&gt;&lt;/span&gt;
+
+<span class="cmt">// 3. .trim：自动去掉「首尾的空格」</span>
+<span class="cmt">//    防止用户手滑多打空格导致对比不上</span>
+&lt;input v-model.trim="username" /&gt;</pre></div>
+  <div class="tblwrap"><table>
+    <thead><tr><th>修饰符</th><th>存进去前做了什么</th><th>典型用途</th></tr></thead>
+    <tbody>
+      <tr><td><code>.lazy</code></td><td>改成"失焦/回车"时才同步，而非实时</td><td>搜索、大段输入，减少请求</td></tr>
+      <tr><td><code>.number</code></td><td>把字符串转成数字</td><td>年龄、数量、价格</td></tr>
+      <tr><td><code>.trim</code></td><td>去掉首尾空格</td><td>用户名、昵称、标签</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>修饰符像<b>门口的门卫</b>：<code>.number</code> 把"字符串入场券"换成本地"数字入场券"再放行；<code>.trim</code> 把身上多余的"空格装饰"摘掉再登记；<code>.lazy</code> 则是"你出去时才登记"，不像实时记录那样频繁打扰。
+  </div>
+
+  <h3>8.5 更细的值绑定：单选、复选、下拉的"值"到底存什么</h3>
+  <p>v-model 绑定不同控件，<b>存进变量的"值"长得不一样</b>。搞懂这个，表单数据才不会存错形。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>不同控件的 v-model 存什么</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 文本框：存「字符串」</span>
+&lt;input v-model="name" /&gt;   <span class="cmt">// name 是 "张三" 这种字符串</span>
+
+<span class="cmt">// 单选框：同一组 name 下，存「被选中的那个 value」</span>
+&lt;input type="radio" value="male" v-model="gender" /&gt; 男
+&lt;input type="radio" value="female" v-model="gender" /&gt; 女
+<span class="cmt">// gender 只可能是 'male' 或 'female' 之一</span>
+
+<span class="cmt">// 复选框（单独一个）：存「true / false」表示勾没勾</span>
+&lt;input type="checkbox" v-model="agree" /&gt; 我同意协议
+<span class="cmt">// agree 是布尔：true 或 false</span>
+
+<span class="cmt">// 复选框（一组）：存「被勾选所有 value 组成的数组」</span>
+&lt;input type="checkbox" value="篮球" v-model="hobbies" /&gt;
+&lt;input type="checkbox" value="吉他" v-model="hobbies" /&gt;
+<span class="cmt">// hobbies 是 ['篮球'] 或 ['篮球','吉他']</span>
+
+<span class="cmt">// 下拉框：单选存「选中的 option 的 value」</span>
+&lt;select v-model="city"&gt;
+  &lt;option value="beijing"&gt;北京&lt;/option&gt;
+  &lt;option value="shanghai"&gt;上海&lt;/option&gt;
+&lt;/select&gt;
+<span class="cmt">// city 是 'beijing' 等</span></pre></div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>记口诀：<b>单选/下拉存"单个字符串"；一组复选存"字符串数组"；单个复选存"布尔值"</b>。开发时先想清楚控件类型，再决定 ref 的初始值。
+  </div>
+
+  <h3>8.6 在「组件」上使用 v-model：给自家组件也开双向绑定</h3>
+  <p>v-model 不仅能绑原生输入框，还能用在<b>组件</b>上——比如你自己做了一个 <code>MyInput</code> 输入框组件，让父组件也能用 <code>v-model="xxx"</code> 双向绑定。</p>
+  <p>原理其实很简单：<b>v-model 在一个组件上 = 传一个 <code>modelValue</code> prop + 监听一个 <code>update:modelValue</code> 事件</b>。组件内部配合 <code>defineProps</code> 和 <code>defineEmits</code> 接住、弹回即可。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>子组件：MyInput.vue</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 接住父级传下来的值（名字必须是 modelValue）</span>
+const model = defineProps([<span class="cmt">'modelValue'</span>])
+<span class="cmt">// 声明要发的事件（名字必须是 update:modelValue）</span>
+const emit = defineEmits([<span class="cmt">'update:modelValue'</span>])
+&lt;template&gt;
+  &lt;input
+    :value="model"   <span class="cmt">// 显示父级传来的值</span>
+    @input="emit(<span class="cmt">'update:modelValue'</span>, $event.target.value)" <span class="cmt">// 一改就发回去</span>
+  /&gt;
+&lt;/template&gt;</pre></div>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>父组件用法</span><button class="copybtn">复制代码</button></div><pre class="code">&lt;script setup&gt;
+  import MyInput from <span class="cmt">'./MyInput.vue'</span>
+  const msg = ref(<span class="cmt">'初始文字'</span>)
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;span class="cmt"&gt;&lt;!-- 就跟绑原生输入框一样顺手 --&gt;&lt;/span&gt;
+  &lt;MyInput v-model="msg" /&gt;
+  &lt;p&gt;下面是 msg：{{ msg }}&lt;/p&gt;
+&lt;/template&gt;</pre></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>v-model 传数据像<b>双向对讲机</b>：父级把 <code>modelValue</code> 这段"录音"交给组件，组件一有改动就喊一句 <code>update:modelValue</code>，父级立刻更新。两边都能说、都能听，就是"双向绑定"。
+  </div>
+  <div class="callout info">
+    <span class="tag">提示</span>这一节一步步走到了"组件通信"门口——正式的知识在<b>第 10 章</b>（Props 与事件）会系统讲。<code>modelValue</code> / <code>update:modelValue</code> 这两个名字就是官方规定的"接头暗号"。
   </div>
 
   <div class="practice">
@@ -1226,6 +1690,66 @@ const count = ref(0)               <span class="cmt">// 组件自有的响应式
   <p>新手常问"拆多细"。经验法则：<b>凡是长得像、可重复、或独占一片逻辑的东西，就值得拆成组件</b>。一开始不要过度拆，随着"同类代码出现两次"再抽。</p>
   <div class="callout tip">
     <span class="tag">技巧</span>怎么判断？如果有一段 HTML+逻辑，你发现有<b>复制粘贴第 2 次</b>的冲动，就打住——把它抽成组件吧。
+  </div>
+
+  <h3>9.6 组件只能有一个「根元素」？（Fragments 来救场）</h3>
+  <p>传统的 Vue2 要求：<b>一个组件的模板必须只有一个顶层根元素</b>，想放两个兄弟节点还得外层包一层 <code>&lt;div&gt;</code>。</p>
+  <p>Vue3 放宽了：<b>允许有多个根元素</b>，叫 <b>Fragments（碎片）</b>。现在可以并列写多个顶层标签，不再为了包裹而包裹。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Vue2 时代被迫包一层</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// ❌ 这种「只是为了让外面有根」的 div 很烦人</span>
+&lt;template&gt;
+  &lt;div&gt;<span class="cmt">// 这层 div 纯粹是"行李背带"，不想要</span>
+    &lt;h2&gt;标题&lt;/h2&gt;
+    &lt;p&gt;内容&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</pre></div>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>Vue3 直接并列写（Fragments）</span><button class="copybtn">复制代码</button></div><pre class="code">&lt;template&gt;
+  <span class="cmt">// 并列两个顶层标签，完全合法！</span>
+  &lt;header&gt;顶部&lt;/header&gt;
+  &lt;main&gt;主体&lt;/main&gt;
+&lt;/template&gt;</pre></div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>注意：<b>多根组件</b>时，<code>inheritAttrs</code>（下一章会讲）等"自动接受外部属性的行为"不再落根，需要手动用 <code>v-bind="$attrs"</code> 指定放到哪个元素上。
+  </div>
+
+  <h3>9.7 动态组件：用 <code>&lt;component :is="..."&gt;</code> 切换显示谁</h3>
+  <p>想让"同一块地方，根据状态显示不同组件"（比如登录框有时显示"登录"，有时显示"注册"），懒散地写 <code>v-if</code> 一串，很啰嗦。Vue 提供了 <code>&lt;component&gt;</code> 占位符：<code>:is</code> 给哪个组件名，就渲染哪个。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>动态切换组件</span><button class="copybtn">复制代码</button></div><pre class="code">&lt;script setup&gt;
+  import Login from <span class="cmt">'./Login.vue'</span>
+  import Register from <span class="cmt">'./Register.vue'</span>
+  <span class="cmt">// currentTab 存「当前要显示哪个组件名」</span>
+  const currentTab = ref(<span class="cmt">'Login'</span>)
+&lt;/script&gt;
+
+&lt;template&gt;
+  <span class="cmt">// 用 :is 指定显示哪个组件，点按钮切换</span>
+  &lt;button @click="currentTab = 'Login'"&gt;登录&lt;/button&gt;
+  &lt;button @click="currentTab = 'Register'"&gt;注册&lt;/button&gt;
+
+  <span class="cmt">// 动态组件：is 等于哪个，就显示哪个</span>
+  &lt;component :is="currentTab" /&gt;
+&lt;/template&gt;</pre></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span><code>&lt;component :is&gt;</code> 像<b>一台可换屏幕的显示器</b>：<code>:is</code> 告诉它"现在插哪块屏"，就显示哪块。换输入源就换屏，不用搬整台机器。
+  </div>
+
+  <h3>9.8 keep-alive：切换时「缓存」住组件，不销毁</h3>
+  <p>动态组件切换时，默认会<b>销毁上一个、新建下一个</b>——里面输入到一半的草稿、滚动位置就全没了。想留住它们、又需要时再激活？用 <code>&lt;KeepAlive&gt;</code> 包一层，组件就会被<b>缓存</b>起来。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>缓存组件的状态</span><button class="copybtn">复制代码</button></div><pre class="code">&lt;template&gt;
+  <span class="cmt">// 用 KeepAlive 把动态组件包起来</span>
+  &lt;KeepAlive&gt;
+    &lt;component :is="currentTab" /&gt;
+  &lt;/KeepAlive&gt;
+&lt;/template&gt;</pre></div>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>只缓存特定组件</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 用 include / exclude 指定「哪些组件名」要缓存/不缓存</span>
+&lt;KeepAlive include="Login"&gt;
+  <span class="cmt">// 只有 Login 被缓存，Register 不缓存（每次重开）</span>
+  &lt;component :is="currentTab" /&gt;
+&lt;/KeepAlive&gt;</pre></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>没有 KeepAlive 时切组件，像<b>把书合上放回书架</b>，再打开要重新翻页；有 KeepAlive 时，像<b>书页夹着书签放在桌面</b>，切回来直接落在原来那页。
+  </div>
+  <div class="callout warn">
+    <span class="tag">注意</span>被缓存的组件不会触发 <code>onUnmounted</code>（因为没真销毁），而是触发 <code>onActivated</code> / <code>onDeactivated</code> 两个专属钩子。需要"回来时刷新数据"，就在 <code>onActivated</code> 里做。
   </div>
 
   <div class="practice">
@@ -1397,6 +1921,92 @@ function removeTodo(id) {
 &lt;/template&gt;</pre>
   </div>
 
+  <h3>10.5 Prop 的类型校验：像给包裹「贴标签」般安全</h3>
+  <p>到目前为止 defineProps 都写成了数组（只声明名字）。想更稳妥，就用<b>对象写法</b>：声明每个 prop 的<b>类型、是否必填、默认值</b>。传错了类型，Vue 会在控制台<b>警告</b>你。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>对象写法的类型校验</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 用对象描述每个 prop 的「身份证信息」</span>
+defineProps({
+  <span class="cmt">// name 必须是字符串，而且是必填</span>
+  name: {
+    type: String,
+    required: true,       <span class="cmt">// 必填，没传会警告</span>
+  },
+  <span class="cmt">// age 必须是数字，可选，缺省默认 18</span>
+  age: {
+    type: Number,
+    default: 18,
+  },
+  <span class="cmt">// tags 必须是数组，缺省给空数组</span>
+  tags: {
+    type: Array,
+    default: () =&gt; [],    <span class="cmt">// 数组/对象必须用「工厂函数」返回，避免引用同一份</span>
+  },
+  <span class="cmt">// 还可以自定义校验函数：不符合就警告</span>
+  level: {
+    validator: (v) =&gt; [<span class="cmt">'低'</span>, <span class="cmt">'中'</span>, <span class="cmt">'高'</span>].includes(v),
+  },
+})</pre></div>
+  <p>下面是校验时最常用的<b>类型取值</b>一览：</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>类型</th><th>含义</th></tr></thead>
+    <tbody>
+      <tr><td><code>String</code></td><td>必须是字符串</td></tr>
+      <tr><td><code>Number</code></td><td>必须是数字</td></tr>
+      <tr><td><code>Boolean</code></td><td>必须是布尔值</td></tr>
+      <tr><td><code>Array</code></td><td>必须是数组</td></tr>
+      <tr><td><code>Object</code></td><td>必须是对象</td></tr>
+      <tr><td><code>Function</code></td><td>必须是一个函数</td></tr>
+      <tr><td>自定义数组</td><td>如 <code>[String, Number]</code>，两者之一都行</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>类型校验像<b>快递分拣扫码</b>：寄来的包裹上写得清清楚楚"易碎品、限重2kg、必须冷藏"，分拣员按标签处理。传错类型时 Vue 就像<b>扫码不匹配亮红灯</b>，在控制台提醒你。
+  </div>
+
+  <h3>10.6 单向数据流：子组件不能直接改父的 prop</h3>
+  <p><b>一句话：props 是父传子的"只读复印件"，子组件不能反过来改它</b>。这是 Vue 的铁律，叫<b>单向数据流</b>。数据只能父 → 子，想改，就发事件让父去改。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>这样改是错的</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// ❌ 子组件里试图直接改传进来的 prop</span>
+const props = defineProps([<span class="cmt">'count'</span>])
+function handleClick() {
+  props.count++   <span class="cmt">// ← 报错 / 不生效：你无权改父的数据</span>
+}</pre></div>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>正确姿势：本地备份 或 发事件让父改</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 方案A：只做「局部展示 / 局部可改」，用本地 ref 拷贝一份</span>
+const props = defineProps([<span class="cmt">'count'</span>])
+const local = ref(props.count)   <span class="cmt">// 自己的副本，随便改</span>
+
+<span class="cmt">// 方案B：要把改动告诉父，emit 事件，让父来改</span>
+const emit = defineEmits([<span class="cmt">'update:count'</span>])
+function plus() { emit(<span class="cmt">'update:count'</span>, props.count + 1) }
+
+<span class="cmt">// 父组件这样用：# 没括号 = v-on，收到事件就把 count 加 1</span>
+&lt;span class="cmt"&gt;&lt;Child :count="count" @update:count="count = $event" /&gt;&lt;/span&gt;</pre></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>父传子比作<b>校长下发"通知单"</b>：你拿到的是<b>复印件</b>，用红笔改它改不了校长桌上的原件；想真改，就要<b>向校长申请（发事件）</b>，让他改系统里的版本再重新下发。
+  </div>
+
+  <h3>10.7 Fallthrough Attributes：没被 props 接住的"漏网属性"去哪了</h3>
+  <p>在组件标签上写了一个<b>没被 props 声明</b>的属性（比如 <code>class</code>、<code>id</code>、<code>style</code>、甚至普通 <code>data-x</code>），它不会报错——Vue 会把这个属性自动<b>"透传"</b>到组件的<b>根元素</b>上，这叫 <b>Fallthrough（透传属性）</b>。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>透传自动落到根元素</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 父组件：给 Card 组件传 class 和 id（都没在 props 里声明）</span>
+&lt;Card class="big-card" id="myCard" /&gt;
+
+<span class="cmt">// 子组件 Card.vue 只写了这些（没声明 class/id）</span>
+defineProps([<span class="cmt">'title'</span>])
+&lt;template&gt;
+  &lt;div&gt;{{ title }}&lt;/div&gt;  <span class="cmt">// 这个根 div 会自动多出 class="big-card" id="myCard"</span>
+&lt;/template&gt;</pre></div>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>用 $attrs 手动接管透传</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 想改放到「不是根元素」的地方？用 v-bind="$attrs" 指定</span>
+&lt;template&gt;
+  &lt;div class="wrapper"&gt;
+    <span class="cmt">// 把外部传的 class/id 都绑到里面的 input 上</span>
+    &lt;input v-bind="$attrs" /&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</pre></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>透传属性像<b>顺路捎带的行李标签</b>：寄到公司大楼（组件）但没写具体部门（prop），收件前台（Vue）就默认把它放到<b>最显眼的正门（根元素）</b>上。想挂到别的门，就用 $attrs 亲手贴上。
+  </div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>如果不想让属性自动落到根元素，给的定义里加 <code>defineOptions({ inheritAttrs: false })</code> 即可关闭自动透传，改用 <code>v-bind="$attrs"</code> 手动控制。
+  </div>
+
   <div class="practice">
     <span class="tag">动手练习 10·1</span>
     <ol>
@@ -1509,6 +2119,78 @@ import Layout from './Layout.vue'
     </tbody>
   </table></div>
 
+  <h3>11.4 插槽的「渲染作用域」：父模板只能用父的数据</h3>
+  <p>插槽内容是<b>在父组件里写、在子组件里挖坑</b>的，但记住一个重要规则：<b>这些内容能访问的数据，是"父组件的数据"</b>——因为这段模板是在父组件作用域里编译的。它<b>访问不到子组件</b>里的变量。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>父作用域 vs 子作用域</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 父组件 App.vue</span>
+&lt;template&gt;
+  &lt;Card&gt;
+    <span class="cmt">// 这里能用到父的 snake（能访问）</span>
+    {{ snake }}
+    <span class="cmt">// ❌ 不能用子组件里的 fish（子内部数据，父看不见）</span>
+  &lt;/Card&gt;
+&lt;/template&gt;
+
+<span class="cmt">// 子组件 Card.vue</span>
+const fish = ref(<span class="cmt">'小鱼'</span>)   <span class="cmt">// 这道鱼是子自己的，父拿不到</span>
+&lt;template&gt;
+  &lt;slot&gt;&lt;/slot&gt;   <span class="cmt">// 坑在子这里，但坑里装什么由父决定</span>
+&lt;/template&gt;</pre></div>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>给插槽一个「默认内容」</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 子组件：坑里默认显示「没有内容」</span>
+&lt;button type="submit"&gt;
+  <span class="cmt">// 父没往坑里塞东西时，就显示这个默认文案</span>
+  &lt;slot&gt;提交&lt;/slot&gt;
+&lt;/button&gt;
+
+<span class="cmt">// 父没传时按钮显示「提交」；传了就显示父给的文字</span></pre></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>作用域就像<b>做饭的权限</b>：父组件手里有自己冰箱里的"蛇"，子组件冰箱里的"鱼"是子专属——父往子挖的坑里放料，只能放<b>自己冰箱（作用域）</b>里的料。
+  </div>
+
+  <h3>11.5 具名插槽的 `#` 简写语法</h3>
+  <p>前面 11.2 你可能写成 <code>&lt;template v-slot:header&gt;...&lt;/template&gt;</code>。太长？<b>Vue 给了一个甜点</b>：用 <code>#</code> 代替 <code>v-slot:</code>，写起来飞快。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>两种写法等价</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 长写法（你以前见过）</span>
+&lt;template v-slot:header&gt;这是头部&lt;/template&gt;
+
+<span class="cmt">// 简写：# = v-slot:，写法一模一样</span>
+&lt;template #header&gt;这是头部&lt;/template&gt;
+
+<span class="cmt">// 默认插槽简写：#default 可以，省略不写也行</span>
+&lt;template #default&gt;我是主体&lt;/template&gt;</pre></div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>写组件代码时，<b>具名插槽几乎都用 # 简写</b>。它像快捷键 <code>Ctrl+S</code> 之于"菜单-保存"，功能等价，敲起来更快，是所有 Vue3 项目的惯例。
+  </div>
+
+  <h3>11.6 作用域插槽：子把数据「递出来」给父用</h3>
+  <p>前面说插槽内容只能用父的数据。但有时你希望<b>子把数据传给插槽内容用</b>（比如"列表组件把自己算好的第几项递给父渲染"）。怎么办？在 <code>&lt;slot&gt;</code> 上<b>绑属性</b>即可，叫<b>作用域插槽</b>。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>子组件：把数据通过 slot 递出来</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 子组件：MyList.vue，把每个 item 交给父来渲染成什么样</span>
+const props = defineProps([<span class="cmt">'items'</span>])
+&lt;template&gt;
+  &lt;ul&gt;
+    &lt;li v-for="item in items" :key="item.id"&gt;
+      <span class="cmt">// slot 上绑 item，等于把这个 item 递给父模板</span>
+      &lt;slot :item="item"&gt;{{ item.text }}&lt;/slot&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/template&gt;</pre></div>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>父组件：用简化参数接住</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 父组件：v-slot 解构拿属性</span>
+&lt;MyList :items="books"&gt;
+  <span class="cmt">// slotProps 是子递出来的一包属性（里面有 item）</span>
+  &lt;template #default="slotProps"&gt;
+    &lt;b&gt;{{ slotProps.item.title }}&lt;/b&gt;
+  &lt;/template&gt;
+&lt;/MyList&gt;
+
+<span class="cmt">// 更写法出厂：直接把需要的那几个解构出来</span>
+&lt;MyList :items="books"&gt;
+  &lt;template #default="{ item }"&gt;&lt;b&gt;{{ item.title }}&lt;/b&gt;&lt;/template&gt;
+&lt;/MyList&gt;</pre></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>作用域插槽像<b>子组件递给你一张"食材卡"</b>：默认盖子里的东西由你定，但子可以先在卡片上写明"这是第 3 块牛排"。你接着这张卡片，就能按它来烹饪出你想要的样子。
+  </div>
+  <div class="callout warn">
+    <span class="tag">注意</span>作用域插槽属性<b>只在对应插槽内容里能访问</b>，离开这段 template 就失效。也别把它当成传数据的万能工具，项目里 <b>最高一层数据最好仍是 props 单向传递</b>。
+  </div>
+
   <div class="practice">
     <span class="tag">动手练习 11·1</span>
     <ol>
@@ -1608,6 +2290,59 @@ onBeforeUnmount(() =&gt; {
   </div>
   <div class="callout warn">
     <span class="tag">注意</span>新手常见病：<b>在 <code>setup</code> 里直接 <code>setInterval</code> 而从不到期清理</b>。组件销毁了定时器还在跑，越积越多拖垮页面。切记：<b>有开就有关</b>——开了定时器 / 监听，就在 <code>onBeforeUnmount</code> 里关掉。
+  </div>
+
+  <h3>12.3 完整生命周期钩子表格：看懂组件的「整个人生」</h3>
+  <p>除了创建/挂载/更新/卸载这四个阶段，Vue 还内置了更多"到点就通知你"的钩子。全部列成一张表，每遇到一个场景直接找对应钩子。</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>钩子（组合式 API）</th><th>什么时候触发</th><th>典型用法</th></tr></thead>
+    <tbody>
+      <tr><td><code>onBeforeMount</code></td><td>即将把组件放进页面，DOM 还没生成</td><td>在渲染前做最后准备</td></tr>
+      <tr><td><code>onMounted</code></td><td>组件刚放进页面，DOM 已生成</td><td>发请求、绑定第三方库、启动定时器</td></tr>
+      <tr><td><code>onBeforeUpdate</code></td><td>数据变了，但页面还没重新渲染</td><td>记录"改之前"的状态</td></tr>
+      <tr><td><code>onUpdated</code></td><td>数据变了，且页面已经刷新好</td><td>此时可读取最新 DOM、做 DOM 依赖的操作</td></tr>
+      <tr><td><code>onBeforeUnmount</code></td><td>组件即将从页面移除</td><td>清理定时器、取消请求、移除监听（最重要的清理钩子）</td></tr>
+      <tr><td><code>onUnmounted</code></td><td>组件已经从页面移除完毕</td><td>收尾工作</td></tr>
+      <tr><td><code>onErrorCaptured</code></td><td>子组件抛错时冒泡到这里</td><td>集中捕获错误、上报、降级显示</td></tr>
+      <tr><td><code>onActivated</code> / <code>onDeactivated</code></td><td>组件配合 KeepAlive 时，被激活 / 被切走</td><td>回到缓存组件时刷新数据</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>钩子像<b>人生大事的"电话通知"</b>：出生（onMounted）会通知你，长大（onUpdated）会通知你，毕业退租搬家（onBeforeUnmount）会先让你收拾东西——准时接电话，你就能在每个节点做该做的事。
+  </div>
+  <div class="callout tip">
+    <span class="tag">技巧</span><b>用得最多的就三个</b>：<code>onMounted</code>（进场干活）、<code>onBeforeUnmount</code>（离场打扫）、偶尔 <code>onUpdated</code>（改完读 DOM）。其余先眼熟，用到再查。
+  </div>
+
+  <h3>12.4 钩子怎么写进代码：在 setup 里调用即可</h3>
+  <p>组合式 API 里，所有生命周期钩子都是<b>从 vue 导入、直接在 <code>&lt;script setup&gt;</code> 里调用</b>即可。它们按<b>书写顺序</b>注册，到了一个阶段就触发对应的回调。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>在 setup 中注册一系列钩子</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 导入需要的钩子</span>
+import { onMounted, onBeforeUnmount, onUpdated } from <span class="cmt">'vue'</span>
+
+&lt;script setup&gt;
+  <span class="cmt">// 1. 进场：组件挂到页面上后执行（发请求放这里）</span>
+  onMounted(() =&gt; {
+    fetchData()
+    startTimer()
+  })
+
+  <span class="cmt">// 2. 更新：某个数据变、页面刷新后执行</span>
+  onUpdated(() =&gt; {
+    console.log(<span class="cmt">'页面已刷新'</span>)
+  })
+
+  <span class="cmt">// 3. 离场：组件要销毁前，清理所有"手工开的东西"</span>
+  onBeforeUnmount(() =&gt; {
+    clearInterval(timer)   <span class="cmt">// 关定时器</span>
+    removeEventListener(...)  <span class="cmt">// 移除监听</span>
+    abortController.abort()   <span class="cmt">// 取消请求</span>
+  })
+&lt;/script&gt;</pre></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>每个钩子的回调就像<b>贴在生死节点上的"待办便签"</b>：进场时贴"发请求、看时间"，离场时贴"关闹钟、还钥匙"。你把便签贴好，Vue 到这个时点就自动照着做。
+  </div>
+  <div class="callout warn">
+    <span class="tag">注意</span>钩子<b>只能在 setup 里同步调用</b>（不能在 <code>if</code> 或回调里异步调用，会注册失败）。它内部可以用箭头函数读外面的变量，但钩子本身必须在顶层。
   </div>
 
   <div class="practice">
@@ -1715,6 +2450,72 @@ const { x, y } = useMouse()    <span class="cmt">// 一行接入，自动管理�
     <span class="tag">技巧</span>看到 `useCounter`、`useMouse` 这类名字了吗？<b>「useXxx」是可组合函数的标准命名习惯</b>，像"接口说明书"，一看就知道它能做什么。写 Vue3 时，凡是"逻辑可以抽出去、被多个地方复用"的场景，都值得包成 useXxx。
   </div>
 
+  <h3>13.5 在组合式函数里用生命周期钩子 + 返回清理函数</h3>
+  <p>组合式函数的厉害之处：它<b>内部也能调用生命周期钩子</b>（onMounted、onBeforeUnmount 等）——因为它是"在某个组件里被调用"，符合"钩子必须在 setup 顶层同步调用"的规则。于是你可以把"开定时器 + 关定时器"整个打包进一个函数。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>一个自带清理的 useClock</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 组合式函数：useClock.js</span>
+import { ref, onMounted, onBeforeUnmount } from <span class="cmt">'vue'</span>
+
+export function useClock() {
+  <span class="cmt">// 当前时间</span>
+  const now = ref(new Date())
+
+  <span class="cmt">// 在函数内部也能用它，因为它运行在组件的 setup 里</span>
+  onMounted(() =&gt; {
+    timer.value = setInterval(() =&gt; {
+      now.value = new Date()
+    }, 1000)
+  })
+
+  <span class="cmt">// 组件销毁时，把定时器一起关掉，不会泄漏</span>
+  onBeforeUnmount(() =&gt; {
+    clearInterval(timer.value)
+  })
+
+  <span class="cmt">// 把「数据 + 清理方法」一起交出去</span>
+  return { now, stop }
+}</pre></div>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>还嫌不够，再手动返回一个 stop</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 在组合式函数里也可以给「清理」留一个手动口子</span>
+export function useClock() {
+  const now = ref(new Date())
+  let timer = null
+
+  <span class="cmt">// stop 函数：随时手动停</span>
+  function stop() { clearInterval(timer) }
+  <span class="cmt">// start 函数：随时重启</span>
+  function start() { stop(); timer = setInterval(() =&gt; now.value = new Date(), 1000) }
+
+  onMounted(start)
+  onBeforeUnmount(stop)
+
+  <span class="cmt">// 返回给使用者：想手动停止就调用 .stop()</span>
+  return { now, start, stop }
+}</pre></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>组合式函数像<b>外卖盒里自带一次性餐具和垃圾桶袋</b>：打开盒子就能用（onMounted 自动开），吃完自动有袋子收走（onBeforeUnmount 自动清）。答应永远不会把垃圾留外面。
+  </div>
+  <div class="callout tip">
+    <span class="tag">技巧</span><b>"有开就有关"是好代码的硬标准</b>。无论定时器、请求、监听，只要组合式函数里开了，就必须在同一函数里关干净。这样用你的人不会背"内存泄漏"的锅。
+  </div>
+
+  <h3>13.6 到底要不要抽成组合式函数？一张决策表</h3>
+  <p>不是所有东西都值得抽。面对"这段逻辑要不要封成 useXxx"，用下面几个问题自测：<b>会不会被两个地方复用？</b>有没有复杂到不好读？</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>情况</th><th>要不要封装</th><th>理由</th></tr></thead>
+    <tbody>
+      <tr><td>同一份逻辑在 2 个以上组件重复</td><td>必须封装</td><td>DRY：一处改，处处生效</td></tr>
+      <tr><td>单个组件里，一堆阶梯式嵌套的状态</td><td>鼓励封装</td><td>把"状态 + 行为 + 清理"包成黑盒，好读</td></tr>
+      <tr><td>逻辑只有一次、且只有几行</td><td>可以晚点抽</td><td>过早封装反而增加跳转负担</td></tr>
+      <tr><td>纯展示、无状态副作用的函数</td><td>可作为普通函数</td><td>不需要 vue 的 ref/computed 时，就是普通函数</td></tr>
+      <tr><td>需要访问组件 props / 生命周期</td><td>封装成 useXxx</td><td>把它们藏进函数里，调用方界面更干净</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>封装像<b>要不要买收纳盒</b>：东西多、乱、常用 → 买盒子（封装）；只有一两只零散物件 → 随手放着更省事。收纳过度反而找东西更慢。
+  </div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>一个实用的触发信号：<b>当你发现自己开始"复制粘贴代码"时</b>，就是该抽组合式函数的那一刻。尽早抽，别等到项目长草了才回头改。
+  </div>
+
   <div class="practice">
     <span class="tag">动手练习 13·1</span>
     <ol>
@@ -1792,6 +2593,34 @@ const font = inject('font', '16px')   <span class="cmt">// 找不到 font 就用
   </table></div>
   <div class="callout warn">
     <span class="tag">注意</span>provide/inject 虽然方便，但也有代价：<b>数据来源在哪里不容易一眼看出</b>。最好只用于"明确定义的全局状态"，别到处滥用，否则项目也会变得像乱接线的盘根错节。
+  </div>
+
+  <h3>14.5 inject 的默认值 &amp; 响应性：注入后还能「活着」吗</h3>
+  <p>两个细节常踩坑：<b>① 如果上层根本没 provide，inject 会得到 undefined，可能报错；② provide 的值若想实时联动，要用 ref / reactive 包着</b>。下面把这两个说清。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>inject 提供默认值，避免 undefined</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 1. 只写名字：拿不到时是 undefined</span>
+const name = inject(<span class="cmt">'username'</span>)   <span class="cmt">// 上层没提供 → undefined</span>
+
+<span class="cmt">// 2. 给默认值：拿不到就用默认（最常见写法）</span>
+const name = inject(<span class="cmt">'username'</span>, <span class="cmt">'游客'</span>)  <span class="cmt">// 缺省时是 '游客'</span>
+
+<span class="cmt">// 3. 默认值也可以是工厂函数（用于数组/对象，避免共享同一份）</span>
+const list = inject(<span class="cmt">'tags'</span>, () =&gt; [])</pre></div>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>provide 用 ref 包着，注入后仍实时联动</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 父：provide 一个 ref，才是「活」的数据</span>
+const count = ref(0)
+provide(<span class="cmt">'count'</span>, count)
+
+<span class="cmt">// 子：inject 拿到 REF，改/读要 .value</span>
+const c = inject(<span class="cmt">'count'</span>)
+c.value++   <span class="cmt">// 会同步到父组件页面</span>
+
+<span class="cmt">// 注意：如果用 provide('x', 普通值/非 ref)，后面改它不会联动</span>
+let plain = 0
+provide(<span class="cmt">'x'</span>, plain)   <span class="cmt">// ❌ 这只是传了一个快照，不是活引用</span></pre></div>
+  <div class="callout info">
+    <span class="tag">对比</span>provide 传<b>ref</b> = 递一跟"网线"，改它两头都通、实时同步；provide 传<b>普通值</b> = 递一张"照片"，改原件照片不会变。项目要实时联动，一律 provide <b>ref / reactive</b>。
+  </div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>如果你想让 provide 的值<b>只读、不许子端乱改</b>，可以 <code>provide('key', readonly(ref(...)))</code>，用第 4 章学过的 <code>readonly</code> 包一层。
   </div>
 
   <div class="practice">
@@ -1922,6 +2751,72 @@ const font = inject('font', '16px')   <span class="cmt">// 找不到 font 就用
   </div>
   <div class="callout warn">
     <span class="tag">注意</span>列表项一定要写 <code>:key</code>，而且用<b>稳定的 id</b>，不要用下标 <code>index</code>。因为 Vue 靠 key 来"认出"哪一项移动了，用下标会导致顺序乱了就判断错人。
+  </div>
+
+  <h3>15.6 过渡模式 transition-mode：两个元素交换时的「出场顺序」</h3>
+  <p>当你要在两个元素之间切换（比如<code>登录</code>/<code>注册</code>都套上 transition），如果它们占同一个位置，会出现"旧的和新的一起在动、上下重叠"的问题。用 <code>mode</code> 控制切换顺序即可。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>三种模式</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// out-in：旧的先退场，新的再进场（最常见，推荐）</span>
+&lt;Transition mode="out-in"&gt;
+  &lt;component :is="currentTab" /&gt;
+&lt;/Transition&gt;
+
+<span class="cmt">// in-out：新的先进场，旧的再退场（少用）</span>
+&lt;Transition mode="in-out"&gt;
+  ...
+&lt;/Transition&gt;
+
+<span class="cmt">// 默认（不写）：同时进出，可能重叠 → 用 mode="out-in" 解决</span></pre></div>
+  <div class="callout analogy">
+    <span class="tag">类比</span>mode 像<b>两个人进门出门的顺序</b>：<code>out-in</code> 是"屋里的人先走完，新人才进"（不拥挤）；不设 mode 则是"旧人还没出，新人就挤进来"，会撞车。
+  </div>
+
+  <h3>15.7 appear：组件「首次出现」也给动画</h3>
+  <p>&lt;Transition&gt; 默认只在"元素被创建/销毁"时播放动画。<b>页面刚打开、组件第一次挂载</b>就想来一次进场动画？加 <code>appear</code> 属性即可，让动画在初始渲染时也触发。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>首屏也动一下</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 加 appear：页面第一次显示这块时，也播放入场动画</span>
+&lt;Transition appear name="fade"&gt;
+  &lt;p&gt;我是一打开页面就淡入出现&lt;/p&gt;
+&lt;/Transition&gt;
+<span class="cmt">// .fade-enter-from / .fade-enter-active 样式照旧写即可</span></pre></div>
+  <div class="callout tip">
+    <span class="tag">技巧</span><code>appear</code> 很适合"欢迎页、首屏引导"这类开场效果；配合 <code>mode="out-in"</code> + 多块 <code>v-if</code>，就能做出翻页式的开场引导。
+  </div>
+
+  <h3>15.8 用 JS 钩子 @enter / @leave 控制动画（对接第三方库）</h3>
+  <p>CSS 动画够日常用；但要做复杂动效（拖拽、物理弹跳、逐帧），CSS 很吃力。这时用 &lt;Transition&gt; 提供的 <b>JS 钩子</b>（@before-enter、@enter、@leave 等），在回调里自由操作元素，甚至直接对接 <b>Animate.css / GSAP</b> 这类动画库。</p>
+  <div class="codewrap"><div class="codehead"><span class="lab"><span class="dots"><i></i><i></i><i></i></span>JS 钩子接 GSAP 示例</span><button class="copybtn">复制代码</button></div><pre class="code"><span class="cmt">// 引第三方动画库（GSAP 为例）</span>
+import gsap from <span class="cmt">'gsap'</span>
+
+<span class="cmt">// 进场：从透明+位移 弹到正常位</span>
+function onEnter(el, done) {
+  gsap.fromTo(el, { opacity: 0, y: 30 },
+             { opacity: 1, y: 0, duration: 0.5, onComplete: done })
+}
+<span class="cmt">// 退场：缩小淡出</span>
+function onLeave(el, done) {
+  gsap.to(el, { opacity: 0, scale: 0.8, duration: 0.3, onComplete: done })
+}
+&lt;template&gt;
+  &lt;Transition
+    @before-enter="onBeforeEnter"
+    @enter="onEnter"
+    @leave="onLeave"
+    :css="false"&gt;  <span class="cmt">// 纯 JS 驱动时可关掉 CSS 检测</span>
+    &lt;p v-if="show"&gt;我交给 JS 表演&lt;/p&gt;
+  &lt;/Transition&gt;
+&lt;/template&gt;</pre></div>
+  <div class="tblwrap"><table>
+    <thead><tr><th>钩子</th><th>含义</th></tr></thead>
+    <tbody>
+      <tr><td><code>@before-enter</code></td><td>进场动画开始前，先重置状态</td></tr>
+      <tr><td><code>@enter</code></td><td>进场：可在回调里操作元素；记得调用 done() 告知结束</td></tr>
+      <tr><td><code>@after-enter</code></td><td>进场结束后执行</td></tr>
+      <tr><td><code>@enter-cancelled</code></td><td>进场被中断时执行</td></tr>
+      <tr><td><code>@leave</code></td><td>退场：操作元素淡出/移出；同样要 done()</td></tr>
+      <tr><td><code>@after-leave</code></td><td>退场结束后执行</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout tip">
+    <span class="tag">技巧</span>JS 模式下，进/退场函数<b>必须调用第二个参数 <code>done()</code></b>，否则 Vue 以为动画永远没结束。嫌自带回调麻烦，直接在 <code>@enter</code> 里调用第三方库的完成回调即可。
   </div>
 
   <div class="practice">

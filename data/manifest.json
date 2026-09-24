@@ -1,0 +1,10 @@
+[
+  {
+    "title": "FastAPI 完全教程",
+    "desc": "从零开始的 FastAPI 小白向全文档教程，涵盖环境搭建、路由、依赖注入、数据库与部署等核心内容。",
+    "category": "Python 后端",
+    "tags": ["Python", "FastAPI", "Web", "API"],
+    "path": "docs/fastapi.html",
+    "date": "2026-09-23"
+  }
+]

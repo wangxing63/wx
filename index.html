@@ -19,9 +19,10 @@ body{margin:0;background:linear-gradient(180deg,#f8faff 0%,#f1f5fb 100%);color:v
 .layout{display:flex;gap:12px;height:100vh;padding:12px;align-items:stretch}
 .col{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
   display:flex;flex-direction:column;min-width:0;overflow:hidden}
-.col-files{flex:0 0 244px}
-.col-outline{flex:0 0 296px}
-.col-page{flex:1 1 auto}
+.col-files{flex:0 0 clamp(196px,15vw,252px)}
+.col-outline{flex:0 0 clamp(228px,19vw,310px)}
+.col-page{flex:1 1 auto;min-width:0}
+.layout.focus .col-files,.layout.focus .col-outline{display:none}
 .col-head{flex:0 0 auto;height:60px;display:flex;align-items:center;gap:10px;padding:0 14px;
   border-bottom:1px solid var(--line-soft);background:linear-gradient(180deg,#fff,#fcfdff)}
 .head-ico{width:30px;height:30px;flex:0 0 30px;border-radius:9px;background:var(--blue-bg);
@@ -32,10 +33,12 @@ body{margin:0;background:linear-gradient(180deg,#f8faff 0%,#f1f5fb 100%);color:v
 .head-txt small{font-size:11px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .head-badge{flex:0 0 auto;min-width:24px;height:22px;padding:0 7px;border-radius:7px;background:#f1f5fb;
   color:#7c8ba3;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.head-actions{flex:0 0 auto;display:flex;align-items:center;gap:6px}
 .head-btn{flex:0 0 auto;display:flex;align-items:center;gap:5px;height:30px;padding:0 10px;
   border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--muted);
-  font-size:11.5px;text-decoration:none;transition:.15s}
+  font:11.5px var(--sans);cursor:pointer;text-decoration:none;transition:.15s}
 .head-btn:hover{border-color:#bfd2ff;color:var(--blue);background:var(--blue-soft);text-decoration:none}
+.head-btn.on{background:var(--blue-bg);border-color:#bfd2ff;color:var(--blue)}
 .head-btn svg{width:13px;height:13px}
 .col-body{flex:1 1 auto;overflow-y:auto;padding:10px 10px 16px;
   scrollbar-width:thin;scrollbar-color:#d7dfeb transparent}
@@ -103,7 +106,6 @@ iframe{width:100%;height:100%;border:1px solid var(--line);border-radius:10px;di
 .ol-empty{text-align:center;color:var(--faint);font-size:12px;padding:26px 4px}
 .loading{color:var(--faint);font-size:12px;text-align:center;padding:12px}
 
-@media (max-width:1100px){.col-files{flex:0 0 214px}.col-outline{flex:0 0 258px}}
 @media (max-width:900px){
   body{overflow:auto}
   .layout{flex-direction:column;height:auto;min-height:100vh;padding:10px;gap:10px}
@@ -141,7 +143,10 @@ iframe{width:100%;height:100%;border:1px solid var(--line);border-radius:10px;di
     <div class="col-head">
       <span class="head-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>
       <div class="head-txt"><b>页面内容</b><small id="curTitle">—</small></div>
-      <a id="openNew" class="head-btn" href="#" target="_blank" rel="noopener">新窗口打开 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></a>
+      <div class="head-actions">
+        <button id="focusBtn" class="head-btn" type="button"><span id="focusLabel">专注阅读</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg></button>
+        <a id="openNew" class="head-btn" href="#" target="_blank" rel="noopener">新窗口打开 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></a>
+      </div>
     </div>
     <div class="page-body"><iframe id="frame" title="页面内容"></iframe></div>
   </section>
@@ -162,6 +167,9 @@ const outlineSub  = document.getElementById('outlineSub');
 const outlineCount= document.getElementById('outlineCount');
 const openNew     = document.getElementById('openNew');
 const fileCount   = document.getElementById('fileCount');
+const focusBtn    = document.getElementById('focusBtn');
+const focusLabel  = document.getElementById('focusLabel');
+const layoutEl    = document.querySelector('.layout');
 const DOT_COLORS = ['#3b82f6','#8b5cf6','#ec4899','#f59e0b','#10b981',
                     '#06b6d4','#6366f1','#f97362','#14b8a6','#a855f7'];
 
@@ -178,7 +186,7 @@ function esc(s){
 }
 function urlParams(){
   const q = new URLSearchParams(location.search);
-  return { f: q.get('f') || '', s: q.get('s') || '' };
+  return { f: q.get('f') || '', s: q.get('s') || '', focus: q.get('focus') === '1' };
 }
 function setUrl(f, s){
   const u = new URL(location.href);
@@ -268,12 +276,20 @@ function injectFrameCSS(){
     const st = d.createElement('style');
     st.id = '__agg_hide_side__';
     /* 聚合页已有中栏大纲，隐藏原页面自带的左目录，正文原样保留 */
-    st.textContent = 'nav.side,div.side,aside.side,.side,#sidebar{display:none!important}' +
-                     '#main{padding-left:14px!important}' +
-                     '.wrap{max-width:none!important}' +
-                     /* 嵌入阅读时跳过入场淡入，保证正文第一时间完整可见 */
-                     '.hero{animation:none!important;opacity:1!important;transform:none!important}' +
-                     '.reveal{opacity:1!important;transform:none!important}';
+    st.textContent =
+      /* 1. 聚合页已有中栏大纲，隐藏原页面自带的左目录 */
+      'nav.side,div.side,aside.side,.side,#sidebar{display:none!important}' +
+      /* 2. 原教程把正文写死成 880~1150px，宽屏下右侧会空一大片；
+            这里解除所有宽度上限，让正文跟着 iframe 真正弹性铺满 */
+      '.wrap,#wrap,.main,#main,main,.container{max-width:none!important;width:auto!important;' +
+        'margin:0!important;min-width:0!important}' +
+      '.container{flex:1 1 auto!important}' +
+      '#main{padding-left:14px!important}' +
+      '#cols{width:100%!important}' +
+      /* 3. 嵌入阅读时跳过入场淡入，保证正文第一时间完整可见 */
+      '.hero,.hero h1,.hero .lead{animation:none!important;opacity:1!important;transform:none!important}' +
+      '.hero h1{color:#1f2937!important;-webkit-text-fill-color:#1f2937!important}' +
+      '.reveal{opacity:1!important;transform:none!important}';
     d.head.appendChild(st);
     frame.contentWindow.dispatchEvent(new Event('resize'));
   } catch (e) { /* file:// 下不同源，忽略：此时原目录仍在，不影响阅读 */ }
@@ -372,6 +388,13 @@ toggleAll.addEventListener('click', function(){
   current.groups.forEach(function(g, i){ collapsed[i] = allOpen; });
   renderOutline();
 });
+focusBtn.addEventListener('click', function(){
+  const on = layoutEl.classList.toggle('focus');
+  focusBtn.classList.toggle('on', on);
+  focusLabel.textContent = on ? '显示目录' : '专注阅读';
+  /* 栏宽变化后让内嵌页面按其响应式逻辑重新排版（速查手册的分栏依赖 resize） */
+  try { frame.contentWindow.dispatchEvent(new Event('resize')); } catch (e) {}
+});
 frame.addEventListener('load', function(){
   injectFrameCSS();
   try { frame.contentWindow.addEventListener('scroll', onFrameScroll, {passive:true}); } catch (e) {}
@@ -380,6 +403,11 @@ frame.addEventListener('load', function(){
 
 renderFiles();
 const init = urlParams();
+if (init.focus) {
+  layoutEl.classList.add('focus');
+  focusBtn.classList.add('on');
+  focusLabel.textContent = '显示目录';
+}
 openDoc(byFile[init.f] ? init.f : DEFAULT_DOC, init.s);
 </script>
 </body>

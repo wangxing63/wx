@@ -1,0 +1,2711 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DrissionPage 图解教程 · 2026 最新版（5.0 零基础完整版）</title>
+<style>
+
+:root{
+  --ink:#1f2937; --muted:#5b6570; --faint:#8b949e; --line:#d8dee4;
+  --bg:#ffffff; --panel:#f7f9fb; --code:#f4f7fa;
+  --blue:#2563eb; --blue-bg:#eff6ff; --blue-line:#93c5fd;
+  --orange:#ea580c; --orange-bg:#fff7ed; --orange-line:#fdba74;
+  --green:#16a34a; --green-bg:#f0fdf4; --green-line:#86efac;
+  --purple:#7c3aed; --purple-bg:#faf5ff; --purple-line:#c4b5fd;
+  --red:#dc2626; --red-bg:#fef2f2; --red-line:#fca5a5;
+  --mono:"Cascadia Code","SF Mono",Consolas,"Liberation Mono",Menlo,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:var(--mono);font-size:.9em;background:#eef1f4;padding:2px 6px;border-radius:5px;color:#b1234a}
+pre{margin:0}
+.wrap{display:flex;max-width:1400px;margin:0 auto;align-items:flex-start}
+
+/* ---------- 侧边目录 ---------- */
+.side{width:250px;flex:0 0 250px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--panel);border-right:1px solid var(--line);padding:26px 18px 40px}
+.side .logo{font-weight:800;font-size:17px;letter-spacing:.5px;margin-bottom:4px}
+.side .logo span{color:var(--blue)}
+.side .sub{font-size:12px;color:var(--faint);margin-bottom:22px;line-height:1.6}
+.side a.toc{display:block;font-size:13.5px;color:var(--muted);padding:7px 10px;border-radius:8px;line-height:1.4;border-left:3px solid transparent}
+.side a.toc:hover{background:#eaeef3;color:var(--ink);text-decoration:none}
+.side a.toc.on{background:var(--blue-bg);color:var(--blue);font-weight:700;border-left-color:var(--blue)}
+.side .toc-group{font-size:11px;color:var(--faint);letter-spacing:1.5px;margin:18px 0 6px 10px;font-weight:700}
+
+/* ---------- 主区 ---------- */
+.main{flex:1;min-width:0;padding:0 46px 100px;max-width:1000px}
+.hero{background:linear-gradient(135deg,#eff6ff 0%,#faf5ff 55%,#f0fdf4 100%);border:1px solid var(--line);border-radius:20px;padding:40px 42px;margin:36px 0 34px}
+.hero h1{margin:0 0 10px;font-size:34px;letter-spacing:-.5px;line-height:1.35}
+.hero .lead{font-size:17px;color:#374151;margin:0 0 18px}
+.badges{display:flex;flex-wrap:wrap;gap:9px}
+.badge{font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:99px;border:1px solid}
+.b-blue{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-line)}
+.b-green{background:var(--green-bg);color:var(--green);border-color:var(--green-line)}
+.b-purple{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-line)}
+.b-orange{background:var(--orange-bg);color:var(--orange);border-color:var(--orange-line)}
+
+h2.chap{font-size:26px;margin:64px 0 8px;padding-top:18px;border-top:2px solid var(--line);letter-spacing:-.3px;scroll-margin-top:20px;display:flex;align-items:center;gap:12px}
+h2.chap .num{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:38px;border-radius:11px;background:var(--blue);color:#fff;font-size:17px;font-family:var(--mono);flex:0 0 auto}
+.chap-lead{color:var(--muted);margin:0 0 22px;font-size:15.5px}
+h3{font-size:19px;margin:34px 0 12px;scroll-margin-top:20px}
+h4{font-size:16px;margin:22px 0 8px}
+p{margin:10px 0}
+ul,ol{padding-left:22px}
+li{margin:5px 0}
+strong{font-weight:700}
+.small{font-size:13.5px;color:var(--muted)}
+hr{border:0;border-top:1px dashed var(--line);margin:34px 0}
+
+/* ---------- 图 ---------- */
+.fig{margin:24px 0;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 20px 14px;overflow:hidden}
+.fig svg{display:block;width:100%;height:auto}
+.fig figcaption{font-size:13px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.6}
+.fig figcaption b{color:var(--ink)}
+svg text{font-family:var(--sans)}
+svg .tb{font-size:15px;font-weight:700;fill:#1f2937}
+svg .t{font-size:13.5px;fill:#1f2937}
+svg .ts{font-size:12px;fill:#5b6570}
+svg .tm{font-family:var(--mono);font-size:12.5px;fill:#1f2937}
+svg .lbl{font-size:12.5px;font-weight:700;fill:#fff}
+svg .flow{font-family:var(--mono);font-size:12px;font-weight:700;fill:#2563eb}
+svg .box{stroke-width:2}
+svg .dash{stroke-dasharray:6 5}
+
+/* ---------- 步骤 ---------- */
+.step{background:#fff;border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:12px;padding:18px 22px;margin:20px 0}
+.step-h{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;margin-bottom:8px}
+.step-n{width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-family:var(--mono);flex:0 0 auto}
+.step p:first-of-type{margin-top:0}
+
+/* ---------- 命令块 ---------- */
+.cmd{background:var(--code);border:1px solid #dde3ea;border-radius:12px;margin:14px 0;overflow:hidden}
+.cmd-bar{background:#eaeef3;border-bottom:1px solid #dde3ea;padding:7px 14px;font-size:11.5px;color:var(--muted);font-family:var(--mono);letter-spacing:.4px;display:flex;justify-content:space-between}
+.cmd pre{padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.9;color:#111827;white-space:pre}
+.cmd .c{color:#5a7d52;background:#eef6ea;border-radius:4px;padding:0 4px}  /* 注释：带底色＝解释，不要敲 */
+.cmd .k{color:#0b5cad;font-weight:700}  /* 关键字 */
+.cmd .s{color:#b1234a}          /* 字符串 */
+.cmd .f{color:#8a5a00}          /* 文件名/参数 */
+.cmd .p{color:#0b5cad;background:#dbeafe;border-radius:4px;padding:0 5px;font-weight:700}  /* 提示符：蓝底 $ ＝这一行要敲 */
+.cmd-note{padding:0 16px 14px;font-size:13px;color:var(--muted);line-height:1.7}
+
+/* 终端输出 */
+.out{background:#fbfcfd;border:1px solid var(--line);border-left:4px solid var(--green);border-radius:10px;margin:12px 0;overflow:hidden}
+.out-bar{background:var(--green-bg);padding:6px 14px;font-size:11.5px;color:var(--green);font-weight:700;font-family:var(--mono);border-bottom:1px solid var(--green-line)}
+.out pre{padding:12px 16px;font-family:var(--mono);font-size:12.8px;line-height:1.85;color:#243b2f;white-space:pre;overflow-x:auto}
+.out .p{color:#0f9d58;font-weight:700}
+.out .red{color:#c0392b}
+.out .grn{color:#0f9d58;font-weight:700}
+.out .blu{color:#1a56c4;font-weight:700}
+.out .dim{color:#7a8794}
+.trans{padding:10px 16px 14px;font-size:13px;color:var(--muted);border-top:1px dashed var(--line);line-height:1.8}
+.trans b{color:var(--ink)}
+
+/* 逐词拆解 */
+.dissect{border:1px solid var(--blue-line);background:var(--blue-bg);border-radius:12px;padding:16px 18px;margin:14px 0}
+.dissect .dl{font-family:var(--mono);font-size:14.5px;font-weight:700;color:#0b3d91;background:#fff;border:1px solid var(--blue-line);border-radius:8px;padding:9px 13px;display:inline-block;margin-bottom:12px;white-space:pre-wrap;word-break:break-all}
+table.words{width:100%;border-collapse:collapse;font-size:13.5px}
+table.words td{padding:7px 8px;border-bottom:1px solid #d7e5fb;vertical-align:top;line-height:1.7}
+table.words tr:last-child td{border-bottom:0}
+table.words td:first-child{width:150px;white-space:nowrap}
+table.words code{background:#fff;border:1px solid #d7e5fb;color:#0b5cad;padding:2px 7px;font-size:12.5px}
+table.words .en{color:var(--faint);font-size:12px}
+
+/* 卡片 */
+.analogy,.check,.warn,.tip{border-radius:12px;padding:14px 18px;margin:16px 0;font-size:14.5px;line-height:1.8}
+.analogy{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid #f59e0b}
+.check{background:var(--green-bg);border:1px solid var(--green-line);border-left:4px solid var(--green)}
+.warn{background:var(--red-bg);border:1px solid var(--red-line);border-left:4px solid var(--red)}
+.tip{background:var(--purple-bg);border:1px solid var(--purple-line);border-left:4px solid var(--purple)}
+.card-t{font-weight:800;font-size:13px;letter-spacing:.5px;display:block;margin-bottom:4px}
+.analogy .card-t{color:#b45309}.check .card-t{color:#15803d}.warn .card-t{color:#b91c1c}.tip .card-t{color:#6d28d9}
+.analogy p,.check p,.warn p,.tip p{margin:4px 0}
+
+details.later{border:1px dashed var(--line);border-radius:10px;padding:10px 16px;margin:14px 0;background:#fcfdfe}
+details.later summary{cursor:pointer;font-size:13.5px;color:var(--muted);font-weight:700;outline:none}
+details.later[open] summary{margin-bottom:10px;color:var(--blue)}
+details.later .cmd{margin-top:8px}
+
+table.kv{width:100%;border-collapse:collapse;font-size:14px;margin:16px 0}
+table.kv th,table.kv td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;line-height:1.7}
+table.kv th{background:var(--panel);font-weight:700;font-size:13.5px}
+table.kv tr:nth-child(even) td{background:#fcfdfe}
+table.kv code{font-size:12.5px}
+
+.pill{display:inline-block;background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-line);border-radius:6px;padding:1px 8px;font-size:12px;font-weight:700;font-family:var(--mono)}
+.footer{margin-top:70px;padding-top:22px;border-top:1px solid var(--line);color:var(--faint);font-size:13px;line-height:1.8}
+
+@media(max-width:900px){
+  .wrap{display:block}
+  .side{position:static;width:auto;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:16px}
+  .side .toc-group{display:none}
+  .side a.toc{display:inline-block;margin:2px}
+  .main{padding:0 20px 70px}
+  .hero{padding:26px 22px}
+  .hero h1{font-size:26px}
+}
+
+/* CODE_HIGHLIGHT_V2 CSS START */
+body pre span,body pre code span{-webkit-text-fill-color:currentColor!important}
+body pre span[class^="tk-"],body pre code span[class^="tk-"]{font-weight:inherit;font-style:normal}
+body pre span.tk-kw,body pre code span.tk-kw{color:#0b5cad!important;font-weight:700}
+body pre span.tk-str,body pre code span.tk-str{color:#b1234a!important}
+body pre span.tk-url,body pre code span.tk-url{color:#b1234a!important;text-decoration:underline;text-decoration-color:#f0a8bd}
+body pre span.tk-num,body pre code span.tk-num{color:#a35300!important}
+body pre span.tk-fn,body pre code span.tk-fn{color:#6d28d9!important}
+body pre span.tk-prop,body pre code span.tk-prop{color:#0b7285!important}
+body pre span.tk-opt,body pre code span.tk-opt{color:#c2410c!important}
+body pre span.tk-bi,body pre code span.tk-bi{color:#047857!important}
+body pre span.tk-cmt,body pre code span.tk-cmt{color:#3f7a3f!important;background:#eef6ea;border-radius:3px;padding:0 2px}
+body pre span.tk-tag,body pre code span.tk-tag{color:#7c3aed!important}
+body pre span.tk-op,body pre code span.tk-op{color:#64748b!important}
+body pre.hl-dark span.tk-kw,body pre.hl-dark code span.tk-kw{color:#93c5fd!important}
+body pre.hl-dark span.tk-str,body pre.hl-dark code span.tk-str{color:#fca5a5!important}
+body pre.hl-dark span.tk-url,body pre.hl-dark code span.tk-url{color:#fca5a5!important}
+body pre.hl-dark span.tk-num,body pre.hl-dark code span.tk-num{color:#fdba74!important}
+body pre.hl-dark span.tk-fn,body pre.hl-dark code span.tk-fn{color:#c4b5fd!important}
+body pre.hl-dark span.tk-prop,body pre.hl-dark code span.tk-prop{color:#67e8f9!important}
+body pre.hl-dark span.tk-opt,body pre.hl-dark code span.tk-opt{color:#fdba74!important}
+body pre.hl-dark span.tk-bi,body pre.hl-dark code span.tk-bi{color:#6ee7b7!important}
+body pre.hl-dark span.tk-cmt,body pre.hl-dark code span.tk-cmt{color:#7ee787!important;background:transparent}
+body pre.hl-dark span.tk-tag,body pre.hl-dark code span.tk-tag{color:#d8b4fe!important}
+body pre.hl-dark span.tk-op,body pre.hl-dark code span.tk-op{color:#94a3b8!important}
+/* CODE_HIGHLIGHT_V2 CSS END */
+
+
+/* ===== 动画与交互（在 Git 图解教程版式上追加） ===== */
+:root{--sqla:#0f766e;--sqla-bg:#f0fdfa;--sqla-line:#5eead4}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes dashMove{to{stroke-dashoffset:-30}}
+@keyframes pulseRing{0%,100%{opacity:.45;transform:scale(.92)}50%{opacity:1;transform:scale(1.06)}}
+@keyframes numPop{0%{transform:scale(1)}40%{transform:scale(1.45);color:#0f766e}100%{transform:scale(1)}}
+@keyframes hiFlash{0%{background:#fde68a;box-shadow:0 0 0 6px rgba(253,230,138,.5)}100%{background:transparent;box-shadow:none}}
+@keyframes barGrow{from{width:0}to{width:var(--w,100%)}}
+@keyframes gentleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
+.hero{animation:fadeUp .7s ease both}
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .55s ease,transform .55s ease}
+.reveal.in{opacity:1;transform:none}
+svg .flowline{stroke-dasharray:9 6;animation:dashMove 1.1s linear infinite}
+svg .pulse{animation:pulseRing 1.9s ease-in-out infinite;transform-origin:center}
+.float{animation:gentleFloat 3s ease-in-out infinite}
+.pop{animation:numPop .45s ease}
+.flash{animation:hiFlash .8s ease}
+.badge.b-sqla{animation:pulseRing 2.4s ease-in-out infinite;background:var(--sqla-bg);color:var(--sqla);border-color:var(--sqla-line)}
+
+/* 代码块：注释行 / 关键字 / 提示符 更醒目 */
+.cmd .c{color:#4d7c43;background:#eef6ea;border-radius:4px;padding:0 5px}
+.cmd .k{color:#0b5cad;font-weight:700}
+.cmd .s{color:#b1234a}
+.cmd .f{color:#8a5a00}
+.cmd .p{color:#0b5cad;background:#dbeafe;border-radius:4px;padding:0 5px;font-weight:700}
+.cmd .d{color:#7c3aed;font-weight:700}
+.cmd .blank{display:block;height:7px}
+.cmd-bar .mode{font-weight:700;color:#0f766e}
+.cmd.file .cmd-bar{background:#e6f6f3;border-bottom-color:#b9e6df}
+.cmd.file .cmd-bar .mode{color:#0f766e}
+
+/* 可点词解释 */
+.kw{cursor:pointer;border-bottom:1px dashed #93c5fd;padding:0 1px}
+.kw:hover{background:#dbeafe;border-bottom-color:#2563eb}
+.gloss-panel{position:fixed;right:18px;bottom:18px;z-index:99;width:340px;max-width:calc(100vw - 36px);background:#fff;border:2px solid var(--blue-line);border-radius:14px;box-shadow:0 12px 34px rgba(15,23,42,.18);padding:14px 18px;display:none;font-size:13.5px;line-height:1.8}
+.gloss-panel.show{display:block;animation:slideIn .25s ease}
+.gloss-panel .gp-w{font-family:var(--mono);font-weight:800;color:#0b5cad;font-size:15px}
+.gloss-panel .gp-en{color:var(--faint);font-size:12.5px;margin:2px 0 8px}
+.gloss-panel .gp-ex{background:var(--code);border-radius:8px;padding:7px 10px;font-family:var(--mono);font-size:12.5px;margin-top:8px;color:#b1234a}
+.gloss-panel .gp-x{float:right;cursor:pointer;border:0;background:#eaeef3;border-radius:6px;padding:1px 8px;font-size:13px;font-weight:700}
+.gloss-tip{font-size:13px;color:var(--muted);margin:8px 0 0}
+
+/* 交互演示 */
+.demo{border:1px solid var(--blue-line);background:linear-gradient(180deg,#ffffff,#f6faff);border-radius:14px;padding:16px 18px;margin:18px 0}
+.demo-h{font-size:12.5px;font-weight:800;color:var(--blue);letter-spacing:.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.demo-h .live{background:var(--green-bg);color:var(--green);border:1px solid var(--green-line);border-radius:99px;padding:1px 9px;font-size:11px}
+.demo-row{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.dbtn{font-family:var(--sans);font-size:13px;font-weight:700;color:#fff;background:var(--blue);border:0;border-radius:9px;padding:7px 14px;cursor:pointer;transition:transform .18s,box-shadow .18s,background .18s}
+.dbtn:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(37,99,235,.25)}
+.dbtn:active{transform:scale(.95)}
+.dbtn.ghost{background:#fff;color:var(--blue);border:1px solid var(--blue-line)}
+.dbtn.teal{background:var(--sqla)}
+.dbtn.green{background:var(--green)}
+.dbtn.red{background:var(--red)}
+.dbtn.gray{background:#64748b}
+.dbtn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.demo-screen{background:#fff;border:1px dashed var(--blue-line);border-radius:10px;padding:8px 14px;font-size:14px;min-width:140px;text-align:center}
+.demo-screen b{font-family:var(--mono);font-size:21px;color:var(--blue);display:inline-block}
+.demo-screen.big{min-width:260px;text-align:left;font-family:var(--mono);font-size:12.5px;line-height:1.9;white-space:pre-wrap}
+.lamps{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:12px;font-size:12.5px;color:var(--muted)}
+.lamp{border:1px solid var(--line);background:#fff;border-radius:99px;padding:3px 11px;transition:all .3s}
+.lamp.on{background:var(--orange-bg);border-color:var(--orange-line);color:var(--orange);font-weight:800;box-shadow:0 0 0 4px rgba(234,88,12,.1)}
+.demo-note{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.7}
+.pane{display:flex;gap:12px;flex-wrap:wrap}
+.pane>div{flex:1 1 230px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13.5px}
+.pane .pt{font-weight:800;font-size:12.5px;color:var(--muted);margin-bottom:8px}
+.bar{height:12px;background:#e8eef6;border-radius:99px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#2563eb,#0f766e);border-radius:99px;animation:barGrow 1s ease both}
+.timeline{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+.tl{font-size:12.5px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 10px;transition:all .3s}
+.tl.on{background:var(--sqla);color:#fff;border-color:var(--sqla);transform:translateY(-4px)}
+.poolbox{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.slot{width:78px;height:52px;border:2px solid var(--line);border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;transition:all .35s}
+.slot.busy{background:var(--orange-bg);border-color:var(--orange-line);color:var(--orange);font-weight:800;transform:translateY(-4px)}
+.slot.free{background:var(--green-bg);border-color:var(--green-line);color:var(--green)}
+.sqlout{background:#0f172a;color:#a5f3fc;border-radius:10px;padding:12px 16px;font-family:var(--mono);font-size:12.5px;line-height:1.9;white-space:pre-wrap;min-height:64px}
+.sqlout .hl{color:#fde68a;font-weight:700}
+.rowlist{font-family:var(--mono);font-size:12.5px;background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 13px;line-height:1.9;min-height:62px}
+.rowlist .new{color:var(--green);font-weight:700}
+
+/* 索引 / 词典 表格更紧凑 */
+table.kv.tight td,table.kv.tight th{padding:6px 9px;font-size:13px}
+table.kv.tight td:first-child{white-space:nowrap}
+.tagv{display:inline-block;background:var(--sqla-bg);color:var(--sqla);border:1px solid var(--sqla-line);border-radius:6px;padding:0 7px;font-size:11.5px;font-weight:700;font-family:var(--mono)}
+.tagnew{display:inline-block;background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:6px;padding:0 7px;font-size:11.5px;font-weight:700}
+.anchor{scroll-margin-top:22px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+
+/* DrissionPage 教程专用：沿用它教程的组件，只换主色与少量专属样式 */
+:root{
+  --sqla:#0f766e; --sqla-bg:#effcf9; --sqla-line:#99e2d3;
+  --dp:#0f766e; --dp-bg:#effcf9; --dp-line:#99e2d3;
+}
+.badge.b-dp{background:var(--dp-bg);color:var(--dp);border-color:var(--dp-line)}
+.dp-h{color:var(--dp)!important}
+.step.dp{border-left-color:var(--dp)}
+h2.chap .num.dp{background:var(--dp)}
+table.kv th{background:var(--dp-bg)}
+table.words td:first-child code{color:var(--dp)}
+.chapter-tag{display:inline-block;font:700 11px var(--mono);letter-spacing:.6px;
+  background:var(--dp-bg);color:var(--dp);border:1px solid var(--dp-line);
+  border-radius:99px;padding:2px 9px;vertical-align:middle;margin-left:8px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin:10px 0 4px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.toc-group.dp{color:var(--dp)}
+.stat{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.stat div{flex:1 1 130px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:12px 14px;text-align:center}
+.stat b{display:block;font:800 21px var(--mono);color:var(--dp)}
+.stat span{font-size:12px;color:var(--muted)}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="side">
+  <div class="logo">DrissionPage <span>图解教程</span></div>
+  <div class="sub">2026 最新版 · 27 章（含第 0 章速查表）+ 3 个附录<br>全篇按官网 5.0 新写法：Chromium → Tab</div>
+  <div class="toc-group">第一篇 · 跟着做（零基础）</div>
+  <a class="toc" href="#c0">00 关键字速查表</a>
+  <a class="toc" href="#c1">01 开始之前</a>
+  <a class="toc" href="#c2">02 装好环境（手把手）</a>
+  <a class="toc" href="#c3">03 第一个程序</a>
+  <a class="toc" href="#c4">04 刚才发生了什么</a>
+  <div class="toc-group">第二篇 · 日常主线</div>
+  <a class="toc" href="#c5">05 三种对象与两种模式</a>
+  <a class="toc" href="#c6">06 启动和连接浏览器</a>
+  <a class="toc" href="#c7">07 访问网页与等待</a>
+  <a class="toc" href="#c8">08 定位元素语法全表</a>
+  <a class="toc" href="#c9">09 元素操作与信息</a>
+  <div class="toc-group">第三篇 · 全部技能</div>
+  <a class="toc" href="#c10">10 相对定位、筛选与加速</a>
+  <a class="toc" href="#c11">11 iframe、ShadowRoot 与跨域</a>
+  <a class="toc" href="#c12">12 标签页与浏览器上下文</a>
+  <a class="toc" href="#c13">13 页面信息与交互</a>
+  <a class="toc" href="#c14">14 监听网络数据</a>
+  <a class="toc" href="#c15">15 下载文件</a>
+  <a class="toc" href="#c16">16 上传文件</a>
+  <a class="toc" href="#c17">17 截图、录像与动作链</a>
+  <a class="toc" href="#c18">18 SessionPage 收发数据包</a>
+  <a class="toc" href="#c19">19 d / s 模式切换</a>
+  <div class="toc-group">第四篇 · 实战与进阶</div>
+  <a class="toc" href="#c20">20 配置文件与全局设置</a>
+  <a class="toc" href="#c21">21 独立上下文与代理</a>
+  <a class="toc" href="#c22">22 与 Selenium / Playwright / requests 迁移</a>
+  <a class="toc" href="#c23">23 完整实战一：登录并抓数据</a>
+  <a class="toc" href="#c24">24 完整实战二：监听接口并下载文件</a>
+  <a class="toc" href="#c25">25 加速、异常、打包与工具</a>
+  <a class="toc" href="#c26">26 常见问题与排错</a>
+  <div class="toc-group">附录</div>
+  <a class="toc" href="#apxa">附录 A 定位符速查表</a>
+  <a class="toc" href="#apxb">附录 B 完整 API 索引</a>
+  <a class="toc" href="#apxc">附录 C 4.1 → 5.0 变化对照</a>
+</nav>
+
+<main class="main">
+
+<div class="hero">
+  <h1>DrissionPage 图解教程 <span style="font-size:19px;color:var(--dp);vertical-align:middle">5.0 零基础完整版</span></h1>
+  <p class="lead">用 Python 控制浏览器、抓数据、下文件，不用背一大堆概念。<br>每个英文都翻译，每行代码都拆开讲，每一步都有图、有动画、有「你会看到什么」。</p>
+  <div class="badges">
+    <span class="badge b-dp">对齐官网 5.0 测试版（5.0.0b1）</span>
+    <span class="badge b-blue">Python ≥ 3.6</span>
+    <span class="badge b-purple">全篇 Chromium 新写法</span>
+    <span class="badge b-green">稳定版 4.1.1.4 差异也讲清</span>
+    <span class="badge b-orange">27 章 + 3 附录 · 全主题覆盖</span>
+  </div>
+</div>
+
+<div class="warn">
+  <span class="card-t">先看这里：版本要说清楚（很重要）</span>
+  <p>官网 <a href="https://www.drissionpage.cn" target="_blank">www.drissionpage.cn</a> 首页写着两句话：<b>「当前文档适用于 DrissionPage 4.1.1.4」</b> 和 <b>「DrissionPage 5.0 测试版已发布」</b>。</p>
+  <p>也就是说：<span class="kw" data-w="pip">pip</span> 直接装到的<b>最新稳定版是 4.1.1.4</b>；而本教程按你要求的 <b>5.0</b> 写，它在 PyPI 上是测试版 <code>5.0.0b1</code>，要显式指定版本号才能装到。</p>
+  <p>5.0 不是小升级，是一次重构：<b>删掉了 ChromiumPage 和 WebPage</b>，统一用 <code>Chromium()</code> 启动浏览器。如果你装的是 4.1.1.4 却照抄本教程，部分 5.0 新 API（独立上下文、<span class="kw" data-w="ax:"><code>ax:</code></span> 定位、<span class="kw" data-w="NavResult"><code>NavResult</code></span> 等）会报错。第 2 章会把两个版本的安装命令都给你，附录 C 有完整对照表。</p>
+</div>
+
+<div class="tip">
+  <span class="card-t">这份教程和别的不一样在哪</span>
+  <p>① <b>先做再懂</b>：第 3 章就让你打开网页、输入文字、拿到结果，第 4 章才回头讲原理，不先灌概念。<br>
+  ② <b>每个英文都翻译</b>：命令、参数、<span class="kw" data-w="Python">Python</span> 关键字、定位符、HTML / CSS / DOM 名词，连 <span class="kw" data-w="="><code>=</code></span> <span class="kw" data-w="."><code>.</code></span> <span class="kw" data-w="()"><code>()</code></span> <span class="kw" data-w=":"><code>:</code></span> 这些符号都拆开讲；第 0 章有完整速查表，正文里带虚线下划线的词<b>可以点开看解释</b>。<br>
+  ③ <b>图是真画出来的</b>：全部是内嵌 SVG 矢量图，断网也在；还有可以点的小动画，看得见对象是怎么一层层拿到的。<br>
+  ④ <b>10–26 章把技能补到全</b>：定位、元素、iframe、标签页、监听、下载、上传、截图、动作链、数据包、配置、上下文、代理、迁移、实战、排错，全部展开成正式章节，不折叠、不省略。<br>
+  ⑤ <b>每步有检查点</b>：敲完立刻告诉你「应该看到什么」，错了当场就能发现。<br>
+  ⑥ <b>只讲一套写法</b>：全书统一 <code>Chromium() → latest_tab → tab</code>，不再出现旧的 Page 对象，避免学混。</p>
+</div>
+
+<div class="warn">
+  <span class="card-t">先看这里：三种框，别敲错地方（重要）</span>
+  <p><b>① 终端命令块</b>（灰底、<span class="pill">$</span> 蓝底）：<b>只敲带 <code>$</code> 的那一行</b>。<code>$</code> 只是「这一行要敲」的标记，不是命令的一部分；绿色 <span class="kw" data-w="#"><code>#</code></span> 开头的行是解释，<b>不要敲进去</b>，注释里的 <span class="kw" data-w="="><code>=</code></span> 是「意思是」，不是命令语法。</p>
+  <p><b>② Python 文件块</b>（标题写着文件名，如 <code>first.py</code>）：整段是<b>写进 .py 文件</b>的代码，不是在终端里一行行敲。绿色 <span class="kw" data-w="#"><code>#</code></span> 注释是解释，可以不写；代码里真正要运行的是没带绿色底色的部分。</p>
+  <p><b>③ 输出模拟块</b>（绿边）：这是「<b>你会看到什么</b>」，是屏幕显示的结果，<b>千万不要敲</b>。</p>
+  <p>另外：终端提示符前面的路径每个电脑都不一样（可能是 <code>C:\Users\你\Desktop&gt;</code>、<code>~$</code>、<code>/c/...</code>），所以本书<b>不写死路径</b>，只写 <code>$</code>。判断有没有进对文件夹，用 <code>pwd</code> 看一眼，末尾是目标文件夹名才算成功。</p>
+</div>
+
+<div class="fig">
+<svg viewBox="0 0 900 250" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="900" height="250" fill="#ffffff"/>
+  <text class="tb" x="20" y="28">全书路线：先跑通，再补全，最后实战</text>
+  <rect class="box" x="20" y="50" width="190" height="86" rx="12" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="t" x="34" y="76">第一篇 跟着做</text><text class="ts" x="34" y="98">01–04 章</text>
+  <text class="ts" x="34" y="118">装好 → 跑通 → 懂原理</text>
+  <rect class="box" x="230" y="50" width="190" height="86" rx="12" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="t" x="244" y="76">第二篇 日常主线</text><text class="ts" x="244" y="98">05–09 章</text>
+  <text class="ts" x="244" y="118">启动 / 访问 / 定位 / 操作</text>
+  <rect class="box" x="440" y="50" width="190" height="86" rx="12" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="t" x="454" y="76">第三篇 全部技能</text><text class="ts" x="454" y="98">10–19 章</text>
+  <text class="ts" x="454" y="118">iframe / 监听 / 下载 / 数据包</text>
+  <rect class="box" x="650" y="50" width="230" height="86" rx="12" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="t" x="664" y="76">第四篇 实战与进阶</text><text class="ts" x="664" y="98">20–26 章 + 附录</text>
+  <text class="ts" x="664" y="118">配置 / 代理 / 迁移 / 排错</text>
+  <path d="M212 93 L228 93" stroke="#2563eb" stroke-width="2" marker-end="url(#ar0)"/>
+  <path d="M422 93 L438 93" stroke="#2563eb" stroke-width="2" marker-end="url(#ar0)"/>
+  <path d="M632 93 L648 93" stroke="#2563eb" stroke-width="2" marker-end="url(#ar0)"/>
+  <defs><marker id="ar0" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#2563eb"/></marker></defs>
+  <text class="tb" x="20" y="178">5.0 的三层对象（全书所有代码都从最左边开始）</text>
+  <rect class="box" x="20" y="192" width="230" height="42" rx="10" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tm" x="36" y="218">Chromium()  浏览器</text>
+  <rect class="box" x="290" y="192" width="250" height="42" rx="10" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tm" x="306" y="218">new_context()  独立上下文</text>
+  <rect class="box" x="580" y="192" width="300" height="42" rx="10" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tm" x="596" y="218">latest_tab → tab.ele()  标签页与元素</text>
+  <path d="M252 213 L288 213" stroke="#0f766e" stroke-width="2" marker-end="url(#ar1)"/>
+  <path d="M542 213 L578 213" stroke="#0f766e" stroke-width="2" marker-end="url(#ar1)"/>
+  <defs><marker id="ar1" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#0f766e"/></marker></defs>
+</svg>
+<figcaption><b>全书路线图</b>：左边四篇逐步推进；下面一行是 5.0 统一的对象顺序，第 4 章会拆开讲。</figcaption>
+</div>
+
+<h2 class="chap" id="c0"><span class="num dp">00</span> 关键字速查表</h2>
+<p class="chap-lead">这张表把全书会出现的英文和符号一次列全。<b>现在不用背</b>，写代码时回来查就行；正文里带虚线的词点一下也能看到解释。</p>
+
+<h3>0.1 Python 关键字与符号</h3>
+<table class="kv">
+<tr><th>写法</th><th>英文原意</th><th>中文意思</th><th>例子</th></tr>
+<tr><td><span class="kw" data-w="from"><code>from</code></span></td><td>from 从……</td><td>指定从哪个模块拿东西</td><td><code>from DrissionPage import Chromium</code></td></tr>
+<tr><td><span class="kw" data-w="import"><code>import</code></span></td><td>import 导入</td><td>把别人写好的类、函数拿进本文件</td><td><code>import time</code></td></tr>
+<tr><td><span class="kw" data-w="as"><code>as</code></span></td><td>as 作为</td><td>起别名，后面用短名字</td><td><code>import Chromium as C</code></td></tr>
+<tr><td><code>for ... in</code></td><td>for each in 对每一个</td><td>把列表里的东西一个一个取出来</td><td><code>for link in links:</code></td></tr>
+<tr><td><code>if / not</code></td><td>if 如果 / not 不</td><td>条件判断 / 取反</td><td><code>if not ele:</code></td></tr>
+<tr><td><span class="kw" data-w="None"><code>None</code></span></td><td>none 空值</td><td>什么都没有，不是 0 也不是空字符串</td><td><code>page = None</code></td></tr>
+<tr><td><code>True / False</code></td><td>true / false 真 / 假</td><td>布尔值，开关常用</td><td><code>headless(True)</code></td></tr>
+<tr><td><code>def / return</code></td><td>define 定义 / return 返回</td><td>定义函数 / 把结果交回去</td><td><code>def f(): return 1</code></td></tr>
+<tr><td><code>try / except</code></td><td>try 尝试 / except 捕获</td><td>包住可能出错的代码 / 出错时兜底</td><td><code>except ElementNotFoundError:</code></td></tr>
+<tr><td><code>print()</code></td><td>print 打印</td><td>把内容显示在终端，用来检查结果</td><td><code>print(tab.title)</code></td></tr>
+<tr><td><span class="kw" data-w="="><code>=</code></span></td><td>assign 赋值</td><td>把右边的结果存进左边变量（<b>不是</b>「等于」）</td><td><code>tab = browser.latest_tab</code></td></tr>
+<tr><td><span class="kw" data-w="=="><code>==</code></span></td><td>equals 等于</td><td>比较两边是否相等</td><td><code>if res.status == 200:</code></td></tr>
+<tr><td><span class="kw" data-w="."><code>.</code></span></td><td>dot 点号</td><td>取这个对象身上的属性或方法</td><td><code>tab.get(url)</code></td></tr>
+<tr><td><span class="kw" data-w="()"><code>()</code></span></td><td>parentheses 括号</td><td>函数名后加括号＝执行它；括号里放参数</td><td><code>Chromium()</code></td></tr>
+<tr><td><span class="kw" data-w=":"><code>:</code></span></td><td>colon 冒号</td><td>下面是一段缩进的代码块</td><td><code>for i in range(3):</code></td></tr>
+<tr><td><span class="kw" data-w="#"><code>#</code></span></td><td>comment 注释</td><td>给人看的说明，Python 不执行</td><td><code># 启动浏览器</code></td></tr>
+<tr><td><span class="kw" data-w="[]"><code>[]</code></span> / <span class="kw" data-w="{}"><code>{}</code></span></td><td>list / dict 列表 / 字典</td><td>按顺序装一堆 / 按键取值</td><td><code>links[0]</code>、<code>{"a": 1}</code></td></tr>
+<tr><td><code>f"...{x}"</code></td><td>formatted string 格式化字符串</td><td>字符串前加 f，花括号里放变量</td><td><code>f"第 {i} 页"</code></td></tr>
+</table>
+
+<h3>0.2 DrissionPage 对象与方法</h3>
+<table class="kv">
+<tr><th>写法</th><th>英文原意</th><th>中文意思</th><th>例子</th></tr>
+<tr><td><span class="kw" data-w="DrissionPage"><code>DrissionPage</code></span></td><td>Drission + Page</td><td>库名＝Driver 驱动浏览器 + Session 收发数据包</td><td><code>from DrissionPage import Chromium</code></td></tr>
+<tr><td><code>Chromium()</code></td><td>Chromium 浏览器内核</td><td><b>5.0 唯一浏览器入口</b>，代表一个浏览器进程</td><td><code>browser = Chromium()</code></td></tr>
+<tr><td><code>ChromiumOptions()</code></td><td>options 启动选项</td><td>启动浏览器<b>之前</b>的配置对象</td><td><code>co = ChromiumOptions()</code></td></tr>
+<tr><td><code>SessionPage()</code></td><td>session page 会话页面</td><td>不开浏览器，只收发数据包（5.0 仍保留）</td><td><code>page = SessionPage()</code></td></tr>
+<tr><td><span class="kw" data-w="latest_tab"><code>latest_tab</code></span></td><td>latest tab 最后激活的标签页</td><td>取当前标签页对象，是全书最常用的一行</td><td><code>tab = browser.latest_tab</code></td></tr>
+<tr><td><span class="kw" data-w="BrowserContext"><code>BrowserContext</code></span></td><td>browser context 浏览器上下文</td><td><b>5.0 新增</b>：cookies / 代理互相隔离的小环境</td><td><code>context = browser.new_context()</code></td></tr>
+<tr><td><code>ele() / eles()</code></td><td>element(s) 元素</td><td>查一个 / 查一批元素</td><td><code>tab.ele('#kw')</code></td></tr>
+<tr><td><code>get()</code></td><td>get 获取、访问</td><td>访问网址；5.0 浏览器 tab 返回 <span class="kw" data-w="NavResult"><code>NavResult</code></span></td><td><code>res = tab.get(url)</code></td></tr>
+<tr><td><code>click() / input()</code></td><td>click 点击 / input 输入</td><td>点元素 / 往输入框写字</td><td><code>ele.input('abc')</code></td></tr>
+<tr><td><code>text / attr()</code></td><td>text 文本 / attribute 属性</td><td>取元素文字 / 取 HTML 属性值</td><td><code>ele.attr('href')</code></td></tr>
+<tr><td><span class="kw" data-w="listen"><code>listen</code></span></td><td>listen 监听</td><td>抓网页发出的网络请求和响应</td><td><code>tab.listen.start('api/')</code></td></tr>
+<tr><td><code>change_mode()</code></td><td>change mode 切换模式</td><td>在浏览器模式与数据包模式间切换</td><td><code>tab.change_mode()</code></td></tr>
+<tr><td><span class="kw" data-w="Settings"><code>Settings</code></span></td><td>settings 全局设置</td><td>整个程序的默认行为</td><td><code>Settings.set_language('zh_cn')</code></td></tr>
+</table>
+
+<h3>0.3 定位符（第 8 章会展开成完整一章）</h3>
+<table class="kv">
+<tr><th>写法</th><th>英文原意</th><th>中文意思</th><th>例子</th></tr>
+<tr><td><code>#abc</code></td><td>id selector</td><td>按 id 属性找（等价 <code>@id=abc</code>）</td><td><code>tab.ele('#user_login')</code></td></tr>
+<tr><td><code>.abc</code></td><td>class selector</td><td>按 class 找</td><td><code>page.eles('.item')</code></td></tr>
+<tr><td><code>@name=wd</code></td><td>attribute 属性</td><td>按属性名和值找；只写 <code>@name</code> ＝有这个属性</td><td><code>tab.ele('@name=wd')</code></td></tr>
+<tr><td><code>tag:a</code> / <code>t:a</code></td><td>tag 标签</td><td>按 HTML 标签名找，<span class="kw" data-w="t:"><code>t:</code></span> 是缩写</td><td><code>tab.eles('tag:a')</code></td></tr>
+<tr><td><code>text=登录</code> / <span class="kw" data-w="tx:"><code>tx:</code></span></td><td>text 文本</td><td>按元素文字找</td><td><code>tab.ele('text=登录')</code></td></tr>
+<tr><td><span class="kw" data-w="x:"><code>x:</code></span> / <span class="kw" data-w="c:"><code>c:</code></span></td><td>xpath / css</td><td>只用 XPath / 只用 CSS 选择器找</td><td><code>tab.ele('x://div[@id=abc]')</code></td></tr>
+<tr><td><span class="kw" data-w="ax:"><code>ax:</code></span></td><td>accessibility 无障碍</td><td><b>5.0 新增</b>：按 Chrome 无障碍语义找</td><td><code>tab.ele('ax:@name=主导航@role=navigation')</code></td></tr>
+<tr><td><span class="kw" data-w="="><code>=</code></span> <span class="kw" data-w=":"><code>:</code></span> <code>^</code> <code>$</code></td><td>exact / contains / starts / ends</td><td>精确 / 包含 / 开头 / 结尾匹配</td><td><code>@id^row</code></td></tr>
+</table>
+
+<h3>0.4 HTML / CSS / DOM 与网络名词</h3>
+<table class="kv">
+<tr><th>写法</th><th>英文原意</th><th>中文意思</th><th>例子</th></tr>
+<tr><td><span class="kw" data-w="id"><code>id</code></span></td><td>identifier 身份标识</td><td>HTML 属性，页面中原则上唯一</td><td><code>&lt;div id="kw"&gt;</code></td></tr>
+<tr><td><span class="kw" data-w="class"><code>class</code></span></td><td>class 类</td><td>HTML 属性，给元素分组，可写多个值</td><td><code>&lt;a class="item"&gt;</code></td></tr>
+<tr><td><code>href / src</code></td><td>hypertext reference / source</td><td>链接地址 / 图片脚本资源地址</td><td><code>ele.attr('href')</code></td></tr>
+<tr><td><span class="kw" data-w="iframe"><code>iframe</code></span></td><td>inline frame 内嵌框架</td><td>网页里再嵌一个网页</td><td><code>tab.get_frame('t:iframe')</code></td></tr>
+<tr><td><span class="kw" data-w="shadow_root"><code>shadow_root</code></span> / <code>sr</code></td><td>shadow root 影子根</td><td>Shadow DOM 的根节点，用 <code>.sr</code> 简写</td><td><code>ele.sr('tag:div')</code></td></tr>
+<tr><td><span class="kw" data-w="DOM"><code>DOM</code></span></td><td>Document Object Model</td><td>浏览器把 HTML 解析成的一棵树</td><td><code>document.querySelector('#kw')</code></td></tr>
+<tr><td><span class="kw" data-w="cookie"><code>cookie</code></span></td><td>cookie 小甜饼</td><td>网站存在浏览器里的身份信息</td><td><code>tab.set.cookies('a=1;')</code></td></tr>
+<tr><td><span class="kw" data-w="headers"><code>headers</code></span></td><td>headers 请求头</td><td>请求附带的元信息，如 User-Agent</td><td><code>so.set_headers({'UA': '...'})</code></td></tr>
+<tr><td><span class="kw" data-w="proxy"><code>proxy</code></span></td><td>proxy 代理</td><td>请求经另一台服务器转发，可换 IP</td><td><code>co.set_proxy('127.0.0.1:7890')</code></td></tr>
+<tr><td><span class="kw" data-w="CDP"><code>CDP</code></span></td><td>Chrome DevTools Protocol</td><td>Chrome 调试协议，本库靠它控制浏览器</td><td><code>tab.run_cdp('Page.navigate')</code></td></tr>
+<tr><td><span class="kw" data-w="timeout"><code>timeout</code></span></td><td>timeout 超时</td><td>最多等多少秒</td><td><code>tab.get(url, timeout=10)</code></td></tr>
+</table>
+
+<div class="check">
+  <span class="card-t">检查点：这一章只要记住 3 件事</span>
+  <p>① <span class="kw" data-w="="><code>=</code></span> 是「存进去」，<span class="kw" data-w="=="><code>==</code></span> 才是「比较相等」。<br>
+  ② <span class="kw" data-w="."><code>.</code></span> 读作「……的」，<code>tab.ele()</code> 就是「tab 的 ele 方法」。<br>
+  ③ 绿色 <span class="kw" data-w="#"><code>#</code></span> 注释永远不用敲，蓝底 <code>$</code> 才是要敲的终端命令。</p>
+</div>
+
+<h2 class="chap" id="c1"><span class="num dp">01</span> 开始之前</h2>
+<p class="chap-lead">先花两分钟搞清楚这个库是干什么的、要装什么，后面的每一步才不会迷糊。</p>
+
+<h3>1.1 DrissionPage 到底做什么</h3>
+<p>它是一个 <span class="kw" data-w="Python">Python</span> 库，帮你用代码操作网页。名字里的 <b>Drission</b> 是 <b>Driver</b>（驱动浏览器）和 <b>Session</b>（收发数据包）拼起来的，所以它有两条路：</p>
+<div class="fig">
+<svg viewBox="0 0 880 250" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="250" fill="#ffffff"/>
+  <rect class="box" x="330" y="14" width="220" height="44" rx="10" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tb" x="372" y="42">你的 Python 代码</text>
+  <path d="M440 60 L440 88" stroke="#0f766e" stroke-width="2" marker-end="url(#arC1)"/>
+  <rect class="box" x="40" y="92" width="360" height="112" rx="14" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tb" x="60" y="120">① d 模式：真的开一个浏览器</text>
+  <text class="ts" x="60" y="145">能点击、输入、滚动、执行 js、截图</text>
+  <text class="ts" x="60" y="168">慢一点，但「看得见」的页面都能操作</text>
+  <text class="tm" x="60" y="190">tab = Chromium().latest_tab</text>
+  <rect class="box" x="480" y="92" width="360" height="112" rx="14" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="tb" x="500" y="120">② s 模式：只发网络请求</text>
+  <text class="ts" x="500" y="145">不开浏览器，直接拿 HTML，速度快</text>
+  <text class="ts" x="500" y="168">不能点击、不能执行 js</text>
+  <text class="tm" x="500" y="190">page = SessionPage()</text>
+  <path d="M440 88 L220 88 L220 90" stroke="#2563eb" stroke-width="2" fill="none" marker-end="url(#arC1b)"/>
+  <path d="M440 88 L660 88 L660 90" stroke="#7c3aed" stroke-width="2" fill="none" marker-end="url(#arC1c)"/>
+  <text class="ts" x="300" y="232">两条路可以在同一个标签页上用 change_mode() 切换（第 19 章）</text>
+  <defs>
+    <marker id="arC1" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#0f766e"/></marker>
+    <marker id="arC1b" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#2563eb"/></marker>
+    <marker id="arC1c" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#7c3aed"/></marker>
+  </defs>
+</svg>
+<figcaption><b>两条路</b>：左边开真浏览器，右边只发数据包。5.0 里两条路都保留，还能互相切换。</figcaption>
+</div>
+
+<p>举三个最常见的用途，你一看就知道自己要不要用它：</p>
+<table class="kv">
+<tr><th>你想做的事</th><th>用哪条路</th><th>本教程哪一章</th></tr>
+<tr><td>自动填写表单、点按钮、登录后抓内容</td><td>d 模式（开浏览器）</td><td>第 3、23 章</td></tr>
+<tr><td>批量读一批静态网页，越快越好</td><td>s 模式（<span class="kw" data-w="SessionPage"><code>SessionPage</code></span>）</td><td>第 18 章</td></tr>
+<tr><td>网页数据是 js 调接口拿到的，想直接拿接口结果</td><td>监听网络数据</td><td>第 14、24 章</td></tr>
+<tr><td>把网页上的文件下载下来</td><td>下载管理 / DownloadKit</td><td>第 15 章</td></tr>
+</table>
+
+<h3>1.2 版本：稳定版与 5.0 测试版</h3>
+<p>教程写于 2026 年 11 月，下面的版本号是当时从 <a href="https://pypi.org/project/DrissionPage/" target="_blank">PyPI</a> 和官网首页实际查到的，不是猜的：</p>
+<table class="kv">
+<tr><th>版本</th><th>状态</th><th>安装命令</th><th>本教程是否适用</th></tr>
+<tr><td><code>4.1.1.4</code></td><td>官网当前文档对应的<b>最新稳定版</b></td><td><code>pip install DrissionPage</code></td><td>大部分适用，但 5.0 新 API 会报「没有这个属性」</td></tr>
+<tr><td><code>5.0.0b1</code></td><td><b>5.0 测试版</b>（官网首页公告已发布）</td><td><code>pip install DrissionPage==5.0.0b1</code></td><td><b>完全适用</b>，本教程按它写</td></tr>
+</table>
+<div class="warn">
+  <span class="card-t">测试版是什么意思</span>
+  <p>版本号里的 <code>b</code> 是 <span class="kw" data-w="beta">beta</span>（测试版）的缩写。功能新，但可能还有小毛病；做正式项目时用稳定版更保险。本教程会在每个 5.0 新特性旁标出「仅 5.0」。</p>
+</div>
+
+<h3>1.3 要准备的东西</h3>
+<div class="step">
+  <div class="step-h"><span class="step-n">1</span> Python 3.6 或更高</div>
+  <p>官网要求 3.6 及以上。第 2 章会教你查版本。</p>
+</div>
+<div class="step">
+  <div class="step-h"><span class="step-n">2</span> Chromium 内核的浏览器</div>
+  <p>Chrome 或 Edge 都行，<b>建议版本号 100 以上</b>，旧版有些功能不支持。只收发数据包（s 模式）可以不装浏览器。</p>
+</div>
+<div class="step">
+  <div class="step-h"><span class="step-n">3</span> 一个能写代码的编辑器</div>
+  <p>记事本也行，用 VS Code、PyCharm 更省事。本教程所有代码都写进 <code>.py</code> 文件再运行。</p>
+</div>
+
+<div class="check">
+  <span class="card-t">检查点</span>
+  <p>能回答这三个问题就可以往下走：① 我要开真浏览器还是只发请求？② 我装的是 4.1.1.4 还是 5.0 测试版？③ 我电脑上的 Chrome / Edge 版本是多少？</p>
+</div>
+
+<h2 class="chap" id="c2"><span class="num dp">02</span> 装好环境（手把手）</h2>
+<p class="chap-lead">这一章每一步都给出「你会看到什么」。照着做，做错当场就能发现。</p>
+
+<div class="fig">
+<svg viewBox="0 0 880 132" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="132" fill="#ffffff"/>
+  <rect class="box" x="14" y="34" width="150" height="60" rx="11" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="t" x="34" y="60">① 查 Python</text><text class="ts" x="34" y="80">python --version</text>
+  <rect class="box" x="184" y="34" width="150" height="60" rx="11" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="t" x="204" y="60">② 建文件夹</text><text class="ts" x="204" y="80">mkdir + cd</text>
+  <rect class="box" x="354" y="34" width="150" height="60" rx="11" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="t" x="374" y="60">③ 装库</text><text class="ts" x="374" y="80">pip install</text>
+  <rect class="box" x="524" y="34" width="150" height="60" rx="11" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="t" x="544" y="60">④ 验证导入</text><text class="ts" x="544" y="80">python -c</text>
+  <rect class="box" x="694" y="34" width="170" height="60" rx="11" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="t" x="714" y="60">⑤ 找浏览器路径</text><text class="ts" x="714" y="80">chrome://version</text>
+  <path d="M166 64 L182 64 M336 64 L352 64 M506 64 L522 64 M676 64 L692 64" stroke="#2563eb" stroke-width="2" marker-end="url(#arC2)"/>
+  <defs><marker id="arC2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#2563eb"/></marker></defs>
+</svg>
+<figcaption><b>安装五步</b>：一步一步来，每步都有检查点。</figcaption>
+</div>
+
+<h3>2.1 第 1 步：查 Python 版本</h3>
+<div class="cmd"><div class="cmd-bar"><span>终端</span><span>只敲带 $ 的行</span></div><pre><span class="p">$</span> <span class="k">python</span> --version
+<span class="c"># python = 运行 Python；--version = 问它「你是什么版本」（version = 版本）</span>
+<span class="c"># 注意：$ 只是「这一行要敲」的标记，不是命令的一部分</span></pre></div>
+<div class="out"><div class="out-bar">你会看到什么（数字可能不一样）</div><pre>Python 3.13.14</pre><div class="trans"><b>看到 <code>Python 3.x.x</code> 就成功。</b>只要第一位是 3 且版本 ≥ 3.6 就行。</div></div>
+<div class="warn">
+  <span class="card-t">Windows 特有：'python' 不是内部或外部命令</span>
+  <p>如果报这个错，先试 <code>py --version</code>（Windows 的 Python 启动器）。还不行说明装 Python 时没勾「Add Python to PATH」，重新运行安装包并勾上，或把 Python 安装目录加进环境变量 PATH。</p>
+</div>
+
+<h3>2.2 第 2 步：建一个项目文件夹并进去</h3>
+<p>不要把所有代码撒在桌面上。先建个文件夹，再用 <code>cd</code> 进去。<code>cd</code> 是 <b>change directory</b>（改变目录）的缩写。</p>
+<div class="cmd"><div class="cmd-bar"><span>终端</span><span>一条一条敲</span></div><pre><span class="p">$</span> <span class="k">mkdir</span> dp-lab
+<span class="c"># mkdir = make directory 新建文件夹；dp-lab 是文件夹名，可以自己改</span>
+<span class="p">$</span> <span class="k">cd</span> dp-lab
+<span class="c"># cd = change directory 进入文件夹；dp-lab 是「相对路径」，指当前位置下面的 dp-lab</span>
+<span class="p">$</span> <span class="k">pwd</span>
+<span class="c"># pwd = print working directory 打印当前所在位置，用来检查有没有进对</span></pre></div>
+<div class="out"><div class="out-bar">你会看到什么</div><pre>/c/Users/Administrator/Desktop/dp-lab</pre><div class="trans"><b>检查点：末尾必须是 <code>dp-lab</code></b>。每个人的前半截都不一样（可能是 <code>C:\Users\你的名字\...</code>、<code>/home/...</code>），所以本书从不写死提示符路径；只看<b>最后一段</b>。</div></div>
+<table class="kv">
+<tr><th>情况</th><th>怎么写 <code>cd</code></th><th>说明</th></tr>
+<tr><td>进当前位置下的文件夹</td><td><code>cd dp-lab</code></td><td>相对路径，最常用</td></tr>
+<tr><td>直接给完整路径</td><td><code>cd /c/Users/Administrator/Desktop/dp-lab</code></td><td>绝对路径；Windows 的 C 盘在 Git Bash 里写成 <code>/c/</code></td></tr>
+<tr><td>回自己的家目录</td><td><code>cd ~</code></td><td><code>~</code> 就是「我的用户文件夹」</td></tr>
+<tr><td>退回上一层</td><td><code>cd ..</code></td><td>两个点＝上一级</td></tr>
+<tr><td>文件夹名有中文</td><td><code>cd 教程</code></td><td>直接写中文即可</td></tr>
+<tr><td>文件夹名有空格</td><td><code>cd "my lab"</code></td><td><b>必须加引号</b>，否则会被当成两个参数</td></tr>
+<tr><td>另一个盘</td><td><code>cd /d/work</code></td><td>D 盘在 Git Bash 里写 <code>/d/</code></td></tr>
+<tr><td>懒得打全</td><td><code>cd dp</code> 然后按 <kbd>Tab</kbd></td><td>Tab 自动补全文件夹名</td></tr>
+</table>
+
+<h3>2.3 第 3 步：安装 DrissionPage</h3>
+<p>按你要的版本<b>二选一</b>，只敲其中一条：</p>
+<div class="cmd"><div class="cmd-bar"><span>终端 · 方案 A：装 5.0 测试版（本教程用这个）</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">pip</span> install DrissionPage==5.0.0b1
+<span class="c"># pip = Python 包管理器；install = 安装；==5.0.0b1 = 精确指定版本（不写就装最新稳定版）</span></pre></div>
+<div class="cmd"><div class="cmd-bar"><span>终端 · 方案 B：装最新稳定版</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">pip</span> install DrissionPage --upgrade
+<span class="c"># --upgrade = 升级到最新（upgrade = 升级）；已装过也能用这条更新</span></pre></div>
+<div class="out"><div class="out-bar">你会看到什么（节选）</div><pre>Collecting DrissionPage==5.0.0b1
+  Downloading DrissionPage-5.0.0b1-py3-none-any.whl ...
+Installing collected packages: requests, lxml, cssselect, websocket-client, DownloadKit, DrissionPage
+Successfully installed DrissionPage-5.0.0b1 ...</pre><div class="trans"><b>检查点：最后一行出现 <code>Successfully installed ... DrissionPage</code> 才算成功。</b>中间那些 <code>Collecting / Downloading</code> 是在自动装它依赖的其它库，不用管。</div></div>
+<div class="warn">
+  <span class="card-t">Windows 特有：pip 装完提示黄色警告，是错误吗？</span>
+  <p>常见的两种都不是错误：<br>① <code>WARNING: You are using pip version ...</code> —— 只是提醒 pip 可以升级，不影响使用。<br>② <code>Defaulting to user installation because normal site-packages is not writeable</code> —— 没有管理员权限，装到了你自己的用户目录，照样能用。<br>真正要处理的是红色 <code>ERROR: Could not find a version that satisfies the requirement</code>：多半是版本号写错，或网络连不上 PyPI，可加国内镜像 <code>-i https://pypi.tuna.tsinghua.edu.cn/simple</code>。</p>
+</div>
+
+<h3>2.4 第 4 步：验证装好了</h3>
+<div class="cmd"><div class="cmd-bar"><span>终端</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">python</span> -c <span class="s">"import DrissionPage; print(DrissionPage.__version__)"</span>
+<span class="c"># -c = command 直接执行后面引号里的一行代码</span>
+<span class="c"># import = 导入；print = 打印；__version__ = 库自带的「版本号」变量</span></pre></div>
+<div class="out"><div class="out-bar">你会看到什么</div><pre>5.0.0b1</pre><div class="trans"><b>检查点：打印出版本号就成功。</b>如果报 <code>ModuleNotFoundError: No module named 'DrissionPage'</code>，说明装库和运行的 Python 不是同一个环境：改用 <code>python -m pip install ...</code> 重装一次。</div></div>
+
+<h3>2.5 第 5 步：让库找得到浏览器</h3>
+<p>库默认会自动找 Chrome。如果它找不到，或者你想指定 Edge，就要手动告诉它浏览器在哪。</p>
+<div class="step">
+  <div class="step-h"><span class="step-n">1</span> 查浏览器路径</div>
+  <p>打开 Chrome，在地址栏输入 <code>chrome://version</code> 回车（Edge 用 <code>edge://version</code>），找到「<b>可执行文件路径</b>」那一行，复制下来。</p>
+  <p>Windows 上通常长这样：<code>C:\Program Files\Google\Chrome\Application\chrome.exe</code></p>
+</div>
+<div class="step">
+  <div class="step-h"><span class="step-n">2</span> 用命令行写进配置（最简单）</div>
+  <div class="cmd"><div class="cmd-bar"><span>终端</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">dp</span> -p <span class="s">"C:\Program Files\Google\Chrome\Application\chrome.exe"</span>
+<span class="c"># dp = 随库安装的小命令；-p = --set-browser-path 设置浏览器路径</span>
+<span class="c"># 注意：命令行里的 python 环境必须和你项目用的是同一个</span></pre></div>
+  <p>路径里有空格，<b>必须加引号</b>。也可以写在 Python 里（效果一样）：</p>
+  <div class="cmd file"><div class="cmd-bar"><span>set_browser.py</span><span>写进文件，不是在终端敲</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> ChromiumOptions   <span class="c"># from = 从…；import = 导入；ChromiumOptions = 启动配置对象</span>
+
+path = <span class="s">r'C:\Program Files\Google\Chrome\Application\chrome.exe'</span>
+<span class="c"># r'' = raw string 原始字符串：反斜杠 \ 不当转义符，Windows 路径必写 r</span>
+ChromiumOptions().set_browser_path(path).save()
+<span class="c"># . = 的；set_browser_path = 设置浏览器路径；save = 把配置存进 ini 文件</span></pre></div>
+</div>
+<div class="step">
+  <div class="step-h"><span class="step-n">3</span> 5.0 可以直接指定 Edge</div>
+  <div class="cmd file"><div class="cmd-bar"><span>use_edge.py</span><span>仅 5.0</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium, ChromiumOptions
+
+co = ChromiumOptions().use_edge()   <span class="c"># use_edge = 使用 Edge 浏览器（5.0 新增方法）</span>
+browser = Chromium(co)              <span class="c"># Chromium(co) = 按这份配置启动/连接浏览器</span></pre></div>
+</div>
+
+<div class="check">
+  <span class="card-t">检查点：环境装好了</span>
+  <p>① <code>python -c "import DrissionPage; print(DrissionPage.__version__)"</code> 能打印版本号。<br>② 浏览器是 Chrome / Edge 且版本 ≥ 100。<br>③ 如果自动找不到浏览器，已经用 <code>dp -p</code> 或 <code>set_browser_path()</code> 设过路径。<br>三条都满足，就可以写第一个程序了。</p>
+</div>
+
+<h2 class="chap" id="c3"><span class="num dp">03</span> 第一个程序</h2>
+<p class="chap-lead">目标：打开一个网页，往搜索框里打字，点按钮，把页面标题打印出来。全程不到 10 行。</p>
+
+<div class="step">
+  <div class="step-h"><span class="step-n">1</span> 新建文件 first.py</div>
+  <p>在刚才的 <code>dp-lab</code> 文件夹里新建 <code>first.py</code>，把下面整段复制进去。绿色注释是解释，可以不抄。</p>
+  <div class="cmd file"><div class="cmd-bar"><span>first.py</span><span>写进文件后用 python first.py 运行</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+<span class="c"># from = 从 DrissionPage 这个库里；import = 导入；Chromium = 浏览器对象（5.0 唯一入口）</span>
+
+browser = Chromium()
+<span class="c"># Chromium() = 启动或接管一个浏览器；= 把结果存进变量 browser</span>
+
+tab = browser.latest_tab
+<span class="c"># latest_tab = 最后激活的那个标签页；tab 后面所有操作都靠它</span>
+
+tab.get(<span class="s">'https://www.baidu.com'</span>)
+<span class="c"># get = 访问网址；5.0 返回一个 NavResult 对象，第 7 章讲怎么读</span>
+
+tab.ele(<span class="s">'#kw'</span>).input(<span class="s">'DrissionPage'</span>)
+<span class="c"># ele = element 找一个元素；'#kw' = id 为 kw 的元素（搜索框）</span>
+<span class="c"># input = 输入文本；这里是往搜索框写 DrissionPage</span>
+
+tab(<span class="s">'#su'</span>).click()
+<span class="c"># tab('#su') 是 tab.ele('#su') 的简写；click = 点击（百度一下按钮）</span>
+
+<span class="k">print</span>(tab.title)
+<span class="c"># print = 打印到终端；title = 当前网页标题</span></pre></div>
+</div>
+
+<div class="step">
+  <div class="step-h"><span class="step-n">2</span> 运行它</div>
+  <div class="cmd"><div class="cmd-bar"><span>终端（确保已经 cd 进 dp-lab）</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">python</span> first.py
+<span class="c"># python = 用 Python 运行；first.py = 刚才写的文件</span></pre></div>
+</div>
+
+<div class="out"><div class="out-bar">你会看到什么</div><pre>浏览器窗口自动打开，跳到百度，搜索框里出现 DrissionPage，然后自动点「百度一下」。
+终端打印：
+DrissionPage_百度搜索</pre><div class="trans"><b>检查点：</b>终端打印出带「DrissionPage」的标题就成功。标题文字可能随百度页面变化，只要<b>不是空、不是报错</b>就对了。</div></div>
+
+<div class="fig">
+<svg viewBox="0 0 880 210" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="210" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">这 10 行代码依次发生了什么</text>
+  <rect class="box" x="18" y="46" width="126" height="58" rx="10" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tm" x="30" y="70">Chromium()</text><text class="ts" x="30" y="90">开浏览器</text>
+  <rect class="box" x="160" y="46" width="126" height="58" rx="10" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tm" x="172" y="70">latest_tab</text><text class="ts" x="172" y="90">拿标签页</text>
+  <rect class="box" x="302" y="46" width="126" height="58" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="314" y="70">tab.get()</text><text class="ts" x="314" y="90">打开网页</text>
+  <rect class="box" x="444" y="46" width="126" height="58" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="456" y="70">ele().input()</text><text class="ts" x="456" y="90">找框并输入</text>
+  <rect class="box" x="586" y="46" width="126" height="58" rx="10" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="tm" x="598" y="70">click()</text><text class="ts" x="598" y="90">点按钮</text>
+  <rect class="box" x="728" y="46" width="134" height="58" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="tm" x="740" y="70">print(title)</text><text class="ts" x="740" y="90">看结果</text>
+  <path d="M146 75 L158 75 M288 75 L300 75 M430 75 L442 75 M572 75 L584 75 M714 75 L726 75" stroke="#2563eb" stroke-width="2" marker-end="url(#arC3)"/>
+  <text class="ts" x="18" y="140">注意顺序：先有浏览器，才有标签页；先访问网页，才能找网页里的元素。</text>
+  <text class="ts" x="18" y="166">ele() 自带等待：元素还没加载出来时，它最多等 10 秒，不用你自己写 sleep。</text>
+  <text class="ts" x="18" y="192">get() 自带等待加载：默认等页面加载完再往下走，第 7 章会讲怎么改这个行为。</text>
+  <defs><marker id="arC3" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#2563eb"/></marker></defs>
+</svg>
+<figcaption><b>执行顺序</b>：每一步都依赖前一步，顺序写反就会报「找不到元素」。</figcaption>
+</div>
+
+<div class="warn">
+  <span class="card-t">三个最常见的报错，现场就能修</span>
+  <p>① <code>BrowserConnectError: ... 无法连接浏览器</code> → 回第 2.5 步设浏览器路径，或把 Chrome 全部关掉再运行。<br>
+  ② <code>'NoneElement' object has no attribute 'input'</code> → 说明 <code>#kw</code> 没找到（页面结构变了或还没加载完）。把 <code>tab.ele('#kw')</code> 改成 <code>tag:input</code> 再试，或用浏览器 F12 检查真实 id。<br>
+  ③ 程序跑完浏览器还开着 → <b>这是正常行为</b>：本库启动的浏览器不会随程序结束自动关闭。要关掉就调用 <code>browser.quit()</code>（第 6 章）。</p>
+</div>
+
+<div class="demo">
+  <div class="demo-h">动手点一点：5.0 的对象是一层一层拿到的 <span class="live">可点</span></div>
+  <div class="demo-row">
+    <button class="dbtn" onclick="DPDemo.obj(1)">① 启动浏览器</button>
+    <button class="dbtn" onclick="DPDemo.obj(2)">② 建上下文</button>
+    <button class="dbtn" onclick="DPDemo.obj(3)">③ 拿标签页</button>
+    <button class="dbtn" onclick="DPDemo.obj(4)">④ 找元素</button>
+    <button class="dbtn ghost" onclick="DPDemo.obj(0)">重置</button>
+  </div>
+  <div class="demo-screen big" id="demoObj">还没开始</div>
+  <div class="lamps" id="demoObjLamps">
+    <span class="lamp">Chromium</span><span class="lamp">BrowserContext</span><span class="lamp">Tab</span><span class="lamp">Element</span>
+  </div>
+  <div class="demo-note">默认环境不用手动建上下文，<code>Chromium().latest_tab</code> 会直接给你标签页；第 12、21 章才需要显式 <code>new_context()</code>。</div>
+</div>
+
+<div class="check">
+  <span class="card-t">检查点</span>
+  <p>能独立写出「启动浏览器 → 拿标签页 → 访问网址 → 找元素 → 操作 → 打印结果」这六步，就算入门了。下一章解释它们背后到底是什么。</p>
+</div>
+
+<h2 class="chap" id="c4"><span class="num dp">04</span> 刚才发生了什么</h2>
+<p class="chap-lead">把第 3 章那 10 行拆开，认识 5.0 的四层对象。理解了这张图，后面所有章节都是往里填方法。</p>
+
+<div class="fig">
+<svg viewBox="0 0 880 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="300" fill="#ffffff"/>
+  <text class="tb" x="20" y="26">5.0 对象树：一个浏览器可以有多个上下文、多个标签页、无数元素</text>
+  <rect class="box" x="30" y="46" width="200" height="60" rx="12" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tm" x="46" y="72">Chromium</text><text class="ts" x="46" y="92">浏览器进程 · 全书入口</text>
+  <rect class="box" x="280" y="46" width="250" height="60" rx="12" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="296" y="72">BrowserContext（可选）</text><text class="ts" x="296" y="92">独立 cookies / 独立代理 · 5.0 新增</text>
+  <rect class="box" x="580" y="46" width="260" height="60" rx="12" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="tm" x="596" y="72">ChromiumTab / tab</text><text class="ts" x="596" y="92">一个标签页 · 所有操作的主战场</text>
+  <path d="M232 76 L278 76 M532 76 L578 76" stroke="#0f766e" stroke-width="2" marker-end="url(#arC4)"/>
+  <rect class="box" x="580" y="140" width="260" height="56" rx="12" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="tm" x="596" y="166">ChromiumElement</text><text class="ts" x="596" y="186">页面里的一个元素（输入框、按钮…）</text>
+  <path d="M710 108 L710 138" stroke="#2563eb" stroke-width="2" marker-end="url(#arC4b)"/>
+  <rect class="box" x="30" y="140" width="250" height="56" rx="12" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="tm" x="46" y="166">SessionPage</text><text class="ts" x="46" y="186">另一条路：不开浏览器，只发请求</text>
+  <path d="M232 76 L140 76 L140 138" stroke="#ea580c" stroke-width="2" fill="none" marker-end="url(#arC4c)"/>
+  <text class="ts" x="30" y="232">d 模式 = 走上面这条链（真浏览器）；s 模式 = 只发 HTTP 请求（SessionPage 或 tab.change_mode()）。</text>
+  <text class="ts" x="30" y="258">5.0 起 ChromiumTab 自己也能 change_mode()，不再需要旧的 WebPage。</text>
+  <text class="ts" x="30" y="284">记住一句：变量 tab 就是「当前这个标签页」，后面 20 多章都是在它身上调方法。</text>
+  <defs>
+    <marker id="arC4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#0f766e"/></marker>
+    <marker id="arC4b" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#2563eb"/></marker>
+    <marker id="arC4c" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#ea580c"/></marker>
+  </defs>
+</svg>
+<figcaption><b>对象树</b>：5.0 把「浏览器」和「标签页」彻底分开，这是它和旧教程最大的不同。</figcaption>
+</div>
+
+<table class="kv">
+<tr><th>对象</th><th>怎么得到</th><th>它管什么</th><th>常用方法</th></tr>
+<tr><td><span class="kw" data-w="Chromium"><code>Chromium</code></span></td><td><code>Chromium()</code></td><td>整个浏览器进程、所有标签页</td><td><span class="kw" data-w="latest_tab"><code>latest_tab</code></span> <code>new_tab()</code> <code>get_tab()</code> <code>quit()</code></td></tr>
+<tr><td><span class="kw" data-w="BrowserContext"><code>BrowserContext</code></span></td><td><code>browser.new_context()</code></td><td>一个隔离环境（cookies、代理独立）</td><td><code>new_tab()</code> <code>cookies()</code> <code>close()</code></td></tr>
+<tr><td><span class="kw" data-w="ChromiumTab"><code>ChromiumTab</code></span></td><td><code>browser.latest_tab</code></td><td>一个标签页：访问、找元素、点击</td><td><code>get()</code> <code>ele()</code> <code>click()</code> <span class="kw" data-w="listen"><code>listen</code></span></td></tr>
+<tr><td><code>ChromiumElement</code></td><td><code>tab.ele(...)</code></td><td>页面里的一个具体元素</td><td><code>input()</code> <span class="kw" data-w="text"><code>text</code></span> <code>attr()</code> <code>click()</code></td></tr>
+<tr><td><span class="kw" data-w="SessionPage"><code>SessionPage</code></span></td><td><code>SessionPage()</code></td><td>不开浏览器、只收发数据包</td><td><code>get()</code> <code>post()</code> <code>eles()</code> <code>download()</code></td></tr>
+</table>
+
+<div class="warn">
+  <span class="card-t">为什么网上很多教程的代码在你这里跑不通</span>
+  <p>因为大量旧教程（包括 4.1 及更早）开头写的是 <code>from DrissionPage import ChromiumPage</code> 或 <code>WebPage</code>。官网 5.0 功能介绍里明确写着：<b>「不要再用 Page 对象了！……决定将它们删除」</b>。所以本教程从头到尾只用 <code>Chromium()</code>。看到旧写法，按附录 C 换成新写法即可。</p>
+</div>
+
+<div class="dissect">
+  <div class="dl">tab = Chromium().latest_tab</div>
+  <table class="words">
+    <tr><td><code>tab</code></td><td><span class="en">变量名，tab = 标签页</span><br>随便起名，叫 <code>page</code> 也行；本书统一叫 <code>tab</code>。</td></tr>
+    <tr><td><span class="kw" data-w="="><code>=</code></span></td><td><span class="en">赋值</span><br>把右边算出来的结果存进左边变量，<b>不是</b>数学里的相等。</td></tr>
+    <tr><td><code>Chromium()</code></td><td><span class="en">类名 + 括号 = 创建对象</span><br>启动或接管浏览器，得到一个浏览器对象。</td></tr>
+    <tr><td><span class="kw" data-w="."><code>.</code></span></td><td><span class="en">的</span><br>取这个浏览器对象身上的属性。</td></tr>
+    <tr><td><span class="kw" data-w="latest_tab"><code>latest_tab</code></span></td><td><span class="en">latest = 最后的；tab = 标签页</span><br>注意后面<b>没有括号</b>：它是属性，不是方法。</td></tr>
+  </table>
+</div>
+
+<div class="check">
+  <span class="card-t">检查点</span>
+  <p>① 说出 <span class="kw" data-w="Chromium"><code>Chromium</code></span> 和 <code>tab</code> 的分工。<br>② 知道 5.0 删掉了哪两个对象。<br>③ 能解释为什么 <span class="kw" data-w="latest_tab"><code>latest_tab</code></span> 后面不加括号（它是属性）。</p>
+</div>
+
+<h2 class="chap" id="c5"><span class="num dp">05</span> 三种对象与两种模式</h2>
+<p class="chap-lead">这一章回答一个最实用的问题：我现在这个需求，该用哪个对象？</p>
+
+<div class="fig">
+<svg viewBox="0 0 880 230" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="230" fill="#ffffff"/>
+  <rect class="box" x="20" y="30" width="400" height="160" rx="14" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tb" x="40" y="60">d 模式 · Driver 驱动浏览器</text>
+  <text class="ts" x="40" y="86">真的开 Chrome / Edge，页面看得见</text>
+  <text class="ts" x="40" y="110">能点击、输入、滚动、执行 js、截图、监听</text>
+  <text class="ts" x="40" y="134">慢一点、占内存多一点</text>
+  <text class="tm" x="40" y="166">tab = Chromium().latest_tab</text>
+  <rect class="box" x="460" y="30" width="400" height="160" rx="14" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="tb" x="480" y="60">s 模式 · Session 收发数据包</text>
+  <text class="ts" x="480" y="86">不开浏览器，直接发 HTTP 请求拿 HTML</text>
+  <text class="ts" x="480" y="110">速度快、内存小，适合批量读静态页</text>
+  <text class="ts" x="480" y="134">不能点击、不能执行 js、看不到动态渲染</text>
+  <text class="tm" x="480" y="166">page = SessionPage()</text>
+  <path d="M420 110 L458 110" stroke="#0f766e" stroke-width="2" stroke-dasharray="6 5"/>
+  <text class="ts" x="352" y="212">tab.change_mode() 可以在两者间切换（第 19 章）</text>
+</svg>
+<figcaption><b>两种模式</b>：左边「有浏览器」，右边「只有请求」。同一个标签页能切换，但不能同时处于两种模式。</figcaption>
+</div>
+
+<table class="kv">
+<tr><th>你的需求</th><th>选哪个</th><th>起手式</th></tr>
+<tr><td>要登录、要点按钮、页面是 js 渲染的</td><td>d 模式</td><td><code>tab = Chromium().latest_tab</code></td></tr>
+<tr><td>只是读一批列表页的文字和链接</td><td>s 模式</td><td><code>page = SessionPage()</code></td></tr>
+<tr><td>先用浏览器登录，再高速翻 100 页</td><td>先 d 再切 s</td><td><code>tab.change_mode()</code></td></tr>
+<tr><td>要抓网页调接口返回的 JSON</td><td>d 模式 + 监听</td><td><code>tab.listen.start('api/')</code></td></tr>
+</table>
+
+<div class="demo">
+  <div class="demo-h">点一下，看两种模式分别能干什么 <span class="live">可点</span></div>
+  <div class="demo-row" id="demoMode">
+    <button class="dbtn" data-m="d" onclick="DPDemo.mode('d')">d 模式</button>
+    <button class="dbtn ghost" data-m="s" onclick="DPDemo.mode('s')">s 模式</button>
+  </div>
+  <div class="demo-screen big">d 模式（浏览器）：能点击、能滚动、能执行 js、能看到动画页面
+代价：要开浏览器，慢一些</div>
+  <div class="demo-note">名字里的 d = <b>D</b>river（驱动），s = <b>S</b>ession（会话）。5.0 里 <span class="kw" data-w="ChromiumTab"><code>ChromiumTab</code></span> 也能切换模式了，不再需要旧的 <code>WebPage</code>。</div>
+</div>
+
+<div class="warn">
+  <span class="card-t">5.0 重要影响</span>
+  <p>官网明确删除了 <code>ChromiumPage</code> 和 <code>WebPage</code>；同时给 <span class="kw" data-w="ChromiumTab"><code>ChromiumTab</code></span> 加了模式切换。所以「三种对象」在 5.0 里实际是：<b>Chromium（浏览器）→ ChromiumTab（标签页，可切模式）</b> 和 <b>SessionPage（纯数据包）</b>。别再去 import 那两个 Page 了。</p>
+</div>
+
+<div class="check"><span class="card-t">检查点</span><p>能说出「页面要点击 → d 模式」「批量读静态页 → s 模式」「登录后再翻页 → change_mode()」这三条即可。</p></div>
+
+<h2 class="chap" id="c6"><span class="num dp">06</span> 启动和连接浏览器</h2>
+<p class="chap-lead">同为 <code>Chromium()</code>，括号里不传东西＝让库自己启动；传配置对象＝按你的要求启动；传端口＝接管已经开着的浏览器。</p>
+
+<h3>6.1 最简单的启动</h3>
+<div class="cmd file"><div class="cmd-bar"><span>start.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+browser = Chromium()          <span class="c"># 启动（或接管）浏览器，默认端口 9222</span>
+tab = browser.latest_tab      <span class="c"># 取当前标签页</span>
+tab.get(<span class="s">'https://www.drissionpage.cn'</span>)
+<span class="k">print</span>(tab.title)               <span class="c"># 打印标题，用来确认真的连上了</span>
+browser.quit()                <span class="c"># quit = 退出，关掉整个浏览器进程</span></pre></div>
+<div class="out"><div class="out-bar">你会看到什么</div><pre>浏览器自动打开官网首页，终端打印：
+DrissionPage官网</pre><div class="trans"><b>检查点：</b>打印出标题就成功。<code>quit()</code> 之后浏览器窗口会关闭；<b>不写这一行，浏览器会一直开着</b>（这是官方行为，不是 bug）。</div></div>
+
+<h3>6.2 启动配置 ChromiumOptions</h3>
+<p>配置对象只在<b>启动之前</b>有效：浏览器一旦创建，再改配置没用；接管一个已经开着的浏览器时，配置里也只有端口和地址生效。</p>
+<div class="cmd file"><div class="cmd-bar"><span>options.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium, ChromiumOptions
+
+co = ChromiumOptions()            <span class="c"># ChromiumOptions = 浏览器启动配置对象</span>
+co.headless()                     <span class="c"># headless = 无头：不显示浏览器窗口</span>
+co.no_imgs(True).mute(True)       <span class="c"># no_imgs = 不加载图片；mute = 静音；链式写法</span>
+co.set_argument(<span class="s">'--window-size'</span>, <span class="s">'1280,900'</span>)
+<span class="c"># set_argument = 添加浏览器启动参数（argument = 参数）</span>
+
+browser = Chromium(co)            <span class="c"># 按 co 这份配置启动浏览器</span>
+tab = browser.latest_tab
+tab.get(<span class="s">'https://www.baidu.com'</span>)
+<span class="k">print</span>(tab.title)
+browser.quit()                    <span class="c"># 无头模式尤其要记得 quit，否则进程一直挂着</span></pre></div>
+
+<table class="kv">
+<tr><th>方法</th><th>英文原意</th><th>作用</th></tr>
+<tr><td><code>headless(on_off=True)</code></td><td>headless 无头</td><td>不显示窗口运行</td></tr>
+<tr><td><code>set_browser_path(path)</code></td><td>set browser path 设浏览器路径</td><td>指定 Chrome / Edge 的 exe</td></tr>
+<tr><td><code>set_local_port(port)</code></td><td>local port 本地端口</td><td>换调试端口，默认 9222</td></tr>
+<tr><td><code>auto_port()</code></td><td>auto port 自动端口</td><td>每次随机找空端口，适合开多个浏览器</td></tr>
+<tr><td><code>set_user_data_path(path)</code></td><td>user data path 用户数据目录</td><td>用独立的用户文件夹（保留登录态）</td></tr>
+<tr><td><code>use_system_user_path()</code></td><td>use system user path 用系统用户目录</td><td>5.0 会<b>复制一份</b>系统用户目录来用</td></tr>
+<tr><td><code>incognito(True)</code></td><td>incognito 隐身</td><td>无痕模式</td></tr>
+<tr><td><code>set_proxy(proxy)</code></td><td>proxy 代理</td><td>5.0 支持 <code>http://账号:密码@ip:端口</code></td></tr>
+<tr><td><code>no_imgs(True)</code> / <code>no_js(True)</code></td><td>no images / no javascript</td><td>不加载图片 / 不执行 js，提速</td></tr>
+<tr><td><code>set_argument(arg, value)</code></td><td>argument 启动参数</td><td>加任意 Chrome 命令行参数</td></tr>
+<tr><td><code>set_pref(arg, value)</code></td><td>preference 偏好设置</td><td>改浏览器偏好项</td></tr>
+<tr><td><code>add_extension(path)</code></td><td>extension 扩展</td><td>加载插件</td></tr>
+<tr><td><code>save() / save_to_default()</code></td><td>save 保存</td><td>把配置写进 ini 文件，下次自动读</td></tr>
+<tr><td><code>use_edge()</code></td><td>use Edge 用 Edge</td><td><b>仅 5.0</b>：直接指定 Edge</td></tr>
+<tr><td><code>disable_pdf_preview()</code></td><td>disable PDF preview</td><td><b>仅 5.0</b>：禁止浏览器直接预览 PDF，方便下载</td></tr>
+<tr><td><code>close_cross_origin()</code></td><td>close cross origin 关闭跨域能力</td><td><b>仅 5.0</b>：关掉跨域 iframe 增强功能</td></tr>
+</table>
+
+<h3>6.3 接管一个已经打开的浏览器</h3>
+<p>有时你想用手工开着的浏览器（已经登录好了）。两种做法：</p>
+<div class="cmd"><div class="cmd-bar"><span>终端 · Windows 快捷方式法</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="s">"C:\Program Files\Google\Chrome\Application\chrome.exe"</span> --remote-debugging-port=9333
+<span class="c"># --remote-debugging-port = 远程调试端口；9333 可换成别的空闲端口</span>
+<span class="c"># 实际做法：右键 Chrome 快捷方式 → 属性 → 在「目标」末尾空一格，粘上这串参数</span></pre></div>
+<div class="cmd file"><div class="cmd-bar"><span>connect.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+browser = Chromium(9333)          <span class="c"># 括号里传端口号＝接管 9333 上的浏览器</span>
+tab = browser.latest_tab
+<span class="k">print</span>(tab.title)
+<span class="c"># 也可写 Chromium('127.0.0.1:9333') 或 Chromium('ws://127.0.0.1:9333/devtools/browser/...')</span></pre></div>
+<div class="warn">
+  <span class="card-t">Windows 特有：接管时的两个坑</span>
+  <p>① 加启动参数前，<b>必须先把所有 Chrome 窗口关掉</b>，否则新参数不生效（Chrome 会复用已有进程）。<br>② 默认端口 <code>9222</code> 上如果已经有浏览器，<code>Chromium()</code> 会直接接管它，连用户数据、登录状态一起复用。想要一个全新的干净环境，用 <code>ChromiumOptions().auto_port()</code>。</p>
+</div>
+
+<h3>6.4 开多个浏览器 / 无头模式收尾</h3>
+<div class="cmd file"><div class="cmd-bar"><span>multi.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium, ChromiumOptions
+
+co1 = ChromiumOptions().set_local_port(9111).set_user_data_path(<span class="s">r'D:\data1'</span>)
+co2 = ChromiumOptions().set_local_port(9222).set_user_data_path(<span class="s">r'D:\data2'</span>)
+<span class="c"># 多开必须「端口不同 + 用户文件夹不同」，二者缺一不可</span>
+
+browser1, browser2 = Chromium(co1), Chromium(co2)
+<span class="c"># 逗号 = 一次给两个变量赋值；r'' = 原始字符串，Windows 路径不写 r 会踩转义坑</span>
+browser1.latest_tab.get(<span class="s">'https://www.drissionpage.cn'</span>)
+browser2.latest_tab.get(<span class="s">'https://www.baidu.com'</span>)
+
+browser1.quit(); browser2.quit()   <span class="c"># quit = 关闭整个浏览器；分号 = 同一行写两句</span></pre></div>
+
+<div class="fig">
+<svg viewBox="0 0 880 170" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="170" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">Chromium() 括号里传什么，决定它做什么</text>
+  <rect class="box" x="18" y="46" width="205" height="70" rx="11" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tm" x="32" y="70">Chromium()</text><text class="ts" x="32" y="92">自动启动/接管 9222</text>
+  <rect class="box" x="240" y="46" width="205" height="70" rx="11" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="254" y="70">Chromium(co)</text><text class="ts" x="254" y="92">按配置对象启动</text>
+  <rect class="box" x="462" y="46" width="205" height="70" rx="11" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="tm" x="476" y="70">Chromium(9333)</text><text class="ts" x="476" y="92">接管指定端口</text>
+  <rect class="box" x="684" y="46" width="178" height="70" rx="11" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="tm" x="698" y="70">Chromium('ws://…')</text><text class="ts" x="698" y="92">用 ws 地址连接</text>
+  <text class="ts" x="18" y="146">不管哪种写法，下一步都是 browser.latest_tab —— 全书统一。</text>
+</svg>
+<figcaption><b>四种入口</b>：括号里不传、传配置、传端口、传 ws 地址。</figcaption>
+</div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能写出无头启动并 <code>quit()</code>。<br>② 知道配置只在启动前有效。<br>③ 知道多开必须端口和用户目录都不同。</p></div>
+
+<h2 class="chap" id="c7"><span class="num dp">07</span> 访问网页与等待</h2>
+<p class="chap-lead"><code>tab.get(url)</code> 看着简单，5.0 里它的返回值变了；等待方法也有讲究，别乱加。</p>
+
+<h3>7.1 get() 与 5.0 的 NavResult</h3>
+<div class="cmd file"><div class="cmd-bar"><span>visit.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+tab = Chromium().latest_tab
+res = tab.get(<span class="s">'https://www.drissionpage.cn'</span>)
+<span class="c"># 5.0：get() 返回 NavResult 对象（navigation result = 导航结果）</span>
+<span class="c"># 4.1 返回的是 bool（True/False），旧教程里 if tab.get(url): 在 5.0 要改</span>
+
+<span class="k">print</span>(res.ok)          <span class="c"># ok = 是否成功，True / False</span>
+<span class="k">print</span>(res.status)      <span class="c"># status = 状态码，正常是 200；出错可能是 'net::ERR_TIMED_OUT'</span>
+<span class="k">print</span>(res.url)         <span class="c"># url = 最终网址（有跳转时和输入的不一样）</span>
+<span class="k">print</span>(res.headers)     <span class="c"># headers = 收到的响应头</span></pre></div>
+<div class="out"><div class="out-bar">你会看到什么</div><pre>True
+200
+https://www.drissionpage.cn/
+{'content-type': 'text/html', ...}</pre><div class="trans"><b>检查点：</b><code>res.ok</code> 为 True、<code>res.status</code> 为 200 说明访问成功。</div></div>
+
+<table class="kv">
+<tr><th>参数</th><th>英文原意</th><th>作用</th></tr>
+<tr><td><code>url</code></td><td>Uniform Resource Locator 网址</td><td>必填，也可以是本地文件路径</td></tr>
+<tr><td><code>retry</code></td><td>retry 重试</td><td>连接失败重试几次，默认 3</td></tr>
+<tr><td><code>interval</code></td><td>interval 间隔</td><td>每次重试间隔几秒，默认 2</td></tr>
+<tr><td><span class="kw" data-w="timeout"><code>timeout</code></span></td><td>timeout 超时</td><td>最多等多久</td></tr>
+<tr><td><code>raise_err</code></td><td>raise error 抛错</td><td><b>5.0 改名</b>：原 <code>show_errmsg</code>，控制出错是否抛异常</td></tr>
+<tr><td><code>params / data / json / headers / cookies / proxies</code></td><td>请求参数</td><td>仅 s 模式下有效，用法与 requests 一致</td></tr>
+</table>
+
+<h3>7.2 三种加载模式</h3>
+<div class="cmd file"><div class="cmd-bar"><span>loadmode.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+tab = Chromium().latest_tab
+tab.set.load_mode.eager()     <span class="c"># eager = 急切：DOM 就绪就往下走，不苦等图片</span>
+tab.get(<span class="s">'https://www.baidu.com'</span>)
+<span class="c"># 另外两种：tab.set.load_mode.normal()（全加载完）/ none()（完全不等）</span>
+<span class="c"># none 模式常配合监听用：先 listen.start()，再 get()，拿到包后 tab.stop_loading()</span></pre></div>
+<table class="kv">
+<tr><th>模式</th><th>含义</th><th>什么时候用</th></tr>
+<tr><td><code>normal()</code></td><td>等所有资源加载完（默认）</td><td>普通访问，最省心</td></tr>
+<tr><td><code>eager()</code></td><td>DOM 就绪就继续</td><td>页面图片多、想快一点</td></tr>
+<tr><td><code>none()</code></td><td>不主动停，马上往下走</td><td>配合网络监听抓接口数据</td></tr>
+</table>
+
+<h3>7.3 等待方法全表</h3>
+<div class="warn">
+  <span class="card-t">最容易犯的错：多此一举地加等待</span>
+  <p><code>get()</code> <b>已经内置等待加载</b>，后面不用再写 <code>tab.wait.load_start()</code>；<code>ele()</code> 也自带等待（默认 10 秒）。只有等「某个元素出现 / 消失 / 变成可点击 / 标题变化」这类具体状态时，才需要下面的方法。</p>
+</div>
+<table class="kv">
+<tr><th>写在谁身上</th><th>方法</th><th>等什么</th></tr>
+<tr><td>页面 <code>tab.wait.*</code></td><td><code>load_start()</code> <code>doc_loaded()</code></td><td>开始加载 / 文档加载完</td></tr>
+<tr><td>页面</td><td><code>ele_displayed(loc)</code> <code>ele_hidden(loc)</code> <code>ele_deleted(loc)</code></td><td>元素出现 / 隐藏 / 被删</td></tr>
+<tr><td>页面</td><td><code>eles_loaded(loc)</code></td><td>一批元素加载出来</td></tr>
+<tr><td>页面</td><td><code>title_change(text)</code> <code>url_change(text)</code></td><td>标题 / 网址变化</td></tr>
+<tr><td>页面</td><td><code>download_begin()</code> <code>downloads_done()</code></td><td>下载开始 / 全部下载完</td></tr>
+<tr><td>元素 <code>ele.wait.*</code></td><td><code>displayed()</code> <code>hidden()</code> <code>deleted()</code></td><td>这个元素显示 / 隐藏 / 消失</td></tr>
+<tr><td>元素</td><td><code>clickable(wait_stop=True)</code> <code>enabled()</code> <code>disabled()</code></td><td>可点击 / 可用 / 禁用</td></tr>
+<tr><td>浏览器 <code>browser.wait.*</code></td><td><code>new_tab()</code></td><td>新标签页出现</td></tr>
+<tr><td>通用</td><td><code>tab.wait(2)</code></td><td>硬等 2 秒（尽量少用）</td></tr>
+</table>
+<div class="cmd file"><div class="cmd-bar"><span>wait.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+tab = Chromium().latest_tab
+tab.get(<span class="s">'https://www.baidu.com'</span>)
+tab.wait.ele_displayed(<span class="s">'tag:div'</span>)   <span class="c"># 等到有 div 显示出来</span>
+ele = tab.ele(<span class="s">'#kw'</span>)
+<span class="k">print</span>(ele.wait.clickable())        <span class="c"># clickable = 可点击；返回 True 就能放心点</span></pre></div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 知道 5.0 的 <code>get()</code> 返回 <span class="kw" data-w="NavResult"><code>NavResult</code></span>，用 <code>res.ok</code> 判断。<br>② 知道 <code>get()</code> 和 <code>ele()</code> 自带等待。<br>③ 能按需挑一个 <code>wait.*</code> 方法。</p></div>
+
+<h2 class="chap" id="c8"><span class="num dp">08</span> 定位元素语法全表</h2>
+<p class="chap-lead">这是全书最重要的一章：所有自动化都从「找到那个元素」开始。DrissionPage 的定位符比 XPath 短得多。</p>
+
+<div class="fig">
+<svg viewBox="0 0 880 250" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="250" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">一段 HTML 和它对应的定位符</text>
+  <rect x="18" y="42" width="400" height="180" rx="10" fill="#f7f9fb" stroke="#d8dee4"/>
+  <text class="tm" x="32" y="66">&lt;div id="search"&gt;</text>
+  <text class="tm" x="48" y="90">&lt;input name="wd" class="s_ipt"&gt;</text>
+  <text class="tm" x="48" y="114">&lt;a class="item" href="/doc"&gt;文档&lt;/a&gt;</text>
+  <text class="tm" x="48" y="138">&lt;a class="item" href="/faq"&gt;常见问题&lt;/a&gt;</text>
+  <text class="tm" x="32" y="162">&lt;/div&gt;</text>
+  <text class="ts" x="32" y="196">DOM = 文档对象模型：一棵由标签组成的树</text>
+  <rect x="440" y="42" width="420" height="180" rx="10" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tm" x="456" y="68">tab.ele('#search')          → 那个 div</text>
+  <text class="tm" x="456" y="94">tab.ele('@name=wd')         → 输入框</text>
+  <text class="tm" x="456" y="120">tab.eles('tag:a')            → 两个 a</text>
+  <text class="tm" x="456" y="146">tab.ele('text=文档')         → 第一个 a</text>
+  <text class="tm" x="456" y="172">tab.ele('x://div[@id="search"]') → div</text>
+  <text class="ts" x="456" y="202">5.0 新增：ax: 无障碍语义定位</text>
+</svg>
+<figcaption><b>同一段网页，五种找法</b>：短写法够用时，不必写长长的 XPath。</figcaption>
+</div>
+
+<h3>8.1 前缀总表</h3>
+<table class="kv">
+<tr><th>写法</th><th>英文原意</th><th>找什么</th><th>例子</th></tr>
+<tr><td><code>#abc</code></td><td>id selector</td><td>id 等于 abc（句首单独用）</td><td><code>#user_login</code></td></tr>
+<tr><td><code>.abc</code></td><td>class selector</td><td>class 含 abc（句首单独用）</td><td><code>.item</code></td></tr>
+<tr><td><code>@name=wd</code></td><td>attribute 属性</td><td>属性 name 的值是 wd</td><td><code>@value=登 录</code></td></tr>
+<tr><td><code>@name</code></td><td>has attribute</td><td>只要有这个属性就行</td><td><code>@placeholder</code></td></tr>
+<tr><td><code>tag:a</code> / <code>t:a</code></td><td>tag 标签</td><td>标签名是 a</td><td><code>tag:div</code></td></tr>
+<tr><td><code>text=文档</code> / <span class="kw" data-w="tx:"><code>tx:</code></span></td><td>text 文本</td><td>元素文字包含「文档」</td><td><code>text=登录</code></td></tr>
+<tr><td><code>css:.item</code> / <span class="kw" data-w="c:"><code>c:</code></span></td><td>CSS selector</td><td>用 CSS 选择器找</td><td><code>css:div > a</code></td></tr>
+<tr><td><code>xpath://div</code> / <span class="kw" data-w="x:"><code>x:</code></span></td><td>XPath</td><td>用 XPath 路径找</td><td><code>x://div[@id=abc]</code></td></tr>
+<tr><td><code>ax:@name=主导航@role=navigation</code></td><td>accessibility 无障碍</td><td><b>仅 5.0</b>：按 Chrome 无障碍语义找</td><td><code>ele('ax:@role=link')</code></td></tr>
+</table>
+
+<h3>8.2 匹配符与组合</h3>
+<table class="kv">
+<tr><th>符号</th><th>含义</th><th>例子</th></tr>
+<tr><td><span class="kw" data-w="="><code>=</code></span></td><td>精确等于</td><td><code>@id=row1</code></td></tr>
+<tr><td><span class="kw" data-w=":"><code>:</code></span></td><td>包含</td><td><code>@id:ow</code></td></tr>
+<tr><td><code>^</code></td><td>以此开头</td><td><code>@id^row</code></td></tr>
+<tr><td><code>$</code></td><td>以此结尾</td><td><code>@id$w1</code></td></tr>
+<tr><td><code>@@</code></td><td>多个条件「同时满足」</td><td><code>tag:li@@text():前沿技术</code></td></tr>
+<tr><td><code>@|</code></td><td>多个条件「满足其一」</td><td><code>@|id=row1@|id=row2</code></td></tr>
+<tr><td><code>@!</code></td><td>否定 / 没有这个属性</td><td><code>@!class</code></td></tr>
+<tr><td><code>@text()</code></td><td>把文本当属性用（避免和普通属性混淆）</td><td><code>@@text()=第三行</code></td></tr>
+</table>
+
+<div class="demo">
+  <div class="demo-h">点不同定位符，看会匹配到什么 <span class="live">可点</span></div>
+  <div class="demo-row">
+    <button class="dbtn" onclick="DPDemo.loc('id')">#kw</button>
+    <button class="dbtn" onclick="DPDemo.loc('tag')">tag:a</button>
+    <button class="dbtn" onclick="DPDemo.loc('attr')">@name=wd</button>
+    <button class="dbtn" onclick="DPDemo.loc('text')">text=百度一下</button>
+    <button class="dbtn teal" onclick="DPDemo.loc('ax')">ax:（5.0 新增）</button>
+    <button class="dbtn teal" onclick="DPDemo.loc('auto')">自动匹配（5.0）</button>
+  </div>
+  <div class="demo-screen big" id="demoLocOut"><b>tab.ele("#kw")</b>
+匹配到：&lt;input id="kw" class="s_ipt"&gt;
+按 id 找：命中搜索框</div>
+  <div class="demo-note">5.0 起不写前缀时会自动按顺序尝试 <b>xpath / css selector → 文本</b>；写 <span class="kw" data-w="x:"><code>x:</code></span> 表示只用 XPath。<code>ele()</code> 也只返回元素对象，不再返回文本字符串。</div>
+</div>
+
+<div class="cmd file"><div class="cmd-bar"><span>locator.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+tab = Chromium().latest_tab
+tab.get(<span class="s">'https://www.baidu.com'</span>)
+
+a = tab.ele(<span class="s">'#kw'</span>)                 <span class="c"># id 定位，等价于 @id=kw</span>
+b = tab.ele(<span class="s">'@name=wd'</span>)              <span class="c"># 按属性 name 定位</span>
+c = tab.eles(<span class="s">'tag:a'</span>)               <span class="c"># eles = 复数，找到所有 a 标签，返回列表</span>
+d = tab.ele(<span class="s">'text=百度一下'</span>)          <span class="c"># 按可见文字定位</span>
+e = tab.ele(<span class="s">'x://div[@id="head"]'</span>)  <span class="c"># x: = 只用 XPath</span>
+f = tab.ele(<span class="s">'ax:@name=主导航@role=navigation'</span>)  <span class="c"># 仅 5.0，无障碍语义定位</span>
+<span class="k">print</span>(a.tag, len(c))               <span class="c"># tag = 标签名；len() = 列表长度</span></pre></div>
+
+<div class="warn">
+  <span class="card-t">新手最容易踩的 5 个坑</span>
+  <p>① <b>别右键复制绝对 XPath</b>：又长又容易失效，还不能用相对定位、不能跨 iframe。<br>
+  ② <b>找不到不返回 None</b>：返回 <span class="kw" data-w="NoneElement"><code>NoneElement</code></span>（一个「空元素」对象），要用 <code>if not ele:</code> 判断；<code>eles()</code> 找不到返回空列表。<br>
+  ③ <b>5.0 的 <code>ele()</code> 不再返回文本字符串</b>：只返回元素对象，取文字要用 <code>.text</code>。<br>
+  ④ <code>@@</code> 和 <code>@|</code> <b>不能同时出现</b>在一个定位符里；文本里含这些符号时改用 XPath。<br>
+  ⑤ 文本里有 <code>&amp;nbsp;</code> 这类特殊字符时，写成 <code>\u00A0</code> 形式（详见附录 A）。</p>
+</div>
+
+<h3>8.3 简写对照</h3>
+<table class="kv">
+<tr><th>完整写法</th><th>简写</th><th>说明</th></tr>
+<tr><td><code>tab.ele(loc)</code></td><td><code>tab(loc)</code></td><td>页面对象可直接当函数调用</td></tr>
+<tr><td><span class="kw" data-w="tag:"><code>tag:</code></span> / <span class="kw" data-w="text:"><code>text:</code></span> / <code>xpath:</code> / <code>css:</code></td><td><span class="kw" data-w="t:"><code>t:</code></span> / <span class="kw" data-w="tx:"><code>tx:</code></span> / <span class="kw" data-w="x:"><code>x:</code></span> / <span class="kw" data-w="c:"><code>c:</code></span></td><td>前缀缩写</td></tr>
+<tr><td><code>@tag()</code> / <code>@text()</code></td><td><code>@t()</code> / <code>@tx()</code></td><td>属性名缩写</td></tr>
+<tr><td><code>ele.shadow_root</code></td><td><code>ele.sr</code></td><td>Shadow DOM 根节点</td></tr>
+</table>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能用 <span class="kw" data-w="#"><code>#</code></span> <span class="kw" data-w="@"><code>@</code></span> <span class="kw" data-w="tag:"><code>tag:</code></span> <code>text=</code> 各写一个定位符。<br>② 知道 <code>ele()</code> 与 <code>eles()</code> 的区别。<br>③ 知道 5.0 的 <span class="kw" data-w="ax:"><code>ax:</code></span> 和自动匹配模式。</p></div>
+
+<h2 class="chap" id="c9"><span class="num dp">09</span> 元素操作与信息</h2>
+<p class="chap-lead">找到元素之后，无非两件事：<b>对它做点什么</b>，或者<b>从它身上读点什么</b>。</p>
+
+<div class="fig">
+<svg viewBox="0 0 880 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="200" fill="#ffffff"/>
+  <rect class="box" x="270" y="18" width="340" height="52" rx="12" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tb" x="360" y="50">ele = tab.ele('#kw')</text>
+  <rect class="box" x="30" y="100" width="390" height="76" rx="12" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tb" x="48" y="126">① 动作：改它</text>
+  <text class="ts" x="48" y="150">click() input() clear() hover() check() select() drag_to()</text>
+  <rect class="box" x="460" y="100" width="390" height="76" rx="12" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="tb" x="478" y="126">② 读数：看它</text>
+  <text class="ts" x="478" y="150">text html attr() link states rect</text>
+  <path d="M440 72 L230 72 L230 98" stroke="#2563eb" stroke-width="2" fill="none"/>
+  <path d="M440 72 L650 72 L650 98" stroke="#16a34a" stroke-width="2" fill="none"/>
+</svg>
+<figcaption><b>一个元素对象的两面</b>：左边改变页面，右边读取信息。</figcaption>
+</div>
+
+<h3>9.1 常用动作</h3>
+<table class="kv">
+<tr><th>方法</th><th>英文原意</th><th>作用</th></tr>
+<tr><td><code>click()</code></td><td>click 点击</td><td>左键点击；5.0 默认点元素随机位置</td></tr>
+<tr><td><code>click.right()</code> / <code>click.middle()</code></td><td>right / middle 右 / 中</td><td>右键 / 中键</td></tr>
+<tr><td><code>click.at(offset_x, offset_y)</code></td><td>at 在……位置</td><td>点元素内偏移位置</td></tr>
+<tr><td><code>click.for_new_tab()</code></td><td>for new tab 为了新标签页</td><td>点击后返回新打开的标签页对象</td></tr>
+<tr><td><code>click.to_download(...)</code></td><td>to download 去下载</td><td>点击触发下载，返回下载任务</td></tr>
+<tr><td><code>input(vals, clear=False)</code></td><td>input 输入</td><td>输入文字；末尾 <code>\n</code> 相当于回车</td></tr>
+<tr><td><code>clear(by_js=False)</code></td><td>clear 清空</td><td>清空输入框</td></tr>
+<tr><td><code>hover()</code></td><td>hover 悬停</td><td>鼠标移上去</td></tr>
+<tr><td><code>check(checked=True)</code></td><td>check 勾选</td><td>勾选复选框；<b>5.0 参数由 uncheck 改为 checked</b></td></tr>
+<tr><td><code>select.by_text('x')</code></td><td>select 选择</td><td>下拉框按文本选；还有 by_value / by_index</td></tr>
+<tr><td><code>drag_to(ele2)</code></td><td>drag to 拖到</td><td>拖到另一个元素上</td></tr>
+<tr><td><code>set.innerHTML(html)</code></td><td>set inner HTML 设置内部 HTML</td><td>直接改元素内容</td></tr>
+<tr><td><code>run_js(script)</code></td><td>run JavaScript 执行 js</td><td>在元素上执行脚本，取结果要写 <span class="kw" data-w="return"><code>return</code></span></td></tr>
+</table>
+
+<h3>9.2 常用读数</h3>
+<table class="kv">
+<tr><th>属性 / 方法</th><th>英文原意</th><th>读到什么</th></tr>
+<tr><td><span class="kw" data-w="text"><code>text</code></span> / <code>raw_text</code></td><td>text 文本 / raw 原始</td><td>格式化后的文字 / 保留原始空格换行</td></tr>
+<tr><td><span class="kw" data-w="html"><code>html</code></span> / <code>inner_html</code></td><td>HTML</td><td>含自身的源码 / 只含内部源码</td></tr>
+<tr><td><span class="kw" data-w="tag"><code>tag</code></span></td><td>tag 标签</td><td>标签名，如 <span class="kw" data-w="input"><code>input</code></span></td></tr>
+<tr><td><code>attrs</code> / <code>attr(name)</code></td><td>attribute 属性</td><td>全部属性字典 / 指定属性值</td></tr>
+<tr><td><span class="kw" data-w="link"><code>link</code></span></td><td>link 链接</td><td>取 href 或 src，并<b>补全成完整网址</b></td></tr>
+<tr><td><code>value</code> / <code>property(name)</code></td><td>value 值 / property 属性</td><td>表单值 / js 属性值</td></tr>
+<tr><td><code>states.is_displayed</code> 等</td><td>states 状态集合</td><td>是否显示 / 勾选 / 可用 / 可点击 / 有尺寸</td></tr>
+<tr><td><code>rect.size</code> / <code>rect.location</code></td><td>rectangle 矩形</td><td>尺寸 / 坐标</td></tr>
+<tr><td><code>css_selector</code></td><td>CSS selector 选择器</td><td><b>5.0 改名</b>：原 <code>css_path</code></td></tr>
+</table>
+
+<div class="cmd file"><div class="cmd-bar"><span>element.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+tab = Chromium().latest_tab
+tab.get(<span class="s">'https://www.baidu.com'</span>)
+
+box = tab.ele(<span class="s">'#kw'</span>)            <span class="c"># 找搜索框</span>
+box.input(<span class="s">'DrissionPage'</span>)        <span class="c"># 输入文字</span>
+<span class="k">print</span>(box.value)                 <span class="c"># value = 输入框当前的值</span>
+
+btn = tab.ele(<span class="s">'#su'</span>)
+<span class="k">print</span>(btn.text)                  <span class="c"># text = 按钮上的字</span>
+<span class="k">print</span>(btn.attr(<span class="s">'class'</span>))         <span class="c"># attr = 取 class 属性</span>
+<span class="k">print</span>(btn.states.is_displayed)  <span class="c"># states.is_displayed = 是否可见</span>
+
+
+links = tab.eles(<span class="s">'tag:a'</span>)         <span class="c"># 所有链接</span>
+<span class="k">for</span> a <span class="k">in</span> links[:5]:               <span class="c"># for...in = 遍历；[:5] = 只取前 5 个</span>
+    <span class="k">print</span>(a.text, a.link)       <span class="c"># link = 完整网址</span></pre></div>
+
+<div class="warn">
+  <span class="card-t">两个细节会让你少踩坑</span>
+  <p>① <code>attr('href')</code> 和 <span class="kw" data-w="link"><code>link</code></span> 会<b>自动补全成完整网址</b>；想拿网页里原始写的相对路径，用 <code>ele.attrs['href']</code>。<br>② <code>click()</code> 点不动时报「该元素没有位置及大小」，可以改 <code>ele.click(by_js=True)</code>（用 js 点），或先确认定位符是不是找到了别的同名元素。</p>
+</div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能对搜索框 <code>input()</code> 并读回 <code>value</code>。<br>② 能遍历 <code>eles()</code> 结果打印 <span class="kw" data-w="text"><code>text</code></span> 和 <span class="kw" data-w="link"><code>link</code></span>。<br>③ 知道 <span class="kw" data-w="text"><code>text</code></span> 是属性（不加括号）、<code>attr()</code> 是方法（要加括号）。</p></div>
+
+<h2 class="chap" id="c10"><span class="num dp">10</span> 相对定位、筛选与加速</h2>
+<p class="chap-lead">网页结构一变，长 XPath 就失效。这一章教你「先找一个稳的锚点，再顺着它找邻居」，还有官方实测快十几倍的读法。</p>
+
+<div class="fig">
+<svg viewBox="0 0 880 220" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="220" fill="#ffffff"/>
+  <text class="tb" x="18" y="24">以「当前元素」为中心的亲戚关系</text>
+  <rect class="box" x="350" y="90" width="180" height="48" rx="10" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tm" x="386" y="120">当前元素 ele</text>
+  <rect class="box" x="350" y="36" width="180" height="42" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="t" x="392" y="62">parent() 父</text>
+  <rect class="box" x="120" y="90" width="180" height="48" rx="10" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="t" x="152" y="120">prev() 前一个</text>
+  <rect class="box" x="580" y="90" width="180" height="48" rx="10" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="t" x="612" y="120">next() 后一个</text>
+  <rect class="box" x="350" y="150" width="180" height="42" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="t" x="382" y="176">child() 子</text>
+  <path d="M440 88 L440 80 M440 112 L350 112 M530 112 L580 112 M440 140 L440 148" stroke="#2563eb" stroke-width="2" marker-end="url(#arC10)"/>
+  <text class="ts" x="18" y="212">复数形式：children() nexts() prevs() afters() befores() —— 一次拿一串；加 s 的一律返回列表。</text>
+  <defs><marker id="arC10" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#2563eb"/></marker></defs>
+</svg>
+<figcaption><b>相对定位</b>：只认「亲戚」，不依赖整页的绝对路径，页面改版也不容易坏。</figcaption>
+</div>
+
+<h3>10.1 相对定位方法表</h3>
+<table class="kv">
+<tr><th>方法</th><th>英文原意</th><th>取到谁</th></tr>
+<tr><td><code>parent(level_or_loc=1)</code></td><td>parent 父</td><td>上一层；写数字＝往上几层</td></tr>
+<tr><td><code>child()</code> / <code>children()</code></td><td>child 子</td><td>一个 / 所有直接子元素</td></tr>
+<tr><td><code>next()</code> / <code>nexts()</code></td><td>next 下一个</td><td>后面一个 / 后面全部兄弟</td></tr>
+<tr><td><code>prev()</code> / <code>prevs()</code></td><td>previous 前一个</td><td>前面一个 / 前面全部兄弟</td></tr>
+<tr><td><code>after()</code> / <code>before()</code></td><td>after / before 之后 / 之前</td><td>后面 / 前面的节点（可含文本节点）</td></tr>
+<tr><td><code>east() / west() / south() / north()</code></td><td>东南西北（视觉方位）</td><td><b>仅 d 模式</b>：按屏幕位置找可见元素</td></tr>
+<tr><td><code>offset(x, y)</code></td><td>offset 偏移</td><td>按坐标偏移找元素</td></tr>
+</table>
+<div class="cmd file"><div class="cmd-bar"><span>relative.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+tab = Chromium().latest_tab
+tab.get(<span class="s">'https://www.baidu.com'</span>)
+
+box = tab.ele(<span class="s">'#kw'</span>)               <span class="c"># 先找一个稳的锚点：搜索框</span>
+form = box.parent(<span class="s">'tag:form'</span>)      <span class="c"># parent = 往上找 form 标签</span>
+btn = box.next(<span class="s">'tag:span'</span>)         <span class="c"># next = 后面第一个 span</span>
+<span class="k">print</span>(form.tag, btn.tag)          <span class="c"># tag = 标签名</span></pre></div>
+
+<h3>10.2 在结果里筛选</h3>
+<p><code>eles()</code> 得到的是列表，可以直接在列表上「过滤」：</p>
+<table class="kv">
+<tr><th>写法</th><th>作用</th></tr>
+<tr><td><code>.filter.displayed()</code></td><td>只要可见的</td></tr>
+<tr><td><code>.filter.checked()</code> / <code>.filter.selected()</code> / <code>.filter.enabled()</code></td><td>只要勾选 / 选中 / 可用的</td></tr>
+<tr><td><code>.filter.text('图')</code> / <code>.filter.attr('class', 'item')</code></td><td>按文字 / 属性筛</td></tr>
+<tr><td><code>.filter_one(2).text('图')</code></td><td>取符合条件的第 2 个</td></tr>
+<tr><td><code>.search(displayed=True, checked=True)</code></td><td>「或」关系查找（s 模式无此方法）</td></tr>
+<tr><td><code>.get.texts()</code> / <code>.get.links()</code> / <code>.get.attrs('href')</code></td><td>一次取一批文字 / 链接 / 属性</td></tr>
+</table>
+<div class="cmd file"><div class="cmd-bar"><span>filter.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+tab = Chromium().latest_tab
+tab.get(<span class="s">'https://www.baidu.com'</span>)
+nav = tab.ele(<span class="s">'#s-top-left'</span>)        <span class="c"># 左上角导航条</span>
+<span class="k">for</span> a <span class="k">in</span> nav.eles(<span class="s">'t:a'</span>).filter.displayed():
+    <span class="c"># eles('t:a') = 所有 a 标签；filter.displayed() = 只留看得见的</span>
+    <span class="k">print</span>(a.text, a.link)</pre></div>
+
+<h3>10.3 静态副本加速（读大量数据时必用）</h3>
+<div class="tip">
+  <span class="card-t">为什么能快十几倍</span>
+  <p>动态元素（<code>ele()</code> 结果）每读一次属性都要和浏览器通信一次。静态副本（<code>s_ele()</code> / <code>s_eles()</code>）是把 HTML 拷一份到本地解析，之后读文字、属性全在内存里完成。官方实测：打印 1613 个链接从 <b>4.06 秒降到 0.28 秒</b>。</p>
+</div>
+<div class="cmd file"><div class="cmd-bar"><span>fast.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+tab = Chromium().latest_tab
+tab.get(<span class="s">'https://gitee.com/explore/all'</span>)
+
+body = tab.ele(<span class="s">'t:body'</span>)       <span class="c"># 只跟浏览器要一次最外层容器</span>
+links = body.s_eles(<span class="s">'t:a'</span>)      <span class="c"># s_eles = 转成本地静态副本列表，之后不再通信</span>
+<span class="k">for</span> a <span class="k">in</span> links[:10]:          <span class="c"># [:10] = 只看前 10 个</span>
+    <span class="k">print</span>(a.text, a.link)</pre></div>
+<div class="warn"><span class="card-t">静态副本的边界</span><p>它是<b>纯文本快照</b>：不能点击、不能输入，也不影响原来的动态元素。一页只转一次最高级容器即可；反复调 <code>s_ele()</code> 反而更慢。要交互还是得用 <code>ele()</code>。</p></div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能用 <code>parent()</code> / <code>next()</code> 从锚点找邻居。<br>② 能用 <code>filter.displayed()</code> 过滤列表。<br>③ 知道「只读大量数据用 s_eles，要点击用 ele」。</p></div>
+
+<h2 class="chap" id="c11"><span class="num dp">11</span> iframe、ShadowRoot 与跨域</h2>
+<p class="chap-lead">网页里套网页、组件里藏组件，是新手最容易「明明有元素却找不到」的原因。5.0 还专门增强了跨域能力。</p>
+
+<div class="fig">
+<svg viewBox="0 0 880 220" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="220" fill="#ffffff"/>
+  <text class="tb" x="18" y="24">主页面里嵌了一个 iframe（另一个网页）</text>
+  <rect class="box" x="18" y="40" width="410" height="160" rx="12" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="t" x="34" y="64">主页面 tab</text>
+  <text class="tm" x="34" y="88">&lt;div id="head"&gt;标题&lt;/div&gt;</text>
+  <rect class="box" x="40" y="104" width="360" height="80" rx="10" fill="#fff" stroke="#fdba74" stroke-dasharray="6 5"/>
+  <text class="t" x="56" y="128">iframe（同域 / 跨域）</text>
+  <text class="tm" x="56" y="152">&lt;a&gt;文档&lt;/a&gt;</text>
+  <rect class="box" x="460" y="40" width="400" height="70" rx="12" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="t" x="476" y="64">同域：直接找</text>
+  <text class="tm" x="476" y="88">tab.ele('文档')</text>
+  <rect class="box" x="460" y="124" width="400" height="76" rx="12" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="t" x="476" y="148">5.0 跨域：也能直接找</text>
+  <text class="tm" x="476" y="174">tab.ele('新闻')  ← 不用先 get_frame()</text>
+  <path d="M430 120 L458 76 M430 120 L458 160" stroke="#2563eb" stroke-width="2" fill="none"/>
+</svg>
+<figcaption><b>iframe 查找</b>：同域可以直接跨层找；5.0 起跨域也能直接用 tab 找（有条件，见下文）。</figcaption>
+</div>
+
+<h3>11.1 iframe 的两种取法</h3>
+<div class="cmd file"><div class="cmd-bar"><span>iframe.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+tab = Chromium().latest_tab
+tab.get(<span class="s">'https://drissionpage.cn/demos/iframe_diff_domain.html'</span>)
+
+iframe = tab.get_frame(<span class="s">'t:iframe'</span>)
+<span class="c"># get_frame = 取框架对象；'t:iframe' = 按标签名找 iframe</span>
+ele = iframe.ele(<span class="s">'新闻'</span>)       <span class="c"># 在这个框架内部找元素（旧写法）</span>
+<span class="k">print</span>(ele.text)
+
+ele2 = tab.ele(<span class="s">'新闻'</span>)         <span class="c"># 仅 5.0：跨域也能直接从 tab 找</span>
+<span class="k">print</span>(ele2.text)</pre></div>
+<table class="kv">
+<tr><th>方法</th><th>作用</th></tr>
+<tr><td><code>tab.get_frame(loc)</code></td><td>取一个 iframe，返回 <code>ChromiumFrame</code>（既能当元素，又能当页面）</td></tr>
+<tr><td><code>tab.get_frames(loc)</code></td><td>取所有符合条件的 iframe（较慢，少用）</td></tr>
+<tr><td><code>iframe.ele()</code> / <code>iframe.get()</code></td><td>在框架内找元素 / 让框架自己跳网址</td></tr>
+<tr><td><code>tab.ele()</code>（5.0）</td><td>同域任意层直接找；跨域在满足条件时也能直接找</td></tr>
+</table>
+<div class="warn">
+  <span class="card-t">5.0 跨域能力的两个前提</span>
+  <p>① 必须用 <b>DrissionPage 启动的浏览器</b>，或手动加了 <code>--disable-site-isolation-trials</code> 启动参数的浏览器。<br>② 如果发现异常，可用 <code>ChromiumOptions().close_cross_origin()</code> 关掉这个增强功能，退回旧写法。</p>
+</div>
+
+<h3>11.2 ShadowRoot（影子 DOM）</h3>
+<p>一些现代组件把内容藏在 Shadow DOM 里，普通定位符进不去。取它的根节点用 <span class="kw" data-w="shadow_root"><code>shadow_root</code></span>，简写 <code>sr</code>。</p>
+<div class="cmd file"><div class="cmd-bar"><span>shadow.py</span><span>写进文件</span></div><pre>root = tab.ele(<span class="s">'#history-app'</span>).sr
+<span class="c"># sr = shadow_root 的简写；注意是「属性」，后面不加括号</span>
+items = root.eles(<span class="s">'t:history-item'</span>)   <span class="c"># 在影子根里找元素</span>
+<span class="k">for</span> it <span class="k">in</span> items:
+    <span class="k">print</span>(it.text)</pre></div>
+<div class="warn"><span class="card-t">嵌套 ShadowRoot 不能跳级</span><p>要一层一层取：先拿外层元素的 <code>.sr</code>，在里面找到下一层元素，再取它的 <code>.sr</code>。不要指望一次定位符跨两级。</p></div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 知道「主页面里找不到」时先想是不是在 iframe 里。<br>② 会写 <code>tab.get_frame('t:iframe')</code>。<br>③ 知道 <code>.sr</code> 不加括号、且不能跨级。</p></div>
+
+<h2 class="chap" id="c12"><span class="num dp">12</span> 标签页与浏览器上下文</h2>
+<p class="chap-lead">5.0 最大的新东西就在这里：<b>独立上下文</b>。一个浏览器可以同时登录多个账号、各用各的代理。</p>
+
+<h3>12.1 标签页管理</h3>
+<table class="kv">
+<tr><th>方法 / 属性</th><th>作用</th></tr>
+<tr><td><code>browser.latest_tab</code></td><td>最后激活的标签页（最常用）</td></tr>
+<tr><td><code>browser.new_tab(url=None)</code></td><td>新建标签页；5.0 新增 <code>hidden</code> 参数可建隐藏页</td></tr>
+<tr><td><code>browser.get_tab(id_or_num=None, title=None, url=None)</code></td><td>按序号 / id / 标题 / 网址找一个标签页</td></tr>
+<tr><td><code>browser.get_tabs(title=None, url=None)</code></td><td>找一批标签页</td></tr>
+<tr><td><code>browser.activate_tab(tab)</code></td><td>激活某个标签页（本库多标签页可并行操作，不一定要激活）</td></tr>
+<tr><td><code>tab.close()</code></td><td>关掉这个标签页；<b>不等于关浏览器</b></td></tr>
+<tr><td><code>browser.quit()</code></td><td>关掉整个浏览器进程</td></tr>
+</table>
+<div class="cmd file"><div class="cmd-bar"><span>tabs.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+browser = Chromium()
+tab1 = browser.latest_tab
+tab1.get(<span class="s">'https://www.drissionpage.cn'</span>)
+tab2 = browser.new_tab(<span class="s">'https://www.baidu.com'</span>)  <span class="c"># 新开一个标签页</span>
+<span class="k">print</span>(tab1.title, tab2.title)
+
+found = browser.get_tab(url=<span class="s">'drissionpage.cn'</span>)  <span class="c"># 按网址找回 tab1</span>
+<span class="k">print</span>(found.title)
+tab2.close()                       <span class="c"># 只关第二个标签页</span>
+browser.quit()                     <span class="c"># 关整个浏览器</span></pre></div>
+
+<h3>12.2 5.0 新增：BrowserContext 独立上下文</h3>
+<p>每个上下文有<b>自己独立的 cookies</b>，可以当作一个无痕浏览器，还能单独设代理。新建时浏览器不可见，要再用它开一个标签页才会出现。</p>
+<div class="cmd file"><div class="cmd-bar"><span>context.py</span><span>仅 5.0</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+browser = Chromium()
+context = browser.new_context(proxy=<span class="s">'127.0.0.1:7890'</span>)
+<span class="c"># new_context = 新建独立上下文；proxy = 只给这个上下文用的代理</span>
+tab = context.new_tab()             <span class="c"># 用它开标签页，浏览器窗口这时才出现</span>
+tab.get(<span class="s">'https://www.drissionpage.cn'</span>)
+<span class="k">print</span>(tab.title)
+context.close()                    <span class="c"># close = 关闭上下文，里面的标签页一起关</span></pre></div>
+<table class="kv">
+<tr><th>上下文的方法 / 属性</th><th>英文原意</th><th>作用</th></tr>
+<tr><td><code>new_tab()</code></td><td>new tab 新标签页</td><td>在这个上下文里开标签页</td></tr>
+<tr><td><span class="kw" data-w="latest_tab"><code>latest_tab</code></span></td><td>latest 最后的</td><td>最后激活的标签页</td></tr>
+<tr><td><code>tab_ids</code></td><td>tab ids 标签页编号</td><td>所有标签页 id</td></tr>
+<tr><td><code>get_tab()</code> / <code>get_tabs()</code></td><td>get 取</td><td>按条件找标签页</td></tr>
+<tr><td><code>cookies()</code></td><td>cookies</td><td>读这个上下文的 cookies</td></tr>
+<tr><td><code>set.cookies()</code> / <code>set.cookies.clear()</code></td><td>set 设置 / clear 清空</td><td>设置 / 清空 cookies</td></tr>
+<tr><td><code>set.perm.camera()</code> 等</td><td>permission 权限</td><td>允许摄像头、地理位置等权限</td></tr>
+<tr><td><code>wait.new_tab()</code></td><td>wait 等待</td><td>等新标签页出现</td></tr>
+<tr><td><code>close()</code></td><td>close 关闭</td><td>关闭上下文</td></tr>
+</table>
+
+<div class="demo">
+  <div class="demo-h">点一点：一个浏览器登录两个账号 <span class="live">可点</span></div>
+  <div class="demo-row">
+    <button class="dbtn" onclick="DPDemo.ctx(1)">① 建上下文 A</button>
+    <button class="dbtn" onclick="DPDemo.ctx(2)">② 建上下文 B</button>
+    <button class="dbtn teal" onclick="DPDemo.ctx(3)">③ 看结果</button>
+    <button class="dbtn ghost" onclick="DPDemo.ctx(0)">重置</button>
+  </div>
+  <div class="demo-screen big" id="demoCtx">一个浏览器，一个默认环境</div>
+  <div class="lamps" id="demoCtxLamps"><span class="lamp">上下文 A · 账号 A</span><span class="lamp">上下文 B · 账号 B</span><span class="lamp">cookies 隔离</span></div>
+  <div class="demo-note">浏览器级也能设权限：<code>browser.set.perm.camera()</code>、<code>browser.set.perm.geolocation()</code>。</div>
+</div>
+
+<div class="warn">
+  <span class="card-t">5.0 关于标签页的改名与删除（照旧教程写会报错）</span>
+  <p>① <code>new_tab()</code> <b>删除了</b> <span class="kw" data-w="new_context"><code>new_context</code></span> 参数，独立环境改用 <code>browser.new_context()</code>；新增 <code>hidden</code> 参数。<br>② <code>browser.tabs_count</code> 属性<b>被删除</b>。<br>③ <code>tab.set.activate()</code> <b>改名为</b> <code>tab.activate()</code>。<br>④ <code>get_tab()</code> 的 <code>as_id</code> 参数补回；序号为数字时条件参数也能生效。</p>
+</div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 会开新标签页并按网址找回它。<br>② 能说出 BrowserContext 解决什么问题（cookies / 代理隔离）。<br>③ 知道 <code>tab.close()</code> 与 <code>browser.quit()</code> 的区别。</p></div>
+
+<h2 class="chap" id="c13"><span class="num dp">13</span> 页面信息与交互</h2>
+<p class="chap-lead">标签页对象除了找元素，还能读整页信息、执行 js、滚页面、处理弹窗、改窗口。</p>
+
+<div class="fig">
+<svg viewBox="0 0 880 180" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="180" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">tab 身上的四组能力</text>
+  <rect class="box" x="18" y="44" width="200" height="100" rx="11" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="t" x="32" y="68">① 读整页</text><text class="ts" x="32" y="90">html title url json</text><text class="ts" x="32" y="112">cookies() save()</text>
+  <rect class="box" x="234" y="44" width="200" height="100" rx="11" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="t" x="248" y="68">② 导航 / 刷新</text><text class="ts" x="248" y="90">back forward refresh</text><text class="ts" x="248" y="112">stop_loading</text>
+  <rect class="box" x="450" y="44" width="200" height="100" rx="11" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="t" x="464" y="68">③ 脚本 / 滚动</text><text class="ts" x="464" y="90">run_js run_cdp</text><text class="ts" x="464" y="112">scroll.to_bottom()</text>
+  <rect class="box" x="666" y="44" width="196" height="100" rx="11" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="t" x="680" y="68">④ 设置 / 弹窗</text><text class="ts" x="680" y="90">set.headers()</text><text class="ts" x="680" y="112">handle_alert()</text>
+  <text class="ts" x="18" y="168">这一章所有方法都写在 tab 上，不需要重新创建对象。</text>
+</svg>
+<figcaption><b>标签页的四组能力</b>：读、跳、执行、设置。</figcaption>
+</div>
+
+<table class="kv">
+<tr><th>分类</th><th>方法 / 属性</th><th>作用</th></tr>
+<tr><td>读整页</td><td><span class="kw" data-w="html"><code>html</code></span> <code>json</code> <code>title</code> <code>url</code> <code>user_agent</code></td><td>源码 / JSON / 标题 / 网址 / UA</td></tr>
+<tr><td>读整页</td><td><code>save(path, name)</code></td><td>把页面存成文件（可存 PDF）</td></tr>
+<tr><td>存储</td><td><code>cookies()</code> <code>session_storage()</code> <code>local_storage()</code></td><td>读 cookies / 两种本地存储</td></tr>
+<tr><td>导航</td><td><code>back()</code> <code>forward()</code> <code>refresh()</code> <code>stop_loading()</code></td><td>后退 / 前进 / 刷新 / 停止加载</td></tr>
+<tr><td>滚动</td><td><code>scroll.down(px)</code> <code>scroll.to_bottom()</code> <code>scroll.to_see(ele)</code></td><td>向下滚 / 到底 / 滚到元素可见</td></tr>
+<tr><td>脚本</td><td><code>run_js(script)</code> <code>run_cdp(cmd)</code></td><td>执行 js / 直接发 CDP 命令</td></tr>
+<tr><td>弹窗</td><td><code>handle_alert(accept=True)</code> <code>set.auto_handle_alert()</code></td><td>处理 / 自动处理 alert</td></tr>
+<tr><td>设置</td><td><code>set.headers(headers)</code> <code>set.user_agent(ua)</code> <code>set.cookies(c)</code></td><td>改请求头 / UA / cookies</td></tr>
+<tr><td>窗口</td><td><code>set.window.max()</code> <code>set.window.hide()</code></td><td>最大化 / 隐藏（<b>仅 Windows</b>，需装 pypiwin32）</td></tr>
+<tr><td>元素</td><td><code>new_ele(html, ...)</code></td><td><b>5.0 改名</b>：原 <code>add_ele()</code>，往页面插入新元素</td></tr>
+</table>
+
+<div class="cmd file"><div class="cmd-bar"><span>page.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+tab = Chromium().latest_tab
+tab.get(<span class="s">'https://www.baidu.com'</span>)
+<span class="k">print</span>(tab.title)                     <span class="c"># title = 标题（属性，不加括号）</span>
+<span class="k">print</span>(tab.url)                       <span class="c"># url = 当前网址</span>
+<span class="k">print</span>(tab.run_js(<span class="s">'return document.title;'</span>))
+<span class="c"># run_js = 执行 js；取结果必须写 return，否则拿到 None</span>
+tab.scroll.to_bottom()                <span class="c"># 滚到页面底部</span>
+tab.set.headers({<span class="s">'Referer'</span>: <span class="s">'https://www.baidu.com'</span>})
+<span class="c"># set.headers = 设置请求头；{} 是字典，键:值 成对</span></pre></div>
+
+<div class="warn"><span class="card-t">Windows 特有：set.window.hide()</span><p>隐藏窗口只支持 Windows，且必须先 <code>pip install pypiwin32</code>；隐藏后如果有新窗口弹出，整个浏览器又会显示出来。</p></div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能打印 <code>tab.title</code> 和 <code>tab.url</code>。<br>② 知道 <code>run_js()</code> 取结果要写 <span class="kw" data-w="return"><code>return</code></span>。<br>③ 知道属性（<code>title</code>）不加括号、方法（<code>refresh()</code>）要加括号。</p></div>
+
+<h2 class="chap" id="c14"><span class="num dp">14</span> 监听网络数据</h2>
+<p class="chap-lead">很多网页的内容是 js 调接口拿到的，HTML 里根本没有。这时候别硬解析页面，直接「听」它发了什么请求。5.0 把监听大幅升级了。</p>
+
+<div class="fig">
+<svg viewBox="0 0 880 190" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="190" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">监听三步：必须先开监听，再让网页发请求</text>
+  <rect class="box" x="18" y="46" width="250" height="70" rx="11" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tm" x="32" y="70">listen.start('api/')</text><text class="ts" x="32" y="92">① 先开「录音机」</text>
+  <rect class="box" x="300" y="46" width="250" height="70" rx="11" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="314" y="70">tab.get(url)</text><text class="ts" x="314" y="92">② 让网页发请求</text>
+  <rect class="box" x="582" y="46" width="280" height="70" rx="11" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="tm" x="596" y="70">packet = listen.wait()</text><text class="ts" x="596" y="92">③ 拿到数据包</text>
+  <path d="M270 82 L298 82 M552 82 L580 82" stroke="#2563eb" stroke-width="2" marker-end="url(#arC14)"/>
+  <text class="ts" x="18" y="148">顺序写反（先访问再 start）就什么都抓不到 —— 这是新手第一大坑。</text>
+  <text class="ts" x="18" y="174">5.0 新增：全局监听 browser.listen.start()、ws / sse 监听、set_method() / set_res_type()。</text>
+  <defs><marker id="arC14" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#2563eb"/></marker></defs>
+</svg>
+<figcaption><b>监听三步</b>：顺序不能反。</figcaption>
+</div>
+
+<div class="demo">
+  <div class="demo-h">点一点：看监听是怎么走完的 <span class="live">可点</span></div>
+  <div class="demo-row">
+    <button class="dbtn" onclick="DPDemo.listen(1)">① start()</button>
+    <button class="dbtn" onclick="DPDemo.listen(2)">② get()</button>
+    <button class="dbtn teal" onclick="DPDemo.listen(3)">③ wait()</button>
+    <button class="dbtn ghost" onclick="DPDemo.listen(0)">重置</button>
+  </div>
+  <div class="demo-screen big" id="demoListen">还没开始</div>
+  <div class="lamps" id="demoListenLamps"><span class="lamp">已开监听</span><span class="lamp">网页已访问</span><span class="lamp">拿到数据包</span></div>
+</div>
+
+<h3>14.1 基础用法</h3>
+<div class="cmd file"><div class="cmd-bar"><span>listen.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+tab = Chromium().latest_tab
+tab.listen.start(<span class="s">'api/getkeydata'</span>)   <span class="c"># start = 开始监听；参数是网址里包含的字符串</span>
+tab.get(<span class="s">'http://www.hao123.com/'</span>)  <span class="c"># 访问，网页这时才会发请求</span>
+packet = tab.listen.wait()             <span class="c"># wait = 等一个数据包，返回 DataPacket</span>
+<span class="k">print</span>(packet.url)                     <span class="c"># 请求网址</span>
+<span class="k">print</span>(packet.response.body)           <span class="c"># 响应正文：json 自动变 dict</span></pre></div>
+
+<h3>14.2 监听方法全表</h3>
+<table class="kv">
+<tr><th>方法</th><th>英文原意</th><th>作用</th></tr>
+<tr><td><code>listen.start(targets=None)</code></td><td>start 开始</td><td>开始监听；<span class="kw" data-w="True"><code>True</code></span> 表示全部抓</td></tr>
+<tr><td><code>listen.set_targets(targets)</code></td><td>set targets 设目标</td><td>只改监听目标</td></tr>
+<tr><td><code>listen.wait(count=1)</code></td><td>wait 等待</td><td>等到指定条数，返回数据包或列表</td></tr>
+<tr><td><code>listen.steps(count=None, gap=1)</code></td><td>steps 一步步</td><td>迭代取包，适合持续采集</td></tr>
+<tr><td><code>listen.wait_silent()</code></td><td>wait silent 等安静</td><td>等网络安静下来</td></tr>
+<tr><td><code>listen.pause()</code> / <code>resume()</code> / <code>stop()</code></td><td>暂停 / 继续 / 停止</td><td>控制监听状态</td></tr>
+<tr><td><code>packet.url / method / request / response</code></td><td>数据包属性</td><td>网址 / 方法 / 请求 / 响应</td></tr>
+<tr><td><code>packet.response.body</code></td><td>body 正文</td><td>JSON 自动转 dict，base64 自动转 bytes</td></tr>
+</table>
+
+<h3>14.3 5.0 监听新变化（重要）</h3>
+<div class="warn">
+  <span class="card-t">参数被删了，别照旧教程写</span>
+  <p>5.0 从 <code>listen.start()</code> 和 <code>listen.set_targets()</code> 里<b>删除了 <code>method</code> 和 <code>res_type</code> 参数</b>，改由两个新方法设置。旧写法 <code>listen.set_targets(method=('GET','POST'), res_type='WebSocket')</code> 在 5.0 会报错。</p>
+</div>
+<div class="cmd file"><div class="cmd-bar"><span>listen50.py</span><span>仅 5.0</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+tab = Chromium().latest_tab
+tab.listen.set_method.GET(only=True)             <span class="c"># 只听 GET 请求；only=True 表示「仅此一类」</span>
+tab.listen.set_res_type.all().remove_WebSocket() <span class="c"># 听所有类型，但排除 WebSocket；支持链式</span>
+tab.listen.start(<span class="s">'api/'</span>)                       <span class="c"># start 现在只管网址目标</span>
+tab.get(<span class="s">'https://example.com'</span>)
+<span class="k">for</span> p <span class="k">in</span> tab.listen.steps(count=3):             <span class="c"># steps = 一条条取，最多 3 条</span>
+    <span class="k">print</span>(p.url, p.response.status)
+
+browser = Chromium()
+browser.listen.start()                          <span class="c"># 仅 5.0：全局监听，覆盖所有标签页</span>
+<span class="k">for</span> data <span class="k">in</span> browser.latest_tab.listen.browser_steps():
+    <span class="k">print</span>(data.url)                            <span class="c"># 全局监听不支持 ws / sse</span></pre></div>
+<table class="kv">
+<tr><th>5.0 新能力</th><th>说明</th></tr>
+<tr><td><code>set_method.GET(only=True)</code> / <code>.all()</code> / <code>.remove_GET()</code></td><td>用方法名当类型名，<code>remove_</code> 前缀＝排除，<code>only=True</code>＝只听这类</td></tr>
+<tr><td><code>set_res_type.WebSocket(only=True)</code></td><td>按资源类型筛，同样支持链式</td></tr>
+<tr><td><code>browser.listen.start()</code> + <code>listen.browser_steps()</code></td><td>全局监听，包括之后新建的标签页；不支持 ws / sse</td></tr>
+<tr><td>ws / sse 监听</td><td>结果类型为 <code>WebSocketPacket</code> / <code>SSEPacket</code></td></tr>
+<tr><td>跨域 iframe 监听</td><td>可直接用 tab 监听内部跨域 iframe 的数据包</td></tr>
+<tr><td>自动转 list / 自动纠正编码</td><td>长连接结果自动转列表，结果编码自动修正</td></tr>
+</table>
+
+<div class="check"><span class="card-t">检查点</span><p>① 记住「先 start 再 get」。<br>② 会读 <code>packet.response.body</code>。<br>③ 知道 5.0 把 method/res_type 拆成了 <code>set_method()</code> / <code>set_res_type()</code>。</p></div>
+
+<h2 class="chap" id="c15"><span class="num dp">15</span> 下载文件</h2>
+<p class="chap-lead">下载有三条路：浏览器点击触发、用 DownloadKit 直接下、5.0 主动触发浏览器下载。按场景选一条就行。</p>
+
+<div class="fig">
+<svg viewBox="0 0 880 190" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="190" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">三条下载路线</text>
+  <rect class="box" x="18" y="46" width="270" height="94" rx="11" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="t" x="32" y="70">① 点击触发（浏览器）</text>
+  <text class="ts" x="32" y="92">ele.click.to_download()</text>
+  <text class="ts" x="32" y="114">适合：页面上的下载按钮</text>
+  <rect class="box" x="304" y="46" width="270" height="94" rx="11" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="t" x="318" y="70">② 直接下（不走浏览器）</text>
+  <text class="ts" x="318" y="92">page.download(url, path)</text>
+  <text class="ts" x="318" y="114">适合：已知文件网址、批量下</text>
+  <rect class="box" x="590" y="46" width="272" height="94" rx="11" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="t" x="604" y="70">③ 主动触发（仅 5.0）</text>
+  <text class="ts" x="604" y="92">tab.download.by_browser(url)</text>
+  <text class="ts" x="604" y="114">适合：blob、PDF 等难直接下的</text>
+  <text class="ts" x="18" y="170">三条路都返回 / 可得到下载任务，记得 <b>wait()</b> 等它完成，否则文件名还是临时 id。</text>
+</svg>
+<figcaption><b>下载三条路</b>：按「有没有网址、要不要浏览器」来选。</figcaption>
+</div>
+
+<h3>15.1 下载前的设置</h3>
+<div class="cmd file"><div class="cmd-bar"><span>dl_setting.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+browser = Chromium()
+browser.set.download_path(<span class="s">r'D:\downloads'</span>)
+<span class="c"># set.download_path = 设置下载目录；r'' = 原始字符串，Windows 路径防转义</span>
+browser.set.download_file_name(<span class="s">'报告'</span>, <span class="s">'pdf'</span>)
+<span class="c"># download_file_name = 下载前重命名；第二参数是后缀，可不写</span>
+browser.set.when_download_file_exists(<span class="s">'rename'</span>)
+<span class="c"># 同名文件怎么办：rename 改名 / overwrite 覆盖 / skip 跳过（也可写 r / o / s）</span>
+
+tab = browser.latest_tab
+tab.get(<span class="s">'https://example.com/files'</span>)
+mission = tab.ele(<span class="s">'text=下载'</span>).click.to_download()
+<span class="c"># click.to_download = 点击并触发下载，返回 DownloadMission 下载任务</span>
+<span class="k">print</span>(mission.wait())       <span class="c"># wait() = 等下载完成，返回最终文件路径</span></pre></div>
+<div class="out"><div class="out-bar">你会看到什么</div><pre>D:\downloads\报告.pdf</pre><div class="trans"><b>检查点：</b>终端打印出一个真实存在的文件路径，去文件夹里能看到文件。下载管理默认不开启，设置下载路径或调用 <code>click.to_download()</code> 会自动开启。</div></div>
+
+<table class="kv">
+<tr><th>方法 / 属性</th><th>英文原意</th><th>作用</th></tr>
+<tr><td><code>set.download_path(path)</code></td><td>download path 下载路径</td><td>设下载目录（浏览器级影响后续新标签页）</td></tr>
+<tr><td><code>set.download_file_name(name, suffix)</code></td><td>file name 文件名</td><td>下载前重命名，<b>每次触发后会被清空</b></td></tr>
+<tr><td><code>set.when_download_file_exists(mode)</code></td><td>when exists 当已存在</td><td>同名时改名 / 覆盖 / 跳过</td></tr>
+<tr><td><code>wait.download_begin()</code></td><td>begin 开始</td><td>等下载任务出现</td></tr>
+<tr><td><code>wait.downloads_done()</code></td><td>done 完成</td><td>等所有下载完成</td></tr>
+<tr><td><code>mission.wait()</code> / <code>mission.cancel()</code></td><td>wait / cancel 等 / 取消</td><td>等完成拿路径 / 取消并删除已下文件</td></tr>
+<tr><td><code>mission.url / name / folder / final_path / state</code></td><td>任务属性</td><td>网址 / 文件名 / 目录 / 最终路径 / 状态</td></tr>
+</table>
+
+<h3>15.2 DownloadKit：已知网址直接下</h3>
+<div class="cmd file"><div class="cmd-bar"><span>dl_kit.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> SessionPage
+
+page = SessionPage()
+res = page.download(<span class="s">'https://www.baidu.com/img/flexible/logo/pc/result.png'</span>, <span class="s">r'C:\download'</span>)
+<span class="c"># download = 直接下载；第一个参数是网址，第二个是保存目录</span>
+<span class="k">print</span>(res)                  <span class="c"># 返回 ('success', '具体路径')</span>
+
+page.download.add(url2, <span class="s">r'C:\download'</span>)   <span class="c"># add = 加入并发队列（多线程）</span>
+page.download.set.block_size(<span class="s">'30m'</span>)      <span class="c"># 大文件分块大小：30 兆</span></pre></div>
+<div class="warn"><span class="card-t">DownloadKit 走的是 requests，不是浏览器</span><p>它基于 requests 实现，会自动同步 cookies，但<b>不会带上浏览器里的请求头 / 表单数据</b>。目标接口要求 headers 或 data 时要手动补。它支持多线程、大文件分块、失败重试、文件名冲突处理。</p></div>
+
+<h3>15.3 5.0：主动触发浏览器下载</h3>
+<div class="cmd file"><div class="cmd-bar"><span>dl_by_browser.py</span><span>仅 5.0</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium, ChromiumOptions
+
+co = ChromiumOptions().disable_pdf_preview()
+<span class="c"># disable_pdf_preview = 5.0 新增：禁止浏览器直接打开 PDF 预览</span>
+tab = Chromium(co).latest_tab
+mission = tab.download.by_browser(<span class="s">'http://example.com/abc.pdf'</span>)
+<span class="c"># by_browser = 主动让浏览器下载这个网址，返回 DownloadMission</span>
+mission.wait()</pre></div>
+<table class="kv">
+<tr><th><code>by_browser()</code> 参数</th><th>作用</th></tr>
+<tr><td><code>url</code></td><td>下载地址</td></tr>
+<tr><td><code>save_path</code> / <code>rename</code> / <code>suffix</code></td><td>保存目录 / 重命名 / 指定后缀</td></tr>
+<tr><td><span class="kw" data-w="timeout"><code>timeout</code></span></td><td>等待下载触发的超时时间</td></tr>
+<tr><td><code>file_exists</code></td><td>同名处理：<code>rename</code> / <code>overwrite</code> / <code>skip</code></td></tr>
+</table>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能设置下载路径并让 <code>click.to_download()</code> 拿到文件路径。<br>② 知道 DownloadKit 不走浏览器。<br>③ 知道 5.0 的 <code>by_browser()</code> 用来解决 blob / PDF 难下载的问题。</p></div>
+
+<h2 class="chap" id="c16"><span class="num dp">16</span> 上传文件</h2>
+<p class="chap-lead">上传的本质是「把文件路径交给网页的文件选择框」。三种写法，按页面情况选。</p>
+
+<div class="cmd file"><div class="cmd-bar"><span>upload.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+tab = Chromium().latest_tab
+tab.get(<span class="s">'https://example.com/upload'</span>)
+
+<span class="c"># 写法一（最省事）：点击按钮时直接把路径塞进去</span>
+tab.ele(<span class="s">'#uploadButton'</span>).click.to_upload(<span class="s">r'C:\test.txt'</span>)
+<span class="c"># click.to_upload = 点击并自动处理文件选择框；r'' 保护 Windows 反斜杠</span>
+
+<span class="c"># 写法二（按钮不好点时）：先预设路径，再点，再等它填完</span>
+tab.set.upload_files(<span class="s">r'C:\test.txt'</span>)   <span class="c"># 预设要上传的文件</span>
+tab.ele(<span class="s">'@text()=选择文件'</span>).click()      <span class="c"># 触发文件选择框</span>
+tab.wait.upload_paths_inputted()               <span class="c"># 等路径填完；5.0 新增 timeout 参数</span>
+
+<span class="c"># 写法三（页面上就有 input 元素）：直接往 input 里写路径</span>
+tab.ele(<span class="s">'tag:input@type=file'</span>).input(<span class="s">r'D:\a.txt'</span>)
+<span class="c"># 多个文件可传列表 ['a.txt','b.txt']，或用 \n 分隔的字符串</span></pre></div>
+
+<table class="kv">
+<tr><th>写法</th><th>什么时候用</th></tr>
+<tr><td><code>click.to_upload(paths)</code></td><td>最常用，一键完成</td></tr>
+<tr><td><code>set.upload_files()</code> + <code>click()</code> + <code>wait.upload_paths_inputted()</code></td><td>按钮是异步触发、或需要精细控制时</td></tr>
+<tr><td><code>input(path)</code> 写进 <code>input[type=file]</code></td><td>页面直接暴露文件输入框时</td></tr>
+</table>
+<div class="warn">
+  <span class="card-t">Windows 路径与两个坑</span>
+  <p>① 路径一律写成 <code>r'C:\test.txt'</code>（前缀 r = raw，原始字符串），否则 <code>\t</code> 会被当成制表符，路径就错了。<br>② 异步上传必须等 <code>wait.upload_paths_inputted()</code>，不然代码跑完了文件还没填进去。<br>③ 文件在<b>跨域 iframe</b> 里时，要用那个 iframe 对象的 <code>set.upload_paths()</code>，不能用外层 tab。</p>
+</div>
+
+<div class="check"><span class="card-t">检查点</span><p>能用写法一完成一次上传，并知道 Windows 路径为什么要加 <code>r</code>。</p></div>
+
+<h2 class="chap" id="c17"><span class="num dp">17</span> 截图、录像与动作链</h2>
+<p class="chap-lead">取证、存档、模拟真人操作，这三件事分别对应截图、录像、动作链。</p>
+
+<h3>17.1 截图</h3>
+<div class="cmd file"><div class="cmd-bar"><span>screen.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+tab = Chromium().latest_tab
+tab.get(<span class="s">'https://www.drissionpage.cn'</span>)
+tab.get_screenshot(path=<span class="s">'tmp'</span>, name=<span class="s">'home.png'</span>, full_page=<span class="k">True</span>)
+<span class="c"># get_screenshot = 截图；path = 目录；name = 文件名；full_page=True = 截整页</span>
+ele = tab.ele(<span class="s">'tag:h1'</span>)
+ele.get_screenshot(name=<span class="s">'title.png'</span>)  <span class="c"># 只截这一个元素</span></pre></div>
+<table class="kv">
+<tr><th>参数</th><th>作用</th></tr>
+<tr><td><code>path</code> / <code>name</code></td><td>保存目录 / 文件名（支持 jpg / png / webp）</td></tr>
+<tr><td><code>as_bytes</code> / <code>as_base64</code></td><td>不存文件，直接拿字节 / base64 字符串</td></tr>
+<tr><td><code>full_page=True</code></td><td>整页长图（对可视范围外截图需浏览器 ≥ 90 版）</td></tr>
+<tr><td><code>left_top</code> / <code>right_bottom</code></td><td>指定矩形区域</td></tr>
+</table>
+
+<h3>17.2 录像</h3>
+<div class="cmd file"><div class="cmd-bar"><span>record.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+tab = Chromium().latest_tab
+tab.screencast.set_save_path(<span class="s">'video'</span>)  <span class="c"># 设置保存路径（必须英文）</span>
+tab.screencast.set_mode.video_mode()      <span class="c"># 录成视频；也有 imgs_mode() 逐帧存图</span>
+tab.screencast.start()                    <span class="c"># 开始录</span>
+tab.get(<span class="s">'https://www.baidu.com'</span>)
+tab.wait(3)                               <span class="c"># 硬等 3 秒，让画面有内容</span>
+tab.screencast.stop()                     <span class="c"># 停止并保存</span></pre></div>
+<div class="warn"><span class="card-t">录像的两个前提</span><p>① <code>video_mode()</code> 需要先 <code>pip install opencv-python</code>；② 保存路径和文件名<b>必须是英文</b>，中文路径会失败。</p></div>
+
+<h3>17.3 动作链</h3>
+<div class="cmd file"><div class="cmd-bar"><span>actions.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+<span class="k">from</span> DrissionPage.common <span class="k">import</span> Keys
+<span class="c"># common = 公共工具模块；Keys = 特殊按键常量</span>
+
+tab = Chromium().latest_tab
+tab.get(<span class="s">'https://www.baidu.com'</span>)
+tab.actions.move_to(<span class="s">'#kw'</span>).click().type(<span class="s">'DrissionPage'</span>)
+<span class="c"># actions = 动作链；move_to = 移到；click = 点；type = 逐字符模拟按键</span>
+<span class="c"># 不需要 Selenium 那套 perform()！每个动作写完立即生效</span>
+tab.actions.type(Keys.ENTER)              <span class="c"># ENTER = 回车键</span>
+
+tab.set.show_trail()                      <span class="c"># 仅 5.0：显示鼠标运动轨迹</span></pre></div>
+<table class="kv">
+<tr><th>方法</th><th>英文原意</th><th>作用</th></tr>
+<tr><td><code>move_to(ele)</code> / <code>move(x, y)</code></td><td>move 移动</td><td>移到元素 / 按偏移移动</td></tr>
+<tr><td><code>click()</code> / <code>r_click()</code> / <code>m_click()</code></td><td>click / right / middle</td><td>左 / 右 / 中键点击</td></tr>
+<tr><td><code>hold()</code> / <code>release()</code></td><td>hold 按住 / release 松开</td><td>拖拽时按住再松开</td></tr>
+<tr><td><code>type(text)</code> / <code>input(text)</code></td><td>type 打字 / input 输入</td><td>逐字符模拟按键 / 一次输入整段</td></tr>
+<tr><td><code>key_down(key)</code> / <code>key_up(key)</code></td><td>key down / up 按下 / 抬起</td><td>组合键，如 Ctrl+A</td></tr>
+<tr><td><code>scroll(delta_y)</code> / <code>up()</code> <code>down()</code></td><td>scroll 滚动</td><td>滚轮 / 上下移动</td></tr>
+<tr><td><code>drag_in(ele, files)</code></td><td>drag in 拖入</td><td>把文件拖进页面；5.0 新增 <code>offset_x/offset_y</code></td></tr>
+</table>
+<div class="tip"><span class="card-t">和 Selenium 最大的不同</span><p>动作链<b>不需要 <code>perform()</code></b>，每个方法调用时动作就已经发出去了；而且「这些操作皆为模拟，真正的鼠标不会移动」。</p></div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能截一张整页图。<br>② 能写一条 <code>move_to().click().type()</code> 动作链。<br>③ 知道不需要 <code>perform()</code>。</p></div>
+
+<h2 class="chap" id="c18"><span class="num dp">18</span> SessionPage 收发数据包</h2>
+<p class="chap-lead">不开浏览器，直接发 HTTP 请求拿网页。速度快、内存小，适合批量读静态页。5.0 里它仍然保留。</p>
+
+<div class="fig">
+<svg viewBox="0 0 880 150" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="150" fill="#ffffff"/>
+  <rect class="box" x="20" y="40" width="180" height="64" rx="11" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="tm" x="36" y="66">SessionPage()</text><text class="ts" x="36" y="88">Python 进程内</text>
+  <rect class="box" x="340" y="40" width="180" height="64" rx="11" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="356" y="66">page.get(url)</text><text class="ts" x="356" y="88">HTTP 请求</text>
+  <rect class="box" x="660" y="40" width="200" height="64" rx="11" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="tm" x="676" y="66">page.html / .json</text><text class="ts" x="676" y="88">直接从内存读</text>
+  <path d="M202 72 L338 72 M522 72 L658 72" stroke="#7c3aed" stroke-width="2" marker-end="url(#arC18)"/>
+  <text class="ts" x="20" y="132">全程没有浏览器窗口：不能点击、不能执行 js，但翻 100 页也很快。</text>
+  <defs><marker id="arC18" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#7c3aed"/></marker></defs>
+</svg>
+<figcaption><b>s 模式</b>：请求 → 响应 → 读数据，三步都在 Python 里完成。</figcaption>
+</div>
+
+<div class="cmd file"><div class="cmd-bar"><span>session.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> SessionPage
+
+page = SessionPage()                       <span class="c"># 创建页面对象；括号里可传 SessionOptions</span>
+page.get(<span class="s">'https://gitee.com/explore/all'</span>)
+<span class="c"># 注意：SessionPage.get() 返回 bool（是否成功），不是 Response，也不是 5.0 的 NavResult</span>
+
+<span class="k">for</span> item <span class="k">in</span> page.eles(<span class="s">'t:h3'</span>)[:5]:   <span class="c"># eles = 找所有 h3；[:5] 只取前 5 个</span>
+    lnk = item.ele(<span class="s">'tag:a'</span>)           <span class="c"># 在每一行里再找 a 标签</span>
+    <span class="k">print</span>(lnk.text, lnk.link)        <span class="c"># text = 文字；link = 完整网址</span></pre></div>
+
+<h3>18.1 get / post 与页面信息</h3>
+<table class="kv">
+<tr><th>写法</th><th>说明</th></tr>
+<tr><td><code>page.get(url, params=..., headers=...)</code></td><td>GET 请求；参数与 requests 一致，返回 <span class="kw" data-w="bool"><code>bool</code></span></td></tr>
+<tr><td><code>page.post(url, data=..., json=...)</code></td><td>POST 请求，参数同 requests</td></tr>
+<tr><td><code>page.html</code> / <code>page.json</code> / <code>page.title</code></td><td>响应源码 / JSON 字典 / 标题</td></tr>
+<tr><td><code>page.response.status_code</code></td><td>要状态码时，从内嵌的 Response 对象取</td></tr>
+<tr><td><code>page.session</code></td><td>拿到底层 requests 的 Session，可用原生方法</td></tr>
+<tr><td><code>page.download(url, path)</code></td><td>直接下载文件（DownloadKit）</td></tr>
+</table>
+<div class="warn"><span class="card-t">别把两个 get() 搞混</span><p>浏览器标签页 <code>tab.get()</code> 在 5.0 返回 <span class="kw" data-w="NavResult"><code>NavResult</code></span>；<code>SessionPage.get()</code> 返回 <span class="kw" data-w="bool"><code>bool</code></span>。写 <code>if tab.get(url):</code> 在 5.0 是错的，要用 <code>if tab.get(url).ok:</code>。</p></div>
+
+<h3>18.2 启动配置与运行期设置</h3>
+<div class="cmd file"><div class="cmd-bar"><span>session_opt.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> SessionPage, SessionOptions
+
+so = SessionOptions(read_file=<span class="k">False</span>)   <span class="c"># read_file=False = 不读 ini，用内置默认配置</span>
+so.set_retry(5, 1)                    <span class="c"># 失败重试 5 次，间隔 1 秒</span>
+so.set_timeout(10)                    <span class="c"># 超时 10 秒</span>
+so.set_headers({<span class="s">'User-Agent'</span>: <span class="s">'Mozilla/5.0'</span>})
+<span class="c"># set_headers = 设置请求头；{} 是字典</span>
+page = SessionPage(so)
+
+page.set.cookies(<span class="s">'a=1; b=2;'</span>)       <span class="c"># 运行中改设置用 page.set.*（不是 so）</span>
+page.set.proxies(<span class="s">'http://127.0.0.1:7890'</span>, <span class="s">'https://127.0.0.1:7890'</span>)
+<span class="c"># proxies = 代理；两个参数分别是 http 和 https</span>
+page.get(<span class="s">'https://example.com'</span>)
+<span class="k">print</span>(page.title)</pre></div>
+<div class="tip"><span class="card-t">配置改动的时机</span><p><span class="kw" data-w="SessionOptions"><code>SessionOptions</code></span> 只在<b>创建对象时</b>有效，对象建好后再改 <code>so</code> 不会生效；运行中要用 <code>page.set.*()</code>。这和 ChromiumOptions「只在启动前有效」是同一个道理。</p></div>
+
+<h3>18.3 与 requests 对比（官网演示）</h3>
+<table class="kv">
+<tr><th>requests 写法</th><th>DrissionPage 写法</th></tr>
+<tr><td><code>r = requests.get(url, headers=headers); html = etree.HTML(r.text); title = html.xpath('//h1')[0].text</code></td><td><code>page = SessionPage(); page.get(url); title = page('tag:h1').text</code></td></tr>
+<tr><td>手动写 headers、手动解析、手动取链接绝对路径</td><td>自带默认 headers，<code>.link</code> 自动补全网址</td></tr>
+</table>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能用 SessionPage 翻页并打印标题和链接。<br>② 知道 <code>page.get()</code> 返回 bool。<br>③ 知道配置要在创建对象前设好。</p></div>
+
+<h2 class="chap" id="c19"><span class="num dp">19</span> d / s 模式切换</h2>
+<p class="chap-lead">先开浏览器登录，再切成数据包模式高速翻页 —— 这是 DrissionPage 最拿手的组合技。</p>
+
+<div class="cmd file"><div class="cmd-bar"><span>mode.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+tab = Chromium().latest_tab
+tab.get(<span class="s">'https://gitee.com/login'</span>)
+<span class="c"># ……这里用 d 模式完成登录（输入账号密码、点按钮）……</span>
+
+tab.change_mode()                  <span class="c"># 切到 s 模式；会用新模式重新访问当前网址</span>
+<span class="k">print</span>(tab.title)                   <span class="c"># 登录态靠 cookies 带过去，标题还在</span>
+
+<span class="k">for</span> i <span class="k">in</span> <span class="k">range</span>(1, 4):            <span class="c"># range(1,4) = 1、2、3 三页</span>
+    tab.get(<span class="s">f'https://gitee.com/explore/all?page={i}'</span>)
+    <span class="c"># f'' = 格式化字符串，{i} 会被换成当前页码</span>
+    <span class="k">print</span>(tab.eles(<span class="s">'t:h3'</span>).get.texts()[:3])
+    <span class="c"># .get.texts() = 一次拿一批文字</span></pre></div>
+
+<table class="kv">
+<tr><th>方法 / 参数</th><th>作用</th></tr>
+<tr><td><code>change_mode(mode=None, go=True, copy_cookies=True)</code></td><td>切换模式；<code>mode='d'</code> 或 <code>'s'</code>，不写就来回切</td></tr>
+<tr><td><code>go=False</code></td><td>切换时不重新访问当前网址（卡住时可试）</td></tr>
+<tr><td><code>copy_cookies=True</code></td><td>把 cookies 带到新模式，保住登录态</td></tr>
+<tr><td><code>cookies_to_session()</code> / <code>cookies_to_browser()</code></td><td>只同步 cookies，不切模式</td></tr>
+<tr><td><code>post()</code></td><td>两种模式都能用</td></tr>
+</table>
+<div class="fig">
+<svg viewBox="0 0 880 150" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="150" fill="#ffffff"/>
+  <rect class="box" x="40" y="40" width="300" height="70" rx="12" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tb" x="60" y="68">d 模式：登录、点按钮</text><text class="ts" x="60" y="92">慢，但能操作页面</text>
+  <rect class="box" x="520" y="40" width="320" height="70" rx="12" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="tb" x="540" y="68">s 模式：翻 100 页</text><text class="ts" x="540" y="92">快，cookies 带过去</text>
+  <path d="M344 75 L516 75" stroke="#0f766e" stroke-width="2" marker-end="url(#arC19)"/>
+  <text class="tm" x="360" y="66">change_mode()</text>
+  <text class="ts" x="40" y="136">只同步 cookies，不同步请求头 headers —— 若切过去后内容不对，检查是不是缺 headers。</text>
+  <defs><marker id="arC19" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#0f766e"/></marker></defs>
+</svg>
+<figcaption><b>切换模式</b>：登录用浏览器，翻页用数据包。</figcaption>
+</div>
+<div class="warn"><span class="card-t">5.0 的变化</span><p>旧的 <code>WebPage</code> 被删除，但<b>模式切换没有消失</b>：官网明确说「ChromiumTab 增加模式切换功能」，所以 <code>Chromium().latest_tab</code> 拿到的标签页直接就能 <code>change_mode()</code>。</p></div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 知道 <code>change_mode()</code> 会重新访问当前网址。<br>② 知道 cookies 会带过去、headers 不会。<br>③ 知道 5.0 不再需要 WebPage 就能切模式。</p></div>
+
+<h2 class="chap" id="c20"><span class="num dp">20</span> 配置文件与全局设置</h2>
+<p class="chap-lead">每次都在代码里写一遍配置很烦。这一章讲三种「设一次，一直生效」的办法。</p>
+
+<div class="fig">
+<svg viewBox="0 0 880 180" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="180" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">三种配置层级：越靠右越临时</text>
+  <rect class="box" x="18" y="46" width="260" height="94" rx="11" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="t" x="32" y="70">① ini 配置文件</text><text class="ts" x="32" y="92">configs.ini / dp_configs.ini</text><text class="ts" x="32" y="114">整个环境共用，持久保存</text>
+  <rect class="box" x="296" y="46" width="260" height="94" rx="11" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="t" x="310" y="70">② Options 对象</text><text class="ts" x="310" y="92">ChromiumOptions / SessionOptions</text><text class="ts" x="310" y="114">一次启动有效</text>
+  <rect class="box" x="574" y="46" width="288" height="94" rx="11" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="t" x="588" y="70">③ 运行期 set.*</text><text class="ts" x="588" y="92">tab.set.* / page.set.*</text><text class="ts" x="588" y="114">当前对象有效，立刻生效</text>
+  <path d="M280 93 L294 93 M558 93 L572 93" stroke="#2563eb" stroke-width="2"/>
+  <text class="ts" x="18" y="166">优先级：运行期设置 &gt; Options 对象 &gt; ini 文件 &gt; 内置默认值。</text>
+</svg>
+<figcaption><b>三层配置</b>：改哪一层，取决于你要影响多久。</figcaption>
+</div>
+
+<h3>20.1 ini 配置文件</h3>
+<p>默认文件在 <code>Python安装目录\Lib\site-packages\DrissionPage\_configs\configs.ini</code>。它只管<b>启动配置</b>：对象创建后再改无效，接管已打开的浏览器时也基本无效，<b>升级库会被重置</b>。</p>
+<table class="kv">
+<tr><th>小节</th><th>常见键</th><th>含义</th></tr>
+<tr><td><code>[paths]</code></td><td><code>download_path</code> <code>tmp_path</code></td><td>下载目录 / 临时目录</td></tr>
+<tr><td><code>[chromium_options]</code></td><td><code>address=127.0.0.1:9222</code> <code>browser_path=chrome</code> <code>load_mode=normal</code></td><td>调试地址 / 浏览器路径 / 加载模式</td></tr>
+<tr><td><code>[session_options]</code></td><td><span class="kw" data-w="headers"><code>headers</code></span></td><td>默认请求头</td></tr>
+<tr><td><code>[timeouts]</code></td><td><code>base=10</code> <code>page_load=30</code> <code>script=30</code></td><td>基础 / 页面加载 / 脚本超时</td></tr>
+<tr><td><code>[proxies]</code></td><td><code>http</code> <code>https</code></td><td>默认代理</td></tr>
+<tr><td><code>[others]</code></td><td><code>retry_times=3</code> <code>retry_interval=2</code></td><td>重试次数 / 间隔</td></tr>
+</table>
+<div class="cmd file"><div class="cmd-bar"><span>ini_opt.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium, ChromiumOptions
+<span class="k">from</span> DrissionPage.common <span class="k">import</span> configs_to_here
+
+configs_to_here()
+<span class="c"># configs_to_here = 把默认 ini 复制到当前项目目录，生成 dp_configs.ini</span>
+<span class="c"># 之后程序优先读项目里的这份，打包/换电脑更省事</span>
+
+co = ChromiumOptions(ini_path=<span class="s">r'D:\setting.ini'</span>)
+<span class="c"># ini_path = 指定读另一份配置文件</span>
+co.no_imgs(<span class="k">True</span>).mute(<span class="k">True</span>)     <span class="c"># 改配置，链式写法</span>
+co.save_to_default()              <span class="c"># 存回默认 ini，下次自动生效</span></pre></div>
+
+<h3>20.2 命令行 dp 工具</h3>
+<table class="kv">
+<tr><th>全称</th><th>缩写</th><th>参数</th><th>作用</th></tr>
+<tr><td><code>--set-browser-path</code></td><td><code>-p</code></td><td>浏览器路径</td><td>写入浏览器路径</td></tr>
+<tr><td><code>--set-user-path</code></td><td><code>-u</code></td><td>用户数据目录</td><td>写入用户目录</td></tr>
+<tr><td><code>--configs-to-here</code></td><td><code>-c</code></td><td>无</td><td>复制 ini 到当前目录</td></tr>
+<tr><td><code>--launch-browser</code></td><td><code>-l</code></td><td>端口（0＝用配置值）</td><td>启动浏览器等待接管</td></tr>
+</table>
+<div class="cmd"><div class="cmd-bar"><span>终端</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">dp</span> -p <span class="s">"C:\Program Files\Google\Chrome\Application\chrome.exe"</span>
+<span class="c"># -p = --set-browser-path；路径有空格必须加引号</span>
+<span class="p">$</span> <span class="k">dp</span> -l 0
+<span class="c"># -l = --launch-browser 启动浏览器并等待被接管；0 表示用配置里的端口</span></pre></div>
+<div class="warn"><span class="card-t">命令行和代码要用同一个 Python 环境</span><p>如果你电脑上有多个 Python（或用了虚拟环境），<span class="kw" data-w="dp"><code>dp</code></span> 可能属于另一个环境，改的配置你的程序读不到。用 <code>python -m pip show DrissionPage</code> 确认，必要时先激活虚拟环境再敲 <span class="kw" data-w="dp"><code>dp</code></span>。</p></div>
+
+<h3>20.3 Settings 全局设置</h3>
+<div class="cmd file"><div class="cmd-bar"><span>settings.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage.common <span class="k">import</span> Settings
+
+Settings.set_language(<span class="s">'zh_cn'</span>)              <span class="c"># 报错信息用中文（'en' 是英文）</span>
+Settings.set_raise_when_ele_not_found(<span class="k">True</span>)
+<span class="c"># 找不到元素时直接抛异常，而不是返回 NoneElement；调试时很好用</span>
+Settings.set_raise_when_click_failed(<span class="k">True</span>)   <span class="c"># 点击失败也抛异常</span>
+Settings.set_singleton_tab_obj(<span class="k">False</span>)        <span class="c"># 允许同一标签页生成多个对象</span>
+Settings.set_cdp_timeout(30)                  <span class="c"># CDP 命令超时 30 秒</span></pre></div>
+<table class="kv">
+<tr><th>方法</th><th>默认值</th><th>作用</th></tr>
+<tr><td><code>set_raise_when_ele_not_found()</code></td><td>False</td><td>找不到元素是否抛错</td></tr>
+<tr><td><code>set_raise_when_click_failed()</code></td><td>False</td><td>点击失败是否抛错</td></tr>
+<tr><td><code>set_raise_when_wait_failed()</code></td><td>False</td><td>等待失败是否抛错</td></tr>
+<tr><td><code>set_singleton_tab_obj()</code></td><td>True</td><td>同一标签页是否复用同一对象</td></tr>
+<tr><td><code>set_cdp_timeout(second)</code></td><td>30</td><td>CDP 通信超时</td></tr>
+<tr><td><code>set_browser_connect_timeout(second)</code></td><td>30</td><td>连接浏览器超时</td></tr>
+<tr><td><code>set_auto_handle_alert(accept)</code></td><td>None</td><td>自动处理弹窗</td></tr>
+<tr><td><code>set_language(code)</code></td><td>zh_cn</td><td>报错语言</td></tr>
+<tr><td><code>set_wait_stop_before_click()</code></td><td>—</td><td><b>仅 5.0</b>：点击前是否等元素停止移动</td></tr>
+</table>
+
+<div class="check"><span class="card-t">检查点</span><p>① 知道 ini 会被升级覆盖，重要配置宜另存。<br>② 会用 <code>dp -p</code> 设浏览器路径。<br>③ 知道调试时打开 <code>set_raise_when_ele_not_found(True)</code> 更容易发现定位符写错。</p></div>
+
+<h2 class="chap" id="c21"><span class="num dp">21</span> 独立上下文与代理</h2>
+<p class="chap-lead">5.0 最值得专门学的新功能：一个浏览器里开多个互不干扰的「小浏览器」，各自登录、各自走不同代理。</p>
+
+<div class="fig">
+<svg viewBox="0 0 880 210" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="210" fill="#ffffff"/>
+  <rect class="box" x="20" y="20" width="200" height="52" rx="11" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tm" x="36" y="52">Chromium() 浏览器</text>
+  <rect class="box" x="300" y="20" width="250" height="88" rx="11" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="t" x="316" y="46">上下文 A</text><text class="ts" x="316" y="68">cookies：账号 A</text><text class="ts" x="316" y="90">代理：上海 IP</text>
+  <rect class="box" x="580" y="20" width="280" height="88" rx="11" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="t" x="596" y="46">上下文 B</text><text class="ts" x="596" y="68">cookies：账号 B</text><text class="ts" x="596" y="90">代理：广州 IP</text>
+  <path d="M120 74 L298 46 M120 74 L578 46" stroke="#0f766e" stroke-width="2" fill="none" marker-end="url(#arC21)"/>
+  <text class="ts" x="20" y="140">每个上下文 = 一个无痕浏览器：cookies 独立、可独立设代理、可独立设权限。</text>
+  <text class="ts" x="20" y="166">新建时窗口不可见，必须 context.new_tab() 之后才出现。</text>
+  <text class="ts" x="20" y="192">用途：一个浏览器登录多个账号、多地区采集、批量注册、给不同任务分配不同出口 IP。</text>
+  <defs><marker id="arC21" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#0f766e"/></marker></defs>
+</svg>
+<figcaption><b>独立上下文</b>：解决「同一浏览器多账号登录」的老大难。</figcaption>
+</div>
+
+<h3>21.1 代理的两种设置时机</h3>
+<table class="kv">
+<tr><th>时机</th><th>写法</th><th>影响范围</th></tr>
+<tr><td>浏览器启动<b>前</b></td><td><code>ChromiumOptions().set_proxy('http://user:pass@ip:port')</code></td><td>所有上下文通用</td></tr>
+<tr><td>浏览器启动<b>后</b></td><td><code>browser.new_context(proxy='http://user:pass@ip:port')</code></td><td>只有这个上下文</td></tr>
+</table>
+<div class="cmd file"><div class="cmd-bar"><span>proxy.py</span><span>仅 5.0 支持账密代理</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium, ChromiumOptions
+
+<span class="c"># 方式一：启动时设，所有标签页共用</span>
+co = ChromiumOptions().set_proxy(<span class="s">'http://zhangsan:abc123@12.34.56.78:9101'</span>)
+<span class="c"># 格式 http://账号:密码@IP:端口 —— 5.0 起才支持带账密</span>
+browser = Chromium(co)
+browser.latest_tab.get(<span class="s">'https://ipv4.webshare.io/'</span>)
+
+<span class="c"># 方式二：启动后给某个上下文单独设</span>
+browser2 = Chromium()
+ctx = browser2.new_context(proxy=<span class="s">'http://lisi:abc123@123.4.56.78:9101'</span>)
+tab = ctx.new_tab()
+tab.get(<span class="s">'https://ipv4.webshare.io/'</span>)</pre></div>
+
+<h3>21.2 多个上下文各登各的号</h3>
+<div class="cmd file"><div class="cmd-bar"><span>multi_account.py</span><span>仅 5.0</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+browser = Chromium()
+ctx_a = browser.new_context()      <span class="c"># 上下文 A：独立的 cookies</span>
+ctx_b = browser.new_context()      <span class="c"># 上下文 B：另一份 cookies</span>
+
+tab_a, tab_b = ctx_a.new_tab(), ctx_b.new_tab()
+<span class="c"># 逗号 = 一次给两个变量赋值；每个上下文都要自己开标签页</span>
+
+tab_a.get(<span class="s">'https://example.com/login'</span>)
+tab_b.get(<span class="s">'https://example.com/login'</span>)
+<span class="c"># 分别输入不同账号密码（此处省略），两边登录状态互不影响</span>
+
+<span class="k">print</span>(ctx_a.cookies())            <span class="c"># cookies() = 读这个上下文的 cookies</span>
+ctx_b.set.cookies.clear()          <span class="c"># 只清空 B 的，A 不受影响</span>
+ctx_b.close()                      <span class="c"># 关掉 B，里面的标签页一起关</span></pre></div>
+
+<h3>21.3 权限与系统用户目录</h3>
+<div class="cmd file"><div class="cmd-bar"><span>perm.py</span><span>仅 5.0</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium, ChromiumOptions
+
+browser = Chromium()
+browser.set.perm.camera()          <span class="c"># 允许使用摄像头</span>
+browser.set.perm.geolocation()     <span class="c"># 允许读取地理位置</span>
+
+co = ChromiumOptions().use_system_user_path()
+<span class="c"># 5.0 行为：复制一份系统用户文件夹来用（可带出插件，登录态不一定保留）</span>
+<span class="c"># 旧版 Chrome 可传 old_ver=True 用旧方式；也可用 use_edge() 指定 Edge</span>
+browser2 = Chromium(co)</pre></div>
+<div class="warn"><span class="card-t">新版 Chrome 的限制</span><p>新版 Chrome 不允许程序直接使用正在运行的系统用户文件夹，所以 5.0 的 <code>use_system_user_path()</code> 改成<b>复制一份</b>。能把用户信息和插件带出来，但<b>不一定保留登录状态</b> —— 需要登录态时，更稳的做法是用 <code>set_user_data_path()</code> 指定一个专用目录，让登录信息留在那里。</p></div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能说出 <code>new_context()</code> 解决什么问题。<br>② 知道账密代理的格式 <code>http://账号:密码@IP:端口</code>。<br>③ 知道上下文要 <code>new_tab()</code> 之后窗口才出现。</p></div>
+
+<h2 class="chap" id="c22"><span class="num dp">22</span> 与 Selenium / Playwright / requests 迁移</h2>
+<p class="chap-lead">如果你已经会别的库，这一章是「翻译表」。5.0 的入口变了，迁移时要顺手改掉 Page 对象。</p>
+
+<table class="kv">
+<tr><th>Selenium 写法</th><th>DrissionPage 写法</th></tr>
+<tr><td><code>WebDriverWait(driver).until(ec.presence_of_element_located((By.XPATH, '//*[contains(text(),"some text")]')))</code></td><td><code>tab('some text')</code></td></tr>
+<tr><td><code>driver.switch_to.window(driver.window_handles[0])</code></td><td><code>tab = browser.latest_tab</code></td></tr>
+<tr><td><code>Select(element).select_by_visible_text('text')</code></td><td><code>element.select('text')</code></td></tr>
+<tr><td><code>ActionChains(driver).drag_and_drop(ele1, ele2).perform()</code></td><td><code>ele1.drag_to(ele2)</code></td></tr>
+<tr><td><code>driver.execute_script("window.scrollTo(...)")</code></td><td><code>tab.scroll.to_bottom()</code></td></tr>
+<tr><td><code>options = webdriver.ChromeOptions(); options.add_argument("--headless")</code></td><td><code>options = ChromiumOptions().headless()</code></td></tr>
+<tr><td><code>execute_script('return arguments[0].shadowRoot', element)</code></td><td><code>shadow_element = element.sr</code></td></tr>
+<tr><td>取 xpath 属性/文本节点很绕</td><td><code>element('xpath://div[@id="div_id"]/@class')</code></td></tr>
+</table>
+
+<h3>22.1 接管已有对象</h3>
+<div class="cmd file"><div class="cmd-bar"><span>docking.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage.common <span class="k">import</span> from_selenium, from_playwright, By
+
+page = from_selenium(driver)        <span class="c"># 把 selenium 的 WebDriver 接过来</span>
+page2 = from_playwright(pw_page)    <span class="c"># 把 playwright 的 Page / Browser 接过来</span>
+tab.ele((By.ID, <span class="s">'kw'</span>))           <span class="c"># By 兼容 selenium 的定位元组写法</span></pre></div>
+<div class="warn"><span class="card-t">5.0 迁移注意</span><p>官方定义 <code>from_selenium()</code> / <code>from_playwright()</code> 返回的是 <code>ChromiumPage</code>，而 5.0 删除了这个类。用 5.0 时建议不要依赖这两个函数的返回对象，直接改成 <code>Chromium()</code> 重新连接浏览器；官网 5.0 说明里也提到「修复从 playwright 对象迁移时的问题」，但对接函数的返回类型文档未更新。</p></div>
+
+<h3>22.2 与 requests 对照</h3>
+<table class="kv">
+<tr><th>requests</th><th>DrissionPage（SessionPage）</th></tr>
+<tr><td><code>r = requests.get(url, headers=headers)</code></td><td><code>page.get(url)</code>（自带默认 headers）</td></tr>
+<tr><td><code>etree.HTML(r.text).xpath('//h1')[0].text</code></td><td><code>page('tag:h1').text</code></td></tr>
+<tr><td>手动 <code>iter_content()</code> 写文件</td><td><code>page.download(url, save_path, 'img')</code></td></tr>
+<tr><td>手动维护 Session / cookies</td><td><code>page.session</code> 可取原生 Session</td></tr>
+</table>
+
+<div class="check"><span class="card-t">检查点</span><p>能把一段 Selenium 的元素等待 + 点击，改写成 <code>tab('text').click()</code> 这类短写法。</p></div>
+
+<h2 class="chap" id="c23"><span class="num dp">23</span> 完整实战一：登录并抓数据</h2>
+<p class="chap-lead">把前面学的东西串起来：启动浏览器 → 登录 → 切换模式 → 翻页抓标题 → 存文件。每一步都有检查点。</p>
+
+<div class="step">
+  <div class="step-h"><span class="step-n">1</span> 先看清目标，不要一上来就写一堆代码</div>
+  <p>目标站点用官网示例里的 Gitee 登录页做演示。真实项目中把网址、账号、密码换成你自己的；<b>不要把密码写死在代码里提交到网上</b>。</p>
+  <p>打开浏览器手工看一遍：账号输入框的 <span class="kw" data-w="id"><code>id</code></span>、密码输入框的 <span class="kw" data-w="id"><code>id</code></span>、登录按钮的定位符。官网示例里分别是 <code>#user_login</code>、<code>#user_password</code>、<code>@value=登 录</code>。</p>
+  <div class="check"><span class="card-t">检查点</span><p>能在浏览器 F12 里找到这三个元素的属性，就算这一步完成。</p></div>
+</div>
+
+<div class="step">
+  <div class="step-h"><span class="step-n">2</span> 写完整脚本</div>
+  <div class="cmd file"><div class="cmd-bar"><span>login_demo.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+
+browser = Chromium()                       <span class="c"># 启动浏览器</span>
+tab = browser.latest_tab                   <span class="c"># 取标签页</span>
+
+res = tab.get(<span class="s">'https://gitee.com/login'</span>)   <span class="c"># 访问登录页</span>
+<span class="k">print</span>(<span class="s">'打开登录页：'</span>, res.ok, res.status)   <span class="c"># 5.0：读 NavResult 的 ok / status</span>
+
+tab.ele(<span class="s">'#user_login'</span>).input(<span class="s">'你的账号'</span>)
+<span class="c"># #user_login = 按 id 找账号框；input = 输入</span>
+tab.ele(<span class="s">'#user_password'</span>).input(<span class="s">'你的密码'</span>)
+tab.ele(<span class="s">'@value=登 录'</span>).click()         <span class="c"># @value= = 按 value 属性找按钮；click = 点击</span>
+
+tab.wait.url_change(<span class="s">'login'</span>, exclude=<span class="k">True</span>)
+<span class="c"># 等网址不再是 login 页；exclude=True = 「不包含 login」才算成功</span>
+<span class="k">print</span>(<span class="s">'登录后网址：'</span>, tab.url)
+
+tab.change_mode()                         <span class="c"># 切到 s 模式，带着 cookies 高速翻页</span>
+
+lines = []
+<span class="c"># lines = 空列表，用来攒结果；[] 造一个空列表</span>
+<span class="k">for</span> i <span class="k">in</span> <span class="k">range</span>(1, 4):                  <span class="c"># range(1,4) = 1、2、3</span>
+    tab.get(<span class="s">f'https://gitee.com/explore/all?page={i}'</span>)
+    <span class="c"># f'' = 格式化字符串；{i} 换成当前页码</span>
+    titles = tab.eles(<span class="s">'t:h3'</span>).get.texts()
+    <span class="c"># eles = 找所有 h3；.get.texts() = 一次拿一批文字</span>
+    <span class="k">for</span> t <span class="k">in</span> titles:
+        lines.append(<span class="s">f'{i}\t{t}'</span>)     <span class="c"># append = 往列表末尾加一项；\t = 制表符</span>
+    <span class="k">print</span>(<span class="s">f'第 {i} 页拿到 {len(titles)} 条'</span>)  <span class="c"># len() = 列表长度</span>
+
+<span class="k">with</span> <span class="k">open</span>(<span class="s">'result.txt'</span>, <span class="s">'w'</span>, encoding=<span class="s">'utf-8'</span>) <span class="k">as</span> f:
+    <span class="c"># with open = 打开文件并自动关闭；'w' = 写入；encoding = 编码</span>
+    f.write(<span class="s">'\n'</span>.join(lines))         <span class="c"># '\n'.join = 用换行把列表拼成一大段文字</span>
+
+<span class="k">print</span>(<span class="s">'已保存 result.txt，共'</span>, len(lines), <span class="s">'条'</span>)
+browser.quit()                            <span class="c"># 收尾：关浏览器</span></pre></div>
+</div>
+
+<div class="step">
+  <div class="step-h"><span class="step-n">3</span> 运行并逐步检查</div>
+  <div class="cmd"><div class="cmd-bar"><span>终端</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">python</span> login_demo.py</pre></div>
+  <div class="out"><div class="out-bar">你会看到什么（示例）</div><pre>打开登录页： True 200
+登录后网址： https://gitee.com/
+第 1 页拿到 20 条
+第 2 页拿到 20 条
+第 3 页拿到 20 条
+已保存 result.txt，共 60 条</pre><div class="trans"><b>检查点：</b>① 第一行必须是 <code>True 200</code>；② 登录后网址里不再有 <code>login</code>；③ 当前文件夹里出现 <code>result.txt</code>，打开能看到 60 行文字。</div></div>
+</div>
+
+<div class="warn">
+  <span class="card-t">跑不通时按这个顺序查</span>
+  <p>① <code>True 200</code> 没出现 → 网络或网址问题，检查 <code>res.status</code> 里的错误文本。<br>
+  ② 卡在输入账号 → 用 F12 确认 <code>#user_login</code> 还是不是这个 id；页面改版最常见。<br>
+  ③ 登录后网址没变 → 账号密码不对或有验证码，先用手工登录一次确认流程。<br>
+  ④ 切模式后内容为空 → s 模式不执行 js，若列表是 js 渲染的，就别切模式，留在 d 模式抓。<br>
+  ⑤ 文件是乱码 → <code>open()</code> 里已写 <code>encoding='utf-8'</code>，用支持 UTF-8 的编辑器打开。</p>
+</div>
+
+<div class="check"><span class="card-t">检查点</span><p>能独立跑通「登录 → 切模式 → 翻页 → 存文件」完整链路，并说得清每一步为什么要这么做，本实战就完成了。</p></div>
+
+<h2 class="chap" id="c24"><span class="num dp">24</span> 完整实战二：监听接口并下载文件</h2>
+<p class="chap-lead">很多网站的数据不在 HTML 里，而是 js 悄悄调接口拿的。这一章用「监听」直接拿接口数据，再把对应文件下载下来。</p>
+
+<div class="fig">
+<svg viewBox="0 0 880 180" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="180" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">实战二流程</text>
+  <rect class="box" x="18" y="46" width="200" height="70" rx="11" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tm" x="30" y="70">listen.start('api/')</text><text class="ts" x="30" y="92">① 先开监听</text>
+  <rect class="box" x="236" y="46" width="200" height="70" rx="11" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="248" y="70">tab.get(url)</text><text class="ts" x="248" y="92">② 触发请求</text>
+  <rect class="box" x="454" y="46" width="200" height="70" rx="11" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="tm" x="466" y="70">listen.steps()</text><text class="ts" x="466" y="92">③ 逐条读 JSON</text>
+  <rect class="box" x="672" y="46" width="190" height="70" rx="11" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="tm" x="684" y="70">download(url)</text><text class="ts" x="684" y="92">④ 下载文件</text>
+  <path d="M220 82 L234 82 M438 82 L452 82 M656 82 L670 82" stroke="#2563eb" stroke-width="2" marker-end="url(#arC24)"/>
+  <text class="ts" x="18" y="146">关键顺序：先 <b>start</b> 再 <b>get</b>；反过来一个包也抓不到。</text>
+  <text class="ts" x="18" y="172">5.0 可以先用 set_method.GET(only=True) 过滤，再用 by_browser() 下载难处理的文件。</text>
+  <defs><marker id="arC24" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#2563eb"/></marker></defs>
+</svg>
+<figcaption><b>监听 + 下载</b>：不解析页面，直接拿接口返回的 JSON。</figcaption>
+</div>
+
+<div class="step">
+  <div class="step-h"><span class="step-n">1</span> 先找出接口地址</div>
+  <p>打开目标网页 → 按 F12 → 切到「网络 / Network」→ 刷新页面 → 看那些返回 JSON 的请求，把网址里<b>有辨识度的一段</b>记下来（比如 <code>api/getlist</code>）。监听时用这一段当目标即可，不用写完整网址。</p>
+  <div class="check"><span class="card-t">检查点</span><p>手上有一个字符串，能唯一认出那个接口请求。</p></div>
+</div>
+
+<div class="step">
+  <div class="step-h"><span class="step-n">2</span> 写脚本</div>
+  <div class="cmd file"><div class="cmd-bar"><span>listen_download.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium, SessionPage
+
+KEY = <span class="s">'api/getlist'</span>        <span class="c"># KEY = 常量：接口网址里独有的那一段；大写表示「不要改」</span>
+
+browser = Chromium()
+tab = browser.latest_tab
+tab.listen.set_method.GET(only=<span class="k">True</span>)  <span class="c"># 仅 5.0：只听 GET 请求</span>
+tab.listen.start(KEY)                    <span class="c"># ① 先开监听</span>
+tab.get(<span class="s">'https://example.com/list'</span>)  <span class="c"># ② 再访问，触发请求</span>
+
+urls = []                               <span class="c"># 空列表，攒文件网址</span>
+<span class="k">for</span> packet <span class="k">in</span> tab.listen.steps(count=5):
+    <span class="c"># steps = 一条条取数据包，最多 5 条</span>
+    body = packet.response.body          <span class="c"># JSON 会自动变成 dict（字典）</span>
+    <span class="k">print</span>(<span class="s">'抓到：'</span>, packet.url)
+    <span class="k">if</span> <span class="k">isinstance</span>(body, <span class="k">dict</span>):       <span class="c"># isinstance = 判断是不是字典类型</span>
+        <span class="k">for</span> row <span class="k">in</span> body.get(<span class="s">'data'</span>, []):
+            <span class="c"># .get('data', []) = 取键 data，没有就给空列表</span>
+            u = row.get(<span class="s">'file_url'</span>)   <span class="c"># 假设每条数据里有文件网址字段</span>
+            <span class="k">if</span> u:
+                urls.append(u)           <span class="c"># append = 加到列表末尾</span>
+
+<span class="k">print</span>(<span class="s">'共找到文件：'</span>, len(urls))
+page = SessionPage()                   <span class="c"># 下载不必经过浏览器，用 SessionPage 更快</span>
+<span class="k">for</span> u <span class="k">in</span> urls:
+    <span class="k">print</span>(page.download(u, <span class="s">r'D:\downloads'</span>))
+    <span class="c"># download = 直接下载；返回 ('success', 路径)</span>
+
+browser.quit()</pre></div>
+</div>
+
+<div class="step">
+  <div class="step-h"><span class="step-n">3</span> 运行并检查</div>
+  <div class="cmd"><div class="cmd-bar"><span>终端</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">python</span> listen_download.py</pre></div>
+  <div class="out"><div class="out-bar">你会看到什么（示例）</div><pre>抓到： https://example.com/api/getlist?page=1
+共找到文件： 3
+('success', 'D:\\downloads\\a.pdf')
+('success', 'D:\\downloads\\b.pdf')
+('success', 'D:\\downloads\\c.pdf')</pre><div class="trans"><b>检查点：</b>① 至少打印一行「抓到」；② <code>D:\downloads</code> 里能看到下载好的文件。</div></div>
+</div>
+
+<div class="warn">
+  <span class="card-t">常见失败原因</span>
+  <p>① 一行「抓到」都没有 → 把 <code>start()</code> 挪到 <code>get()</code> 前面；或把目标字符串改短一点（只留域名或 <code>api</code>）。<br>
+  ② <code>body</code> 是字符串不是字典 → 接口返回的不是标准 JSON，用 <code>print(type(body), body[:200])</code> 看一眼真实内容。<br>
+  ③ 下载报 403 → 接口需要登录态或请求头，改用 <code>tab.set.headers(...)</code> 或直接让浏览器下载（<code>download.by_browser()</code>）。<br>
+  ④ 文件是 PDF 但浏览器总是打开预览 → 启动时加 <code>ChromiumOptions().disable_pdf_preview()</code>（仅 5.0）。</p>
+</div>
+
+<h3>24.1 5.0 版：主动触发浏览器下载</h3>
+<div class="cmd file"><div class="cmd-bar"><span>by_browser.py</span><span>仅 5.0</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium, ChromiumOptions
+
+co = ChromiumOptions().disable_pdf_preview()
+tab = Chromium(co).latest_tab
+mission = tab.download.by_browser(<span class="s">'https://example.com/abc.pdf'</span>, rename=<span class="s">'报告'</span>)
+<span class="c"># by_browser = 主动让浏览器下载；rename = 重命名</span>
+<span class="k">print</span>(mission.wait())   <span class="c"># wait() = 等完成并拿到最终路径</span></pre></div>
+
+<div class="check"><span class="card-t">检查点</span><p>能说出「先 start 再 get」的原因，并能独立把抓到的 JSON 字段变成下载任务。</p></div>
+
+<h2 class="chap" id="c25"><span class="num dp">25</span> 加速、异常、打包与工具</h2>
+<p class="chap-lead">把程序从「能跑」变成「能交付」：更快、更稳、能打包给别人用。</p>
+
+<h3>25.1 加速：静态副本</h3>
+<div class="cmd file"><div class="cmd-bar"><span>accelerate.py</span><span>写进文件</span></div><pre>body = tab.ele(<span class="s">'t:body'</span>)         <span class="c"># 只跟浏览器通信一次，拿最外层容器</span>
+links = body.s_eles(<span class="s">'t:a'</span>)        <span class="c"># s_eles = 转成本地静态副本，之后读数据不再通信</span>
+<span class="k">print</span>(len(links))                 <span class="c"># 官方实测：1613 个链接 4.06s → 0.28s</span></pre></div>
+<div class="tip"><span class="card-t">三条原则</span><p>① 一页只转一次最高级容器；② 静态副本只能读，不能点；③ 反复调 <code>s_ele()</code> 反而更慢。</p></div>
+
+<h3>25.2 异常：让错误说人话</h3>
+<div class="cmd file"><div class="cmd-bar"><span>errors.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium
+<span class="k">from</span> DrissionPage.errors <span class="k">import</span> ElementNotFoundError, BrowserConnectError
+<span class="c"># errors = 异常模块；把可能要处理的异常类导入进来</span>
+
+<span class="k">try</span>:
+    tab = Chromium().latest_tab
+    ele = tab.ele(<span class="s">'#not-exist'</span>, timeout=3)
+    <span class="k">print</span>(ele.text)
+<span class="k">except</span> ElementNotFoundError:
+    <span class="c"># except = 捕获这种错；找不到元素时会跳到这里</span>
+    <span class="k">print</span>(<span class="s">'元素没找到，检查定位符或页面是否改版'</span>)
+<span class="k">except</span> BrowserConnectError:
+    <span class="k">print</span>(<span class="s">'浏览器连不上，检查路径和端口'</span>)</pre></div>
+<table class="kv">
+<tr><th>异常类</th><th>什么时候抛</th></tr>
+<tr><td><code>ElementNotFoundError</code></td><td>找不到元素（需先打开 Settings 抛错开关）</td></tr>
+<tr><td><code>BrowserConnectError</code></td><td>连不上浏览器</td></tr>
+<tr><td><code>PageDisconnectedError</code> / <code>ContextLostError</code></td><td>页面 / 上下文丢失</td></tr>
+<tr><td><code>ElementLostError</code> / <code>NoRectError</code></td><td>元素失效 / 没有位置尺寸</td></tr>
+<tr><td><code>WaitTimeoutError</code> / <code>CDPError</code></td><td>等待超时 / CDP 通信出错</td></tr>
+<tr><td><code>LocatorError</code> / <code>UnknownError</code></td><td>定位符写错 / 未知错误</td></tr>
+</table>
+
+<h3>25.3 打包成 exe</h3>
+<div class="warn">
+  <span class="card-t">打包最容易忘的一件事：配置文件</span>
+  <p>老版本打包后常报「ini 不存在」，4.0.4.1 起已修复。稳妥做法仍是二选一：<br>
+  ① <b>带配置</b>：<code>configs_to_here()</code> 生成 <code>dp_configs.ini</code>，和 exe 放同一目录，代码里用 <code>ChromiumOptions(ini_path=r'.\configs.ini')</code>；<br>
+  ② <b>不带配置</b>：全部写进代码 —— <code>ChromiumOptions(read_file=False)</code>、<code>SessionOptions(read_file=False)</code>，并且用不到的模式传 <code>session_options=False</code>。</p>
+</div>
+<div class="cmd file"><div class="cmd-bar"><span>pack.py</span><span>写进文件</span></div><pre><span class="k">from</span> DrissionPage <span class="k">import</span> Chromium, ChromiumOptions
+
+co = ChromiumOptions(read_file=<span class="k">False</span>)
+<span class="c"># read_file=False = 完全不读 ini，避免打包后找不到配置</span>
+co.set_browser_path(<span class="s">r'.\Chrome\chrome.exe'</span>)
+<span class="c"># 用相对路径，把绿色版浏览器放在 exe 同目录，换电脑也能跑</span>
+browser = Chromium(addr_or_opts=co, session_options=<span class="k">False</span>)
+<span class="c"># session_options=False = 不用 s 模式，省掉那份配置</span></pre></div>
+<div class="cmd"><div class="cmd-bar"><span>终端</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">pip</span> install pyinstaller
+<span class="c"># pyinstaller = 把 Python 程序打包成 exe 的工具</span>
+<span class="p">$</span> <span class="k">pyinstaller</span> -F pack.py
+<span class="c"># -F = --onefile 打成单个 exe 文件</span></pre></div>
+<div class="out"><div class="out-bar">你会看到什么</div><pre>... completed successfully.
+生成文件在 dist\pack.exe</pre><div class="trans"><b>检查点：</b>把 <code>Chrome</code> 文件夹和 exe 放一起，双击能启动浏览器就成功。建议在干净虚拟环境里只装必要库（只装 DrissionPage 时 exe 约 14 MB）。</div></div>
+
+<h3>25.4 实用工具速查</h3>
+<table class="kv">
+<tr><th>工具</th><th>英文原意</th><th>作用</th></tr>
+<tr><td><code>make_session_ele(html)</code></td><td>make session element 造静态元素</td><td>把一段 HTML 字符串变成可定位的静态元素</td></tr>
+<tr><td><code>get_blob(page, url)</code></td><td>get blob 取二进制大对象</td><td>取 blob 资源（仅静态资源，不支持流媒体）</td></tr>
+<tr><td><code>wait_until(func, timeout=10)</code></td><td>wait until 等到……为止</td><td>反复调用函数直到返回值不为假，超时抛错</td></tr>
+<tr><td><code>tree(ele)</code></td><td>tree 树</td><td>打印 DOM 结构，排查定位符时好用</td></tr>
+<tr><td><code>Keys.ENTER / Keys.CTRL_A</code></td><td>keys 按键</td><td>特殊键常量</td></tr>
+<tr><td><code>By.ID / By.XPATH</code></td><td>by 通过……</td><td>兼容 selenium 的定位元组</td></tr>
+<tr><td><code>configs_to_here()</code></td><td>configs to here 配置放这儿</td><td>把 ini 复制到当前目录</td></tr>
+<tr><td><code>from_selenium(driver)</code> / <code>from_playwright(page)</code></td><td>from 从……接管</td><td>接管其它库已打开的浏览器（5.0 注意返回类型，见第 22 章）</td></tr>
+</table>
+
+<div class="check"><span class="card-t">检查点</span><p>① 知道什么时候用 <code>s_eles()</code>。<br>② 会用 <code>try / except</code> 兜住找不到元素。<br>③ 知道打包时 <code>read_file=False</code> 的用意。</p></div>
+
+<h2 class="chap" id="c26"><span class="num dp">26</span> 常见问题与排错</h2>
+<p class="chap-lead">把官网 QandA 和实战中最常遇到的报错集中在这里，按症状查。</p>
+
+<table class="kv">
+<tr><th>症状</th><th>原因</th><th>怎么修</th></tr>
+<tr><td><code>BrowserConnectError</code> / 浏览器起不来</td><td>找不到浏览器、端口被占、上次无头没关</td><td>用 <code>dp -p</code> 设路径；结尾加 <code>browser.quit()</code>；或 <code>co.headless(False)</code> 关掉旧无头再启</td></tr>
+<tr><td>程序结束了浏览器还开着</td><td>官方行为：不自动关闭</td><td>显式调用 <code>browser.quit()</code>；<code>tab.close()</code> 只关标签页</td></tr>
+<tr><td>一直弹出「恢复页面 / 保存密码」气泡</td><td>Chrome 默认提示</td><td><code>co.set_pref('credentials_enable_service', False)</code>、<code>co.set_argument('--hide-crash-restore-bubble')</code></td></tr>
+<tr><td>点元素报「该元素没有位置及大小」</td><td>定位到了隐藏元素，或元素确实无尺寸</td><td>先检查定位符是否命中同名元素；确无尺寸用 <code>ele.click(by_js=True)</code>（简写 <code>click('js')</code>）</td></tr>
+<tr><td>找不到元素、代码却不报错</td><td>返回 <span class="kw" data-w="NoneElement"><code>NoneElement</code></span>，<span class="kw" data-w="if"><code>if</code></span> 判断为假</td><td>用 <code>if not ele:</code> 判断；调试时开 <code>Settings.set_raise_when_ele_not_found(True)</code></td></tr>
+<tr><td>文本里有 <code>&amp;nbsp;</code> 匹配不上</td><td>HTML 实体没转义</td><td>写成 <code>\u00A0</code>；<code>&amp;gt;</code> 写 <code>\u003E</code>（附录 A 有对照表）</td></tr>
+<tr><td>无头模式「退不出来」</td><td>上次无头进程被继续接管</td><td>结尾 <code>quit()</code>；或 <code>co.headless(False)</code> 重启一次有头窗口</td></tr>
+<tr><td>打包后报「找不到配置」</td><td>ini 没跟 exe 放一起</td><td><code>configs_to_here()</code> 或 <code>ChromiumOptions(read_file=False)</code></td></tr>
+<tr><td>切换模式后数据为空</td><td>s 模式不执行 js，动态渲染内容没了</td><td>留在 d 模式，或改用监听直接拿接口数据</td></tr>
+<tr><td>代码里写 <code>ChromiumPage()</code> 报 ImportError</td><td>装的是 5.0，Page 对象已删除</td><td>改成 <code>Chromium().latest_tab</code>（附录 C 有对照表）</td></tr>
+<tr><td><code>get()</code> 用 <code>if tab.get(url):</code> 判断失效</td><td>5.0 返回 <span class="kw" data-w="NavResult"><code>NavResult</code></span> 而非 bool</td><td>改成 <code>if tab.get(url).ok:</code></td></tr>
+</table>
+
+<div class="warn">
+  <span class="card-t">Windows 专属排查清单</span>
+  <p>① <b>路径</b>：一律用 <code>r'D:\xxx'</code> 或正斜杠，避免 <code>\t</code> <code>\n</code> 被当转义。<br>
+  ② <b>端口</b>：默认 <code>127.0.0.1:9222</code>，多开换 9333 / 9111；端口被占时换一个或关掉旧浏览器。<br>
+  ③ <b>用户目录</b>：新版 Chrome 不让直接用系统用户文件夹，5.0 的 <code>use_system_user_path()</code> 会复制一份；要稳定保留登录态，用 <code>set_user_data_path()</code> 指定专用目录。<br>
+  ④ <b>快捷方式加参数</b>：右键 → 属性 → 目标末尾空一格加 <code>--remote-debugging-port=9333</code>，加之前先关掉所有 Chrome 窗口。<br>
+  ⑤ <b>中文乱码</b>：写文件加 <code>encoding='utf-8'</code>；终端乱码可试 <code>chcp 65001</code>。<br>
+  ⑥ <b>窗口隐藏</b>：<code>set.window.hide()</code> 只支持 Windows 且需 <code>pip install pypiwin32</code>。</p>
+</div>
+
+<div class="tip"><span class="card-t">排查问题的固定顺序</span><p>① 先看报错最后一行（真正的错误类型）；② 确认版本号（<code>python -c "import DrissionPage; print(DrissionPage.__version__)"</code>）；③ 确认定位符（<code>print(ele)</code> 看是不是 <span class="kw" data-w="NoneElement"><code>NoneElement</code></span>）；④ 确认顺序（监听是不是先 start、配置是不是在启动前设）；⑤ 再查网络和端口。<b>90% 的问题都在这五步里。</b></p></div>
+
+<div class="check"><span class="card-t">检查点</span><p>看到报错能先分清是「环境问题 / 版本问题 / 定位符问题 / 顺序问题」中的哪一类，就算学完了。</p></div>
+
+<h2 class="chap" id="apxa"><span class="num dp">A</span> 附录 A 定位符速查表</h2>
+<p class="chap-lead">写定位符时回来查这张表就够了。表中「写法」一列可以直接复制到 <code>tab.ele('...')</code> 的引号里。</p>
+
+<h3>A.1 前缀</h3>
+<table class="kv">
+<tr><th>写法</th><th>含义</th><th>示例</th></tr>
+<tr><td><code>#abc</code></td><td>id 等于 abc（必须在句首单独用）</td><td><code>#user_login</code></td></tr>
+<tr><td><code>.abc</code></td><td>class 含 abc（必须在句首单独用）</td><td><code>.item</code></td></tr>
+<tr><td><code>@name=value</code></td><td>属性 name 等于 value</td><td><code>@name=wd</code></td></tr>
+<tr><td><code>@name</code></td><td>存在该属性</td><td><code>@placeholder</code></td></tr>
+<tr><td><code>@!name</code></td><td>不存在该属性</td><td><code>@!class</code></td></tr>
+<tr><td><code>tag:div</code> / <code>t:div</code></td><td>标签名</td><td><code>tag:input@type=file</code></td></tr>
+<tr><td><code>text=登录</code> / <span class="kw" data-w="tx:"><code>tx:</code></span></td><td>文本包含</td><td><code>text=百度一下</code></td></tr>
+<tr><td><code>css:.a &gt; .b</code> / <span class="kw" data-w="c:"><code>c:</code></span></td><td>CSS 选择器</td><td><code>css:div.content</code></td></tr>
+<tr><td><code>xpath://div</code> / <span class="kw" data-w="x:"><code>x:</code></span></td><td>XPath 路径</td><td><code>x://div[@id="a"]</code></td></tr>
+<tr><td><code>ax:@name=主导航@role=navigation</code></td><td><b>仅 5.0</b> 无障碍语义</td><td><code>ax:@role=link</code></td></tr>
+<tr><td>不写前缀（5.0 自动匹配）</td><td>依次尝试 xpath / css selector → 文本</td><td><code>//div[@id="abc"]</code></td></tr>
+</table>
+
+<h3>A.2 匹配符</h3>
+<table class="kv">
+<tr><th>符号</th><th>英文</th><th>含义</th><th>示例</th></tr>
+<tr><td><span class="kw" data-w="="><code>=</code></span></td><td>equal 相等</td><td>完全相等</td><td><code>@id=row1</code></td></tr>
+<tr><td><span class="kw" data-w=":"><code>:</code></span></td><td>contains 包含</td><td>包含这段字符</td><td><code>@id:ow</code></td></tr>
+<tr><td><code>^</code></td><td>starts with 开头</td><td>以它开头</td><td><code>@id^row</code></td></tr>
+<tr><td><code>$</code></td><td>ends with 结尾</td><td>以它结尾</td><td><code>@id$w1</code></td></tr>
+<tr><td><code>@@</code></td><td>and 与</td><td>多条件同时满足</td><td><code>tag:li@@text():前沿技术</code></td></tr>
+<tr><td><code>@|</code></td><td>or 或</td><td>多条件满足其一</td><td><code>@|id=row1@|id=row2</code></td></tr>
+<tr><td><code>@!</code></td><td>not 非</td><td>否定 / 无此属性</td><td><code>@!id=one</code></td></tr>
+<tr><td><code>@text()</code> / <code>@tx()</code></td><td>text 文本属性</td><td>把文本当属性参与组合</td><td><code>@@text()=第三行</code></td></tr>
+<tr><td><code>@tag()</code> / <code>@t()</code></td><td>tag 标签属性</td><td>把标签名当属性用</td><td><code>@@tag()=div</code></td></tr>
+</table>
+
+<h3>A.3 特殊字符与限制</h3>
+<table class="kv">
+<tr><th>情况</th><th>怎么处理</th></tr>
+<tr><td>文本含 <code>&amp;nbsp;</code></td><td>写成 <code>\u00A0</code></td></tr>
+<tr><td>文本含 <code>&amp;gt;</code></td><td>写成 <code>\u003E</code></td></tr>
+<tr><td>文本含 <code>@@</code> <code>@|</code> <code>@!</code></td><td>改用 XPath</td></tr>
+<tr><td>属性含特殊字符</td><td>改用 CSS 选择器并用 <code>\</code> 转义</td></tr>
+<tr><td><code>@@</code> 与 <code>@|</code></td><td><b>不能同时出现</b>在同一个定位符里</td></tr>
+<tr><td><span class="kw" data-w="tag:"><code>tag:</code></span> / <code>css:</code> / <code>xpath:</code></td><td>这三种不支持 <code>^</code> <code>$</code>；<code>tag()</code> 一律按 <span class="kw" data-w="="><code>=</code></span> 处理</td></tr>
+</table>
+
+<h3>A.4 简写对照</h3>
+<table class="kv">
+<tr><th>完整</th><th>简写</th><th>完整</th><th>简写</th></tr>
+<tr><td><code>tab.ele(loc)</code></td><td><code>tab(loc)</code></td><td><span class="kw" data-w="tag:"><code>tag:</code></span></td><td><span class="kw" data-w="t:"><code>t:</code></span></td></tr>
+<tr><td><span class="kw" data-w="text:"><code>text:</code></span></td><td><span class="kw" data-w="tx:"><code>tx:</code></span></td><td><code>xpath:</code></td><td><span class="kw" data-w="x:"><code>x:</code></span></td></tr>
+<tr><td><code>css:</code></td><td><span class="kw" data-w="c:"><code>c:</code></span></td><td><code>@text()</code></td><td><code>@tx()</code></td></tr>
+<tr><td><code>@tag()</code></td><td><code>@t()</code></td><td><code>ele.shadow_root</code></td><td><code>ele.sr</code></td></tr>
+</table>
+
+<h2 class="chap" id="apxb"><span class="num dp">B</span> 附录 B 完整 API 索引</h2>
+<p class="chap-lead">按对象分组列出全书用到的 API，方便反查。<b>标「5」的是 5.0 新增或改名</b>。</p>
+
+<h3>B.1 浏览器与上下文</h3>
+<table class="kv">
+<tr><th>对象</th><th>属性 / 方法</th></tr>
+<tr><td><span class="kw" data-w="Chromium"><code>Chromium</code></span></td><td><span class="kw" data-w="latest_tab"><code>latest_tab</code></span> <code>tab_ids</code> <code>new_tab()</code> <span class="pill">5</span> <code>new_context()</code> <code>get_tab()</code> <code>get_tabs()</code> <code>activate_tab()</code> <code>close_tabs()</code> <code>quit()</code> <code>reconnect()</code> <code>clear_cache()</code> <code>cookies()</code> <code>process_id</code> <code>states.is_alive</code> <code>wait.new_tab()</code> <code>set.*</code> <span class="pill">5</span> <code>set.perm.*</code> <span class="pill">5</span> <code>listen.start()</code> <span class="pill">5</span> <code>command_line</code> <span class="pill">5</span> <code>states.is_guest</code></td></tr>
+<tr><td><span class="kw" data-w="BrowserContext"><code>BrowserContext</code></span> <span class="pill">5</span></td><td><code>new_tab()</code> <span class="kw" data-w="latest_tab"><code>latest_tab</code></span> <code>tab_ids</code> <code>get_tab()</code> <code>get_tabs()</code> <code>cookies()</code> <code>set.cookies()</code> <code>set.cookies.clear()</code> <code>set.perm.*()</code> <code>wait.new_tab()</code> <code>close()</code></td></tr>
+<tr><td><span class="kw" data-w="ChromiumOptions"><code>ChromiumOptions</code></span></td><td><code>headless()</code> <code>new_env()</code> <code>incognito()</code> <code>no_imgs()</code> <code>no_js()</code> <code>mute()</code> <code>set_browser_path()</code> <code>set_local_port()</code> <code>set_address()</code> <code>auto_port()</code> <code>set_user_data_path()</code> <code>use_system_user_path()</code> <code>set_cache_path()</code> <code>set_proxy()</code> <code>set_download_path()</code> <code>set_argument()</code> <code>set_pref()</code> <code>set_flag()</code> <code>add_extension()</code> <code>set_user_agent()</code> <code>save()</code> <code>save_to_default()</code> <span class="pill">5</span> <code>use_edge()</code> <span class="pill">5</span> <code>disable_pdf_preview()</code> <span class="pill">5</span> <code>close_cross_origin()</code></td></tr>
+</table>
+
+<h3>B.2 标签页与页面</h3>
+<table class="kv">
+<tr><th>分类</th><th>API</th></tr>
+<tr><td>访问</td><td><code>get()</code> <span class="pill">5</span> <code>NavResult(ok/status/url/headers/request/Response)</code> <code>post()</code> <code>back()</code> <code>forward()</code> <code>refresh()</code> <code>stop_loading()</code></td></tr>
+<tr><td>查找</td><td><code>ele()</code> <code>eles()</code> <code>s_ele()</code> <code>s_eles()</code> <code>find()</code> <code>active_ele</code> <code>get_frame()</code> <code>get_frames()</code></td></tr>
+<tr><td>信息</td><td><span class="kw" data-w="html"><code>html</code></span> <code>json</code> <code>title</code> <code>url</code> <code>user_agent</code> <code>tab_id</code> <code>cookies()</code> <code>session_storage()</code> <code>local_storage()</code> <code>save()</code> <code>states.ready_state</code> <code>rect.*</code></td></tr>
+<tr><td>等待</td><td><code>wait.load_start()</code> <code>wait.doc_loaded()</code> <code>wait.eles_loaded()</code> <code>wait.ele_displayed()</code> <code>wait.ele_hidden()</code> <code>wait.ele_deleted()</code> <code>wait.title_change()</code> <code>wait.url_change()</code> <code>wait.download_begin()</code> <code>wait.downloads_done()</code> <code>wait.upload_paths_inputted()</code> <code>wait.alert_closed()</code></td></tr>
+<tr><td>交互</td><td><code>run_js()</code> <code>run_js_loaded()</code> <code>run_async_js()</code> <code>run_cdp()</code> <code>scroll.*</code> <code>handle_alert()</code> <code>set.headers()</code> <code>set.user_agent()</code> <code>set.cookies()</code> <code>set.window.*</code> <code>set.load_mode.*</code> <code>disconnect()</code> <code>reconnect()</code> <code>close()</code> <span class="pill">5</span> <code>new_ele()</code> <span class="pill">5</span> <code>activate()</code> <span class="pill">5</span> <code>set.show_trail()</code></td></tr>
+<tr><td>截图录像</td><td><code>get_screenshot()</code> <code>screencast.set_mode.*()</code> <code>screencast.start()</code> <code>screencast.stop()</code> <code>console.start()</code> <code>console.wait()</code> <code>console.steps()</code></td></tr>
+<tr><td>监听</td><td><code>listen.start()</code> <code>listen.set_targets()</code> <code>listen.wait()</code> <code>listen.steps()</code> <code>listen.wait_silent()</code> <code>listen.pause()</code> <code>listen.resume()</code> <code>listen.stop()</code> <span class="pill">5</span> <code>listen.set_method.*()</code> <span class="pill">5</span> <code>listen.set_res_type.*()</code> <span class="pill">5</span> <code>listen.browser_steps()</code></td></tr>
+<tr><td>下载</td><td><code>set.download_path()</code> <code>set.download_file_name()</code> <code>set.when_download_file_exists()</code> <code>download()</code> <span class="pill">5</span> <code>download.by_browser()</code> <code>download.add()</code> <code>download.set.*</code> <code>download.missions</code></td></tr>
+<tr><td>动作链</td><td><code>actions.move_to()</code> <code>actions.click()</code> <code>actions.type()</code> <code>actions.hold()</code> <code>actions.release()</code> <code>actions.scroll()</code> <code>actions.drag_in()</code></td></tr>
+<tr><td>模式</td><td><code>change_mode()</code> <code>cookies_to_session()</code> <code>cookies_to_browser()</code></td></tr>
+</table>
+
+<h3>B.3 元素对象</h3>
+<table class="kv">
+<tr><th>分类</th><th>API</th></tr>
+<tr><td>信息</td><td><span class="kw" data-w="text"><code>text</code></span> <code>raw_text</code> <code>texts()</code> <span class="kw" data-w="html"><code>html</code></span> <code>inner_html</code> <span class="kw" data-w="tag"><code>tag</code></span> <code>attrs</code> <code>attr()</code> <code>property()</code> <code>value</code> <span class="kw" data-w="link"><code>link</code></span> <code>child_count</code> <span class="kw" data-w="shadow_root"><code>shadow_root</code></span> / <code>sr</code> <span class="pill">5</span> <code>css_selector</code></td></tr>
+<tr><td>状态 / 几何</td><td><code>states.is_displayed</code> <code>states.is_checked</code> <code>states.is_enabled</code> <code>states.is_clickable</code> <code>states.is_alive</code> <code>rect.size</code> <code>rect.location</code> <code>rect.midpoint</code></td></tr>
+<tr><td>查找 / 相对</td><td><code>ele()</code> <code>eles()</code> <code>parent()</code> <code>child()</code> <code>children()</code> <code>next()</code> <code>nexts()</code> <code>prev()</code> <code>prevs()</code> <code>after()</code> <code>before()</code> <code>east()</code> <code>west()</code> <code>south()</code> <code>north()</code> <code>offset()</code></td></tr>
+<tr><td>筛选</td><td><code>filter.displayed()</code> <code>filter.checked()</code> <code>filter.text()</code> <code>filter.attr()</code> <code>filter_one()</code> <code>search()</code> <code>get.texts()</code> <code>get.links()</code> <code>get.attrs()</code></td></tr>
+<tr><td>交互</td><td><code>click()</code> <code>click.left()</code> <code>click.right()</code> <code>click.middle()</code> <code>click.at()</code> <code>click.multi()</code> <code>click.to_upload()</code> <code>click.to_download()</code> <code>click.for_new_tab()</code> <code>input()</code> <code>clear()</code> <code>focus()</code> <code>hover()</code> <code>check()</code> <code>select.*</code> <code>drag()</code> <code>drag_to()</code></td></tr>
+<tr><td>修改 / 脚本</td><td><code>set.innerHTML()</code> <code>set.attr()</code> <code>set.property()</code> <code>set.style()</code> <code>remove_attr()</code> <code>run_js()</code> <code>add_init_js()</code> <code>remove_init_js()</code></td></tr>
+<tr><td>等待 / 滚动 / 保存</td><td><code>wait.displayed()</code> <code>wait.clickable()</code> <code>wait.deleted()</code> <code>wait.stop_moving()</code> <code>scroll.*</code> <code>src()</code> <code>save()</code> <code>get_screenshot()</code></td></tr>
+</table>
+
+<h3>B.4 数据包、配置与工具</h3>
+<table class="kv">
+<tr><th>分类</th><th>API</th></tr>
+<tr><td><span class="kw" data-w="SessionPage"><code>SessionPage</code></span></td><td><code>get()</code> <code>post()</code> <span class="kw" data-w="html"><code>html</code></span> <code>json</code> <code>title</code> <code>raw_data</code> <code>ele()</code> <code>eles()</code> <code>session</code> <code>response</code> <code>download()</code> <code>set.*</code> <code>close()</code></td></tr>
+<tr><td><span class="kw" data-w="SessionOptions"><code>SessionOptions</code></span></td><td><code>set_headers()</code> <code>set_a_header()</code> <code>set_cookies()</code> <code>set_timeout()</code> <code>set_retry()</code> <code>set_proxies()</code> <code>set_auth()</code> <code>set_verify()</code> <code>set_download_path()</code> <code>save()</code> <code>save_to_default()</code></td></tr>
+<tr><td><span class="kw" data-w="Settings"><code>Settings</code></span></td><td><code>set_language()</code> <code>set_raise_when_ele_not_found()</code> <code>set_raise_when_click_failed()</code> <code>set_raise_when_wait_failed()</code> <code>set_singleton_tab_obj()</code> <code>set_cdp_timeout()</code> <code>set_browser_connect_timeout()</code> <code>set_auto_handle_alert()</code> <span class="pill">5</span> <code>set_wait_stop_before_click()</code></td></tr>
+<tr><td><code>common</code> 工具</td><td><span class="kw" data-w="Keys"><code>Keys</code></span> <span class="kw" data-w="By"><code>By</code></span> <code>Actions</code> <span class="kw" data-w="Settings"><code>Settings</code></span> <code>wait_until()</code> <code>make_session_ele()</code> <code>get_blob()</code> <code>tree()</code> <code>configs_to_here()</code> <code>from_selenium()</code> <code>from_playwright()</code></td></tr>
+<tr><td><code>errors</code> 异常</td><td><code>ElementNotFoundError</code> <code>BrowserConnectError</code> <code>PageDisconnectedError</code> <code>ContextLostError</code> <code>ElementLostError</code> <code>NoRectError</code> <code>WaitTimeoutError</code> <code>CDPError</code> <code>LocatorError</code> <code>UnknownError</code> <code>CanNotClickError</code> <code>CookieFormatError</code></td></tr>
+<tr><td>命令行</td><td><code>dp -p</code> <code>dp -u</code> <code>dp -c</code> <code>dp -l</code></td></tr>
+</table>
+
+<h2 class="chap" id="apxc"><span class="num dp">C</span> 附录 C 4.1 → 5.0 变化对照</h2>
+<p class="chap-lead">官网《5.0 功能介绍》的完整要点，按「删除 / 改名 / 新增 / 修复」整理。看到旧教程代码时来这里查怎么改。</p>
+
+<h3>C.1 删除与改名（照旧写会报错）</h3>
+<table class="kv">
+<tr><th>4.1 及更早</th><th>5.0</th></tr>
+<tr><td><code>from DrissionPage import ChromiumPage</code>；<code>page = ChromiumPage()</code></td><td><b>已删除</b>。改成 <code>from DrissionPage import Chromium; browser = Chromium(); tab = browser.latest_tab</code></td></tr>
+<tr><td><code>from DrissionPage import WebPage</code>；<code>page.change_mode()</code></td><td><b>已删除</b>。ChromiumTab 自己就能 <code>change_mode()</code></td></tr>
+<tr><td><code>tab.get(url)</code> 返回 bool；<code>show_errmsg=</code></td><td>返回 <span class="kw" data-w="NavResult"><code>NavResult</code></span>（<code>ok/status/url/headers/request</code>）；参数改 <code>raise_err</code> 且位置调整</td></tr>
+<tr><td><code>new_tab(new_context=True)</code></td><td>删除 <span class="kw" data-w="new_context"><code>new_context</code></span> 参数；改用 <code>browser.new_context()</code>；新增 <code>hidden</code> 参数</td></tr>
+<tr><td><code>browser.tabs_count</code></td><td>属性删除</td></tr>
+<tr><td><code>tab.set.activate()</code></td><td>改名 <code>tab.activate()</code></td></tr>
+<tr><td><code>tab.add_ele()</code></td><td>改名 <code>tab.new_ele()</code></td></tr>
+<tr><td><code>ele.css_path</code></td><td>改名 <code>ele.css_selector</code></td></tr>
+<tr><td><code>ele.check(uncheck=False)</code></td><td>参数改名 <code>checked</code>，默认值变为 True</td></tr>
+<tr><td><code>wait.clickable(wait_moved=...)</code></td><td>参数改名 <code>wait_stop</code></td></tr>
+<tr><td><code>ChromiumOptions.set_paths()</code></td><td>已删除</td></tr>
+<tr><td><code>listen.start(method=..., res_type=...)</code> / <code>set_targets(...)</code></td><td>两个参数删除，改用 <code>set_method()</code> / <code>set_res_type()</code></td></tr>
+</table>
+
+<h3>C.2 5.0 新增能力</h3>
+<table class="kv">
+<tr><th>新能力</th><th>怎么用</th></tr>
+<tr><td>独立浏览器上下文</td><td><code>browser.new_context(proxy=...)</code> → <code>context.new_tab()</code>；cookies 与代理互相隔离</td></tr>
+<tr><td>账密代理</td><td><code>'http://user:password@ip:port'</code>；启动前 <code>set_proxy()</code>，启动后 <code>new_context(proxy=)</code></td></tr>
+<tr><td>跨域 iframe 直接取元素 / 监听</td><td><code>tab.ele('新闻')</code>、<code>tab.listen.start()</code>；可用 <code>close_cross_origin()</code> 关闭</td></tr>
+<tr><td><span class="kw" data-w="ax:"><code>ax:</code></span> 无障碍定位</td><td><code>tab.ele('ax:@name=主导航@role=navigation')</code></td></tr>
+<tr><td>定位符自动匹配</td><td>不写前缀时依次试 xpath / css selector → 文本；<span class="kw" data-w="x:"><code>x:</code></span> 表示只用 XPath</td></tr>
+<tr><td><code>ele()</code> 只返回元素对象</td><td>不再返回文本字符串，取文字用 <code>.text</code></td></tr>
+<tr><td>监听升级</td><td><code>set_method.GET(only=True)</code> / <code>set_res_type.all().remove_WebSocket()</code>；全局监听 <code>browser.listen.start()</code> + <code>browser_steps()</code>；ws / sse 结果 <code>WebSocketPacket</code> / <code>SSEPacket</code></td></tr>
+<tr><td>主动触发下载</td><td><code>tab.download.by_browser(url, save_path, rename, suffix, timeout, file_exists)</code></td></tr>
+<tr><td>权限设置</td><td><code>browser.set.perm.camera()</code> / <code>geolocation()</code>；上下文也支持</td></tr>
+<tr><td>启动选项</td><td><code>use_edge()</code> <code>disable_pdf_preview()</code> <code>close_cross_origin()</code>；<code>set_user_data_path()</code> 与 <code>auto_port()</code> 不再互斥</td></tr>
+<tr><td>系统用户目录</td><td><code>use_system_user_path()</code> 改为复制一份使用，支持 Edge，旧版 Chrome 可传 <code>old_ver=True</code></td></tr>
+<tr><td>其它</td><td><span class="kw" data-w="ChromiumTab"><code>ChromiumTab</code></span> 增加模式切换；<code>tab.set.show_trail()</code> 显示鼠标轨迹；<code>Settings.set_wait_stop_before_click()</code>；<code>click()</code> 点击随机位置、<code>wait_stop</code> 默认 False；<code>wait.upload_paths_inputted()</code> 增 timeout；<code>drag_in()</code> 增 offset_x / offset_y；<code>get_tab()/get_tabs()</code> 补回 <code>as_id</code>；<code>command_line</code> / <code>states.is_guest</code> 新属性</td></tr>
+</table>
+
+<h3>C.3 版本信息与官方资源</h3>
+<table class="kv">
+<tr><th>项目</th><th>内容</th></tr>
+<tr><td>本教程对齐版本</td><td>DrissionPage <b>5.0 测试版</b>（PyPI：<code>5.0.0b1</code>）</td></tr>
+<tr><td>最新稳定版</td><td><code>4.1.1.4</code>（官网当前文档标注适用版本）</td></tr>
+<tr><td>运行环境</td><td>Windows / Linux / Mac；Python ≥ 3.6；Chrome / Edge（建议 ≥ 100）</td></tr>
+<tr><td>官网文档</td><td><a href="https://www.drissionpage.cn" target="_blank">https://www.drissionpage.cn</a></td></tr>
+<tr><td>5.0 功能介绍</td><td><a href="https://www.drissionpage.cn/features/5/" target="_blank">https://www.drissionpage.cn/features/5/</a></td></tr>
+<tr><td>源码仓库</td><td><a href="https://gitee.com/g1879/DrissionPage" target="_blank">Gitee</a> / <a href="https://github.com/g1879/DrissionPage" target="_blank">GitHub</a></td></tr>
+<tr><td>PyPI</td><td><a href="https://pypi.org/project/DrissionPage/" target="_blank">pypi.org/project/DrissionPage</a></td></tr>
+<tr><td>离线文档 / CDP 手册</td><td>官网「教程 → 离线文档」与 <a href="https://drissionpage.cn/cdp" target="_blank">drissionpage.cn/cdp</a></td></tr>
+<tr><td>许可</td><td>个人免费，<b>商用须授权</b>；文档 CC BY-NC 4.0（禁止商用）</td></tr>
+</table>
+
+<div class="warn"><span class="card-t">使用提醒</span><p>请遵守目标网站的 robots 协议与服务条款，不要用于违法用途或给对方服务器造成压力。本教程仅用于学习自动化技术。</p></div>
+
+<div class="stat">
+  <div><b>27</b><span>正文章节</span></div>
+  <div><b>3</b><span>附录</span></div>
+  <div><b>86</b><span>官网页面覆盖</span></div>
+  <div><b>5.0</b><span>版本口径</span></div>
+</div>
+
+<div class="footer">
+  <p><b>DrissionPage 图解教程 · 2026 最新版（5.0 零基础完整版）</b><br>
+  内容依据官网 www.drissionpage.cn 全部文档页面与《5.0 功能介绍》整理，版本号于 2026-11-06 从 PyPI 与官网实测核对。<br>
+  全篇统一使用 5.0 推荐的 <code>Chromium() → latest_tab → tab</code> 写法；稳定版 4.1.1.4 的差异见附录 C。<br>
+  本教程与其它教程使用同一套版式：分组侧栏、图解 SVG、逐关键字注释、手把手实战与检查点。</p>
+</div>
+
+</main>
+</div>
+<div class="gloss-panel" id="glossPanel">
+<button class="gp-x" onclick="DPGloss.hide()">×</button>
+<div class="gp-w" id="gpW"></div>
+<div class="gp-en" id="gpEn"></div>
+<div id="gpCn"></div>
+<div class="gp-ex" id="gpEx"></div>
+</div>
+<script>
+/* ===== 目录高亮（与其它教程一致） ===== */
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.side a.toc'));
+  var targets = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  function mark(){
+    var y = window.scrollY + 140, idx = 0;
+    targets.forEach(function(t,i){ if(t && t.offsetTop <= y) idx = i; });
+    links.forEach(function(a,i){ a.classList.toggle('on', i === idx); });
+  }
+  window.addEventListener('scroll', mark, {passive:true});
+  window.addEventListener('resize', mark);
+  mark();
+})();
+
+/* ===== 滚动淡入 ===== */
+(function(){
+  var reveals = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, {threshold:.08});
+    reveals.forEach(function(el){ io.observe(el); });
+  } else { reveals.forEach(function(el){ el.classList.add('in'); }); }
+})();
+
+/* ===== 点词看解释：每个关键字都有「英文原意 + 中文 + 例子」 ===== */
+var DPGLOSS = {
+  /* --- Python 语言层 --- */
+  'from':['from 从……','Python 关键字，指定「从哪个模块」拿东西。','from DrissionPage import Chromium'],
+  'import':['import 导入','Python 关键字，把别人写好的类、函数拿进本文件用。','import time'],
+  'as':['as 作为','给导入的东西起个别名，后面用短名字。','from DrissionPage import Chromium as C'],
+  'for':['for 对于每一个','循环关键字，把列表里的东西一个一个取出来。','for item in items:'],
+  'in':['in 在……里面','判断/遍历时表示「属于这个集合」。','for link in links:'],
+  'if':['if 如果','条件判断，条件成立才执行下面缩进的代码。','if not ele:'],
+  'not':['not 不','取反，把 True 变 False。','if not ele:'],
+  'None':['None 空值','Python 里表示「什么都没有」，不是 0 也不是空字符串。','x = None'],
+  'True':['True 真','布尔值：成立。','headless(True)'],
+  'False':['False 假','布尔值：不成立。','read_file=False'],
+  'def':['define 定义','定义一个函数，后面写函数名和参数。','def main():'],
+  'return':['return 返回','把结果交回给调用者，函数到此结束。','return tab.title'],
+  'class':['class 类','一类东西的模板，DrissionPage 里的对象都由类生成。','class Chromium'],
+  'try':['try 尝试','包一段可能出错的代码，配合 except 兜底。','try:'],
+  'except':['except 除了/捕获','出错时执行这里，程序不会崩。','except ElementNotFoundError:'],
+  'with':['with 伴随','自动帮你收尾（例如关文件）。','with open("a.txt") as f:'],
+  'lambda':['lambda 匿名函数','一行的小函数，很少用。','lambda x: x+1'],
+  'f-string':['formatted string 格式化字符串','字符串前加 f，花括号里直接放变量。','f"第 {i} 页"'],
+  '=':['= 赋值','把右边的结果存到左边的变量里（不是「等于」）。','tab = browser.latest_tab'],
+  '==':['== 等于','比较两边是否相等，返回 True / False。','if res.status == 200:'],
+  '.':['. 的','点号表示「取这个对象身上的属性或方法」。','tab.get(url)'],
+  '()':['() 调用/参数','函数名后加括号＝执行它；括号里放参数。','Chromium()'],
+  ':':[': 冒号','Python 里表示「下面是一段缩进的代码块」。','for i in range(3):'],
+  '#':['# 注释','这一行是给人看的说明，Python 不会执行。','# 启动浏览器'],
+  '[]':['[] 列表/下标','方括号造列表，或按位置取第几个。','links[0]'],
+  '{}':['{} 字典','花括号造「键:值」对照表。',"{'name':'a'}"],
+  'print':['print 打印','把内容输出到终端，用来检查运行结果。','print(tab.title)'],
+  'range':['range 范围','生成一串数字，常和 for 搭配。','range(1, 4)'],
+  'str':['string 字符串','文本类型。','name = "abc"'],
+  'int':['integer 整数','整数类型。','port = 9222'],
+  'list':['list 列表','按顺序装一堆东西。','tabs = []'],
+  'dict':['dictionary 字典','按键取值的数据结构。','co = {}'],
+  'bool':['boolean 布尔','只有 True / False 两个值。','ok = True'],
+
+  /* --- DrissionPage 对象与模块 --- */
+  'DrissionPage':['Drission + Page','库名：Driver（驱动浏览器）+ Session（收发数据包）。','from DrissionPage import Chromium'],
+  'Chromium':['Chromium 铬/开源浏览器内核','5.0 的唯一浏览器入口对象，代表「一个浏览器进程」。','browser = Chromium()'],
+  'ChromiumOptions':['Chromium options 浏览器启动选项','启动浏览器前的配置对象，只在启动时生效。','co = ChromiumOptions()'],
+  'SessionOptions':['Session options 会话选项','收发数据包模式（s 模式）的配置对象。','so = SessionOptions()'],
+  'SessionPage':['Session page 会话页面','不开浏览器、只收发数据包的页面对象，5.0 仍然存在。','page = SessionPage()'],
+  'ChromiumTab':['Chromium tab 浏览器标签页','标签页对象，5.0 起也能切换 d/s 模式。','tab = browser.latest_tab'],
+  'BrowserContext':['browser context 浏览器上下文','5.0 新增：一个相互隔离的小浏览器，cookies 和代理独立。','context = browser.new_context()'],
+  'latest_tab':['latest tab 最后激活的标签页','浏览器对象属性，取当前最后一个激活的标签页对象。','tab = browser.latest_tab'],
+  'new_tab':['new tab 新建标签页','在浏览器（或上下文）里开一个新标签页。','tab2 = browser.new_tab()'],
+  'new_context':['new context 新建上下文','5.0 新增：建一个独立 cookies / 独立代理的环境。','context = browser.new_context(proxy="...")'],
+  'get_tab':['get tab 取标签页','按序号、id、标题或网址找标签页。','browser.get_tab(url="drissionpage.cn")'],
+  'get_tabs':['get tabs 取多个标签页','找出所有符合条件的标签页，返回列表。','browser.get_tabs()'],
+  'quit':['quit 退出','关掉整个浏览器进程；无头模式必须手动调用。','browser.quit()'],
+  'close':['close 关闭','关标签页或上下文；tab.close() 不等于关浏览器。','tab.close()'],
+  'ele':['element 元素','查一个元素，找不到返回 NoneElement。','tab.ele("#kw")'],
+  'eles':['elements 多个元素','查所有符合条件的元素，返回列表。','tab.eles("tag:a")'],
+  's_ele':['session element 静态元素','把动态元素转成静态副本，取数据更快。','body.s_ele("tag:a")'],
+  's_eles':['session elements 静态元素列表','一次拿一批静态副本，官方实测快十几倍。','body.s_eles("tag:a")'],
+  'NoneElement':['none element 空元素','找不到元素时返回的「占位对象」，if 判断为假。','if not ele:'],
+  'get':['get 获取/访问','访问网址。5.0 浏览器 tab 返回 NavResult；SessionPage 返回 bool。','res = tab.get(url)'],
+  'NavResult':['navigation result 导航结果','5.0 新增：get() 的返回值，含 url/status/ok/headers/request。','print(res.status, res.ok)'],
+  'post':['post 提交','用 POST 方式提交数据，参数与 requests 一致。','page.post(url, data={"a":1})'],
+  'change_mode':['change mode 切换模式','在 d（浏览器）和 s（数据包）模式间切换。','tab.change_mode()'],
+  'click':['click 点击','点元素；可写成 click.left / click.right / click.middle。','ele.click()'],
+  'input':['input 输入','往输入框里写文字，末尾加 \\n 相当于回车。','ele.input("DrissionPage")'],
+  'text':['text 文本','元素属性，取可见文字（已转码、去多余换行）。','print(ele.text)'],
+  'attr':['attribute 属性','取 HTML 属性值，如 href、src、class。','ele.attr("href")'],
+  'html':['HTML 超文本标记语言','网页源码；作为属性时取元素的 outerHTML。','print(tab.html)'],
+  'link':['link 链接','元素属性，自动取 href 或 src，并补全成完整网址。','print(ele.link)'],
+  'states':['states 状态','元素状态集合，如 is_displayed、is_checked。','ele.states.is_displayed'],
+  'rect':['rectangle 矩形','元素位置与尺寸集合，如 size、location。','ele.rect.size'],
+  'wait':['wait 等待','等待某件事发生，如 wait.ele_displayed()。','tab.wait.ele_displayed("tag:div")'],
+  'listen':['listen 监听','抓取网页发出的网络请求与响应。','tab.listen.start("api/")'],
+  'DataPacket':['data packet 数据包','监听到的一条请求/响应记录。','packet = tab.listen.wait()'],
+  'download':['download 下载','下载管理器；5.0 可用 download.by_browser()。','mission = tab.download.by_browser(url)'],
+  'DownloadMission':['download mission 下载任务','一个下载任务对象，wait() 等它完成。','mission.wait()'],
+  'actions':['actions 动作','动作链，模拟鼠标键盘连续操作，不需要 perform()。','tab.actions.move_to(ele).click()'],
+  'Settings':['settings 全局设置','整个程序的默认行为，如报错语言、找不到元素是否抛错。','Settings.set_language("zh_cn")'],
+  'Keys':['keys 按键','特殊键常量，如 Keys.ENTER、Keys.CTRL_A。','ele.input(Keys.ENTER)'],
+  'By':['by 通过……定位','兼容 selenium 写法的定位常量。','tab.ele((By.ID, "kw"))'],
+  'run_js':['run JavaScript 执行脚本','在页面里执行 js，取结果要写 return。','tab.run_js("return document.title;")'],
+
+  /* --- 定位符 / HTML / CSS / DOM 层 --- */
+  '#':['# id 选择器','句首单独用＝按 id 属性查找（等价 @id=）。','tab.ele("#user_login")'],
+  '.':['. class 选择器','句首单独用＝按 class 查找（等价 @class=）。','page.eles(".item")'],
+  '@':['@ attribute 属性','按属性名/属性值查找；@ 后只写名字＝有这个属性。','tab.ele("@name=row1")'],
+  'tag:':['tag 标签','按 HTML 标签名查找。','tab.eles("tag:h3")'],
+  'text:':['text 文本','按元素文字查找。','tab.ele("text=登录")'],
+  't:':['tag 的缩写','tag: 的简写。','tab.eles("t:a")'],
+  'tx:':['text 的缩写','text: 的简写。','tab.ele("tx:文档")'],
+  'x:':['xpath 的缩写','xpath: 的简写，只用 XPath 语法查找。','tab.ele("x://div[@id=abc]")'],
+  'c:':['css 的缩写','css: 的简写，只用 CSS 选择器查找。','tab.ele("c:.item")'],
+  'ax:':['accessibility 无障碍','5.0 新增：按 Chrome 无障碍语义定位，更适合 AI。','tab.ele("ax:@name=主导航@role=navigation")'],
+  'xpath':['XML Path Language','用路径表达式在 HTML 树里找节点，可跨层级、可取属性。','xpath://div[@class="a"]'],
+  'css selector':['CSS selector 层叠样式表选择器','用 CSS 规则选元素，简短但对结构变化敏感。','css:.title > a'],
+  'id':['identifier 身份标识','HTML 属性，页面中原则上唯一。','<div id="kw">'],
+  'class':['class 类','HTML 属性，给元素分组，可有多个值。','<a class="item">'],
+  'href':['hypertext reference 超链接地址','<a> 标签的跳转地址。','ele.attr("href")'],
+  'src':['source 来源','图片/脚本等资源的地址。','ele.attr("src")'],
+  'iframe':['inline frame 内嵌框架','网页里再嵌一个网页；5.0 可直接取跨域 iframe 内元素。','tab.get_frame("t:iframe")'],
+  'shadow_root':['shadow root 影子根','Shadow DOM 的根节点，用 .sr 简写访问。','ele.sr("tag:div")'],
+  'DOM':['Document Object Model 文档对象模型','浏览器把 HTML 解析成的一棵树，元素是树上的节点。','document.querySelector("#kw")'],
+  'cookie':['cookie 小甜饼','网站存在浏览器里的一小段身份信息。','tab.set.cookies("a=1;")'],
+  'headers':['headers 请求头','请求里附带的元信息，如 User-Agent。','so.set_headers({"UA":"..."})'],
+  'proxy':['proxy 代理','让请求经过另一台服务器转发，可换 IP。','co.set_proxy("127.0.0.1:7890")'],
+  'timeout':['timeout 超时','最多等多少秒，超时就放弃。','tab.get(url, timeout=10)'],
+  'CDP':['Chrome DevTools Protocol','Chrome 调试协议，DrissionPage 靠它控制浏览器。','tab.run_cdp("Page.navigate")'],
+  'headless':['headless 无头','不显示窗口地运行浏览器。','ChromiumOptions().headless()'],
+  'd 模式':['driver 驱动模式','控制真实浏览器，能跑 js、能点能看。','tab.change_mode("d")'],
+  's 模式':['session 会话模式','只收发数据包，速度快但不能跑 js。','tab.change_mode("s")'],
+  'pip':['pip Python 包管理器','安装/升级第三方库的命令行工具。','pip install DrissionPage'],
+  'dp':['dp DrissionPage 命令行工具','随库安装的小命令，可设浏览器路径、复制配置。','dp -p "D:\\chrome.exe"'],
+  'ini':['initialization 配置文件','纯文本配置文件，按 [小节] 组织。','configs.ini'],
+  'None':['None 空值','见 Python 层：什么都没有。','x = None']
+};
+
+var DPGloss = {
+  show: function(word){
+    var g = DPGLOSS[word];
+    if (!g) {
+      for (var k in DPGLOSS) { if (word.indexOf(k) === 0) { g = DPGLOSS[k]; break; } }
+    }
+    if (!g) return;
+    document.getElementById('gpW').textContent = word;
+    document.getElementById('gpEn').textContent = g[0];
+    document.getElementById('gpCn').textContent = g[1];
+    document.getElementById('gpEx').textContent = g[2];
+    document.getElementById('glossPanel').classList.add('show');
+  },
+  hide: function(){ document.getElementById('glossPanel').classList.remove('show'); }
+};
+document.addEventListener('click', function(e){
+  var k = e.target.closest ? e.target.closest('.kw') : null;
+  if (k) { DPGloss.show(k.getAttribute('data-w') || k.textContent.trim()); return; }
+  if (!e.target.closest || !e.target.closest('#glossPanel')) DPGloss.hide();
+});
+
+/* ===== 可点动画演示 ===== */
+var DPDemo = {
+  /* 1. 对象层级：一步一步点亮 Chromium → Context → Tab → Element */
+  obj: function(n){
+    var box = document.getElementById('demoObj');
+    if (!box) return;
+    var lamps = box.querySelectorAll('.lamp');
+    for (var i=0;i<lamps.length;i++) lamps[i].classList.toggle('on', i < n);
+    var names = ['还没开始','① 浏览器进程已启动','② 建好独立上下文','③ 拿到标签页','④ 找到页面里的元素'];
+    box.querySelector('.demo-screen').textContent = names[n] || names[0];
+  },
+  /* 2. 定位符：点不同按钮，看会匹配到什么 */
+  loc: function(kind){
+    var out = document.getElementById('demoLocOut');
+    if (!out) return;
+    var data = {
+      'id':   ['tab.ele("#kw")',        '<input id="kw" class="s_ipt">', '按 id 找：命中搜索框'],
+      'tag':  ['tab.eles("tag:a")',     '页面里所有 <a> 链接',            '按标签找：返回一批元素'],
+      'attr': ['tab.ele("@name=wd")',   '<input name="wd">',               '按属性找：命中 name 为 wd 的输入框'],
+      'text': ['tab.ele("text=百度一下")','<input value="百度一下">',      '按文本找：命中按钮'],
+      'ax':   ['tab.ele("ax:@name=主导航@role=navigation")','<nav aria-label="主导航">','5.0 新增：按无障碍语义找'],
+      'auto': ['tab.ele("//div[@id=abc]")','先试 xpath/css，再试文本',      '5.0 自动匹配模式']
+    };
+    var d = data[kind] || data['id'];
+    out.innerHTML = '<b>' + d[0] + '</b>\n匹配到：' + d[1] + '\n' + d[2];
+  },
+  /* 3. 监听流程 */
+  listen: function(n){
+    var box = document.getElementById('demoListen');
+    if (!box) return;
+    var lamps = box.querySelectorAll('.lamp');
+    for (var i=0;i<lamps.length;i++) lamps[i].classList.toggle('on', i < n);
+    var msg = ['还没开始','已开启监听，等待网页发请求','网页已访问，请求正在发出','抓到一个数据包，可以读 response.body'];
+    box.querySelector('.demo-screen').textContent = msg[n] || msg[0];
+  },
+  /* 4. d / s 模式对照 */
+  mode: function(m){
+    var box = document.getElementById('demoMode');
+    if (!box) return;
+    var d = box.querySelector('.demo-screen');
+    var btns = box.querySelectorAll('.dbtn');
+    btns.forEach(function(b){ b.classList.toggle('ghost', b.getAttribute('data-m') !== m); });
+    d.innerHTML = m === 'd'
+      ? 'd 模式（浏览器）：能点击、能滚动、能执行 js、能看到动画页面\n代价：要开浏览器，慢一些'
+      : 's 模式（数据包）：只发 HTTP 请求，速度快、内存小\n代价：不能点击、不能执行 js，看不到 js 渲染出来的内容';
+  },
+  /* 5. 上下文隔离 */
+  ctx: function(n){
+    var box = document.getElementById('demoCtx');
+    if (!box) return;
+    var lamps = box.querySelectorAll('.lamp');
+    for (var i=0;i<lamps.length;i++) lamps[i].classList.toggle('on', i < n);
+    var msg = ['一个浏览器，一个默认环境','新建上下文 A：登录账号 A','新建上下文 B：登录账号 B','两个上下文 cookies 互不干扰'];
+    box.querySelector('.demo-screen').textContent = msg[n] || msg[0];
+  }
+};
+
+</script>
+</body>
+</html>

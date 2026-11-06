@@ -1,0 +1,2568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenCV 图解教程 · 2026 最新版（5.0 零基础完整版）</title>
+<style>
+
+:root{
+  --ink:#1f2937; --muted:#5b6570; --faint:#8b949e; --line:#d8dee4;
+  --bg:#ffffff; --panel:#f7f9fb; --code:#f4f7fa;
+  --blue:#2563eb; --blue-bg:#eff6ff; --blue-line:#93c5fd;
+  --orange:#ea580c; --orange-bg:#fff7ed; --orange-line:#fdba74;
+  --green:#16a34a; --green-bg:#f0fdf4; --green-line:#86efac;
+  --purple:#7c3aed; --purple-bg:#faf5ff; --purple-line:#c4b5fd;
+  --red:#dc2626; --red-bg:#fef2f2; --red-line:#fca5a5;
+  --mono:"Cascadia Code","SF Mono",Consolas,"Liberation Mono",Menlo,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:var(--mono);font-size:.9em;background:#eef1f4;padding:2px 6px;border-radius:5px;color:#b1234a}
+pre{margin:0}
+.wrap{display:flex;max-width:1400px;margin:0 auto;align-items:flex-start}
+
+/* ---------- 侧边目录 ---------- */
+.side{width:250px;flex:0 0 250px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--panel);border-right:1px solid var(--line);padding:26px 18px 40px}
+.side .logo{font-weight:800;font-size:17px;letter-spacing:.5px;margin-bottom:4px}
+.side .logo span{color:var(--blue)}
+.side .sub{font-size:12px;color:var(--faint);margin-bottom:22px;line-height:1.6}
+.side a.toc{display:block;font-size:13.5px;color:var(--muted);padding:7px 10px;border-radius:8px;line-height:1.4;border-left:3px solid transparent}
+.side a.toc:hover{background:#eaeef3;color:var(--ink);text-decoration:none}
+.side a.toc.on{background:var(--blue-bg);color:var(--blue);font-weight:700;border-left-color:var(--blue)}
+.side .toc-group{font-size:11px;color:var(--faint);letter-spacing:1.5px;margin:18px 0 6px 10px;font-weight:700}
+
+/* ---------- 主区 ---------- */
+.main{flex:1;min-width:0;padding:0 46px 100px;max-width:1000px}
+.hero{background:linear-gradient(135deg,#eff6ff 0%,#faf5ff 55%,#f0fdf4 100%);border:1px solid var(--line);border-radius:20px;padding:40px 42px;margin:36px 0 34px}
+.hero h1{margin:0 0 10px;font-size:34px;letter-spacing:-.5px;line-height:1.35}
+.hero .lead{font-size:17px;color:#374151;margin:0 0 18px}
+.badges{display:flex;flex-wrap:wrap;gap:9px}
+.badge{font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:99px;border:1px solid}
+.b-blue{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-line)}
+.b-green{background:var(--green-bg);color:var(--green);border-color:var(--green-line)}
+.b-purple{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-line)}
+.b-orange{background:var(--orange-bg);color:var(--orange);border-color:var(--orange-line)}
+
+h2.chap{font-size:26px;margin:64px 0 8px;padding-top:18px;border-top:2px solid var(--line);letter-spacing:-.3px;scroll-margin-top:20px;display:flex;align-items:center;gap:12px}
+h2.chap .num{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:38px;border-radius:11px;background:var(--blue);color:#fff;font-size:17px;font-family:var(--mono);flex:0 0 auto}
+.chap-lead{color:var(--muted);margin:0 0 22px;font-size:15.5px}
+h3{font-size:19px;margin:34px 0 12px;scroll-margin-top:20px}
+h4{font-size:16px;margin:22px 0 8px}
+p{margin:10px 0}
+ul,ol{padding-left:22px}
+li{margin:5px 0}
+strong{font-weight:700}
+.small{font-size:13.5px;color:var(--muted)}
+hr{border:0;border-top:1px dashed var(--line);margin:34px 0}
+
+/* ---------- 图 ---------- */
+.fig{margin:24px 0;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 20px 14px;overflow:hidden}
+.fig svg{display:block;width:100%;height:auto}
+.fig figcaption{font-size:13px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.6}
+.fig figcaption b{color:var(--ink)}
+svg text{font-family:var(--sans)}
+svg .tb{font-size:15px;font-weight:700;fill:#1f2937}
+svg .t{font-size:13.5px;fill:#1f2937}
+svg .ts{font-size:12px;fill:#5b6570}
+svg .tm{font-family:var(--mono);font-size:12.5px;fill:#1f2937}
+svg .lbl{font-size:12.5px;font-weight:700;fill:#fff}
+svg .flow{font-family:var(--mono);font-size:12px;font-weight:700;fill:#2563eb}
+svg .box{stroke-width:2}
+svg .dash{stroke-dasharray:6 5}
+
+/* ---------- 步骤 ---------- */
+.step{background:#fff;border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:12px;padding:18px 22px;margin:20px 0}
+.step-h{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;margin-bottom:8px}
+.step-n{width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-family:var(--mono);flex:0 0 auto}
+.step p:first-of-type{margin-top:0}
+
+/* ---------- 命令块 ---------- */
+.cmd{background:var(--code);border:1px solid #dde3ea;border-radius:12px;margin:14px 0;overflow:hidden}
+.cmd-bar{background:#eaeef3;border-bottom:1px solid #dde3ea;padding:7px 14px;font-size:11.5px;color:var(--muted);font-family:var(--mono);letter-spacing:.4px;display:flex;justify-content:space-between}
+.cmd pre{padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.9;color:#111827;white-space:pre}
+.cmd .c{color:#5a7d52;background:#eef6ea;border-radius:4px;padding:0 4px}  /* 注释：带底色＝解释，不要敲 */
+.cmd .k{color:#0b5cad;font-weight:700}  /* 关键字 */
+.cmd .s{color:#b1234a}          /* 字符串 */
+.cmd .f{color:#8a5a00}          /* 文件名/参数 */
+.cmd .p{color:#0b5cad;background:#dbeafe;border-radius:4px;padding:0 5px;font-weight:700}  /* 提示符：蓝底 $ ＝这一行要敲 */
+.cmd-note{padding:0 16px 14px;font-size:13px;color:var(--muted);line-height:1.7}
+
+/* 终端输出 */
+.out{background:#fbfcfd;border:1px solid var(--line);border-left:4px solid var(--green);border-radius:10px;margin:12px 0;overflow:hidden}
+.out-bar{background:var(--green-bg);padding:6px 14px;font-size:11.5px;color:var(--green);font-weight:700;font-family:var(--mono);border-bottom:1px solid var(--green-line)}
+.out pre{padding:12px 16px;font-family:var(--mono);font-size:12.8px;line-height:1.85;color:#243b2f;white-space:pre;overflow-x:auto}
+.out .p{color:#0f9d58;font-weight:700}
+.out .red{color:#c0392b}
+.out .grn{color:#0f9d58;font-weight:700}
+.out .blu{color:#1a56c4;font-weight:700}
+.out .dim{color:#7a8794}
+.trans{padding:10px 16px 14px;font-size:13px;color:var(--muted);border-top:1px dashed var(--line);line-height:1.8}
+.trans b{color:var(--ink)}
+
+/* 逐词拆解 */
+.dissect{border:1px solid var(--blue-line);background:var(--blue-bg);border-radius:12px;padding:16px 18px;margin:14px 0}
+.dissect .dl{font-family:var(--mono);font-size:14.5px;font-weight:700;color:#0b3d91;background:#fff;border:1px solid var(--blue-line);border-radius:8px;padding:9px 13px;display:inline-block;margin-bottom:12px;white-space:pre-wrap;word-break:break-all}
+table.words{width:100%;border-collapse:collapse;font-size:13.5px}
+table.words td{padding:7px 8px;border-bottom:1px solid #d7e5fb;vertical-align:top;line-height:1.7}
+table.words tr:last-child td{border-bottom:0}
+table.words td:first-child{width:150px;white-space:nowrap}
+table.words code{background:#fff;border:1px solid #d7e5fb;color:#0b5cad;padding:2px 7px;font-size:12.5px}
+table.words .en{color:var(--faint);font-size:12px}
+
+/* 卡片 */
+.analogy,.check,.warn,.tip{border-radius:12px;padding:14px 18px;margin:16px 0;font-size:14.5px;line-height:1.8}
+.analogy{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid #f59e0b}
+.check{background:var(--green-bg);border:1px solid var(--green-line);border-left:4px solid var(--green)}
+.warn{background:var(--red-bg);border:1px solid var(--red-line);border-left:4px solid var(--red)}
+.tip{background:var(--purple-bg);border:1px solid var(--purple-line);border-left:4px solid var(--purple)}
+.card-t{font-weight:800;font-size:13px;letter-spacing:.5px;display:block;margin-bottom:4px}
+.analogy .card-t{color:#b45309}.check .card-t{color:#15803d}.warn .card-t{color:#b91c1c}.tip .card-t{color:#6d28d9}
+.analogy p,.check p,.warn p,.tip p{margin:4px 0}
+
+details.later{border:1px dashed var(--line);border-radius:10px;padding:10px 16px;margin:14px 0;background:#fcfdfe}
+details.later summary{cursor:pointer;font-size:13.5px;color:var(--muted);font-weight:700;outline:none}
+details.later[open] summary{margin-bottom:10px;color:var(--blue)}
+details.later .cmd{margin-top:8px}
+
+table.kv{width:100%;border-collapse:collapse;font-size:14px;margin:16px 0}
+table.kv th,table.kv td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;line-height:1.7}
+table.kv th{background:var(--panel);font-weight:700;font-size:13.5px}
+table.kv tr:nth-child(even) td{background:#fcfdfe}
+table.kv code{font-size:12.5px}
+
+.pill{display:inline-block;background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-line);border-radius:6px;padding:1px 8px;font-size:12px;font-weight:700;font-family:var(--mono)}
+.footer{margin-top:70px;padding-top:22px;border-top:1px solid var(--line);color:var(--faint);font-size:13px;line-height:1.8}
+
+@media(max-width:900px){
+  .wrap{display:block}
+  .side{position:static;width:auto;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:16px}
+  .side .toc-group{display:none}
+  .side a.toc{display:inline-block;margin:2px}
+  .main{padding:0 20px 70px}
+  .hero{padding:26px 22px}
+  .hero h1{font-size:26px}
+}
+
+/* CODE_HIGHLIGHT_V2 CSS START */
+body pre span,body pre code span{-webkit-text-fill-color:currentColor!important}
+body pre span[class^="tk-"],body pre code span[class^="tk-"]{font-weight:inherit;font-style:normal}
+body pre span.tk-kw,body pre code span.tk-kw{color:#0b5cad!important;font-weight:700}
+body pre span.tk-str,body pre code span.tk-str{color:#b1234a!important}
+body pre span.tk-url,body pre code span.tk-url{color:#b1234a!important;text-decoration:underline;text-decoration-color:#f0a8bd}
+body pre span.tk-num,body pre code span.tk-num{color:#a35300!important}
+body pre span.tk-fn,body pre code span.tk-fn{color:#6d28d9!important}
+body pre span.tk-prop,body pre code span.tk-prop{color:#0b7285!important}
+body pre span.tk-opt,body pre code span.tk-opt{color:#c2410c!important}
+body pre span.tk-bi,body pre code span.tk-bi{color:#047857!important}
+body pre span.tk-cmt,body pre code span.tk-cmt{color:#3f7a3f!important;background:#eef6ea;border-radius:3px;padding:0 2px}
+body pre span.tk-tag,body pre code span.tk-tag{color:#7c3aed!important}
+body pre span.tk-op,body pre code span.tk-op{color:#64748b!important}
+body pre.hl-dark span.tk-kw,body pre.hl-dark code span.tk-kw{color:#93c5fd!important}
+body pre.hl-dark span.tk-str,body pre.hl-dark code span.tk-str{color:#fca5a5!important}
+body pre.hl-dark span.tk-url,body pre.hl-dark code span.tk-url{color:#fca5a5!important}
+body pre.hl-dark span.tk-num,body pre.hl-dark code span.tk-num{color:#fdba74!important}
+body pre.hl-dark span.tk-fn,body pre.hl-dark code span.tk-fn{color:#c4b5fd!important}
+body pre.hl-dark span.tk-prop,body pre.hl-dark code span.tk-prop{color:#67e8f9!important}
+body pre.hl-dark span.tk-opt,body pre.hl-dark code span.tk-opt{color:#fdba74!important}
+body pre.hl-dark span.tk-bi,body pre.hl-dark code span.tk-bi{color:#6ee7b7!important}
+body pre.hl-dark span.tk-cmt,body pre.hl-dark code span.tk-cmt{color:#7ee787!important;background:transparent}
+body pre.hl-dark span.tk-tag,body pre.hl-dark code span.tk-tag{color:#d8b4fe!important}
+body pre.hl-dark span.tk-op,body pre.hl-dark code span.tk-op{color:#94a3b8!important}
+/* CODE_HIGHLIGHT_V2 CSS END */
+
+
+/* ===== 动画与交互（在 Git 图解教程版式上追加） ===== */
+:root{--sqla:#0f766e;--sqla-bg:#f0fdfa;--sqla-line:#5eead4}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes dashMove{to{stroke-dashoffset:-30}}
+@keyframes pulseRing{0%,100%{opacity:.45;transform:scale(.92)}50%{opacity:1;transform:scale(1.06)}}
+@keyframes numPop{0%{transform:scale(1)}40%{transform:scale(1.45);color:#0f766e}100%{transform:scale(1)}}
+@keyframes hiFlash{0%{background:#fde68a;box-shadow:0 0 0 6px rgba(253,230,138,.5)}100%{background:transparent;box-shadow:none}}
+@keyframes barGrow{from{width:0}to{width:var(--w,100%)}}
+@keyframes gentleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
+.hero{animation:fadeUp .7s ease both}
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .55s ease,transform .55s ease}
+.reveal.in{opacity:1;transform:none}
+svg .flowline{stroke-dasharray:9 6;animation:dashMove 1.1s linear infinite}
+svg .pulse{animation:pulseRing 1.9s ease-in-out infinite;transform-origin:center}
+.float{animation:gentleFloat 3s ease-in-out infinite}
+.pop{animation:numPop .45s ease}
+.flash{animation:hiFlash .8s ease}
+.badge.b-sqla{animation:pulseRing 2.4s ease-in-out infinite;background:var(--sqla-bg);color:var(--sqla);border-color:var(--sqla-line)}
+
+/* 代码块：注释行 / 关键字 / 提示符 更醒目 */
+.cmd .c{color:#4d7c43;background:#eef6ea;border-radius:4px;padding:0 5px}
+.cmd .k{color:#0b5cad;font-weight:700}
+.cmd .s{color:#b1234a}
+.cmd .f{color:#8a5a00}
+.cmd .p{color:#0b5cad;background:#dbeafe;border-radius:4px;padding:0 5px;font-weight:700}
+.cmd .d{color:#7c3aed;font-weight:700}
+.cmd .blank{display:block;height:7px}
+.cmd-bar .mode{font-weight:700;color:#0f766e}
+.cmd.file .cmd-bar{background:#e6f6f3;border-bottom-color:#b9e6df}
+.cmd.file .cmd-bar .mode{color:#0f766e}
+
+/* 可点词解释 */
+.kw{cursor:pointer;border-bottom:1px dashed #93c5fd;padding:0 1px}
+.kw:hover{background:#dbeafe;border-bottom-color:#2563eb}
+.gloss-panel{position:fixed;right:18px;bottom:18px;z-index:99;width:340px;max-width:calc(100vw - 36px);background:#fff;border:2px solid var(--blue-line);border-radius:14px;box-shadow:0 12px 34px rgba(15,23,42,.18);padding:14px 18px;display:none;font-size:13.5px;line-height:1.8}
+.gloss-panel.show{display:block;animation:slideIn .25s ease}
+.gloss-panel .gp-w{font-family:var(--mono);font-weight:800;color:#0b5cad;font-size:15px}
+.gloss-panel .gp-en{color:var(--faint);font-size:12.5px;margin:2px 0 8px}
+.gloss-panel .gp-ex{background:var(--code);border-radius:8px;padding:7px 10px;font-family:var(--mono);font-size:12.5px;margin-top:8px;color:#b1234a}
+.gloss-panel .gp-x{float:right;cursor:pointer;border:0;background:#eaeef3;border-radius:6px;padding:1px 8px;font-size:13px;font-weight:700}
+.gloss-tip{font-size:13px;color:var(--muted);margin:8px 0 0}
+
+/* 交互演示 */
+.demo{border:1px solid var(--blue-line);background:linear-gradient(180deg,#ffffff,#f6faff);border-radius:14px;padding:16px 18px;margin:18px 0}
+.demo-h{font-size:12.5px;font-weight:800;color:var(--blue);letter-spacing:.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.demo-h .live{background:var(--green-bg);color:var(--green);border:1px solid var(--green-line);border-radius:99px;padding:1px 9px;font-size:11px}
+.demo-row{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.dbtn{font-family:var(--sans);font-size:13px;font-weight:700;color:#fff;background:var(--blue);border:0;border-radius:9px;padding:7px 14px;cursor:pointer;transition:transform .18s,box-shadow .18s,background .18s}
+.dbtn:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(37,99,235,.25)}
+.dbtn:active{transform:scale(.95)}
+.dbtn.ghost{background:#fff;color:var(--blue);border:1px solid var(--blue-line)}
+.dbtn.teal{background:var(--sqla)}
+.dbtn.green{background:var(--green)}
+.dbtn.red{background:var(--red)}
+.dbtn.gray{background:#64748b}
+.dbtn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.demo-screen{background:#fff;border:1px dashed var(--blue-line);border-radius:10px;padding:8px 14px;font-size:14px;min-width:140px;text-align:center}
+.demo-screen b{font-family:var(--mono);font-size:21px;color:var(--blue);display:inline-block}
+.demo-screen.big{min-width:260px;text-align:left;font-family:var(--mono);font-size:12.5px;line-height:1.9;white-space:pre-wrap}
+.lamps{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:12px;font-size:12.5px;color:var(--muted)}
+.lamp{border:1px solid var(--line);background:#fff;border-radius:99px;padding:3px 11px;transition:all .3s}
+.lamp.on{background:var(--orange-bg);border-color:var(--orange-line);color:var(--orange);font-weight:800;box-shadow:0 0 0 4px rgba(234,88,12,.1)}
+.demo-note{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.7}
+.pane{display:flex;gap:12px;flex-wrap:wrap}
+.pane>div{flex:1 1 230px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13.5px}
+.pane .pt{font-weight:800;font-size:12.5px;color:var(--muted);margin-bottom:8px}
+.bar{height:12px;background:#e8eef6;border-radius:99px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#2563eb,#0f766e);border-radius:99px;animation:barGrow 1s ease both}
+.timeline{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+.tl{font-size:12.5px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 10px;transition:all .3s}
+.tl.on{background:var(--sqla);color:#fff;border-color:var(--sqla);transform:translateY(-4px)}
+.poolbox{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.slot{width:78px;height:52px;border:2px solid var(--line);border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;transition:all .35s}
+.slot.busy{background:var(--orange-bg);border-color:var(--orange-line);color:var(--orange);font-weight:800;transform:translateY(-4px)}
+.slot.free{background:var(--green-bg);border-color:var(--green-line);color:var(--green)}
+.sqlout{background:#0f172a;color:#a5f3fc;border-radius:10px;padding:12px 16px;font-family:var(--mono);font-size:12.5px;line-height:1.9;white-space:pre-wrap;min-height:64px}
+.sqlout .hl{color:#fde68a;font-weight:700}
+.rowlist{font-family:var(--mono);font-size:12.5px;background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 13px;line-height:1.9;min-height:62px}
+.rowlist .new{color:var(--green);font-weight:700}
+
+/* 索引 / 词典 表格更紧凑 */
+table.kv.tight td,table.kv.tight th{padding:6px 9px;font-size:13px}
+table.kv.tight td:first-child{white-space:nowrap}
+.tagv{display:inline-block;background:var(--sqla-bg);color:var(--sqla);border:1px solid var(--sqla-line);border-radius:6px;padding:0 7px;font-size:11.5px;font-weight:700;font-family:var(--mono)}
+.tagnew{display:inline-block;background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:6px;padding:0 7px;font-size:11.5px;font-weight:700}
+.anchor{scroll-margin-top:22px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+
+/* OpenCV 教程专用：沿用其它教程的组件，只换主色 */
+:root{
+  --sqla:#c2410c; --sqla-bg:#fff7ed; --sqla-line:#fdba74;
+  --cv:#c2410c; --cv-bg:#fff7ed; --cv-line:#fdba74;
+}
+.badge.b-cv{background:var(--cv-bg);color:var(--cv);border-color:var(--cv-line)}
+h2.chap .num.cv{background:var(--cv)}
+table.kv th{background:var(--cv-bg)}
+table.words td:first-child code{color:var(--cv)}
+.flag5{display:inline-block;font:700 10.5px var(--mono);letter-spacing:.4px;
+  background:#fff7ed;color:#c2410c;border:1px solid #fdba74;
+  border-radius:99px;padding:1px 7px;vertical-align:middle;margin-left:6px}
+.flag4{display:inline-block;font:700 10.5px var(--mono);letter-spacing:.4px;
+  background:#f1f5f9;color:#64748b;border:1px solid #cbd5e1;
+  border-radius:99px;padding:1px 7px;vertical-align:middle;margin-left:6px}
+.stat{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.stat div{flex:1 1 130px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:12px 14px;text-align:center}
+.stat b{display:block;font:800 21px var(--mono);color:var(--cv)}
+.stat span{font-size:12px;color:var(--muted)}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="side">
+  <div class="logo">OpenCV <span>图解教程</span></div>
+  <div class="sub">2026 最新版 · 27 章（含第 0 章速查表）+ 3 个附录<br>按官网 5.0 校正菜鸟教程全部 31 页内容</div>
+  <div class="toc-group">第一篇 · 跟着做（零基础）</div>
+  <a class="toc" href="#c0">00 关键字速查表</a>
+  <a class="toc" href="#c1">01 开始之前</a>
+  <a class="toc" href="#c2">02 装好环境（手把手）</a>
+  <a class="toc" href="#c3">03 第一个程序</a>
+  <a class="toc" href="#c4">04 图像到底是什么</a>
+  <div class="toc-group">第二篇 · 日常主线</div>
+  <a class="toc" href="#c5">05 基础模块地图</a>
+  <a class="toc" href="#c6">06 读图、显示、保存</a>
+  <a class="toc" href="#c7">07 像素、ROI 与通道</a>
+  <a class="toc" href="#c8">08 画图与写字</a>
+  <a class="toc" href="#c9">09 颜色空间</a>
+  <div class="toc-group">第三篇 · 全部技能</div>
+  <a class="toc" href="#c10">10 图像算术与位运算</a>
+  <a class="toc" href="#c11">11 阈值处理</a>
+  <a class="toc" href="#c12">12 平滑与滤波</a>
+  <a class="toc" href="#c13">13 形态学操作</a>
+  <a class="toc" href="#c14">14 几何变换</a>
+  <a class="toc" href="#c15">15 边缘检测</a>
+  <a class="toc" href="#c16">16 轮廓检测</a>
+  <a class="toc" href="#c17">17 直方图与均衡化</a>
+  <a class="toc" href="#c18">18 视频处理</a>
+  <a class="toc" href="#c19">19 目标跟踪与背景减除</a>
+  <div class="toc-group">第四篇 · 实战与进阶</div>
+  <a class="toc" href="#c20">20 特征匹配与图像拼接</a>
+  <a class="toc" href="#c21">21 人脸检测与模板匹配</a>
+  <a class="toc" href="#c22">22 滤镜效果</a>
+  <a class="toc" href="#c23">23 完整实战一：批量处理图片</a>
+  <a class="toc" href="#c24">24 完整实战二：摄像头实时检测</a>
+  <a class="toc" href="#c25">25 C++ 版 OpenCV 与项目配置</a>
+  <a class="toc" href="#c26">26 机器学习、性能优化与排错</a>
+  <div class="toc-group">附录</div>
+  <a class="toc" href="#apxa">附录 A 函数速查表</a>
+  <a class="toc" href="#apxb">附录 B 完整 API 索引</a>
+  <a class="toc" href="#apxc">附录 C 4.x → 5.0 变化对照</a>
+</nav>
+
+<main class="main">
+
+<div class="hero">
+  <h1>OpenCV 图解教程 <span style="font-size:19px;color:var(--cv);vertical-align:middle">5.0 零基础完整版</span></h1>
+  <p class="lead">读图、改图、找边缘、认人脸、处理视频，一步一步做出来。<br>每个英文都翻译，每行代码都拆开讲，每一步都有图、有动画、有「你会看到什么」。</p>
+  <div class="badges">
+    <span class="badge b-cv">对齐 OpenCV 5.0（pip 包 5.0.0.93）</span>
+    <span class="badge b-blue">Python ≥ 3.6 · C++17</span>
+    <span class="badge b-purple">菜鸟教程 31 页内容全覆盖</span>
+    <span class="badge b-green">4.x → 5.0 差异单独讲清</span>
+    <span class="badge b-orange">27 章 + 3 附录 · 全主题覆盖</span>
+  </div>
+</div>
+
+<div class="warn">
+  <span class="card-t">先看这里：版本要说清楚（很重要）</span>
+  <p>教程写于 <b>2026 年 11 月 6 日</b>，下面版本号是当天从 GitHub 官方仓库和 PyPI 实际查到的：</p>
+  <table class="kv">
+    <tr><th>版本</th><th>状态</th><th>说明</th></tr>
+    <tr><td><code>5.1.0</code></td><td>源码仓库最新正式版</td><td>GitHub 上今天刚发布；C++ 源码层面最新</td></tr>
+    <tr><td><code>5.0.0</code> / <code>5.0.0-alpha</code></td><td>5.0 正式版与预览版</td><td>官方提供 4.x → 5.x 迁移指南</td></tr>
+    <tr><td><code>5.0.0.93</code></td><td><b>pip 能装到的最新版本</b></td><td><code>opencv-python</code> 的版本号，对应 5.0 系列</td></tr>
+    <tr><td><code>4.14.0</code></td><td>4.x 最后稳定系列</td><td>菜鸟教程原文就是按 4.x 写的</td></tr>
+  </table>
+  <p>所以本教程按你要求的 <b>5.0</b> 写：Python 代码用 <code>opencv-python 5.0.0.93</code> 这一套，同时把 5.1.0 与 4.x 的差异标出来。<span class="kw" data-w="cv2">cv2</span> 这个模块名在 5.0 里<b>没有改</b>，别被版本号吓到。</p>
+  <p><b>但有一处必须提醒</b>：5.0 把 Haar 人脸检测（<span class="kw" data-w="CascadeClassifier"><code>CascadeClassifier</code></span>）、<code>ml</code>、SURF 等移到了 <span class="kw" data-w="contrib">contrib</span> 扩展包，菜鸟教程里那些代码在只装 <code>opencv-python</code> 的 5.0 环境会报错。第 21 章和附录 C 会给出两种解决办法。</p>
+</div>
+
+<div class="tip">
+  <span class="card-t">这份教程和别的不一样在哪</span>
+  <p>① <b>先做再懂</b>：第 3 章就让你把一张图读进来、显示、变灰、存盘，第 4 章才回头讲数组原理。<br>
+  ② <b>每个英文都翻译</b>：命令、参数、Python 关键字、NumPy 名词、OpenCV 函数名、C++ 名词、连 <span class="kw" data-w="="><code>=</code></span> <span class="kw" data-w="."><code>.</code></span> <span class="kw" data-w="()"><code>()</code></span> <span class="kw" data-w="[]"><code>[]</code></span> 都拆开讲；第 0 章有完整速查表，正文里带虚线的词<b>点一下能看解释</b>。<br>
+  ③ <b>图是真画出来的</b>：全书内嵌 SVG 矢量图，断网也在；还有可点动画，看得见数组、阈值、卷积到底做了什么。<br>
+  ④ <b>10–26 章把技能补到全</b>：阈值、滤波、形态学、几何变换、边缘、轮廓、直方图、视频、跟踪、拼接、人脸、C++、性能优化，全部展开成正式章节，不折叠、不省略。<br>
+  ⑤ <b>每步有检查点</b>：敲完立刻告诉你「应该看到什么」，错了当场就能发现。<br>
+  ⑥ <b>旧写法会标出来</b>：菜鸟教程基于 4.x，凡是 5.0 有变化的地方都带 <span class="flag5">仅 5.0</span> 或 <span class="flag4">4.x 旧写法</span> 标记。</p>
+</div>
+
+<div class="warn">
+  <span class="card-t">先看这里：三种框，别敲错地方（重要）</span>
+  <p><b>① 终端命令块</b>（灰底、<span class="pill">$</span> 蓝底）：<b>只敲带 <code>$</code> 的那一行</b>。<code>$</code> 只是「这一行要敲」的标记，不是命令的一部分；绿色 <span class="kw" data-w="#"><code>#</code></span> 开头的行是解释，<b>不要敲进去</b>，注释里的 <span class="kw" data-w="="><code>=</code></span> 是「意思是」，不是命令语法。</p>
+  <p><b>② Python 文件块</b>（标题写着文件名，如 <code>first.py</code>）：整段是<b>写进 .py 文件</b>的代码，不是在终端里一行行敲。绿色 <span class="kw" data-w="#"><code>#</code></span> 注释是解释，可以不写。</p>
+  <p><b>③ 输出模拟块</b>（绿边）：这是「<b>你会看到什么</b>」，是屏幕显示的结果或应该弹出的窗口，<b>千万不要敲</b>。</p>
+  <p>另外：终端提示符前面的路径每台电脑都不同（可能是 <code>C:\Users\你\Desktop&gt;</code>、<code>~$</code>、<code>/c/...</code>），本书<b>不写死路径</b>，只写 <code>$</code>。用 <code>pwd</code> 看一眼，末尾是目标文件夹名才算进对了。</p>
+</div>
+
+<div class="fig">
+<svg viewBox="0 0 900 250" xmlns="http://www.w3.org/2000/svg">
+  <rect width="900" height="250" fill="#ffffff"/>
+  <text class="tb" x="20" y="26">全书路线：先把图「读进来」，再一层层加工</text>
+  <rect class="box" x="20" y="46" width="200" height="82" rx="12" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="t" x="36" y="72">第一篇 跟着做</text><text class="ts" x="36" y="94">01–04 章</text>
+  <text class="ts" x="36" y="116">装好 → 跑通 → 懂数组</text>
+  <rect class="box" x="236" y="46" width="200" height="82" rx="12" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="t" x="252" y="72">第二篇 日常主线</text><text class="ts" x="252" y="94">05–09 章</text>
+  <text class="ts" x="252" y="116">读写 / 像素 / 颜色</text>
+  <rect class="box" x="452" y="46" width="200" height="82" rx="12" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="t" x="468" y="72">第三篇 全部技能</text><text class="ts" x="468" y="94">10–19 章</text>
+  <text class="ts" x="468" y="116">滤波 / 边缘 / 视频</text>
+  <rect class="box" x="668" y="46" width="212" height="82" rx="12" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="t" x="684" y="72">第四篇 实战进阶</text><text class="ts" x="684" y="94">20–26 章 + 附录</text>
+  <text class="ts" x="684" y="116">人脸 / C++ / 排错</text>
+  <path d="M222 87 L234 87 M438 87 L450 87 M654 87 L666 87" stroke="#c2410c" stroke-width="2" marker-end="url(#arV0)"/>
+  <text class="tb" x="20" y="166">一条典型的图像处理流水线（全书反复出现）</text>
+  <rect class="box" x="20" y="182" width="140" height="44" rx="10" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tm" x="34" y="210">imread 读图</text>
+  <rect class="box" x="180" y="182" width="140" height="44" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="194" y="210">cvtColor 灰度</text>
+  <rect class="box" x="340" y="182" width="140" height="44" rx="10" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="tm" x="354" y="210">blur / Canny</text>
+  <rect class="box" x="500" y="182" width="140" height="44" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="tm" x="514" y="210">findContours</text>
+  <rect class="box" x="660" y="182" width="220" height="44" rx="10" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="tm" x="674" y="210">imshow / imwrite 输出</text>
+  <path d="M162 204 L178 204 M322 204 L338 204 M482 204 L498 204 M642 204 L658 204" stroke="#2563eb" stroke-width="2" marker-end="url(#arV0)"/>
+  <defs><marker id="arV0" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#2563eb"/></marker></defs>
+</svg>
+<figcaption><b>全书路线图</b>：上面是四篇的推进顺序；下面是几乎每章都会用到的五步流水线。</figcaption>
+</div>
+
+<h2 class="chap" id="c0"><span class="num cv">00</span> 关键字速查表</h2>
+<p class="chap-lead">这张表把全书会出现的英文和符号一次列全。<b>现在不用背</b>，写代码时回来查；正文带虚线的词点一下也能看解释。</p>
+
+<h3>0.1 Python 关键字与符号</h3>
+<table class="kv">
+<tr><th>写法</th><th>英文原意</th><th>中文意思</th><th>例子</th></tr>
+<tr><td><span class="kw" data-w="import"><code>import</code></span></td><td>import 导入</td><td>把别人写好的库拿进本文件</td><td><code>import cv2</code></td></tr>
+<tr><td><span class="kw" data-w="as"><code>as</code></span></td><td>as 作为</td><td>起别名，后面写短名字</td><td><code>import numpy as np</code></td></tr>
+<tr><td><code>for ... in</code></td><td>for each in 对每一个</td><td>把列表里的东西一个个取出来</td><td><code>for (x,y,w,h) in faces:</code></td></tr>
+<tr><td><span class="kw" data-w="while"><code>while</code></span></td><td>while 当……时</td><td>条件成立就一直循环，视频逐帧常用</td><td><code>while True:</code></td></tr>
+<tr><td><code>if / not / break</code></td><td>如果 / 不 / 跳出</td><td>判断 / 取反 / 立刻结束循环</td><td><code>if not ret: break</code></td></tr>
+<tr><td><span class="kw" data-w="None"><code>None</code></span></td><td>none 空值</td><td>什么都没有；读图失败就返回它</td><td><code>if img is None:</code></td></tr>
+<tr><td><code>True / False</code></td><td>真 / 假</td><td>布尔值，常用作开关</td><td><code>closed=True</code></td></tr>
+<tr><td><code>def / return</code></td><td>define 定义 / return 返回</td><td>定义函数 / 把结果交回去</td><td><code>def f(img): return img</code></td></tr>
+<tr><td><code>print()</code></td><td>print 打印</td><td>输出到终端，用来检查结果</td><td><code>print(img.shape)</code></td></tr>
+<tr><td><span class="kw" data-w="="><code>=</code></span></td><td>assign 赋值</td><td>把右边结果存进左边变量（不是「等于」）</td><td><code>img = cv2.imread('a.jpg')</code></td></tr>
+<tr><td><span class="kw" data-w="=="><code>==</code></span></td><td>equals 等于</td><td>比较两边是否相等</td><td><code>if key == 27:</code></td></tr>
+<tr><td><span class="kw" data-w="."><code>.</code></span></td><td>dot 点号</td><td>取这个对象身上的属性或方法</td><td><code>cv2.cvtColor(...)</code></td></tr>
+<tr><td><span class="kw" data-w="()"><code>()</code></span></td><td>parentheses 括号</td><td>函数名后加括号＝执行它；括号里放参数</td><td><code>cv2.waitKey(0)</code></td></tr>
+<tr><td><span class="kw" data-w="[]"><code>[]</code></span></td><td>列表 / 下标 / 切片</td><td>取第几个、或取一段</td><td><code>img[y, x]</code>、<code>img[:100]</code></td></tr>
+<tr><td><span class="kw" data-w=":"><code>:</code></span> / <span class="kw" data-w="#"><code>#</code></span></td><td>冒号 / 注释</td><td>下面是一段缩进代码 / 给人看的说明</td><td><code># 读图</code></td></tr>
+</table>
+
+<h3>0.2 NumPy 与数组</h3>
+<table class="kv">
+<tr><th>写法</th><th>英文原意</th><th>中文意思</th><th>例子</th></tr>
+<tr><td><span class="kw" data-w="numpy"><code>numpy</code></span> / <span class="kw" data-w="np"><code>np</code></span></td><td>Numerical Python</td><td>数值计算库；OpenCV 的图像就是它的数组</td><td><code>import numpy as np</code></td></tr>
+<tr><td><span class="kw" data-w="array"><code>array</code></span></td><td>array 数组</td><td>按序号排列的一堆数；灰度二维、彩色三维</td><td><code>np.array([1,2,3])</code></td></tr>
+<tr><td><span class="kw" data-w="shape"><code>shape</code></span></td><td>shape 形状</td><td>数组尺寸；彩色图是 (高, 宽, 通道数)</td><td><code>h, w = img.shape[:2]</code></td></tr>
+<tr><td><span class="kw" data-w="dtype"><code>dtype</code></span></td><td>data type 数据类型</td><td>每个数是什么类型</td><td><code>img.dtype</code></td></tr>
+<tr><td><span class="kw" data-w="uint8"><code>uint8</code></span></td><td>unsigned 8-bit integer</td><td>0~255 的整数，正好存一个颜色通道</td><td><code>np.uint8</code></td></tr>
+<tr><td><span class="kw" data-w="zeros"><code>zeros</code></span> / <span class="kw" data-w="ones"><code>ones</code></span></td><td>全零 / 全一</td><td>造黑底图或形态学核</td><td><code>np.ones((5,5), np.uint8)</code></td></tr>
+<tr><td><span class="kw" data-w="slice"><code>slice</code></span></td><td>slice 切片</td><td><code>[起:止]</code> 取一段；ROI 就是切片</td><td><code>img[50:200, 100:300]</code></td></tr>
+<tr><td><span class="kw" data-w="where"><code>where</code></span> / <span class="kw" data-w="clip"><code>clip</code></span></td><td>在哪里 / 夹住</td><td>找满足条件的下标 / 把数值限制在范围内</td><td><code>np.clip(b, 0, 255)</code></td></tr>
+</table>
+
+<h3>0.3 OpenCV 常用函数</h3>
+<table class="kv">
+<tr><th>函数</th><th>英文原意</th><th>中文意思</th></tr>
+<tr><td><code>cv2.imread()</code></td><td>image read 读图</td><td>把图片读成数组；失败返回 <span class="kw" data-w="None"><code>None</code></span></td></tr>
+<tr><td><code>cv2.imshow()</code></td><td>image show 显示</td><td>开窗口显示；必须配 <span class="kw" data-w="waitKey"><code>waitKey</code></span></td></tr>
+<tr><td><code>cv2.waitKey()</code></td><td>wait key 等按键</td><td>等多少毫秒；0＝一直等</td></tr>
+<tr><td><code>cv2.imwrite()</code></td><td>image write 写图</td><td>把数组存成图片</td></tr>
+<tr><td><code>cv2.cvtColor()</code></td><td>convert color 转颜色</td><td>彩色转灰度、BGR 转 HSV</td></tr>
+<tr><td><code>cv2.threshold()</code></td><td>threshold 阈值</td><td>按亮度把图分成黑白</td></tr>
+<tr><td><code>cv2.GaussianBlur()</code></td><td>Gaussian blur 高斯模糊</td><td>去噪、保边较好</td></tr>
+<tr><td><code>cv2.Canny()</code></td><td>Canny 边缘检测</td><td>输出黑白边缘图</td></tr>
+<tr><td><code>cv2.findContours()</code></td><td>find contours 找轮廓</td><td>在二值图里找物体外框</td></tr>
+<tr><td><code>cv2.VideoCapture()</code></td><td>video capture 视频捕获</td><td>打开视频或摄像头逐帧读</td></tr>
+</table>
+
+<h3>0.4 概念与参数名词</h3>
+<table class="kv">
+<tr><th>名词</th><th>英文原意</th><th>中文意思</th></tr>
+<tr><td><span class="kw" data-w="BGR"><code>BGR</code></span></td><td>Blue Green Red</td><td>OpenCV 默认通道顺序：蓝、绿、红</td></tr>
+<tr><td><span class="kw" data-w="ROI"><code>ROI</code></span></td><td>Region Of Interest</td><td>感兴趣区域，本质就是数组切片</td></tr>
+<tr><td><span class="kw" data-w="kernel"><code>kernel</code></span></td><td>kernel 卷积核</td><td>在图上滑动的小数字矩阵</td></tr>
+<tr><td><span class="kw" data-w="fps"><code>fps</code></span></td><td>frames per second</td><td>每秒多少帧</td></tr>
+<tr><td><span class="kw" data-w="fourcc"><code>fourcc</code></span></td><td>four character code</td><td>视频编码四字符代码，如 XVID</td></tr>
+<tr><td><span class="kw" data-w="Mat"><code>Mat</code></span> / <span class="kw" data-w="UMat"><code>UMat</code></span></td><td>Matrix / Unified Matrix</td><td>C++ 里存图像的矩阵类</td></tr>
+<tr><td><span class="kw" data-w="contrib"><code>contrib</code></span></td><td>contributions 扩展模块</td><td>额外算法包；5.0 的 Haar、ml 等移到这里</td></tr>
+<tr><td><span class="kw" data-w="ONNX"><code>ONNX</code></span></td><td>Open Neural Network Exchange</td><td>通用神经网络模型格式</td></tr>
+</table>
+
+<div class="check">
+  <span class="card-t">检查点：这一章只要记住 3 件事</span>
+  <p>① 图像在 Python 里就是 NumPy <b>数组</b>，改数组＝改图。<br>
+  ② OpenCV 的通道顺序是 <b>BGR</b>，不是 RGB。<br>
+  ③ 蓝色底 <code>$</code> 才是要敲的终端命令，绿色 <span class="kw" data-w="#"><code>#</code></span> 注释不用敲。</p>
+</div>
+
+<h2 class="chap" id="c1"><span class="num cv">01</span> 开始之前</h2>
+<p class="chap-lead">先花两分钟搞清楚 OpenCV 是干什么的、要装什么，后面每一步才不会迷糊。</p>
+
+<h3>1.1 OpenCV 到底做什么</h3>
+<p>OpenCV 全称 <b>Open Source Computer Vision Library</b>（开源计算机视觉库）。它把「让电脑看懂图片和视频」这件难事，做成了几千个现成函数，你只要调用就行。</p>
+<div class="fig">
+<svg viewBox="0 0 880 220" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="220" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">同一张图，OpenCV 能回答四类问题</text>
+  <rect class="box" x="18" y="44" width="200" height="120" rx="12" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="t" x="32" y="70">① 它是什么</text>
+  <text class="ts" x="32" y="94">分类、人脸检测</text>
+  <text class="ts" x="32" y="116">模板匹配、特征点</text>
+  <text class="tm" x="32" y="146">objdetect / features</text>
+  <rect class="box" x="234" y="44" width="200" height="120" rx="12" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="t" x="248" y="70">② 在哪里</text>
+  <text class="ts" x="248" y="94">边缘、轮廓、框</text>
+  <text class="ts" x="248" y="116">目标跟踪、拼接</text>
+  <text class="tm" x="248" y="146">imgproc / video</text>
+  <rect class="box" x="450" y="44" width="200" height="120" rx="12" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="t" x="464" y="70">③ 变好看</text>
+  <text class="ts" x="464" y="94">去噪、锐化、调色</text>
+  <text class="ts" x="464" y="116">直方图均衡、滤镜</text>
+  <text class="tm" x="464" y="146">imgproc / photo</text>
+  <rect class="box" x="666" y="44" width="196" height="120" rx="12" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="t" x="680" y="70">④ 存下来</text>
+  <text class="ts" x="680" y="94">写图片、写视频</text>
+  <text class="ts" x="680" y="116">实时摄像头处理</text>
+  <text class="tm" x="680" y="146">imgcodecs / videoio</text>
+  <text class="ts" x="18" y="192">菜鸟教程把这四类拆成 Python 版 22 章 + C++ 版 9 章；本教程全部覆盖。</text>
+</svg>
+<figcaption><b>四类问题</b>：认出它、找到它、修好它、存下来。</figcaption>
+</div>
+
+<table class="kv">
+<tr><th>你想做的事</th><th>用哪些函数</th><th>本教程章节</th></tr>
+<tr><td>把一批照片统一缩小、转灰度</td><td><span class="kw" data-w="imread"><code>imread</code></span> <span class="kw" data-w="resize"><code>resize</code></span> <span class="kw" data-w="cvtColor"><code>cvtColor</code></span></td><td>第 3、14、23 章</td></tr>
+<tr><td>找出证件照里的人脸并画框</td><td><span class="kw" data-w="FaceDetectorYN"><code>FaceDetectorYN</code></span> / <span class="kw" data-w="CascadeClassifier"><code>CascadeClassifier</code></span> <code>rectangle</code></td><td>第 21、24 章</td></tr>
+<tr><td>把扫描件里的文字提出来</td><td><span class="kw" data-w="threshold"><code>threshold</code></span> <span class="kw" data-w="findContours"><code>findContours</code></span></td><td>第 11、16 章</td></tr>
+<tr><td>摄像头实时监控/录像</td><td><span class="kw" data-w="VideoCapture"><code>VideoCapture</code></span> <span class="kw" data-w="VideoWriter"><code>VideoWriter</code></span></td><td>第 18、24 章</td></tr>
+<tr><td>两张照片拼成全景图</td><td><code>SIFT_create</code> <span class="kw" data-w="findHomography"><code>findHomography</code></span></td><td>第 20 章</td></tr>
+</table>
+
+<h3>1.2 要准备的东西</h3>
+<div class="step">
+  <div class="step-h"><span class="step-n">1</span> Python 3.6 或更高</div>
+  <p>OpenCV 5.0 明确<b>不再支持 Python 2</b>。第 2 章会教你查版本。</p>
+</div>
+<div class="step">
+  <div class="step-h"><span class="step-n">2</span> pip 与 NumPy</div>
+  <p>装 <code>opencv-python</code> 时会自动带上 NumPy，不用单独装。</p>
+</div>
+<div class="step">
+  <div class="step-h"><span class="step-n">3</span> 一台能开窗口的电脑（可选）</div>
+  <p><code>imshow()</code> 会弹图形窗口。如果只想存文件不弹窗（服务器、无界面环境），把 <span class="kw" data-w="imshow"><code>imshow</code></span> 换成 <span class="kw" data-w="imwrite"><code>imwrite</code></span> 即可，功能不受影响。</p>
+</div>
+<div class="step">
+  <div class="step-h"><span class="step-n">4</span> 一张测试图片</div>
+  <p>随便找一张 jpg/png，放到项目文件夹里，命名成 <code>bird.jpg</code>。全书示例都用这个名字。</p>
+</div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能说出 OpenCV 帮你解决哪四类问题；② 知道 5.0 要 Python ≥ 3.6；③ 手上有一张测试图片。</p></div>
+
+<h2 class="chap" id="c2"><span class="num cv">02</span> 装好环境（手把手）</h2>
+<p class="chap-lead">这一章每一步都给出「你会看到什么」，做错当场就能发现。</p>
+
+<div class="fig">
+<svg viewBox="0 0 880 128" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="128" fill="#ffffff"/>
+  <rect class="box" x="14" y="32" width="150" height="58" rx="11" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="t" x="30" y="56">① 查 Python</text><text class="ts" x="30" y="78">python --version</text>
+  <rect class="box" x="184" y="32" width="150" height="58" rx="11" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="t" x="200" y="56">② 建文件夹</text><text class="ts" x="200" y="78">mkdir + cd</text>
+  <rect class="box" x="354" y="32" width="150" height="58" rx="11" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="t" x="370" y="56">③ 装库</text><text class="ts" x="370" y="78">pip install</text>
+  <rect class="box" x="524" y="32" width="150" height="58" rx="11" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="t" x="540" y="56">④ 验证版本</text><text class="ts" x="540" y="78">print(__version__)</text>
+  <rect class="box" x="694" y="32" width="170" height="58" rx="11" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="t" x="710" y="56">⑤ 放测试图</text><text class="ts" x="710" y="78">bird.jpg</text>
+  <path d="M166 61 L182 61 M336 61 L352 61 M506 61 L522 61 M676 61 L692 61" stroke="#c2410c" stroke-width="2" marker-end="url(#arV2)"/>
+  <defs><marker id="arV2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#c2410c"/></marker></defs>
+</svg>
+<figcaption><b>安装五步</b>：一步一步来，每步都有检查点。</figcaption>
+</div>
+
+<h3>2.1 第 1 步：查 Python 版本</h3>
+<div class="cmd"><div class="cmd-bar"><span>终端</span><span>只敲带 $ 的行</span></div><pre><span class="p">$</span> <span class="k">python</span> --version
+<span class="c"># python = 运行 Python；--version = 问「你是什么版本」（version = 版本）</span>
+<span class="c"># $ 只是「这一行要敲」的标记，不是命令的一部分</span></pre></div>
+<div class="out"><div class="out-bar">你会看到什么</div><pre>Python 3.13.14</pre><div class="trans"><b>检查点：</b>第一位是 3，且版本 ≥ 3.6 就行。</div></div>
+<div class="warn"><span class="card-t">Windows 特有：'python' 不是内部或外部命令</span><p>先试 <code>py --version</code>；还不行说明安装 Python 时没勾「Add Python to PATH」，重新运行安装包勾上，或把 Python 安装目录加进环境变量 PATH。</p></div>
+
+<h3>2.2 第 2 步：建项目文件夹并进去</h3>
+<div class="cmd"><div class="cmd-bar"><span>终端</span><span>一条一条敲</span></div><pre><span class="p">$</span> <span class="k">mkdir</span> cv-lab
+<span class="c"># mkdir = make directory 新建文件夹；cv-lab 是文件夹名，可自己改</span>
+<span class="p">$</span> <span class="k">cd</span> cv-lab
+<span class="c"># cd = change directory 进入文件夹；这里写的是「相对路径」</span>
+<span class="p">$</span> <span class="k">pwd</span>
+<span class="c"># pwd = print working directory 打印当前位置，用来检查有没有进对</span></pre></div>
+<div class="out"><div class="out-bar">你会看到什么</div><pre>/c/Users/Administrator/Desktop/cv-lab</pre><div class="trans"><b>检查点：末尾必须是 <code>cv-lab</code></b>。前半截每人不同，所以本书从不写死提示符路径，只看最后一段。</div></div>
+<table class="kv">
+<tr><th>情况</th><th>怎么写 <code>cd</code></th><th>说明</th></tr>
+<tr><td>进当前位置下的文件夹</td><td><code>cd cv-lab</code></td><td>相对路径，最常用</td></tr>
+<tr><td>给完整路径</td><td><code>cd /c/Users/Administrator/Desktop/cv-lab</code></td><td>绝对路径；Windows 的 C 盘在 Git Bash 里写 <code>/c/</code></td></tr>
+<tr><td>回家目录 / 上一层</td><td><code>cd ~</code> / <code>cd ..</code></td><td><code>~</code> 是我的用户文件夹，<code>..</code> 是上一级</td></tr>
+<tr><td>中文名 / 带空格</td><td><code>cd 教程</code> / <code>cd "my lab"</code></td><td>带空格<b>必须加引号</b></td></tr>
+<tr><td>另一个盘 / 偷懒</td><td><code>cd /d/work</code> / <code>cd cv</code> + <kbd>Tab</kbd></td><td>D 盘写 <code>/d/</code>；Tab 自动补全</td></tr>
+</table>
+
+<h3>2.3 第 3 步：安装 OpenCV</h3>
+<p>按需要<b>二选一</b>（两个包不要同时装，会互相覆盖）：</p>
+<div class="cmd"><div class="cmd-bar"><span>终端 · 方案 A：基础包（本教程前 20 章够用）</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">pip</span> install opencv-python
+<span class="c"># pip = Python 包管理器；install = 安装；opencv-python = 包名</span>
+<span class="c"># 2026-11-06 实测 PyPI 最新版本为 5.0.0.93</span></pre></div>
+<div class="cmd"><div class="cmd-bar"><span>终端 · 方案 B：完整包（第 21 章人脸检测需要）</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">pip</span> install opencv-contrib-python
+<span class="c"># contrib = contributions 扩展模块，包含 Haar、ml、SURF 等额外算法</span>
+<span class="c"># 5.0 把 CascadeClassifier 移到了 contrib，只装基础包会找不到</span></pre></div>
+<div class="out"><div class="out-bar">你会看到什么（节选）</div><pre>Collecting opencv-python
+  Downloading opencv_python-5.0.0.93-...whl ...
+Installing collected packages: numpy, opencv-python
+Successfully installed numpy-2.x.x opencv-python-5.0.0.93</pre><div class="trans"><b>检查点：</b>出现 <code>Successfully installed ... opencv-python</code> 才算成功。中间自动装的 <span class="kw" data-w="numpy"><code>numpy</code></span> 是图像数组的底层库，不用管。</div></div>
+<div class="warn">
+  <span class="card-t">Windows 特有：三种常见提示都不是错误</span>
+  <p>① <code>WARNING: You are using pip version ...</code> —— 只是提醒 pip 可升级。<br>
+  ② <code>Defaulting to user installation ...</code> —— 没管理员权限，装到用户目录，照样能用。<br>
+  ③ <code>opencv-python 与 opencv-contrib-python 同时存在</code> —— 这个是真问题：先 <code>pip uninstall opencv-python opencv-contrib-python</code> 全卸掉，再只装其中一个。</p>
+</div>
+
+<h3>2.4 第 4 步：验证</h3>
+<div class="cmd"><div class="cmd-bar"><span>终端</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">python</span> -c <span class="s">"import cv2; print(cv2.__version__)"</span>
+<span class="c"># -c = command 直接执行引号里的一行代码</span>
+<span class="c"># import = 导入；print = 打印；__version__ = 库自带的版本号变量</span></pre></div>
+<div class="out"><div class="out-bar">你会看到什么</div><pre>5.0.0.93</pre><div class="trans"><b>检查点：</b>打印出版本号就成功。报 <code>ModuleNotFoundError: No module named 'cv2'</code> 说明装库和运行的 Python 不是同一个环境，改用 <code>python -m pip install opencv-python</code> 重装一次。</div></div>
+
+<div class="cmd file"><div class="cmd-bar"><span>check.py</span><span>写进文件再运行，检查 contrib 是否可用</span></div><pre><span class="k">import</span> cv2                         <span class="c"># 导入 OpenCV，模块名永远是 cv2</span>
+<span class="k">print</span>(<span class="s">'版本：'</span>, cv2.__version__)
+<span class="k">print</span>(<span class="s">'有没有 Haar 人脸检测器：'</span>, hasattr(cv2, <span class="s">'CascadeClassifier'</span>))
+<span class="c"># hasattr = has attribute 有没有这个属性；返回 True / False</span>
+<span class="c"># 5.0 基础包里是 False，装了 contrib 才是 True（第 21 章细讲）</span></pre></div>
+
+<h3>2.5 第 5 步：放一张测试图</h3>
+<p>把任意一张图片复制进 <code>cv-lab</code>，命名为 <code>bird.jpg</code>。用 <code>ls</code>（Windows CMD 用 <code>dir</code>）确认它能被看到。</p>
+<div class="cmd"><div class="cmd-bar"><span>终端</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">ls</span>
+<span class="c"># ls = list 列出当前文件夹里的文件；应该能看到 bird.jpg</span></pre></div>
+<div class="warn">
+  <span class="card-t">Windows 特有：图片路径的两个坑</span>
+  <p>① <b>反斜杠</b>：代码里写路径要用 <code>r'C:\img\bird.jpg'</code>（前缀 <code>r</code> = raw 原始字符串），或者干脆用正斜杠 <code>'C:/img/bird.jpg'</code>；否则 <code>\b</code> <code>\t</code> 会被当转义符。<br>
+  ② <b>中文路径</b>：Windows 上 <code>cv2.imread('D:/图片/猫.jpg')</code> 常常返回 <span class="kw" data-w="None"><code>None</code></span>（不报错！）。最省事的解决办法是把图片放到全英文路径下；第 26 章给出不改路径的进阶写法。</p>
+</div>
+
+<div class="check"><span class="card-t">检查点：环境装好了</span><p>① <code>python -c "import cv2; print(cv2.__version__)"</code> 能打印版本号。<br>② 当前文件夹里有 <code>bird.jpg</code>，路径不含中文。<br>③ 知道基础包和 contrib 包的区别。三条都满足就可以写第一个程序了。</p></div>
+
+<h2 class="chap" id="c3"><span class="num cv">03</span> 第一个程序</h2>
+<p class="chap-lead">目标：读进一张图、弹窗显示、转成灰度、保存成新文件。全程不到 12 行。</p>
+
+<div class="step">
+  <div class="step-h"><span class="step-n">1</span> 新建 first.py</div>
+  <p>在 <code>cv-lab</code> 里新建 <code>first.py</code>，把下面整段复制进去。绿色注释是解释，可以不抄。</p>
+  <div class="cmd file"><div class="cmd-bar"><span>first.py</span><span>写进文件后用 python first.py 运行</span></div><pre><span class="k">import</span> cv2                                  <span class="c"># import = 导入；cv2 = OpenCV 的 Python 模块名（5.0 也没改）</span>
+
+img = cv2.imread(<span class="s">'bird.jpg'</span>)                 <span class="c"># imread = image read 读图；返回「数组」，失败返回 None</span>
+<span class="k">if</span> img <span class="k">is</span> <span class="k">None</span>:                            <span class="c"># if = 如果；is None = 是空值；读图失败必须判空</span>
+    <span class="k">print</span>(<span class="s">'没读到图，检查文件名和路径'</span>)   <span class="c"># print = 打印提示</span>
+    <span class="k">exit</span>()                                 <span class="c"># exit = 结束程序，别再往下跑</span>
+
+cv2.imshow(<span class="s">'原图'</span>, img)                      <span class="c"># imshow = image show 开窗口显示；第一个参数是窗口名</span>
+cv2.waitKey(0)                               <span class="c"># waitKey = 等待按键；0 = 一直等；不写这行窗口会一闪而过</span>
+
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) <span class="c"># cvtColor = convert color 转颜色；BGR2GRAY = 彩色转灰度</span>
+cv2.imwrite(<span class="s">'gray.jpg'</span>, gray)               <span class="c"># imwrite = image write 存图；第二个参数是要存的数组</span>
+cv2.destroyAllWindows()                      <span class="c"># destroyAllWindows = 关掉所有窗口，释放资源</span>
+<span class="k">print</span>(<span class="s">'完成，已保存 gray.jpg'</span>)</pre></div>
+</div>
+
+<div class="step">
+  <div class="step-h"><span class="step-n">2</span> 运行它</div>
+  <div class="cmd"><div class="cmd-bar"><span>终端（确保已经 cd 进 cv-lab）</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">python</span> first.py
+<span class="c"># python = 用 Python 运行；first.py = 刚才写的文件</span></pre></div>
+</div>
+
+<div class="out"><div class="out-bar">你会看到什么</div><pre>① 弹出一个标题为「原图」的窗口，里面是 bird.jpg
+② 按任意键后窗口关闭
+③ 终端打印：完成，已保存 gray.jpg
+④ 文件夹里多出一个 gray.jpg，打开是黑白版本</pre><div class="trans"><b>检查点：</b>① 窗口里能看到图；② 按任意键窗口会关；③ 文件夹里出现 <code>gray.jpg</code>。三样齐了才算跑通。</div></div>
+
+<div class="fig">
+<svg viewBox="0 0 880 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="200" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">这 12 行代码依次发生了什么</text>
+  <rect class="box" x="18" y="46" width="130" height="58" rx="10" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="tm" x="30" y="70">imread</text><text class="ts" x="30" y="90">文件 → 数组</text>
+  <rect class="box" x="164" y="46" width="130" height="58" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="176" y="70">is None?</text><text class="ts" x="176" y="90">失败就退出</text>
+  <rect class="box" x="310" y="46" width="130" height="58" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="322" y="70">imshow</text><text class="ts" x="322" y="90">数组 → 窗口</text>
+  <rect class="box" x="456" y="46" width="130" height="58" rx="10" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="tm" x="468" y="70">cvtColor</text><text class="ts" x="468" y="90">彩色 → 灰度</text>
+  <rect class="box" x="602" y="46" width="130" height="58" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="tm" x="614" y="70">imwrite</text><text class="ts" x="614" y="90">数组 → 文件</text>
+  <rect class="box" x="748" y="46" width="114" height="58" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="tm" x="760" y="70">destroy</text><text class="ts" x="760" y="90">关窗口</text>
+  <path d="M150 75 L162 75 M296 75 L308 75 M442 75 L454 75 M588 75 L600 75 M734 75 L746 75" stroke="#2563eb" stroke-width="2" marker-end="url(#arV3)"/>
+  <text class="ts" x="18" y="140">关键：OpenCV 全程操作的都是「数组」——文件读进来变成数组，处理完再存回文件。</text>
+  <text class="ts" x="18" y="166">waitKey(0) 不能省：没有它，窗口来不及刷新，看起来就像「一闪而过」或「卡住不动」。</text>
+  <text class="ts" x="18" y="192">imread 失败不报错、只返回 None —— 这是新手第一大坑，所以每次读图都要判空。</text>
+  <defs><marker id="arV3" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#2563eb"/></marker></defs>
+</svg>
+<figcaption><b>执行顺序</b>：文件 → 数组 → 显示 → 处理 → 存盘 → 收尾。</figcaption>
+</div>
+
+<div class="warn">
+  <span class="card-t">三个最常见的报错，现场就能修</span>
+  <p>① <code>没读到图，检查文件名和路径</code> → 检查 <code>bird.jpg</code> 是否在当前文件夹；Windows 上换成英文路径、用 <code>r'...'</code> 或正斜杠。<br>
+  ② 窗口一闪而过 / 显示灰色无响应 → <code>imshow()</code> 后面一定要跟 <code>waitKey(0)</code>。<br>
+  ③ <code>qt.qpa.plugin: Could not find the Qt platform plugin</code> 或无界面环境报错 → 这台机器没有图形界面，把 <code>imshow/waitKey/destroyAllWindows</code> 三行注释掉，只留 <span class="kw" data-w="imwrite"><code>imwrite</code></span>，程序照样能跑。</p>
+</div>
+
+<div class="check"><span class="card-t">检查点</span><p>能独立写出「读图 → 判空 → 显示 → 转灰度 → 存盘 → 关窗口」这六步，就算入门了。下一章解释「数组」到底是什么。</p></div>
+
+<h2 class="chap" id="c4"><span class="num cv">04</span> 图像到底是什么</h2>
+<p class="chap-lead">这一章是全书的地基：把图片拆成一个个数字。看懂了它，后面所有函数都只是「改数字」。</p>
+
+<div class="fig">
+<svg viewBox="0 0 880 240" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="240" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">一张彩色图 = 一堆小方格，每格三个数（蓝、绿、红）</text>
+  <g>
+    <rect x="30" y="46" width="46" height="46" fill="#ffffff" stroke="#cbd5e1"/>
+    <rect x="80" y="46" width="46" height="46" fill="#ffffff" stroke="#cbd5e1"/>
+    <rect x="130" y="46" width="46" height="46" fill="#ffffff" stroke="#cbd5e1"/>
+    <rect x="30" y="96" width="46" height="46" fill="#ffffff" stroke="#cbd5e1"/>
+    <rect x="80" y="96" width="46" height="46" fill="#ffffff" stroke="#cbd5e1"/>
+    <rect x="130" y="96" width="46" height="46" fill="#ffffff" stroke="#cbd5e1"/>
+    <text class="tm" x="36" y="74">[12,80,210]</text><text class="tm" x="86" y="74">…</text><text class="tm" x="136" y="74">…</text>
+    <text class="tm" x="36" y="124">…</text><text class="tm" x="86" y="124">…</text><text class="tm" x="136" y="124">…</text>
+  </g>
+  <path d="M190 94 L240 94" stroke="#c2410c" stroke-width="2" marker-end="url(#arV4)"/>
+  <rect class="box" x="250" y="46" width="250" height="100" rx="12" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="tm" x="266" y="72">img.shape → (高, 宽, 3)</text>
+  <text class="ts" x="266" y="96">例如 (480, 640, 3)：480 行、640 列、3 通道</text>
+  <text class="tm" x="266" y="124">img[y, x] → [蓝, 绿, 红]</text>
+  <rect class="box" x="520" y="46" width="340" height="100" rx="12" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="536" y="72">坐标是「先行后列」：img[y, x]</text>
+  <text class="ts" x="536" y="96">y 从上往下数（行），x 从左往右数（列）</text>
+  <text class="ts" x="536" y="124">但尺寸写 (宽, 高)：resize(img, (640, 480))</text>
+  <text class="ts" x="18" y="182">每个数通常是 uint8（0~255）：0 最暗、255 最亮。改这些数，就等于改了这张图。</text>
+  <text class="ts" x="18" y="210">灰度图只有 1 个通道，shape 变成 (高, 宽)，每个格子只有一个亮度数。</text>
+  <defs><marker id="arV4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#c2410c"/></marker></defs>
+</svg>
+<figcaption><b>图像 = 数组</b>：彩色图是三维数组，灰度图是二维数组。</figcaption>
+</div>
+
+<div class="demo">
+  <div class="demo-h">点一点：把一张图一层层拆开 <span class="live">可点</span></div>
+  <div class="demo-row">
+    <button class="dbtn" onclick="CVDemo.img(1)">① 看形状</button>
+    <button class="dbtn" onclick="CVDemo.img(2)">② 看一个像素</button>
+    <button class="dbtn" onclick="CVDemo.img(3)">③ 切一块 ROI</button>
+    <button class="dbtn" onclick="CVDemo.img(4)">④ 改数字</button>
+    <button class="dbtn ghost" onclick="CVDemo.img(0)">重置</button>
+  </div>
+  <div class="demo-screen big" id="demoImg">一张图还没拆开</div>
+  <div class="lamps" id="demoImgLamps"><span class="lamp">shape</span><span class="lamp">像素</span><span class="lamp">ROI</span><span class="lamp">改数组</span></div>
+</div>
+
+<div class="cmd file"><div class="cmd-bar"><span>array.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2                            <span class="c"># 导入 OpenCV</span>
+<span class="k">import</span> numpy <span class="k">as</span> np                   <span class="c"># 导入 NumPy 并起别名 np（NumPy = 数值计算库）</span>
+
+img = cv2.imread(<span class="s">'bird.jpg'</span>)       <span class="c"># 读图，得到数组</span>
+<span class="k">print</span>(<span class="s">'形状：'</span>, img.shape)       <span class="c"># shape = 数组尺寸；彩色是 (高, 宽, 3)</span>
+<span class="k">print</span>(<span class="s">'类型：'</span>, img.dtype)       <span class="c"># dtype = 每个数的类型，通常是 uint8</span>
+
+h, w = img.shape[:2]              <span class="c"># [:2] = 只取前两个数；h = 高，w = 宽</span>
+<span class="k">print</span>(<span class="s">'高宽：'</span>, h, w)
+
+px = img[100, 150]                <span class="c"># img[y, x]：第 100 行、第 150 列的像素</span>
+<span class="k">print</span>(<span class="s">'这个像素（B,G,R）：'</span>, px)
+<span class="c"># 注意是 [蓝, 绿, 红]，不是 RGB！</span>
+
+img[100, 150] = [255, 255, 255]   <span class="c"># 把这个点改成白色；= 是赋值</span>
+roi = img[50:200, 100:300]        <span class="c"># 切片：行 50~200、列 100~300 的一块区域 = ROI</span>
+<span class="k">print</span>(<span class="s"> ROI 形状：</span>, roi.shape)</pre></div>
+<div class="out"><div class="out-bar">你会看到什么（数字随图片变化）</div><pre>形状： (480, 640, 3)
+类型： uint8
+高宽： 480 640
+这个像素（B,G,R）： [ 42  88 201]
+ ROI 形状： (150, 200, 3)</pre><div class="trans"><b>检查点：</b>形状是三个数、类型是 <span class="kw" data-w="uint8"><code>uint8</code></span>、像素是三个 0~255 的数，就说明你真的看懂了。</div></div>
+
+<h3>4.1 最容易记反的两件事</h3>
+<table class="kv">
+<tr><th>容易混</th><th>正确写法</th><th>记忆方法</th></tr>
+<tr><td>取像素的坐标</td><td><code>img[y, x]</code>（先行后列）</td><td>数组本来就是「第几行、第几列」</td></tr>
+<tr><td>设置尺寸</td><td><code>cv2.resize(img, (640, 480))</code>（先宽后高）</td><td>尺寸习惯写「宽 × 高」，和坐标相反</td></tr>
+<tr><td>通道顺序</td><td>BGR：0 蓝、1 绿、2 红</td><td>OpenCV 的历史习惯，用 matplotlib 显示前要转 RGB</td></tr>
+<tr><td>读图失败</td><td>返回 <span class="kw" data-w="None"><code>None</code></span>，不报错</td><td>所以每次都要 <code>if img is None:</code></td></tr>
+</table>
+
+<div class="dissect">
+  <div class="dl">gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)</div>
+  <table class="words">
+    <tr><td><span class="kw" data-w="gray"><code>gray</code></span></td><td><span class="en">变量名，gray = 灰度</span><br>随便起名，本书统一用 <span class="kw" data-w="gray"><code>gray</code></span> 表示灰度图。</td></tr>
+    <tr><td><span class="kw" data-w="="><code>=</code></span></td><td><span class="en">赋值</span><br>把右边算出来的新数组存进左边变量。</td></tr>
+    <tr><td><span class="kw" data-w="cv2"><code>cv2</code></span></td><td><span class="en">OpenCV 的模块名</span><br>5.0 里仍然叫 <span class="kw" data-w="cv2"><code>cv2</code></span>，不要写成 <code>cv5</code>。</td></tr>
+    <tr><td><span class="kw" data-w="cvtColor"><code>cvtColor</code></span></td><td><span class="en">convert color 转换颜色</span><br>第一个参数是原图，第二个是「怎么转」。</td></tr>
+    <tr><td><span class="kw" data-w="COLOR_BGR2GRAY"><code>COLOR_BGR2GRAY</code></span></td><td><span class="en">BGR to GRAY 彩色转灰度</span><br>一个常量，写着转换规则；全大写表示常量。</td></tr>
+  </table>
+</div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能说出彩色图的 <span class="kw" data-w="shape"><code>shape</code></span> 三个数分别是什么意思。<br>② 知道 <code>img[y, x]</code> 的顺序和 <code>(宽, 高)</code> 相反。<br>③ 知道通道是 BGR，读图失败返回 <span class="kw" data-w="None"><code>None</code></span>。</p></div>
+
+<h2 class="chap" id="c5"><span class="num cv">05</span> 基础模块地图</h2>
+<p class="chap-lead">OpenCV 有几千个函数，但分在十几个模块里。先看地图，以后查文档不迷路。</p>
+
+<div class="fig">
+<svg viewBox="0 0 880 210" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="210" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">按「干什么」记住这五组就够了</text>
+  <rect class="box" x="18" y="44" width="165" height="72" rx="11" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="t" x="30" y="68">core 核心</text><text class="ts" x="30" y="90">Mat / 数组 / 画图</text>
+  <rect class="box" x="196" y="44" width="165" height="72" rx="11" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="t" x="208" y="68">imgproc 图像处理</text><text class="ts" x="208" y="90">滤波 / 边缘 / 轮廓</text>
+  <rect class="box" x="374" y="44" width="165" height="72" rx="11" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="t" x="386" y="68">imgcodecs / highgui</text><text class="ts" x="386" y="90">读存图 / 显示窗口</text>
+  <rect class="box" x="552" y="44" width="145" height="72" rx="11" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="t" x="564" y="68">videoio / video</text><text class="ts" x="564" y="90">视频 / 跟踪</text>
+  <rect class="box" x="710" y="44" width="152" height="72" rx="11" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="t" x="722" y="68">features / objdetect</text><text class="ts" x="722" y="90">特征 / 检测</text>
+  <text class="ts" x="18" y="146">另外还有：dnn（深度学习推理）、ml（机器学习）、calib（相机标定）、stereo（立体视觉）、photo（修图）、stitching（拼接）、gapi。</text>
+  <text class="ts" x="18" y="174">Python 用户不用记模块名：所有函数都挂在 <code>cv2.</code> 下面，模块怎么拆都不影响调用。</text>
+  <text class="ts" x="18" y="200">5.0 把 calib3d 拆成 calib/stereo/geometry、features2d 改名 features，但 Python 写法不变。</text>
+</svg>
+<figcaption><b>模块地图</b>：Python 里只管 <code>cv2.函数名()</code>；C++ 才需要关心头文件。</figcaption>
+</div>
+
+<table class="kv">
+<tr><th>模块</th><th>英文原意</th><th>典型函数</th><th>本教程章节</th></tr>
+<tr><td>core</td><td>core 核心</td><td><span class="kw" data-w="Mat"><code>Mat</code></span> <code>Scalar</code> <code>add</code> <code>line</code></td><td>第 4、8、10 章</td></tr>
+<tr><td>imgproc</td><td>image processing 图像处理</td><td><span class="kw" data-w="cvtColor"><code>cvtColor</code></span> <span class="kw" data-w="blur"><code>blur</code></span> <span class="kw" data-w="Canny"><code>Canny</code></span> <span class="kw" data-w="findContours"><code>findContours</code></span></td><td>第 9–17 章</td></tr>
+<tr><td>imgcodecs / highgui</td><td>image codecs / high-level GUI</td><td><span class="kw" data-w="imread"><code>imread</code></span> <span class="kw" data-w="imwrite"><code>imwrite</code></span> <span class="kw" data-w="imshow"><code>imshow</code></span> <span class="kw" data-w="waitKey"><code>waitKey</code></span></td><td>第 3、6 章</td></tr>
+<tr><td>videoio / video</td><td>video I/O 视频输入输出</td><td><span class="kw" data-w="VideoCapture"><code>VideoCapture</code></span> <span class="kw" data-w="VideoWriter"><code>VideoWriter</code></span> <code>createBackgroundSubtractorMOG2</code></td><td>第 18、19 章</td></tr>
+<tr><td>features / features2d</td><td>features 特征</td><td><code>SIFT_create</code> <code>ORB_create</code> <span class="kw" data-w="BFMatcher"><code>BFMatcher</code></span></td><td>第 20 章</td></tr>
+<tr><td>objdetect</td><td>object detection 目标检测</td><td><span class="kw" data-w="FaceDetectorYN"><code>FaceDetectorYN</code></span> <span class="kw" data-w="CascadeClassifier"><code>CascadeClassifier</code></span></td><td>第 21 章</td></tr>
+<tr><td>dnn / ml</td><td>deep neural network / machine learning</td><td><code>readNet</code> <code>blobFromImage</code> <code>SVM_create</code></td><td>第 26 章</td></tr>
+</table>
+
+<div class="warn"><span class="card-t">5.0 的模块重组（Python 用户基本无感）</span><p>官方迁移指南写明：<code>calib3d</code> 拆成 <code>calib</code> / <code>stereo</code> / <code>geometry</code>，<code>features2d</code> 改名 <code>features</code>，<code>ml</code> 和 <code>gapi</code> 移到 contrib，Haar / HOG 也移到 contrib。但文档同时明确写着「<b>Python: no changes required</b>」—— 所有函数仍然是 <code>cv2.函数名()</code>。真正要留意的是「装了基础包还是 contrib 包」。</p></div>
+
+<div class="check"><span class="card-t">检查点</span><p>看到 <code>cv2.GaussianBlur</code> 能说出它属于图像处理（imgproc），看到 <code>cv2.imread</code> 知道它属于读写模块。</p></div>
+
+<h2 class="chap" id="c6"><span class="num cv">06</span> 读图、显示、保存</h2>
+<p class="chap-lead">三件套看似简单，参数却决定了「读进来是彩色还是灰度」「图片会不会被压糊」。</p>
+
+<h3>6.1 imread 的第二个参数</h3>
+<div class="cmd file"><div class="cmd-bar"><span>read.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+
+img = cv2.imread(<span class="s">'bird.jpg'</span>, cv2.IMREAD_COLOR)   <span class="c"># IMREAD_COLOR = 强制读成三通道彩色（默认值）</span>
+gray = cv2.imread(<span class="s">'bird.jpg'</span>, cv2.IMREAD_GRAYSCALE)
+<span class="c"># IMREAD_GRAYSCALE = 直接读成单通道灰度，省一次转换</span>
+unchanged = cv2.imread(<span class="s">'bird.jpg'</span>, cv2.IMREAD_UNCHANGED)
+<span class="c"># IMREAD_UNCHANGED = 原样读，保留 png 的透明通道</span>
+<span class="k">print</span>(img.shape, gray.shape)       <span class="c"># 彩色 (h,w,3)；灰度 (h,w)</span></pre></div>
+<table class="kv">
+<tr><th>参数</th><th>英文原意</th><th>读进来是什么</th></tr>
+<tr><td><code>cv2.IMREAD_COLOR</code>（或 <code>1</code>）</td><td>read color 读彩色</td><td>三通道 BGR；透明通道被丢掉（默认）</td></tr>
+<tr><td><code>cv2.IMREAD_GRAYSCALE</code>（或 <code>0</code>）</td><td>read grayscale 读灰度</td><td>单通道灰度，shape 只有两个数</td></tr>
+<tr><td><code>cv2.IMREAD_UNCHANGED</code>（或 <code>-1</code>）</td><td>read unchanged 原样</td><td>保留 alpha 透明通道</td></tr>
+</table>
+
+<div class="fig">
+<svg viewBox="0 0 880 140" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="140" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">读图 → 显示 → 存盘：三件套各管一段</text>
+  <rect class="box" x="18" y="44" width="190" height="58" rx="10" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="tm" x="30" y="68">imread()</text><text class="ts" x="30" y="90">文件 → 数组</text>
+  <rect class="box" x="226" y="44" width="190" height="58" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="238" y="68">imshow + waitKey</text><text class="ts" x="238" y="90">数组 → 屏幕</text>
+  <rect class="box" x="434" y="44" width="190" height="58" rx="10" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="tm" x="446" y="68">cvtColor / 处理</text><text class="ts" x="446" y="90">改数组里的数</text>
+  <rect class="box" x="642" y="44" width="220" height="58" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="tm" x="654" y="68">imwrite()</text><text class="ts" x="654" y="90">数组 → 新文件</text>
+  <path d="M210 73 L224 73 M418 73 L432 73 M626 73 L640 73" stroke="#c2410c" stroke-width="2" marker-end="url(#fA)"/>
+  <text class="ts" x="18" y="128">全程只有「数组」这一个中间物；窗口只是看一眼，不写 imwrite 就不会有文件。</text>
+  <defs><marker id="fA" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#c2410c"/></marker></defs>
+</svg>
+<figcaption><b>读写链</b>：三个函数各管一段，中间都是同一个数组对象。</figcaption>
+</div>
+
+<h3>6.2 显示三件套</h3>
+<div class="cmd file"><div class="cmd-bar"><span>show.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+
+img = cv2.imread(<span class="s">'bird.jpg'</span>)
+cv2.namedWindow(<span class="s">'预览'</span>, cv2.WINDOW_AUTOSIZE)
+<span class="c"># namedWindow = 先建窗口；WINDOW_AUTOSIZE = 窗口大小自动适应图像</span>
+cv2.imshow(<span class="s">'预览'</span>, img)          <span class="c"># 把数组画到窗口里；窗口名要和上面一致</span>
+key = cv2.waitKey(0)               <span class="c"># 0 = 一直等到按键；返回按键的 ASCII 码</span>
+<span class="k">if</span> key == 27:                     <span class="c"># 27 是 Esc 键；ord('q') 是字母 q 的码</span>
+    <span class="k">print</span>(<span class="s">'按了 Esc'</span>)
+cv2.destroyAllWindows()            <span class="c"># 关掉所有窗口</span></pre></div>
+<div class="warn"><span class="card-t">Windows 特有：窗口标题里的中文乱码</span><p><code>namedWindow('预览')</code> 在部分 Windows 环境会显示成方块，但<b>不影响功能</b>。要好看就换成英文窗口名 <code>'Preview'</code>。另外远程桌面 / 无图形界面下 <span class="kw" data-w="imshow"><code>imshow</code></span> 可能报 Qt 插件错误，注释掉这三行、只保留 <span class="kw" data-w="imwrite"><code>imwrite</code></span> 即可。</p></div>
+
+<h3>6.3 imwrite 与压缩参数</h3>
+<div class="cmd file"><div class="cmd-bar"><span>write.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+
+img = cv2.imread(<span class="s">'bird.jpg'</span>)
+ok = cv2.imwrite(<span class="s">'out.jpg'</span>, img, [cv2.IMWRITE_JPEG_QUALITY, 95])
+<span class="c"># 第三个参数是「保存参数」列表；95 = JPEG 质量（0~100，越大越清楚、文件越大）</span>
+<span class="k">print</span>(<span class="s">'保存成功了吗：'</span>, ok)   <span class="c"># imwrite 返回 True / False</span>
+cv2.imwrite(<span class="s">'out.png'</span>, img, [cv2.IMWRITE_PNG_COMPRESSION, 3])
+<span class="c"># PNG 用压缩级别 0~9；png 是无损格式，不会糊</span></pre></div>
+
+<div class="tip"><span class="card-t">一句话记住三种格式</span><p><b>jpg</b>：文件小、有损，照片用；<b>png</b>：无损、可带透明通道，截图和二值图用；<b>bmp</b>：不压缩、文件很大，一般不用。</p></div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能用 <code>IMREAD_GRAYSCALE</code> 直接读灰度图。<br>② 知道 <span class="kw" data-w="imshow"><code>imshow</code></span> 必须配 <span class="kw" data-w="waitKey"><code>waitKey</code></span>。<br>③ 知道 <span class="kw" data-w="imwrite"><code>imwrite</code></span> 返回 True/False，jpg 能调质量。</p></div>
+
+<h2 class="chap" id="c7"><span class="num cv">07</span> 像素、ROI 与通道</h2>
+<p class="chap-lead">改图像，本质就是改数组里的数字。这一章把「取一块」「拆通道」「改像素」全讲清。</p>
+
+<div class="cmd file"><div class="cmd-bar"><span>pixel.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+<span class="k">import</span> numpy <span class="k">as</span> np
+
+img = cv2.imread(<span class="s">'bird.jpg'</span>)
+b, g, r = cv2.split(img)          <span class="c"># split = 拆开三个通道；顺序是 蓝、绿、红</span>
+merged = cv2.merge([b, g, r])     <span class="c"># merge = 把三个单通道合回彩色图</span>
+<span class="c"># merge 的参数要放「列表」里，方括号别丢</span>
+
+img[100, 150] = [0, 0, 255]       <span class="c"># BGR 里 [0,0,255] 是纯红色</span>
+roi = img[50:200, 100:300]        <span class="c"># ROI = 行 50~200、列 100~300 的一块</span>
+roi[:, :] = [255, 0, 0]           <span class="c"># [:, :] = 这块区域的全部行列；改成纯蓝</span>
+<span class="c"># 注意：roi 是「视图」不是副本，改 roi 会直接改到原图 img！</span>
+copy = roi.copy()                 <span class="c"># copy = 复制一份，之后改 copy 不影响原图</span>
+
+zeros = np.zeros((100, 100, 3), np.uint8)
+<span class="c"># zeros = 造一个 100×100×3 的全 0 数组＝纯黑图；uint8 = 0~255 整数</span></pre></div>
+
+<div class="fig">
+<svg viewBox="0 0 880 175" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="175" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">ROI 就是数组切片：img[y1:y2, x1:x2]</text>
+  <rect x="40" y="46" width="320" height="110" fill="#f7f9fb" stroke="#94a3b8" stroke-width="2"/>
+  <text class="ts" x="48" y="66">整张图 (h, w)</text>
+  <rect x="150" y="76" width="130" height="60" fill="#fee2e2" stroke="#c2410c" stroke-width="2"/>
+  <text class="tm" x="164" y="112">ROI</text>
+  <path d="M40 76 L146 76" stroke="#c2410c" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <path d="M150 46 L150 72" stroke="#c2410c" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text class="ts" x="48" y="90">y1</text><text class="ts" x="136" y="42">x1</text>
+  <rect class="box" x="400" y="46" width="450" height="110" rx="11" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tm" x="416" y="72">roi = img[50:200, 100:300]</text>
+  <text class="ts" x="416" y="96">第一个范围管「行 y」，第二个范围管「列 x」</text>
+  <text class="ts" x="416" y="120">roi 是视图不是副本：改 roi 会改到原图</text>
+  <text class="ts" x="416" y="144">要独立一份就写 roi.copy()</text>
+</svg>
+<figcaption><b>ROI</b>：先行后列；切片拿到的是「视图」。</figcaption>
+</div>
+
+<h3>7.1 通道与颜色</h3>
+<table class="kv">
+<tr><th>写法（BGR 顺序）</th><th>颜色</th><th>说明</th></tr>
+<tr><td><code>[255, 0, 0]</code></td><td>蓝</td><td>第 0 个通道满值</td></tr>
+<tr><td><code>[0, 255, 0]</code></td><td>绿</td><td>第 1 个通道满值</td></tr>
+<tr><td><code>[0, 0, 255]</code></td><td>红</td><td>第 2 个通道满值</td></tr>
+<tr><td><code>[255, 255, 255]</code></td><td>白</td><td>三个都最亮</td></tr>
+<tr><td><code>[0, 0, 0]</code></td><td>黑</td><td>三个都是 0</td></tr>
+</table>
+<div class="warn"><span class="card-t">新手第一大坑：BGR 不是 RGB</span><p>你在别处看到的「红色 <code>(255,0,0)</code>」是 RGB 写法，在 OpenCV 里那是<b>蓝色</b>。所有颜色常量都是 <code>COLOR_BGR2xxx</code>；用 matplotlib 显示 OpenCV 图像前要 <code>cv2.cvtColor(img, cv2.COLOR_BGR2RGB)</code>，否则人脸会发蓝。</p></div>
+
+<h3>7.2 ROI 的用途</h3>
+<table class="kv">
+<tr><th>想做的事</th><th>写法</th></tr>
+<tr><td>裁剪出一块</td><td><code>crop = img[y1:y2, x1:x2]</code></td></tr>
+<tr><td>把一块区域涂黑</td><td><code>img[y1:y2, x1:x2] = 0</code></td></tr>
+<tr><td>把另一张图贴上去</td><td><code>img[y1:y2, x1:x2] = small</code>（尺寸必须一样）</td></tr>
+<tr><td>只处理某一块</td><td><code>roi = img[...]; gray = cv2.cvtColor(roi, ...)</code></td></tr>
+</table>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能用 <span class="kw" data-w="split"><code>split</code></span> / <span class="kw" data-w="merge"><code>merge</code></span> 拆合通道。<br>② 知道 <code>img[y, x]</code> 与 <code>(宽, 高)</code> 顺序相反。<br>③ 知道 ROI 是视图，改它会改到原图，需要独立副本时用 <code>.copy()</code>。</p></div>
+
+<h2 class="chap" id="c8"><span class="num cv">08</span> 画图与写字</h2>
+<p class="chap-lead">检测结果要画框、要标字，靠的就是这几个函数。它们都<b>直接改原图</b>，不返回新图。</p>
+
+<div class="cmd file"><div class="cmd-bar"><span>draw.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+<span class="k">import</span> numpy <span class="k">as</span> np
+
+img = np.zeros((300, 500, 3), np.uint8)   <span class="c"># 造一张 300 高 × 500 宽的黑底图</span>
+cv2.line(img, (20, 20), (200, 20), (0, 255, 0), 2)
+<span class="c"># line = 画线；起点 (20,20)、终点 (200,20)；(0,255,0) 是 BGR 绿色；2 是线宽</span>
+cv2.rectangle(img, (50, 60), (200, 160), (255, 0, 0), 2)
+<span class="c"># rectangle = 画矩形；两个点是左上角和右下角</span>
+cv2.circle(img, (300, 110), 40, (0, 0, 255), -1)
+<span class="c"># circle = 画圆；圆心、半径、颜色；-1 表示「填满」（正数＝线宽）</span>
+cv2.putText(img, <span class="s">'OpenCV 5.0'</span>, (50, 230),
+            cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+<span class="c"># putText = 写字；参数依次是 图、文字、左下角位置、字体、缩放、颜色、线宽</span>
+<span class="c"># FONT_HERSHEY_SIMPLEX 是内置字体；5.0 仍可用，但字形外观变过（见下方提示）</span>
+cv2.imwrite(<span class="s">'draw.png'</span>, img)     <span class="c"># 存盘，避免依赖图形窗口</span></pre></div>
+
+<table class="kv">
+<tr><th>函数</th><th>英文原意</th><th>关键参数</th></tr>
+<tr><td><code>line()</code></td><td>line 线</td><td>起点、终点、颜色、线宽</td></tr>
+<tr><td><code>rectangle()</code></td><td>rectangle 矩形</td><td>左上角、右下角、颜色、线宽（<code>-1</code> 填充）</td></tr>
+<tr><td><code>circle()</code></td><td>circle 圆</td><td>圆心、半径、颜色、线宽</td></tr>
+<tr><td><code>ellipse()</code></td><td>ellipse 椭圆</td><td>中心、轴长、角度、起止角</td></tr>
+<tr><td><code>polylines()</code></td><td>poly lines 多边形线</td><td>点集列表、是否闭合、颜色、线宽</td></tr>
+<tr><td><code>putText()</code></td><td>put text 放文字</td><td>文字、位置、字体、缩放、颜色、线宽</td></tr>
+</table>
+<div class="warn">
+  <span class="card-t">5.0 变化：文字外观不一样了</span>
+  <p>官方迁移指南写明：5.0 换了基于 TrueType 的文字渲染引擎，旧 <code>FONT_HERSHEY_*</code> 常量<b>仍可用、代码不用改</b>，但文字尺寸会略有差别、外观变化明显（默认字体换成 Rubik）。如果你的项目要逐像素比对旧版本生成的标注图，需要重新生成基准图。新代码还可以用 <code>cv2.FontFace</code> 加载自定义 <code>.ttf</code> 字体并写中文。</p>
+</div>
+
+<div class="check"><span class="card-t">检查点</span><p>能画一个红色矩形框住目标，并在旁边写上白色标签；知道 <code>-1</code> 表示填充。</p></div>
+
+<h2 class="chap" id="c9"><span class="num cv">09</span> 颜色空间</h2>
+<p class="chap-lead">同一张图可以换好几种「记颜色的方式」。选对方式，找红色物体这种事会变得特别简单。</p>
+
+<div class="demo">
+  <div class="demo-h">点一点：四种颜色空间分别用来干什么 <span class="live">可点</span></div>
+  <div class="demo-row">
+    <button class="dbtn" onclick="CVDemo.color('bgr')">BGR 默认</button>
+    <button class="dbtn" onclick="CVDemo.color('gray')">GRAY 灰度</button>
+    <button class="dbtn" onclick="CVDemo.color('hsv')">HSV 色相</button>
+    <button class="dbtn" onclick="CVDemo.color('rgb')">RGB 转换</button>
+  </div>
+  <div class="demo-screen big" id="demoColorOut"><b>BGR（OpenCV 默认）</b>
+img[y,x] = [12, 80, 210]
+第 0 个是蓝，第 1 个绿，第 2 个红</div>
+  <div class="demo-note">转换统一用 <code>cv2.cvtColor(图, 常量)</code>；常量名里的方向就是转换方向，例如 <span class="kw" data-w="COLOR_BGR2GRAY"><code>COLOR_BGR2GRAY</code></span>。</div>
+</div>
+
+<div class="cmd file"><div class="cmd-bar"><span>color.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+<span class="k">import</span> numpy <span class="k">as</span> np
+
+img = cv2.imread(<span class="s">'bird.jpg'</span>)
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  <span class="c"># 彩色 → 灰度：三通道变一通道</span>
+hsv  = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)   <span class="c"># 彩色 → HSV：色相 H / 饱和度 S / 亮度 V</span>
+rgb  = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)   <span class="c"># 彩色 → RGB：给 matplotlib 显示前必做</span>
+
+lower = np.array([0, 60, 32])       <span class="c"># 下界：H、S、V 的最小值</span>
+upper = np.array([180, 255, 255])   <span class="c"># 上界：最大值</span>
+mask = cv2.inRange(hsv, lower, upper)
+<span class="c"># inRange = 在区间内：落在上下界之间的像素变 255（白），其余变 0（黑）</span>
+<span class="c"># 得到的 mask 叫「掩码」，后面配合 bitwise_and 就能把目标抠出来</span>
+res = cv2.bitwise_and(img, img, mask=mask)
+<span class="c"># bitwise_and = 按位与；mask 里是黑的地方结果也变黑</span>
+cv2.imwrite(<span class="s">'mask.png'</span>, mask)</pre></div>
+
+<table class="kv">
+<tr><th>常量</th><th>英文原意</th><th>用途</th></tr>
+<tr><td><span class="kw" data-w="COLOR_BGR2GRAY"><code>COLOR_BGR2GRAY</code></span></td><td>BGR to Gray</td><td>灰度化；边缘检测、阈值、模板匹配前常做</td></tr>
+<tr><td><span class="kw" data-w="COLOR_BGR2HSV"><code>COLOR_BGR2HSV</code></span></td><td>BGR to HSV</td><td>按颜色抠物体、目标跟踪</td></tr>
+<tr><td><code>COLOR_BGR2RGB</code></td><td>BGR to RGB</td><td>交给 matplotlib / PIL 显示前必转</td></tr>
+<tr><td><code>COLOR_GRAY2BGR</code></td><td>Gray to BGR</td><td>灰度图要写进彩色视频、或要画彩色框时转回三通道</td></tr>
+</table>
+
+<div class="fig">
+<svg viewBox="0 0 880 150" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="150" fill="#ffffff"/>
+  <rect class="box" x="20" y="40" width="170" height="64" rx="11" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="34" y="66">BGR 原图</text><text class="ts" x="34" y="88">(h, w, 3)</text>
+  <rect class="box" x="240" y="40" width="170" height="64" rx="11" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="tm" x="254" y="66">GRAY 灰度</text><text class="ts" x="254" y="88">(h, w)</text>
+  <rect class="box" x="460" y="40" width="170" height="64" rx="11" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="tm" x="474" y="66">HSV 颜色</text><text class="ts" x="474" y="88">inRange 抠色</text>
+  <rect class="box" x="680" y="40" width="180" height="64" rx="11" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="tm" x="694" y="66">mask 掩码</text><text class="ts" x="694" y="88">黑白二值图</text>
+  <path d="M192 72 L238 72 M412 72 L458 72 M632 72 L678 72" stroke="#c2410c" stroke-width="2" marker-end="url(#arV9)"/>
+  <defs><marker id="arV9" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#c2410c"/></marker></defs>
+</svg>
+<figcaption><b>转换链</b>：转颜色空间 → 用掩码挑出想要的像素 → 抠图。</figcaption>
+</div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能写出 <span class="kw" data-w="cvtColor"><code>cvtColor</code></span> 的三种常用转换。<br>② 知道 HSV 适合按颜色找物体。<br>③ 知道给 matplotlib 显示前要转 RGB。</p></div>
+
+<h2 class="chap" id="c10"><span class="num cv">10</span> 图像算术与位运算</h2>
+<p class="chap-lead">两张图相加会变亮，相减能找出差异，掩码能抠出一部分。这一章讲「图与图之间的运算」。</p>
+
+<div class="cmd file"><div class="cmd-bar"><span>arith.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+<span class="k">import</span> numpy <span class="k">as</span> np
+
+a = cv2.imread(<span class="s">'bird.jpg'</span>)
+b = cv2.imread(<span class="s">'bird2.jpg'</span>)
+<span class="c"># 两张图必须「尺寸一样」，否则会报错；不一样先 resize</span>
+
+bright = cv2.add(a, a)                 <span class="c"># add = 逐像素相加，整体变亮</span>
+dark   = cv2.subtract(a, a)            <span class="c"># subtract = 相减，全变黑</span>
+diff   = cv2.absdiff(a, b)             <span class="c"># absdiff = absolute difference 绝对差，找两图不同之处</span>
+blend  = cv2.addWeighted(a, 0.7, b, 0.3, 0)
+<span class="c"># addWeighted = 加权混合；公式 a*0.7 + b*0.3 + 0；最后一个 gamma 通常写 0</span>
+
+mask = np.zeros(a.shape[:2], np.uint8)
+<span class="c"># 造一张和原图同高宽的单通道黑图，当掩码用；shape[:2] 只取高和宽</span>
+mask[100:300, 200:400] = 255           <span class="c"># 把中间一块涂白＝只保留这块</span>
+cut = cv2.bitwise_and(a, a, mask=mask)
+<span class="c"># bitwise_and = 按位与；掩码为黑的地方结果变黑，白的保留</span>
+cv2.imwrite(<span class="s">'blend.jpg'</span>, blend)
+cv2.imwrite(<span class="s">'cut.jpg'</span>, cut)</pre></div>
+
+<table class="kv">
+<tr><th>函数</th><th>英文原意</th><th>作用</th></tr>
+<tr><td><code>cv2.add(src1, src2)</code></td><td>add 加</td><td>逐像素相加</td></tr>
+<tr><td><code>cv2.subtract()</code></td><td>subtract 减</td><td>逐像素相减</td></tr>
+<tr><td><code>cv2.multiply()</code> / <code>divide()</code></td><td>乘 / 除</td><td>调亮度、做归一化</td></tr>
+<tr><td><code>cv2.absdiff()</code></td><td>absolute difference 绝对差</td><td>运动检测、找差异</td></tr>
+<tr><td><code>cv2.addWeighted(a, α, b, β, γ)</code></td><td>add weighted 加权加</td><td>叠化、加水印、半透明</td></tr>
+<tr><td><code>cv2.bitwise_and/or/not/xor</code></td><td>bitwise 按位与/或/非/异或</td><td>掩码抠图、反色、差异检测</td></tr>
+</table>
+
+<div class="fig">
+<svg viewBox="0 0 880 145" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="145" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">掩码抠图：黑白掩码决定哪一块留下来</text>
+  <rect x="30" y="44" width="150" height="80" rx="8" fill="#bfdbfe" stroke="#2563eb"/>
+  <text class="t" x="52" y="90">原图 A</text>
+  <rect x="220" y="44" width="150" height="80" rx="8" fill="#1e293b" stroke="#64748b"/>
+  <rect x="255" y="60" width="80" height="48" fill="#ffffff"/>
+  <text class="ts" x="238" y="140">掩码：白=留，黑=丢</text>
+  <rect x="410" y="44" width="150" height="80" rx="8" fill="#bfdbfe" stroke="#2563eb" opacity="0.45"/>
+  <rect x="445" y="60" width="80" height="48" fill="#93c5fd" stroke="#2563eb"/>
+  <text class="ts" x="428" y="140">结果：只有白区保留</text>
+  <text class="tm" x="590" y="76">bitwise_and(A, A, mask=mask)</text>
+  <text class="ts" x="590" y="100">addWeighted(A,0.7,B,0.3,0) 则是两图按比例混合</text>
+</svg>
+<figcaption><b>位运算与加权</b>：掩码负责「抠」，加权负责「叠」。</figcaption>
+</div>
+
+<div class="warn">
+  <span class="card-t">最容易踩的坑：OpenCV 的加法不是普通加法</span>
+  <p>OpenCV 做的是<b>饱和运算</b>：<code>200 + 100</code> 不会变成 300 再溢出回绕，而是直接<b>截断成 255</b>；减法小于 0 截断成 0；除数为 0 结果设为 0。而 NumPy 的 <code>a + a</code> 是取模回绕（300 会变成 44）。想让亮度正常叠加，用 <code>cv2.add()</code> 而不是 <code>+</code>。</p>
+</div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能用 <span class="kw" data-w="addWeighted"><code>addWeighted</code></span> 把两张图叠在一起。<br>② 能用 <span class="kw" data-w="bitwise_and"><code>bitwise_and</code></span> + 掩码抠出一块。<br>③ 能说出饱和运算和 NumPy 加法的区别。</p></div>
+
+<h2 class="chap" id="c11"><span class="num cv">11</span> 阈值处理</h2>
+<p class="chap-lead">把彩色图变成只有黑白两色，是找轮廓、认文字之前最常用的一步。</p>
+
+<div class="demo">
+  <div class="demo-h">点一点：五种阈值规则分别怎么变 <span class="live">可点</span></div>
+  <div class="demo-row">
+    <button class="dbtn" onclick="CVDemo.th('binary')">BINARY</button>
+    <button class="dbtn" onclick="CVDemo.th('inv')">BINARY_INV</button>
+    <button class="dbtn" onclick="CVDemo.th('trunc')">TRUNC</button>
+    <button class="dbtn" onclick="CVDemo.th('zero')">TOZERO</button>
+    <button class="dbtn teal" onclick="CVDemo.th('otsu')">OTSU 自动</button>
+  </div>
+  <div class="demo-screen big" id="demoThOut"><b>THRESH_BINARY 二值化</b>
+像素 &gt; 127 → 255（白）；否则 → 0（黑）
+最常用，做轮廓检测前的预处理</div>
+  <div class="demo-note">阈值一般对<b>灰度图</b>做；<code>retval</code> 是实际用到的阈值，<code>dst</code> 是结果图。</div>
+</div>
+
+<div class="cmd file"><div class="cmd-bar"><span>thresh.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+
+gray = cv2.imread(<span class="s">'bird.jpg'</span>, cv2.IMREAD_GRAYSCALE)
+<span class="c"># IMREAD_GRAYSCALE = 直接读成灰度图，省一次 cvtColor</span>
+ret, binary = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+<span class="c"># threshold = 阈值处理；127 = 分界线；255 = 超过后设成的值</span>
+<span class="c"># 返回两个值：ret = 实际用的阈值，binary = 处理后的黑白图</span>
+
+auto = cv2.adaptiveThreshold(gray, 255,
+        cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+<span class="c"># adaptiveThreshold = 自适应阈值：每个小块自己算分界线，适合光照不均</span>
+<span class="c"># 11 = blockSize 邻域大小（必须奇数）；2 = C 从均值里减掉的常数</span>
+
+ret2, otsu = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+<span class="c"># OTSU = 大津法：阈值写 0，算法自动挑最合适的分界线</span>
+<span class="k">print</span>(<span class="s">'手动/自动阈值：'</span>, ret, ret2)
+cv2.imwrite(<span class="s">'binary.png'</span>, binary)
+cv2.imwrite(<span class="s">'otsu.png'</span>, otsu)</pre></div>
+
+<table class="kv">
+<tr><th>类型常量</th><th>规则（像素值 &gt; 阈值时）</th></tr>
+<tr><td><code>THRESH_BINARY</code></td><td>→ maxval（白）；否则 → 0</td></tr>
+<tr><td><code>THRESH_BINARY_INV</code></td><td>→ 0；否则 → maxval（黑白反过来）</td></tr>
+<tr><td><code>THRESH_TRUNC</code></td><td>→ 阈值本身；否则保持不变</td></tr>
+<tr><td><code>THRESH_TOZERO</code></td><td>保持不变；否则 → 0</td></tr>
+<tr><td><code>THRESH_TOZERO_INV</code></td><td>→ 0；否则保持不变</td></tr>
+<tr><td><code>THRESH_OTSU</code></td><td>不是单独用，要和上面某个相加，让算法自动定阈值</td></tr>
+</table>
+
+<div class="fig">
+<svg viewBox="0 0 880 160" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="160" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">阈值就像一条分界线：亮度超过它就归成一堆，没超过归成另一堆</text>
+  <rect x="40" y="50" width="800" height="34" rx="8" fill="url(#gr)"/>
+  <defs><linearGradient id="gr" x1="0" x2="1"><stop offset="0" stop-color="#000000"/><stop offset="1" stop-color="#ffffff"/></linearGradient></defs>
+  <path d="M440 42 L440 94" stroke="#c2410c" stroke-width="3" stroke-dasharray="6 4"/>
+  <text class="tm" x="410" y="116">阈值 127</text>
+  <text class="ts" x="70" y="116">暗（0）</text>
+  <text class="ts" x="740" y="116">亮（255）</text>
+  <text class="ts" x="18" y="146">左边全变黑 0，右边全变白 255 —— 这就是 THRESH_BINARY 的结果。</text>
+</svg>
+<figcaption><b>分界线</b>：把连续变化的亮度，一刀切成黑白两类。</figcaption>
+</div>
+
+<div class="warn"><span class="card-t">三个常见错误</span><p>① 直接对彩色图做 <span class="kw" data-w="threshold"><code>threshold</code></span> → 先转灰度。<br>② <span class="kw" data-w="adaptiveThreshold"><code>adaptiveThreshold</code></span> 的 <code>blockSize</code> 写成偶数 → 必须是奇数（3、5、11…）。<br>③ 忘了 <span class="kw" data-w="threshold"><code>threshold</code></span> 返回<b>两个值</b>，写成 <code>binary = cv2.threshold(...)</code> 后面就会报「tuple 没有 shape」。</p></div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能写出 <code>ret, dst = cv2.threshold(...)</code> 并说出两个返回值。<br>② 知道 Otsu 时阈值写 0。<br>③ 知道 blockSize 必须是奇数。</p></div>
+
+<h2 class="chap" id="c12"><span class="num cv">12</span> 平滑与滤波</h2>
+<p class="chap-lead">照片有噪点、边缘检测前要降噪，都靠「拿周围像素平均一下」。</p>
+
+<div class="demo">
+  <div class="demo-h">点一点：五种核分别有什么效果 <span class="live">可点</span></div>
+  <div class="demo-row">
+    <button class="dbtn" onclick="CVDemo.ker('blur')">均值</button>
+    <button class="dbtn" onclick="CVDemo.ker('gauss')">高斯</button>
+    <button class="dbtn" onclick="CVDemo.ker('median')">中值</button>
+    <button class="dbtn teal" onclick="CVDemo.ker('sharp')">锐化</button>
+    <button class="dbtn teal" onclick="CVDemo.ker('emboss')">浮雕</button>
+  </div>
+  <div class="demo-screen big" id="demoKerOut"><b>均值模糊 blur</b>
+核里全是 1/(5×5)，邻域取平均
+去随机噪声，但边缘会糊</div>
+  <div class="demo-note">「核 kernel」是一个小矩阵，在图上从左到右、从上到下滑动；每滑到一个位置，就把覆盖的像素按核里的权重算出一个新值。</div>
+</div>
+
+<div class="cmd file"><div class="cmd-bar"><span>smooth.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+<span class="k">import</span> numpy <span class="k">as</span> np
+
+img = cv2.imread(<span class="s">'bird.jpg'</span>)
+mean  = cv2.blur(img, (5, 5))                <span class="c"># blur = 邻域取平均；(5,5) 是核大小</span>
+gauss = cv2.GaussianBlur(img, (5, 5), 0)    <span class="c"># 高斯模糊；第三参 sigmaX=0 表示按核大小自动算</span>
+median = cv2.medianBlur(img, 5)             <span class="c"># 中值模糊；核大小写「一个数」，且必须是奇数</span>
+bilat = cv2.bilateralFilter(img, 9, 75, 75)
+<span class="c"># 双边滤波：9 = 邻域直径，75/75 = 颜色与空间的标准差，能保住边缘</span>
+
+kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+<span class="c"># 自定义 3×3 锐化核；np.array = 造数组</span>
+sharp = cv2.filter2D(img, -1, kernel)
+<span class="c"># filter2D = 用自定义核做卷积；-1 表示输出和原图同样的数据类型</span>
+cv2.imwrite(<span class="s">'gauss.jpg'</span>, gauss)
+cv2.imwrite(<span class="s">'sharp.jpg'</span>, sharp)</pre></div>
+
+<table class="kv">
+<tr><th>函数</th><th>英文原意</th><th>擅长</th><th>注意</th></tr>
+<tr><td><code>blur(img, (5,5))</code></td><td>blur 均值模糊</td><td>去随机噪声</td><td>边缘会一起糊掉</td></tr>
+<tr><td><code>GaussianBlur(img, (5,5), 0)</code></td><td>Gaussian 高斯模糊</td><td>通用降噪，Canny 前常用</td><td>核大小要奇数</td></tr>
+<tr><td><code>medianBlur(img, 5)</code></td><td>median 中值模糊</td><td>专治黑白噪点（椒盐噪声）</td><td>参数是一个奇数</td></tr>
+<tr><td><code>bilateralFilter(img, 9, 75, 75)</code></td><td>bilateral 双边滤波</td><td>去噪还保边、磨皮</td><td>比较慢</td></tr>
+<tr><td><code>filter2D(img, -1, kernel)</code></td><td>filter 2D 二维卷积</td><td>锐化、浮雕、自定义效果</td><td><code>-1</code> ＝保持原类型</td></tr>
+</table>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能说出高斯模糊和中值模糊各治什么噪声。<br>② 知道 <span class="kw" data-w="medianBlur"><code>medianBlur</code></span> 的核必须是奇数。<br>③ 能用 <span class="kw" data-w="filter2D"><code>filter2D</code></span> + 自定义核做锐化。</p></div>
+
+<div class="fig">
+<svg viewBox="0 0 880 155" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="155" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">核 kernel 在图上滑动：每停一次，算出中心点的新值</text>
+  <g fill="#e2e8f0" stroke="#94a3b8">
+    <rect x="30" y="44" width="34" height="34"/><rect x="66" y="44" width="34" height="34"/><rect x="102" y="44" width="34" height="34"/><rect x="138" y="44" width="34" height="34"/>
+    <rect x="30" y="80" width="34" height="34"/><rect x="66" y="80" width="34" height="34"/><rect x="102" y="80" width="34" height="34"/><rect x="138" y="80" width="34" height="34"/>
+    <rect x="30" y="116" width="34" height="34"/><rect x="66" y="116" width="34" height="34"/><rect x="102" y="116" width="34" height="34"/><rect x="138" y="116" width="34" height="34"/>
+  </g>
+  <g fill="#fed7aa" stroke="#c2410c" stroke-width="2">
+    <rect x="66" y="44" width="34" height="34"/><rect x="102" y="44" width="34" height="34"/>
+    <rect x="66" y="80" width="34" height="34"/><rect x="102" y="80" width="34" height="34"/>
+    <rect x="66" y="116" width="34" height="34"/><rect x="102" y="116" width="34" height="34"/>
+  </g>
+  <text class="ts" x="200" y="62">① 核盖住 3×3 个像素</text>
+  <text class="ts" x="200" y="88">② 按核里的权重算加权平均</text>
+  <text class="ts" x="200" y="114">③ 把结果写回中心像素</text>
+  <text class="ts" x="200" y="140">④ 往右挪一格，重复；整张图扫完就完成一次滤波</text>
+  <rect class="box" x="560" y="44" width="290" height="100" rx="11" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="tm" x="576" y="70">例：锐化核</text>
+  <text class="tm" x="576" y="96">[[ 0,-1, 0]</text>
+  <text class="tm" x="576" y="118"> [-1, 5,-1]</text>
+  <text class="tm" x="576" y="140"> [ 0,-1, 0]]</text>
+</svg>
+<figcaption><b>卷积</b>：核不同，效果就不同（模糊 / 锐化 / 浮雕）。</figcaption>
+</div>
+
+<h2 class="chap" id="c13"><span class="num cv">13</span> 形态学操作</h2>
+<p class="chap-lead">二值图里总有小白点、小黑洞。腐蚀和膨胀就是专门「修形状」的工具。</p>
+
+<div class="cmd file"><div class="cmd-bar"><span>morph.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+<span class="k">import</span> numpy <span class="k">as</span> np
+
+gray = cv2.imread(<span class="s">'bird.jpg'</span>, cv2.IMREAD_GRAYSCALE)
+_, binary = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+<span class="c"># _ 是一个「我不关心」的变量名，接住第一个返回值</span>
+
+kernel = np.ones((5, 5), np.uint8)     <span class="c"># 造 5×5 全 1 的核；ones = 全一；uint8 = 0~255 整数</span>
+eroded = cv2.erode(binary, kernel, iterations=1)
+<span class="c"># erode = 腐蚀：白色前景收缩，去掉小白点；iterations = 做几次</span>
+dilated = cv2.dilate(binary, kernel, iterations=1)
+<span class="c"># dilate = 膨胀：白色前景扩张，补上小黑洞</span>
+
+opened = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel)
+<span class="c"># MORPH_OPEN = 开运算：先腐蚀再膨胀，专门去小白噪点</span>
+closed = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
+<span class="c"># MORPH_CLOSE = 闭运算：先膨胀再腐蚀，专门填小孔、连断开的笔画</span>
+grad = cv2.morphologyEx(binary, cv2.MORPH_GRADIENT, kernel)
+<span class="c"># MORPH_GRADIENT = 膨胀减腐蚀，得到物体轮廓</span>
+cv2.imwrite(<span class="s">'opened.png'</span>, opened)</pre></div>
+
+<table class="kv">
+<tr><th>操作</th><th>英文原意</th><th>先做什么</th><th>效果</th></tr>
+<tr><td><code>erode()</code></td><td>erode 腐蚀</td><td>—</td><td>白色区域变小</td></tr>
+<tr><td><code>dilate()</code></td><td>dilate 膨胀</td><td>—</td><td>白色区域变大</td></tr>
+<tr><td><code>MORPH_OPEN</code></td><td>opening 开运算</td><td>腐蚀 → 膨胀</td><td>去掉孤立小白点</td></tr>
+<tr><td><code>MORPH_CLOSE</code></td><td>closing 闭运算</td><td>膨胀 → 腐蚀</td><td>填小洞、连邻近物体</td></tr>
+<tr><td><code>MORPH_GRADIENT</code></td><td>gradient 梯度</td><td>膨胀 − 腐蚀</td><td>抠出轮廓线</td></tr>
+<tr><td><code>MORPH_TOPHAT</code> / <code>BLACKHAT</code></td><td>top hat / black hat</td><td>原图 − 开 / 闭 − 原图</td><td>提亮细节 / 提暗细节</td></tr>
+</table>
+
+<div class="fig">
+<svg viewBox="0 0 880 150" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="150" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">腐蚀与膨胀：白色前景的「缩」与「涨」</text>
+  <circle cx="90" cy="82" r="34" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+  <text class="ts" x="52" y="132">原图（白块）</text>
+  <text class="tm" x="160" y="88">→ erode →</text>
+  <circle cx="280" cy="82" r="22" fill="#ffffff" stroke="#c2410c" stroke-width="2"/>
+  <text class="ts" x="238" y="132">腐蚀：变小、去白点</text>
+  <text class="tm" x="350" y="88">→ dilate →</text>
+  <circle cx="470" cy="82" r="46" fill="#ffffff" stroke="#16a34a" stroke-width="2"/>
+  <text class="ts" x="428" y="142">膨胀：变大、补黑洞</text>
+  <rect class="box" x="580" y="44" width="280" height="86" rx="11" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tm" x="596" y="70">开运算 = 腐蚀 → 膨胀</text>
+  <text class="tm" x="596" y="96">闭运算 = 膨胀 → 腐蚀</text>
+  <text class="ts" x="596" y="120">顺序不同，用途正好相反</text>
+</svg>
+<figcaption><b>形态学</b>：先缩后涨去噪点，先涨后缩补小孔。</figcaption>
+</div>
+
+<div class="tip"><span class="card-t">记忆口诀</span><p><b>开运算去白点，闭运算补黑孔</b>。核越大、<code>iterations</code> 越多，效果越猛，但也越容易把本来要保留的细节吃掉。</p></div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能用 <code>getStructuringElement</code> 或 <code>np.ones</code> 造核。<br>② 能说出开运算和闭运算的区别。<br>③ 知道形态学一般对二值图做。</p></div>
+
+<h2 class="chap" id="c14"><span class="num cv">14</span> 几何变换</h2>
+<p class="chap-lead">缩放、旋转、翻转、透视矫正。核心永远是「算出变换矩阵，再把它应用到图上」。</p>
+
+<div class="cmd file"><div class="cmd-bar"><span>geo.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+
+img = cv2.imread(<span class="s">'bird.jpg'</span>)
+h, w = img.shape[:2]                  <span class="c"># 取出高和宽；注意 shape 是 (高, 宽, 通道)</span>
+
+small = cv2.resize(img, (320, 240))  <span class="c"># resize = 缩放；尺寸写 (宽, 高)，和坐标顺序相反！</span>
+flip_h = cv2.flip(img, 1)            <span class="c"># flip = 翻转；1 水平（照镜子）、0 垂直、-1 两个方向</span>
+
+M = cv2.getRotationMatrix2D((w/2, h/2), 30, 1.0)
+<span class="c"># getRotationMatrix2D = 生成旋转矩阵；中心点、角度 30 度、缩放 1.0（不缩放）</span>
+rot = cv2.warpAffine(img, M, (w, h))
+<span class="c"># warpAffine = 应用仿射变换；第三个参数是输出图尺寸 (宽, 高)</span>
+
+cv2.imwrite(<span class="s">'small.jpg'</span>, small)
+cv2.imwrite(<span class="s">'rot.jpg'</span>, rot)</pre></div>
+
+<table class="kv">
+<tr><th>函数</th><th>英文原意</th><th>关键参数</th></tr>
+<tr><td><code>resize(src, dsize)</code></td><td>resize 改尺寸</td><td><code>dsize=(宽,高)</code>；也可用 <code>fx/fy</code> 比例</td></tr>
+<tr><td><code>flip(src, flipCode)</code></td><td>flip 翻转</td><td>1 水平 / 0 垂直 / -1 双向</td></tr>
+<tr><td><code>getRotationMatrix2D()</code></td><td>get rotation matrix 取旋转矩阵</td><td>中心、角度、缩放</td></tr>
+<tr><td><code>warpAffine(src, M, dsize)</code></td><td>warp affine 仿射变换</td><td>平移 / 旋转 / 缩放</td></tr>
+<tr><td><code>getPerspectiveTransform()</code></td><td>get perspective transform</td><td>4 个点算 3×3 矩阵</td></tr>
+<tr><td><code>warpPerspective(src, H, dsize)</code></td><td>warp perspective 透视变换</td><td>矫正歪斜文档、图像拼接</td></tr>
+</table>
+
+<div class="fig">
+<svg viewBox="0 0 880 160" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="160" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">仿射变换三步：算矩阵 → 应用矩阵 → 得到新图</text>
+  <rect class="box" x="20" y="44" width="200" height="66" rx="11" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="tm" x="34" y="70">getRotationMatrix2D</text><text class="ts" x="34" y="92">得到 2×3 矩阵 M</text>
+  <rect class="box" x="280" y="44" width="200" height="66" rx="11" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="294" y="70">warpAffine(img, M)</text><text class="ts" x="294" y="92">把矩阵用到每个像素</text>
+  <rect class="box" x="540" y="44" width="200" height="66" rx="11" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="tm" x="554" y="70">rot</text><text class="ts" x="554" y="92">旋转后的新图</text>
+  <path d="M222 77 L278 77 M482 77 L538 77" stroke="#c2410c" stroke-width="2" marker-end="url(#arV14)"/>
+  <text class="ts" x="18" y="140">矩阵 M 只是「怎么搬像素」的一组数字；真正干活的是 warpAffine / warpPerspective。</text>
+  <defs><marker id="arV14" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#c2410c"/></marker></defs>
+</svg>
+<figcaption><b>变换矩阵</b>：5.0 里函数名和参数都没变，但插值结果更精确了。</figcaption>
+</div>
+
+<div class="warn">
+  <span class="card-t">5.0 变化：数值结果略有不同</span>
+  <p>官方迁移指南写明：<span class="kw" data-w="warpAffine"><code>warpAffine</code></span> / <span class="kw" data-w="warpPerspective"><code>warpPerspective</code></span> / <code>remap</code> 改用更精确的双线性、双三次插值，<b>API 不变但输出像素值会略有差异</b>；<code>INTER_NEAREST</code> 现在与 Pillow 行为一致。如果你的项目拿输出图和旧版本生成的基准图逐像素比对，需要重新生成基准图。日常使用完全不受影响。</p>
+</div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能写出缩放 + 旋转两步。<br>② 知道尺寸参数是 (宽, 高) 而坐标是 [行, 列]。<br>③ 知道 5.0 的变换结果和 4.x 不完全逐像素相同。</p></div>
+
+<h2 class="chap" id="c15"><span class="num cv">15</span> 边缘检测</h2>
+<p class="chap-lead">「哪里是物体的边界」是很多高级任务的第一步。Canny 是最常用的那把刀。</p>
+
+<div class="cmd file"><div class="cmd-bar"><span>edge.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+
+gray = cv2.imread(<span class="s">'bird.jpg'</span>, cv2.IMREAD_GRAYSCALE)
+blur = cv2.GaussianBlur(gray, (5, 5), 0)  <span class="c"># 先降噪：噪点会被误当成边缘</span>
+
+edges = cv2.Canny(blur, 100, 200)
+<span class="c"># Canny = 边缘检测；100 = 低阈值，200 = 高阈值</span>
+<span class="c"># 返回黑白图：边缘是白线，其余是黑</span>
+
+sx = cv2.Sobel(blur, cv2.CV_64F, 1, 0, ksize=5)
+<span class="c"># Sobel = 索贝尔算子；CV_64F = 输出用 64 位浮点（能保留负数梯度）</span>
+<span class="c"># 1,0 = 只算 x 方向导数；ksize=5 = 核大小</span>
+lap = cv2.Laplacian(blur, cv2.CV_64F)
+<span class="c"># Laplacian = 拉普拉斯算子，同时看两个方向的变化</span>
+cv2.imwrite(<span class="s">'edges.png'</span>, edges)</pre></div>
+
+<table class="kv">
+<tr><th>函数</th><th>英文原意</th><th>关键参数</th><th>特点</th></tr>
+<tr><td><code>Canny(img, t1, t2)</code></td><td>Canny 坎尼边缘</td><td>低阈值 / 高阈值</td><td>最常用，边缘细且连续</td></tr>
+<tr><td><code>Sobel(src, ddepth, dx, dy)</code></td><td>Sobel 索贝尔</td><td>输出深度 / 方向导数阶数</td><td>能分别看横、竖边缘</td></tr>
+<tr><td><code>Laplacian(src, ddepth)</code></td><td>Laplacian 拉普拉斯</td><td>输出深度</td><td>对细节敏感，也更容易受噪声影响</td></tr>
+<tr><td><code>Scharr()</code></td><td>Scharr 夏尔</td><td>同 Sobel</td><td>Sobel 的改进版，对细微边缘更敏感</td></tr>
+</table>
+
+<div class="fig">
+<svg viewBox="0 0 880 150" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="150" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">Canny 内部五步（不用手写，理解顺序即可）</text>
+  <rect class="box" x="18" y="44" width="150" height="58" rx="10" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="tm" x="28" y="68">① 高斯降噪</text><text class="ts" x="28" y="88">去掉噪点</text>
+  <rect class="box" x="186" y="44" width="150" height="58" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="196" y="68">② 算梯度</text><text class="ts" x="196" y="88">Sobel</text>
+  <rect class="box" x="354" y="44" width="150" height="58" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="364" y="68">③ 非极大抑制</text><text class="ts" x="364" y="88">边缘变细</text>
+  <rect class="box" x="522" y="44" width="150" height="58" rx="10" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="tm" x="532" y="68">④ 双阈值</text><text class="ts" x="532" y="88">强/弱/非边缘</text>
+  <rect class="box" x="690" y="44" width="172" height="58" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="tm" x="700" y="68">⑤ 边缘连接</text><text class="ts" x="700" y="88">弱边跟随强边</text>
+  <path d="M170 73 L184 73 M338 73 L352 73 M506 73 L520 73 M674 73 L688 73" stroke="#c2410c" stroke-width="2" marker-end="url(#arV15)"/>
+  <text class="ts" x="18" y="132">调阈值口诀：低阈值调低 → 边缘更多更杂；高阈值调高 → 只留最明显的边缘。</text>
+  <defs><marker id="arV15" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#c2410c"/></marker></defs>
+</svg>
+<figcaption><b>Canny 五步</b>：先降噪再找变化，最后用两个阈值筛一遍。</figcaption>
+</div>
+
+<div class="warn"><span class="card-t">两个常见错误</span><p>① 把彩色图直接丢给 <span class="kw" data-w="Canny"><code>Canny</code></span> → 先转灰度。<br>② <span class="kw" data-w="Sobel"><code>Sobel</code></span> 输出含负数，直接 <span class="kw" data-w="imshow"><code>imshow</code></span> 会一片黑；要显示需先取绝对值并转回 8 位（<code>cv2.convertScaleAbs(sx)</code>）。菜鸟教程示例省略了这一步，本教程补上。</p></div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能写出「灰度 → 高斯 → Canny」三步。<br>② 能说出两个阈值调大调小分别有什么影响。</p></div>
+
+<h2 class="chap" id="c16"><span class="num cv">16</span> 轮廓检测</h2>
+<p class="chap-lead">边缘是「线」，轮廓是「一整圈点的集合」，能算面积、周长、外接框，是数物体的关键。</p>
+
+<div class="cmd file"><div class="cmd-bar"><span>contour.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+
+img = cv2.imread(<span class="s">'bird.jpg'</span>)
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+_, binary = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+<span class="c"># 找轮廓前必须二值化：黑背景 + 白物体</span>
+
+contours, hierarchy = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+<span class="c"># findContours = 找轮廓；RETR_TREE = 保留全部层级；CHAIN_APPROX_SIMPLE = 只留端点省内存</span>
+<span class="c"># 返回 contours（轮廓点列表）和 hierarchy（谁套着谁）</span>
+
+cv2.drawContours(img, contours, -1, (0, 255, 0), 2)
+<span class="c"># drawContours = 画轮廓；-1 = 画全部；绿色；线宽 2。注意它直接改原图，不返回新图</span>
+
+<span class="k">for</span> c <span class="k">in</span> contours:
+    area = cv2.contourArea(c)                 <span class="c"># contourArea = 轮廓面积</span>
+    <span class="k">if</span> area &lt; 100:                          <span class="c"># 太小的多半是噪点，跳过</span>
+        <span class="k">continue</span>                           <span class="c"># continue = 跳过本次循环，看下一个</span>
+    x, y, w, h = cv2.boundingRect(c)          <span class="c"># boundingRect = 外接正矩形 (左上角 + 宽高)</span>
+    cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+    peri = cv2.arcLength(c, <span class="k">True</span>)            <span class="c"># arcLength = 周长；True = 轮廓闭合</span>
+    approx = cv2.approxPolyDP(c, 0.01 * peri, <span class="k">True</span>)
+    <span class="c"># approxPolyDP = 用更少的点近似轮廓；0.01*周长 = 近似精度</span>
+    <span class="k">print</span>(<span class="s">'面积/周长/顶点数：'</span>, area, peri, len(approx))
+
+cv2.imwrite(<span class="s">'contours.jpg'</span>, img)</pre></div>
+
+<table class="kv">
+<tr><th>函数 / 常量</th><th>英文原意</th><th>作用</th></tr>
+<tr><td><code>RETR_EXTERNAL</code></td><td>retrieve external 只取外层</td><td>只找最外面一圈，最快</td></tr>
+<tr><td><code>RETR_LIST</code> / <code>RETR_TREE</code></td><td>list / tree 列表 / 树</td><td>全部轮廓 / 全部并保留嵌套层级</td></tr>
+<tr><td><code>CHAIN_APPROX_SIMPLE</code></td><td>chain approximation simple</td><td>压缩直线段只留端点，省内存</td></tr>
+<tr><td><code>contourArea()</code> / <code>arcLength()</code></td><td>area / arc length</td><td>面积 / 周长</td></tr>
+<tr><td><code>boundingRect()</code> / <code>minAreaRect()</code></td><td>bounding rect / min area rect</td><td>正外接框 / 最小旋转矩形</td></tr>
+<tr><td><code>minEnclosingCircle()</code></td><td>min enclosing circle</td><td>最小外接圆</td></tr>
+<tr><td><code>approxPolyDP()</code></td><td>approx polygon Douglas-Peucker</td><td>把弯弯曲曲的轮廓简化成多边形</td></tr>
+</table>
+
+<div class="warn"><span class="card-t">5.0 里 Python 写法没变，C++ 头文件变了</span><p>官方迁移指南：<code>convexHull</code>、<code>minAreaRect</code>、<code>minEnclosingCircle</code>、<code>fitEllipse</code> 等几何函数搬到新的 <code>geometry</code> 模块；<b>Python 不用改</b>仍是 <code>cv2.convexHull()</code>，C++ 需加 <code>#include &lt;opencv2/geometry.hpp&gt;</code>，而 <span class="kw" data-w="findContours"><code>findContours</code></span> 仍在 <code>imgproc.hpp</code>。</p></div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 知道找轮廓前要二值化。<br>② 能画出外接矩形并过滤掉太小的轮廓。<br>③ 知道 <span class="kw" data-w="drawContours"><code>drawContours</code></span> 原地改图。</p></div>
+
+<h2 class="chap" id="c17"><span class="num cv">17</span> 直方图与均衡化</h2>
+<p class="chap-lead">直方图就是「每个亮度值有多少个像素」的统计表。看它就知道照片是不是太暗。</p>
+
+<div class="cmd file"><div class="cmd-bar"><span>hist.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+
+gray = cv2.imread(<span class="s">'bird.jpg'</span>, cv2.IMREAD_GRAYSCALE)
+hist = cv2.calcHist([gray], [0], <span class="k">None</span>, [256], [0, 256])
+<span class="c"># calcHist = calculate histogram 算直方图</span>
+<span class="c"># [gray] = 图片要放列表里；[0] = 第 0 个通道（灰度只有 0 号）</span>
+<span class="c"># None = 不用掩码；[256] = 分 256 个桶；[0,256] = 像素值范围</span>
+<span class="k">print</span>(<span class="s">'最暗那档有多少像素：'</span>, hist[0])
+
+eq = cv2.equalizeHist(gray)
+<span class="c"># equalizeHist = 直方图均衡化：把挤在一起的亮度拉开，灰蒙蒙的图变清楚</span>
+cv2.imwrite(<span class="s">'equalized.jpg'</span>, eq)</pre></div>
+
+<div class="fig">
+<svg viewBox="0 0 880 150" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="150" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">直方图均衡化：把挤在一起的亮度拉开</text>
+  <g fill="#c2410c">
+    <rect x="40" y="90" width="14" height="20"/><rect x="58" y="70" width="14" height="40"/>
+    <rect x="76" y="46" width="14" height="64"/><rect x="94" y="62" width="14" height="48"/>
+    <rect x="112" y="94" width="14" height="16"/><rect x="130" y="100" width="14" height="10"/>
+  </g>
+  <text class="ts" x="40" y="128">均衡前：像素都挤在中间亮度</text>
+  <text class="tm" x="230" y="86">→ equalizeHist →</text>
+  <g fill="#0f766e">
+    <rect x="430" y="84" width="14" height="26"/><rect x="462" y="80" width="14" height="30"/>
+    <rect x="494" y="78" width="14" height="32"/><rect x="526" y="82" width="14" height="28"/>
+    <rect x="558" y="80" width="14" height="30"/><rect x="590" y="84" width="14" height="26"/>
+    <rect x="622" y="78" width="14" height="32"/><rect x="654" y="82" width="14" height="28"/>
+  </g>
+  <text class="ts" x="430" y="128">均衡后：0~255 都用上，对比度更清楚</text>
+  <path d="M40 110 L166 110 M430 110 L686 110" stroke="#94a3b8"/>
+</svg>
+<figcaption><b>均衡化前后</b>：亮度分布被「摊平」，灰蒙蒙的图变通透。</figcaption>
+</div>
+
+<div class="cmd file"><div class="cmd-bar"><span>hist_color.py</span><span>彩色图要分通道做</span></div><pre><span class="k">import</span> cv2
+img = cv2.imread(<span class="s">'bird.jpg'</span>)
+b, g, r = cv2.split(img)            <span class="c"># 拆成三个通道</span>
+b2 = cv2.equalizeHist(b)            <span class="c"># 逐通道均衡</span>
+g2 = cv2.equalizeHist(g)
+r2 = cv2.equalizeHist(r)
+out = cv2.merge([b2, g2, r2])       <span class="c"># 再合回彩色图</span>
+cv2.imwrite(<span class="s">'eq_color.jpg'</span>, out)</pre></div>
+<div class="warn"><span class="card-t">彩色图不能直接 equalizeHist</span><p><span class="kw" data-w="equalizeHist"><code>equalizeHist</code></span> 只接受<b>单通道灰度图</b>。对彩色图直接调用会报错。要么像上面拆通道做（颜色可能略偏），要么先转 HSV、只对 V（亮度）通道均衡再转回 BGR（颜色更自然）。</p></div>
+
+<table class="kv">
+<tr><th>函数</th><th>英文原意</th><th>作用</th></tr>
+<tr><td><code>calcHist([img], [ch], mask, [bins], [range])</code></td><td>calculate histogram</td><td>统计各亮度有多少像素</td></tr>
+<tr><td><code>equalizeHist(gray)</code></td><td>equalize histogram</td><td>拉开对比度</td></tr>
+<tr><td><code>compareHist(h1, h2, method)</code></td><td>compare histogram</td><td>比较两张图的直方图相似度</td></tr>
+<tr><td><code>HISTCMP_CORREL</code></td><td>histogram compare correlation</td><td>相关性比较，越接近 1 越像</td></tr>
+</table>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能写出 <span class="kw" data-w="calcHist"><code>calcHist</code></span> 的五个参数并说明图片为什么要放列表里。<br>② 知道彩色图均衡化要拆通道。</p></div>
+
+<h2 class="chap" id="c18"><span class="num cv">18</span> 视频处理</h2>
+<p class="chap-lead">视频＝一帧帧图片。会处理图片，就只会差一个循环。</p>
+
+<div class="demo">
+  <div class="demo-h">点一点：视频循环的完整五步 <span class="live">可点</span></div>
+  <div class="demo-row">
+    <button class="dbtn" onclick="CVDemo.vid(1)">① 打开</button>
+    <button class="dbtn" onclick="CVDemo.vid(2)">② 读帧</button>
+    <button class="dbtn" onclick="CVDemo.vid(3)">③ 处理</button>
+    <button class="dbtn" onclick="CVDemo.vid(4)">④ 显示</button>
+    <button class="dbtn teal" onclick="CVDemo.vid(5)">⑤ 收尾</button>
+    <button class="dbtn ghost" onclick="CVDemo.vid(0)">重置</button>
+  </div>
+  <div class="demo-screen big" id="demoVid">循环还没开始</div>
+  <div class="lamps" id="demoVidLamps"><span class="lamp">isOpened</span><span class="lamp">read</span><span class="lamp">处理</span><span class="lamp">imshow</span><span class="lamp">release</span></div>
+</div>
+
+<div class="cmd file"><div class="cmd-bar"><span>video.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+
+cap = cv2.VideoCapture(0)             <span class="c"># VideoCapture = 视频捕获；0 = 默认摄像头；也可传 'a.mp4'</span>
+<span class="k">if</span> <span class="k">not</span> cap.isOpened():               <span class="c"># isOpened = 是否打开成功；not = 取反</span>
+    <span class="k">print</span>(<span class="s">'摄像头打不开'</span>); <span class="k">exit</span>()
+<span class="c"># ; 表示同一行写两句，正式代码建议分行写</span>
+
+fps = cap.get(cv2.CAP_PROP_FPS)      <span class="c"># get = 读属性；CAP_PROP_FPS = 每秒帧数</span>
+w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+<span class="k">print</span>(<span class="s">'帧率/宽高：'</span>, fps, w, h)
+
+<span class="k">while</span> <span class="k">True</span>:                        <span class="c"># while True = 一直循环，直到 break</span>
+    ret, frame = cap.read()           <span class="c"># read = 读一帧；ret = 是否成功，frame = 这一帧图片</span>
+    <span class="k">if</span> <span class="k">not</span> ret:                    <span class="c"># 视频放完 / 摄像头断了 → 退出</span>
+        <span class="k">break</span>                       <span class="c"># break = 跳出循环</span>
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  <span class="c"># 每帧都当普通图片处理</span>
+    cv2.imshow(<span class="s">'灰度视频'</span>, gray)
+    <span class="k">if</span> cv2.waitKey(1) &amp; 0xFF == ord(<span class="s">'q'</span>):
+        <span class="c"># waitKey(1) = 等 1 毫秒；&amp; 0xFF = 取低 8 位；ord('q') = 字母 q 的编码</span>
+        <span class="k">break</span>
+
+cap.release()                        <span class="c"># release = 释放摄像头/文件，别忘</span>
+cv2.destroyAllWindows()              <span class="c"># 关窗口</span></pre></div>
+
+<h3>18.1 把处理后的帧存成视频</h3>
+<div class="cmd file"><div class="cmd-bar"><span>writer.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+cap = cv2.VideoCapture(<span class="s">'example.mp4'</span>)
+fps = cap.get(cv2.CAP_PROP_FPS)
+w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))   <span class="c"># int() = 转成整数，尺寸必须是整数</span>
+h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+fourcc = cv2.VideoWriter_fourcc(*<span class="s">'XVID'</span>)
+<span class="c"># fourcc = four character code 四字符编码；*'XVID' 把字符串拆成 4 个字符传进去</span>
+out = cv2.VideoWriter(<span class="s">'output.avi'</span>, fourcc, fps, (w, h))
+<span class="c"># VideoWriter = 视频写出；尺寸写 (宽, 高)，必须和实际写入的帧一致</span>
+
+<span class="k">while</span> <span class="k">True</span>:
+    ret, frame = cap.read()
+    <span class="k">if</span> <span class="k">not</span> ret: <span class="k">break</span>
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    bgr = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
+    <span class="c"># 灰度是单通道，彩色视频要三通道，所以转回去再写</span>
+    out.write(bgr)                    <span class="c"># write = 写入一帧</span>
+    <span class="k">if</span> cv2.waitKey(25) &amp; 0xFF == ord(<span class="s">'q'</span>): <span class="k">break</span>
+cap.release(); out.release(); cv2.destroyAllWindows()</pre></div>
+
+<div class="warn">
+  <span class="card-t">5.0 变化 + Windows 常见坑</span>
+  <p>① <b>5.0 变化</b>：<code>cap.get(属性)</code> 遇到「不支持的属性」时，4.x 返回 0、<b>5.0 返回 -1</b>。官方建议判断写成 <code>if val &lt; 0:</code>，而不是 <code>== -1</code>。<br>
+  ② <b>Windows 摄像头打不开</b>：先确认没被别的软件占用；必要时把 <code>cv2.VideoCapture(0, cv2.CAP_DSHOW)</code> 加上后端参数。<br>
+  ③ <b>写出的视频 0 字节</b>：多半是帧尺寸和 <span class="kw" data-w="VideoWriter"><code>VideoWriter</code></span> 里写的 <code>(w,h)</code> 不一致，或忘了 <code>out.release()</code>。<br>
+  ④ <b>编码器报错</b>：<code>XVID</code> 需要系统里有对应编码器，可换 <code>MJPG</code> 并把扩展名改成 <code>.avi</code>。</p>
+</div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能写出完整的视频循环（打开 → 读帧 → 处理 → 显示 → 释放）。<br>② 知道 <code>waitKey(1) &amp; 0xFF</code> 的用途。<br>③ 知道 5.0 里不支持属性返回 -1。</p></div>
+
+<h2 class="chap" id="c19"><span class="num cv">19</span> 目标跟踪与背景减除</h2>
+<p class="chap-lead">视频里「跟着一个东西跑」和「把动的东西从静止背景里抠出来」，是两类经典任务。</p>
+
+<h3>19.1 背景减除：把运动物体抠出来</h3>
+<div class="cmd file"><div class="cmd-bar"><span>bgsub.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+
+cap = cv2.VideoCapture(<span class="s">'street.mp4'</span>)
+fgbg = cv2.createBackgroundSubtractorMOG2()
+<span class="c"># createBackgroundSubtractorMOG2 = 创建「高斯混合背景减除器」</span>
+<span class="c"># 它会自己学习什么是静止背景，把动的东西输出成白色前景</span>
+
+<span class="k">while</span> <span class="k">True</span>:
+    ret, frame = cap.read()
+    <span class="k">if</span> <span class="k">not</span> ret: <span class="k">break</span>
+    fgmask = fgbg.apply(frame)     <span class="c"># apply = 把这一帧喂进去，得到前景掩码</span>
+    cv2.imshow(<span class="s">'前景'</span>, fgmask)
+    <span class="k">if</span> cv2.waitKey(30) &amp; 0xFF == ord(<span class="s">'q'</span>): <span class="k">break</span>
+cap.release(); cv2.destroyAllWindows()</pre></div>
+<table class="kv">
+<tr><th>写法</th><th>说明</th></tr>
+<tr><td><code>cv2.createBackgroundSubtractorMOG2()</code></td><td>主库自带，高斯数量自适应，最常用</td></tr>
+<tr><td><code>cv2.bgsegm.createBackgroundSubtractorMOG()</code></td><td>旧版 MOG，在 <code>bgsegm</code> 命名空间，需要 contrib 包</td></tr>
+<tr><td><code>cv2.createBackgroundSubtractorKNN()</code></td><td>基于 K 近邻的另一种减除器</td></tr>
+<tr><td><code>.apply(frame)</code></td><td>逐帧喂图，返回黑白前景掩码</td></tr>
+</table>
+
+<h3>19.2 MeanShift / CamShift：跟着目标跑</h3>
+<div class="cmd file"><div class="cmd-bar"><span>meanshift.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+<span class="k">import</span> numpy <span class="k">as</span> np
+
+cap = cv2.VideoCapture(<span class="s">'video.mp4'</span>)
+ret, frame = cap.read()
+x, y, w, h = 300, 200, 100, 50           <span class="c"># 初始跟踪窗口：左上角 (x,y)，宽 w 高 h</span>
+track_window = (x, y, w, h)
+
+roi = frame[y:y+h, x:x+w]                 <span class="c"># 从第一帧里切出目标区域 ROI</span>
+hsv_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+mask = cv2.inRange(hsv_roi, np.array((0., 60., 32.)), np.array((180., 255., 255.)))
+<span class="c"># inRange = 只保留有一定饱和度、亮度的像素，去掉暗部干扰</span>
+roi_hist = cv2.calcHist([hsv_roi], [0], mask, [180], [0, 180])
+<span class="c"># 只统计 H（色相）通道的直方图，作为「目标长什么样」的指纹</span>
+cv2.normalize(roi_hist, roi_hist, 0, 255, cv2.NORM_MINMAX)
+<span class="c"># normalize = 归一化，把数值拉到 0~255，方便后面算概率</span>
+term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
+<span class="c"># 停止条件：最多迭代 10 次，或移动小于 1 像素就停；| 是「按位或」，把两个标志合起来</span>
+
+<span class="k">while</span> <span class="k">True</span>:
+    ret, frame = cap.read()
+    <span class="k">if</span> <span class="k">not</span> ret: <span class="k">break</span>
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    dst = cv2.calcBackProject([hsv], [0], roi_hist, [0, 180], 1)
+    <span class="c"># calcBackProject = 反向投影：算出每个像素「像目标」的概率图</span>
+    ret, track_window = cv2.meanShift(dst, track_window, term_crit)
+    <span class="c"># meanShift = 把窗口往概率最大的地方挪；返回新窗口位置</span>
+    x, y, w, h = track_window
+    cv2.rectangle(frame, (x, y), (x+w, y+h), 255, 2)
+    cv2.imshow(<span class="s">'跟踪'</span>, frame)
+    <span class="k">if</span> cv2.waitKey(30) &amp; 0xFF == 27: <span class="k">break</span>
+    <span class="c"># 27 = Esc 键的 ASCII 码</span>
+cap.release(); cv2.destroyAllWindows()</pre></div>
+
+<table class="kv">
+<tr><th>方法</th><th>英文原意</th><th>区别</th></tr>
+<tr><td><code>meanShift()</code></td><td>mean shift 均值漂移</td><td>窗口大小固定，只挪位置</td></tr>
+<tr><td><code>CamShift()</code></td><td>continuously adaptive mean shift</td><td>窗口大小和角度也会跟着变</td></tr>
+<tr><td><code>calcBackProject()</code></td><td>back projection 反向投影</td><td>把直方图变成「哪里像目标」的概率图</td></tr>
+</table>
+<div class="tip"><span class="card-t">这套方法的边界</span><p>MeanShift / CamShift 靠颜色直方图认目标：目标被遮挡、快速运动、或背景里有同色物体时容易跟丢。做严肃项目时，一般用第 26 章提到的专用跟踪器或 DNN 检测器。</p></div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能用 MOG2 把运动前景抠出来。<br>② 能说出 MeanShift 与 CamShift 的差别。<br>③ 知道反向投影在整个流程里的作用。</p></div>
+
+<h2 class="chap" id="c20"><span class="num cv">20</span> 特征匹配与图像拼接</h2>
+<p class="chap-lead">两张照片拍的是同一片风景，怎么自动拼起来？靠「找两图里相同的特征点」。</p>
+
+<div class="fig">
+<svg viewBox="0 0 880 165" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="165" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">拼接五步</text>
+  <rect class="box" x="18" y="44" width="155" height="64" rx="10" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="tm" x="28" y="68">① SIFT</text><text class="ts" x="28" y="90">找特征点+描述</text>
+  <rect class="box" x="190" y="44" width="155" height="64" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="200" y="68">② knnMatch</text><text class="ts" x="200" y="90">找候选配对</text>
+  <rect class="box" x="362" y="44" width="155" height="64" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="372" y="68">③ 比率测试</text><text class="ts" x="372" y="90">筛掉不靠谱的</text>
+  <rect class="box" x="534" y="44" width="155" height="64" rx="10" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="tm" x="544" y="68">④ findHomography</text><text class="ts" x="544" y="90">算透视矩阵 H</text>
+  <rect class="box" x="706" y="44" width="156" height="64" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="tm" x="716" y="68">⑤ warpPerspective</text><text class="ts" x="716" y="90">把图 1 掰过去</text>
+  <path d="M175 76 L188 76 M347 76 L360 76 M519 76 L532 76 M691 76 L704 76" stroke="#c2410c" stroke-width="2" marker-end="url(#arV20)"/>
+  <text class="ts" x="18" y="140">关键点：匹配数量要够多（经验值 &gt; 10），算出的矩阵才稳定。</text>
+  <defs><marker id="arV20" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#c2410c"/></marker></defs>
+</svg>
+<figcaption><b>拼接五步</b>：找点 → 配对 → 筛选 → 算矩阵 → 变形叠加。</figcaption>
+</div>
+
+<div class="cmd file"><div class="cmd-bar"><span>stitch.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+<span class="k">import</span> numpy <span class="k">as</span> np
+
+img1 = cv2.imread(<span class="s">'left.jpg'</span>); img2 = cv2.imread(<span class="s">'right.jpg'</span>)
+g1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+g2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+
+sift = cv2.SIFT_create()               <span class="c"># SIFT = 尺度不变特征变换；5.0 仍在主库，可直接用</span>
+kp1, des1 = sift.detectAndCompute(g1, <span class="k">None</span>)
+<span class="c"># detectAndCompute = 一次完成「找关键点 kp」和「算描述子 des」；None = 不用掩码</span>
+kp2, des2 = sift.detectAndCompute(g2, <span class="k">None</span>)
+
+bf = cv2.BFMatcher()                   <span class="c"># BFMatcher = Brute Force 暴力匹配器</span>
+matches = bf.knnMatch(des1, des2, k=2)
+<span class="c"># knnMatch = 给每个特征点找 2 个最像的候选；k=2 是后面比率测试的前提</span>
+good = []
+<span class="k">for</span> m, n <span class="k">in</span> matches:                <span class="c"># m = 最像的，n = 第二像的</span>
+    <span class="k">if</span> m.distance &lt; 0.75 * n.distance:  <span class="c"># Lowe 比率测试：最像的要明显比第二像的更像</span>
+        good.append(m)                <span class="c"># append = 加入好匹配列表</span>
+
+<span class="k">if</span> len(good) &gt; 10:                    <span class="c"># 匹配太少就拼不准</span>
+    src = np.float32([kp1[m.queryIdx].pt <span class="k">for</span> m <span class="k">in</span> good]).reshape(-1, 1, 2)
+    dst = np.float32([kp2[m.trainIdx].pt <span class="k">for</span> m <span class="k">in</span> good]).reshape(-1, 1, 2)
+    <span class="c"># queryIdx/trainIdx = 匹配两端特征点的编号；reshape(-1,1,2) = 整理成函数要的形状</span>
+    H, _ = cv2.findHomography(src, dst, cv2.RANSAC, 5.0)
+    <span class="c"># findHomography = 求单应矩阵 H；RANSAC = 自动剔除错误匹配；5.0 = 重投影阈值</span>
+    h1, w1 = img1.shape[:2]; h2, w2 = img2.shape[:2]
+    result = cv2.warpPerspective(img1, H, (w1 + w2, h1))
+    <span class="c"># warpPerspective = 按 H 把第一张图「掰」到第二张的视角</span>
+    result[0:h2, 0:w2] = img2          <span class="c"># 再把第二张贴上去</span>
+    cv2.imwrite(<span class="s">'panorama.jpg'</span>, result)
+<span class="k">else</span>:
+    <span class="k">print</span>(<span class="s">'好匹配太少，换两张重叠更多的照片'</span>)</pre></div>
+
+<table class="kv">
+<tr><th>函数 / 类</th><th>英文原意</th><th>作用</th></tr>
+<tr><td><code>SIFT_create()</code></td><td>Scale-Invariant Feature Transform</td><td>找尺度不变的特征点（5.0 仍在主库）</td></tr>
+<tr><td><code>ORB_create()</code></td><td>Oriented FAST and Rotated BRIEF</td><td>更快的二值特征，适合实时</td></tr>
+<tr><td><code>detectAndCompute()</code></td><td>detect and compute</td><td>一次拿到关键点与描述子</td></tr>
+<tr><td><code>BFMatcher()</code> / <code>FlannBasedMatcher()</code></td><td>Brute Force / FLANN</td><td>暴力匹配 / 快速近似匹配</td></tr>
+<tr><td><code>knnMatch(des1, des2, k=2)</code></td><td>k nearest neighbors</td><td>每个点找 k 个候选</td></tr>
+<tr><td><code>findHomography(..., RANSAC, 5.0)</code></td><td>find homography</td><td>算两图的透视关系矩阵</td></tr>
+<tr><td><code>perspectiveTransform()</code> / <code>warpPerspective()</code></td><td>perspective transform</td><td>变换点 / 变换整张图</td></tr>
+</table>
+
+<div class="warn"><span class="card-t">5.0 迁移提醒</span><p>官方指南写明：<code>features2d</code> 模块改名 <code>features</code>，但 <b>Python 完全不用改</b>（<code>cv2.SIFT_create()</code> 照旧）；<b>SURF、BRIEF、FREAK 等被移到 contrib</b>，只装基础包时用不了。菜鸟教程 C++ 版里的 <code>xfeatures2d::SURF::create()</code> 在 5.0 需要额外编 contrib。新项目建议直接用 SIFT 或 ORB。</p></div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能说出 knnMatch 为什么要 k=2。<br>② 知道 0.75 比率测试筛掉的是什么。<br>③ 知道好匹配太少时要换重叠更多的照片。</p></div>
+
+<h2 class="chap" id="c21"><span class="num cv">21</span> 人脸检测与模板匹配</h2>
+<p class="chap-lead">这一章是 5.0 改动最大的地方，菜鸟教程的旧代码要改才能跑。</p>
+
+<div class="warn">
+  <span class="card-t">先看这里：5.0 把 Haar 人脸检测搬走了</span>
+  <p>官方 <b>4.x → 5.x 迁移指南</b>明确写着：<span class="kw" data-w="CascadeClassifier"><code>CascadeClassifier</code></span>（Haar）和 <code>HOGDescriptor</code> 移到了 <code>xobjdetect</code>（opencv_contrib）。所以：</p>
+  <table class="kv">
+    <tr><th>你的环境</th><th>能不能用 <code>cv2.CascadeClassifier</code></th></tr>
+    <tr><td>装了 <code>opencv-contrib-python</code></td><td><b>能</b>，菜鸟教程原代码基本照用</td></tr>
+    <tr><td>只装了 <code>opencv-python</code>（5.0 基础包）</td><td><b>不能</b>，会报 <code>AttributeError</code></td></tr>
+    <tr><td>想用官方推荐的新方案</td><td>用 <code>cv2.FaceDetectorYN</code>（DNN，不需要 contrib，但要下载模型文件）</td></tr>
+  </table>
+</div>
+
+<h3>21.1 方案 A：装 contrib，沿用 Haar（最省事）</h3>
+<div class="cmd"><div class="cmd-bar"><span>终端 · 先切换到完整包</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">pip</span> uninstall opencv-python -y
+<span class="c"># uninstall = 卸载；-y = 自动确认，不再问一次</span>
+<span class="p">$</span> <span class="k">pip</span> install opencv-contrib-python
+<span class="c"># contrib = 扩展模块包，含 Haar / ml / SURF 等</span></pre></div>
+<div class="cmd file"><div class="cmd-bar"><span>face_haar.py</span><span>需要 opencv-contrib-python</span></div><pre><span class="k">import</span> cv2
+
+xml = cv2.data.haarcascades + <span class="s">'haarcascade_frontalface_default.xml'</span>
+<span class="c"># cv2.data.haarcascades = 级联模型文件所在目录；后面拼上文件名</span>
+<span class="c"># xml 里存的是训练好的模型参数，不是代码</span>
+face = cv2.CascadeClassifier(xml)
+<span class="c"># CascadeClassifier = 级联分类器；5.0 里需要 contrib 包才有</span>
+<span class="k">if</span> face.empty():                    <span class="c"># empty = 模型没加载成功，立刻报错退出</span>
+    <span class="k">print</span>(<span class="s">'模型没加载，检查是否装了 contrib 包'</span>); <span class="k">exit</span>()
+
+img = cv2.imread(<span class="s">'people.jpg'</span>)
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)   <span class="c"># 检测在灰度图上进行，更快</span>
+faces = face.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+<span class="c"># detectMultiScale = 多尺度检测；scaleFactor = 每层缩小比例；minNeighbors = 至少要被邻居「投票」几次</span>
+<span class="c"># minSize = 小于这个尺寸的框直接忽略；返回一堆 (x, y, w, h)</span>
+<span class="k">for</span> (x, y, w, h) <span class="k">in</span> faces:
+    cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)  <span class="c"># 蓝色框</span>
+cv2.imwrite(<span class="s">'faces.jpg'</span>, img)
+<span class="k">print</span>(<span class="s">'找到人脸：'</span>, len(faces))</pre></div>
+
+<h3>21.2 方案 B：5.0 推荐的 DNN 检测器（不用 contrib）</h3>
+<div class="cmd file"><div class="cmd-bar"><span>face_dnn.py</span><span>仅 5.0 推荐写法，需 yunet 模型</span></div><pre><span class="k">import</span> cv2
+
+img = cv2.imread(<span class="s">'people.jpg'</span>)
+h, w = img.shape[:2]
+detector = cv2.FaceDetectorYN.create(
+    <span class="s">'face_detection_yunet.onnx'</span>, <span class="s">''</span>, (w, h))
+<span class="c"># FaceDetectorYN = 基于 YuNet 的 DNN 人脸检测器；第一个参数是模型文件</span>
+<span class="c"># 官方模型在 opencv_zoo 仓库，需自行下载放到项目目录</span>
+<span class="c"># '' = 配置文件（YuNet 不需要）；(w,h) = 输入图尺寸</span>
+_, faces = detector.detect(img)     <span class="c"># detect = 检测；faces 是 N×15 的数组，没有人脸时是 None</span>
+<span class="k">if</span> faces <span class="k">is</span> <span class="k">not</span> <span class="k">None</span>:
+    <span class="k">for</span> f <span class="k">in</span> faces:
+        x, y = int(f[0]), int(f[1])    <span class="c"># 前两个数是框的左上角</span>
+        bw, bh = int(f[2]), int(f[3])  <span class="c"># 第 3、4 个是宽高</span>
+        cv2.rectangle(img, (x, y), (x+bw, y+bh), (0, 255, 0), 2)
+cv2.imwrite(<span class="s">'faces_dnn.jpg'</span>, img)</pre></div>
+<div class="tip"><span class="card-t">两个方案怎么选</span><p>只想快速跑通菜鸟教程的例子 → 方案 A（换 contrib 包）；做正式项目、要更准更快 → 方案 B（DNN）。官方迁移指南也明确建议新项目用 DNN 人脸检测器，速度快、准确率高。</p></div>
+
+<h3>21.3 模板匹配：在大图里找小图</h3>
+<div class="cmd file"><div class="cmd-bar"><span>template.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+<span class="k">import</span> numpy <span class="k">as</span> np
+
+img = cv2.imread(<span class="s">'target.jpg'</span>, 0)      <span class="c"># 0 = 直接读成灰度</span>
+tpl = cv2.imread(<span class="s">'template.jpg'</span>, 0)
+w, h = tpl.shape[::-1]                 <span class="c"># shape[::-1] 把 (高,宽) 倒过来变成 (宽,高)</span>
+
+res = cv2.matchTemplate(img, tpl, cv2.TM_CCOEFF_NORMED)
+<span class="c"># matchTemplate = 拿小图在大图上滑动，每个位置算一个相似度</span>
+<span class="c"># 返回二维结果矩阵 res；TM_CCOEFF_NORMED 是归一化相关系数，越接近 1 越像</span>
+_, max_val, _, max_loc = cv2.minMaxLoc(res)
+<span class="c"># minMaxLoc = 找出矩阵里的最小值、最大值和它们的位置；这里只要最大值与位置</span>
+<span class="k">print</span>(<span class="s">'最高相似度：'</span>, max_val)
+cv2.rectangle(img, max_loc, (max_loc[0]+w, max_loc[1]+h), 255, 2)
+cv2.imwrite(<span class="s">'matched.jpg'</span>, img)</pre></div>
+<table class="kv">
+<tr><th>方法常量</th><th>怎么判断「最像」</th></tr>
+<tr><td><code>TM_SQDIFF</code> / <code>TM_SQDIFF_NORMED</code></td><td>平方差，<b>越小</b>越像（用 minMaxLoc 的最小值）</td></tr>
+<tr><td><code>TM_CCORR</code> / <code>TM_CCORR_NORMED</code></td><td>相关，越大越像</td></tr>
+<tr><td><code>TM_CCOEFF</code> / <code>TM_CCOEFF_NORMED</code></td><td>相关系数，越大越像（最常用）</td></tr>
+</table>
+<div class="warn"><span class="card-t">模板匹配的边界</span><p>它只会「平移」模板，不会缩放、不会旋转。目标变大变小、角度一变就找不到。需要抗缩放/旋转时改用第 20 章的特征匹配。</p></div>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能说出 5.0 里 Haar 检测为什么可能报 AttributeError。<br>② 会写 <code>detectMultiScale</code> 并画框。<br>③ 知道 <code>TM_SQDIFF</code> 要取最小值、其它方法取最大值。</p></div>
+
+<h2 class="chap" id="c22"><span class="num cv">22</span> 滤镜效果</h2>
+<p class="chap-lead">把前面学的函数组合起来，做出能看得见的效果。这一章也是第 23 章实战的铺垫。</p>
+
+<div class="cmd file"><div class="cmd-bar"><span>filters.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+<span class="k">import</span> numpy <span class="k">as</span> np
+
+img = cv2.imread(<span class="s">'bird.jpg'</span>)
+
+<span class="c"># ① 灰度：三通道变一通道</span>
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+cv2.imwrite(<span class="s">'f_gray.jpg'</span>, gray)
+
+<span class="c"># ② 柔光模糊</span>
+soft = cv2.GaussianBlur(img, (15, 15), 0)
+cv2.imwrite(<span class="s">'f_soft.jpg'</span>, soft)
+
+<span class="c"># ③ 素描：先找边缘，再反色成「白底黑线」</span>
+edges = cv2.Canny(gray, 100, 200)
+sketch = cv2.bitwise_not(edges)      <span class="c"># bitwise_not = 按位取反，黑变白、白变黑</span>
+cv2.imwrite(<span class="s">'f_sketch.jpg'</span>, sketch)
+
+<span class="c"># ④ 浮雕：自定义 3×3 核</span>
+emboss_k = np.array([[-2, -1, 0], [-1, 1, 1], [0, 1, 2]])
+emboss = cv2.filter2D(gray, -1, emboss_k)
+<span class="c"># filter2D = 二维卷积；-1 = 输出保持和输入一样的数据类型</span>
+cv2.imwrite(<span class="s">'f_emboss.jpg'</span>, emboss)
+
+<span class="c"># ⑤ 锐化：让字迹更清楚</span>
+sharp_k = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+sharp = cv2.filter2D(img, -1, sharp_k)
+cv2.imwrite(<span class="s">'f_sharp.jpg'</span>, sharp)
+
+<span class="k">print</span>(<span class="s">'五张效果图已保存'</span>)</pre></div>
+
+<div class="out"><div class="out-bar">你会看到什么</div><pre>终端打印：五张效果图已保存
+文件夹里出现 f_gray.jpg / f_soft.jpg / f_sketch.jpg / f_emboss.jpg / f_sharp.jpg</pre><div class="trans"><b>检查点：</b>逐个打开看效果。素描图应该是白底黑线；浮雕图有立体感；锐化图边缘更清晰。</div></div>
+
+<table class="kv">
+<tr><th>效果</th><th>用到的函数</th><th>原理一句话</th></tr>
+<tr><td>灰度</td><td><span class="kw" data-w="cvtColor"><code>cvtColor</code></span></td><td>三通道合成一个亮度</td></tr>
+<tr><td>柔光</td><td><span class="kw" data-w="GaussianBlur"><code>GaussianBlur</code></span></td><td>邻域加权平均</td></tr>
+<tr><td>素描</td><td><span class="kw" data-w="Canny"><code>Canny</code></span> + <code>bitwise_not</code></td><td>边缘 + 反色</td></tr>
+<tr><td>浮雕 / 锐化</td><td><span class="kw" data-w="filter2D"><code>filter2D</code></span> + 自定义核</td><td>用核强调相邻像素的差</td></tr>
+<tr><td>怀旧</td><td><span class="kw" data-w="split"><code>split</code></span> + <code>np.clip</code> + <span class="kw" data-w="merge"><code>merge</code></span></td><td>手动调三个通道的比例</td></tr>
+</table>
+
+<div class="tip"><span class="card-t">自定义核为什么能改变效果</span><p>核中间的数大、四周是负数 → 强调中心和周围的差＝锐化；核从左下到右上一组正负 → 做出光照方向感＝浮雕。核里所有数加起来为 1 时，图像整体亮度不变；加起来为 0 时，平坦区域会变黑。</p></div>
+
+<div class="check"><span class="card-t">检查点</span><p>能独立做出灰度、素描、锐化三种效果，并说出 <span class="kw" data-w="filter2D"><code>filter2D</code></span> 的 <code>-1</code> 是什么意思。</p></div>
+
+<h2 class="chap" id="c23"><span class="num cv">23</span> 完整实战一：批量处理图片</h2>
+<p class="chap-lead">把前面学的东西串成一个真能用的小工具：一个文件夹里的照片，统一缩小、转灰度、存到另一个文件夹。</p>
+
+<div class="step">
+  <div class="step-h"><span class="step-n">1</span> 先准备文件夹和测试图</div>
+  <div class="cmd"><div class="cmd-bar"><span>终端</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">mkdir</span> in out
+<span class="c"># mkdir = 新建文件夹；一次建两个：in 放原图，out 放结果</span>
+<span class="p">$</span> <span class="k">ls</span>
+<span class="c"># ls = 列出文件，应该能看到 in / out 两个文件夹</span></pre></div>
+  <p>往 <span class="kw" data-w="in"><code>in</code></span> 里放 3~5 张 jpg 图片。<b>路径和文件名尽量用英文</b>，避免 Windows 中文路径的坑。</p>
+  <div class="check"><span class="card-t">检查点</span><p><code>ls in</code> 能看到几张图片文件名。</p></div>
+</div>
+
+<div class="fig">
+<svg viewBox="0 0 880 130" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="130" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">批处理工具的流水线</text>
+  <rect class="box" x="18" y="44" width="150" height="56" rx="10" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="tm" x="30" y="68">os.listdir</text><text class="ts" x="30" y="88">列出所有文件</text>
+  <rect class="box" x="186" y="44" width="150" height="56" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="198" y="68">imread + 判空</text><text class="ts" x="198" y="88">读成数组</text>
+  <rect class="box" x="354" y="44" width="150" height="56" rx="10" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="tm" x="366" y="68">灰度 → 缩放</text><text class="ts" x="366" y="88">→ 均衡化</text>
+  <rect class="box" x="522" y="44" width="150" height="56" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="tm" x="534" y="68">imwrite</text><text class="ts" x="534" y="88">存到 out</text>
+  <rect class="box" x="690" y="44" width="172" height="56" rx="10" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tm" x="702" y="68">count += 1</text><text class="ts" x="702" y="88">最后打印总数</text>
+  <path d="M170 72 L184 72 M338 72 L352 72 M506 72 L520 72 M674 72 L688 72" stroke="#c2410c" stroke-width="2" marker-end="url(#fB)"/>
+  <defs><marker id="fB" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#c2410c"/></marker></defs>
+</svg>
+<figcaption><b>批处理五步</b>：一个 for 循环把同一套处理套到所有图片上。</figcaption>
+</div>
+
+<div class="step">
+  <div class="step-h"><span class="step-n">2</span> 写完整脚本</div>
+  <div class="cmd file"><div class="cmd-bar"><span>batch.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2                          <span class="c"># 导入 OpenCV</span>
+<span class="k">import</span> os                           <span class="c"># os = operating system 操作系统，用来列文件夹</span>
+
+IN_DIR, OUT_DIR = <span class="s">'in'</span>, <span class="s">'out'</span>  <span class="c"># 常量：输入/输出文件夹名，大写表示不改</span>
+os.makedirs(OUT_DIR, exist_ok=<span class="k">True</span>)
+<span class="c"># makedirs = make directories 建文件夹；exist_ok=True = 已存在也不报错</span>
+
+count = 0                            <span class="c"># 计数器，最后打印处理了几张</span>
+<span class="k">for</span> name <span class="k">in</span> os.listdir(IN_DIR):  <span class="c"># listdir = 列出文件夹里所有名字</span>
+    <span class="k">if</span> <span class="k">not</span> name.lower().endswith((<span class="s">'.jpg'</span>, <span class="s">'.png'</span>)):
+        <span class="c"># lower() = 转小写；endswith = 以…结尾；不是图片就跳过</span>
+        <span class="k">continue</span>
+    path = os.path.join(IN_DIR, name)
+    <span class="c"># os.path.join = 把文件夹和文件名拼成完整路径（自动处理斜杠）</span>
+    img = cv2.imread(path)
+    <span class="k">if</span> img <span class="k">is</span> <span class="k">None</span>:              <span class="c"># 读失败不报错，只返回 None，必须判空</span>
+        <span class="k">print</span>(<span class="s">'跳过（读不到）：'</span>, name)
+        <span class="k">continue</span>
+
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  <span class="c"># 转灰度</span>
+    small = cv2.resize(gray, (640, 480))          <span class="c"># 统一缩到 640×480（宽,高）</span>
+    eq = cv2.equalizeHist(small)                  <span class="c"># 直方图均衡，拉开对比度</span>
+    out_path = os.path.join(OUT_DIR, name)
+    ok = cv2.imwrite(out_path, eq)                <span class="c"># 存盘，返回 True / False</span>
+    <span class="k">print</span>(name, <span class="s">'→'</span>, <span class="s">'成功'</span> <span class="k">if</span> ok <span class="k">else</span> <span class="s">'失败'</span>)
+    count += 1                                   <span class="c"># += 表示「自己加 1」</span>
+
+<span class="k">print</span>(<span class="s">'全部完成，共处理'</span>, count, <span class="s">'张'</span>)</pre></div>
+</div>
+
+<div class="step">
+  <div class="step-h"><span class="step-n">3</span> 运行并逐步检查</div>
+  <div class="cmd"><div class="cmd-bar"><span>终端</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">python</span> batch.py</pre></div>
+  <div class="out"><div class="out-bar">你会看到什么（示例）</div><pre>a.jpg → 成功
+b.png → 成功
+c.jpg → 成功
+全部完成，共处理 3 张</pre><div class="trans"><b>检查点：</b>① 每张都打印「成功」；② <code>ls out</code> 能看到同名文件；③ 打开一张看，应该是 640×480 的黑白图，且对比度比原图更清楚。</div></div>
+</div>
+
+<div class="warn">
+  <span class="card-t">跑不通时按这个顺序查</span>
+  <p>① 打印「跳过（读不到）」→ 路径里有中文或文件名写错，换成英文路径；或用 <code>os.path.join</code> 打印出来的 <code>path</code> 检查。<br>
+  ② 输出图是彩色的 → 检查是不是漏了 <span class="kw" data-w="cvtColor"><code>cvtColor</code></span>，或者 <code>eq</code> 变量被后面的彩色图覆盖了。<br>
+  ③ <span class="kw" data-w="equalizeHist"><code>equalizeHist</code></span> 报错 → 说明传进去的不是单通道灰度图，回到第 17 章看说明。<br>
+  ④ 输出尺寸不对 → <span class="kw" data-w="resize"><code>resize</code></span> 的 <code>(640, 480)</code> 是 (宽, 高)，不是 (高, 宽)。</p>
+</div>
+
+<div class="check"><span class="card-t">检查点</span><p>能独立跑通「遍历文件夹 → 读图 → 判空 → 处理 → 存盘 → 计数」完整链路，本实战就完成了。</p></div>
+
+<h2 class="chap" id="c24"><span class="num cv">24</span> 完整实战二：摄像头实时检测</h2>
+<p class="chap-lead">把检测算法放进视频循环里，做一个「按 q 退出」的实时小程序。</p>
+
+<div class="step">
+  <div class="step-h"><span class="step-n">1</span> 先跑最小版本：能看到摄像头画面</div>
+  <div class="cmd file"><div class="cmd-bar"><span>cam_min.py</span><span>写进文件</span></div><pre><span class="k">import</span> cv2
+cap = cv2.VideoCapture(0)        <span class="c"># 0 = 默认摄像头</span>
+<span class="k">if</span> <span class="k">not</span> cap.isOpened():         <span class="c"># isOpened = 是否打开成功</span>
+    <span class="k">print</span>(<span class="s">'摄像头打不开'</span>); <span class="k">exit</span>()
+<span class="k">while</span> <span class="k">True</span>:
+    ret, frame = cap.read()      <span class="c"># 读一帧</span>
+    <span class="k">if</span> <span class="k">not</span> ret: <span class="k">break</span>
+    cv2.imshow(<span class="s">'摄像头'</span>, frame)
+    <span class="k">if</span> cv2.waitKey(1) &amp; 0xFF == ord(<span class="s">'q'</span>): <span class="k">break</span>
+    <span class="c"># 按 q 退出；&amp; 0xFF 是取按键编码的低 8 位</span>
+cap.release(); cv2.destroyAllWindows()  <span class="c"># 收尾两件套，缺一不可</span></pre></div>
+  <div class="out"><div class="out-bar">你会看到什么</div><pre>弹出实时画面窗口，按 q 后窗口关闭、程序结束</pre><div class="trans"><b>检查点：</b>能看到自己的实时画面再往下走；打不开就先看下方 Windows 提示。</div></div>
+</div>
+
+<div class="fig">
+<svg viewBox="0 0 880 130" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="130" fill="#ffffff"/>
+  <text class="tb" x="18" y="26">实时检测循环：每一帧都走同一条链</text>
+  <rect class="box" x="18" y="44" width="150" height="56" rx="10" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="tm" x="30" y="68">cap.read()</text><text class="ts" x="30" y="88">取一帧 frame</text>
+  <rect class="box" x="186" y="44" width="150" height="56" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
+  <text class="tm" x="198" y="68">cvtColor 灰度</text><text class="ts" x="198" y="88">检测更快</text>
+  <rect class="box" x="354" y="44" width="150" height="56" rx="10" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text class="tm" x="366" y="68">detectMultiScale</text><text class="ts" x="366" y="88">得到人脸框</text>
+  <rect class="box" x="522" y="44" width="150" height="56" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text class="tm" x="534" y="68">rectangle + putText</text><text class="ts" x="534" y="88">画框写字</text>
+  <rect class="box" x="690" y="44" width="172" height="56" rx="10" fill="#effcf9" stroke="#99e2d3"/>
+  <text class="tm" x="702" y="68">imshow + waitKey</text><text class="ts" x="702" y="88">按 q 退出</text>
+  <path d="M170 72 L184 72 M338 72 L352 72 M506 72 L520 72 M674 72 L688 72" stroke="#c2410c" stroke-width="2" marker-end="url(#fC)"/>
+  <text class="ts" x="18" y="122">循环结束后必须 cap.release() + destroyAllWindows()，否则摄像头一直被占用。</text>
+  <defs><marker id="fC" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#c2410c"/></marker></defs>
+</svg>
+<figcaption><b>实时循环</b>：把「一次图片处理」放进 while True，就成了视频处理。</figcaption>
+</div>
+
+<div class="step">
+  <div class="step-h"><span class="step-n">2</span> 加入实时人脸检测</div>
+  <div class="cmd file"><div class="cmd-bar"><span>cam_face.py</span><span>需要 opencv-contrib-python，见第 21 章</span></div><pre><span class="k">import</span> cv2
+
+xml = cv2.data.haarcascades + <span class="s">'haarcascade_frontalface_default.xml'</span>
+face = cv2.CascadeClassifier(xml)
+<span class="k">if</span> face.empty():
+    <span class="k">print</span>(<span class="s">'模型加载失败：5.0 需要 opencv-contrib-python'</span>); <span class="k">exit</span>()
+
+cap = cv2.VideoCapture(0)
+<span class="k">while</span> <span class="k">True</span>:
+    ret, frame = cap.read()
+    <span class="k">if</span> <span class="k">not</span> ret: <span class="k">break</span>
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  <span class="c"># 检测用灰度图，更快</span>
+    faces = face.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+    <span class="k">for</span> (x, y, w, h) <span class="k">in</span> faces:
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)  <span class="c"># 绿色框</span>
+    cv2.putText(frame, <span class="s">f'faces: {len(faces)}'</span>, (20, 40),
+                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    <span class="c"># putText = 在画面左上角写人脸数量；f'' = 格式化字符串</span>
+    cv2.imshow(<span class="s">'实时人脸'</span>, frame)
+    <span class="k">if</span> cv2.waitKey(1) &amp; 0xFF == ord(<span class="s">'q'</span>): <span class="k">break</span>
+cap.release(); cv2.destroyAllWindows()</pre></div>
+</div>
+
+<div class="step">
+  <div class="step-h"><span class="step-n">3</span> 运行并检查</div>
+  <div class="cmd"><div class="cmd-bar"><span>终端</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">python</span> cam_face.py</pre></div>
+  <div class="out"><div class="out-bar">你会看到什么</div><pre>实时画面里，人脸被绿色矩形框住，左上角显示 faces: 1
+按 q 退出</pre><div class="trans"><b>检查点：</b>① 有绿色框；② 框跟着人脸移动；③ 按 q 能干净退出（摄像头指示灯熄灭）。</div></div>
+</div>
+
+<div class="warn">
+  <span class="card-t">Windows 特有与常见问题</span>
+  <p>① <b>摄像头打不开</b>：确认没被会议软件占用；必要时写 <code>cv2.VideoCapture(0, cv2.CAP_DSHOW)</code>。<br>
+  ② <b>窗口标题中文乱码</b>：把 <code>'实时人脸'</code> 换成 <code>'Face'</code>，不影响功能。<br>
+  ③ <b>按 q 没反应</b>：先点一下图像窗口让它获得焦点，再按 q。<br>
+  ④ <b>报模型加载失败</b>：这是 5.0 的变化 —— 换装 <code>opencv-contrib-python</code>（第 21 章），或改用 <span class="kw" data-w="FaceDetectorYN"><code>FaceDetectorYN</code></span>。<br>
+  ⑤ <b>程序结束后摄像头灯还亮</b>：说明中途异常退出没走到 <code>cap.release()</code>，关掉终端/重跑一次即可；正式项目建议用 <code>try/finally</code> 保证释放。</p>
+</div>
+
+<div class="check"><span class="card-t">检查点</span><p>能独立跑通「打开摄像头 → 逐帧检测 → 画框写字 → 按 q 退出 → 释放资源」，本实战就完成了。</p></div>
+
+<h2 class="chap" id="c25"><span class="num cv">25</span> C++ 版 OpenCV 与项目配置</h2>
+<p class="chap-lead">菜鸟教程有 9 页 C++ 内容。Python 够用，但要知道 C++ 侧怎么装、怎么写、5.0 有什么硬要求。</p>
+
+<h3>25.1 最小 C++ 程序</h3>
+<div class="cmd file"><div class="cmd-bar"><span>main.cpp</span><span>写进文件</span></div><pre><span class="d">#include</span> &lt;opencv2/opencv.hpp&gt;   <span class="c">// #include = 包含头文件；opencv.hpp 把常用模块一次都包进来</span>
+<span class="k">int</span> main() {
+    cv::Mat img = cv::imread(<span class="s">"bird.jpg"</span>);
+    <span class="c">// cv:: = 命名空间；Mat = Matrix 矩阵，C++ 里存图像的类；imread = 读图</span>
+    <span class="k">if</span> (img.empty()) <span class="k">return</span> -1;
+    <span class="c">// empty() = 图是不是空的（读失败）；return -1 = 以错误码结束程序</span>
+    cv::Mat gray;
+    cv::cvtColor(img, gray, cv::COLOR_BGR2GRAY);
+    <span class="c">// C++ 版常把「输出图」当参数传进去，和 Python 返回新图不同</span>
+    cv::imwrite(<span class="s">"gray_cpp.jpg"</span>, gray);
+    <span class="k">return</span> 0;                   <span class="c">// return 0 = 正常结束</span>
+}</pre></div>
+
+<h3>25.2 编译与运行</h3>
+<div class="cmd"><div class="cmd-bar"><span>终端 · Linux / macOS</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">g++</span> main.cpp -o main `pkg-config --cflags --libs opencv4`
+<span class="c"># g++ = C++ 编译器；-o main = 输出可执行文件叫 main</span>
+<span class="c"># pkg-config 会自动填出头文件路径和要链接的库</span>
+<span class="p">$</span> <span class="k">./main</span>
+<span class="c"># ./main = 运行当前目录下这个可执行程序</span></pre></div>
+<div class="cmd file"><div class="cmd-bar"><span>CMakeLists.txt</span><span>5.0 要求 C++17</span></div><pre>cmake_minimum_required(VERSION 3.10)   <span class="c"># 指定最低 CMake 版本</span>
+project(CVLab)                         <span class="c"># project = 项目名</span>
+<span class="k">set</span>(CMAKE_CXX_STANDARD 17)            <span class="c"># 仅 5.0：OpenCV 5.0 要求 C++17 或更高</span>
+find_package(OpenCV REQUIRED)          <span class="c"># find_package = 找到已安装的 OpenCV</span>
+add_executable(main main.cpp)          <span class="c"># add_executable = 生成可执行文件</span>
+target_link_libraries(main ${OpenCV_LIBS})
+<span class="c"># target_link_libraries = 把 OpenCV 的库链接进来；${OpenCV_LIBS} 是 find_package 给的变量</span></pre></div>
+<div class="cmd"><div class="cmd-bar"><span>终端</span><span>只敲 $ 行</span></div><pre><span class="p">$</span> <span class="k">cmake</span> -B build
+<span class="c"># -B build = 把生成的工程文件放到 build 文件夹</span>
+<span class="p">$</span> <span class="k">cmake</span> --build build
+<span class="c"># --build = 真正编译</span></pre></div>
+
+<h3>25.3 Windows 上用 Visual Studio 配置（菜鸟教程做法）</h3>
+<table class="kv">
+<tr><th>步骤</th><th>做什么</th></tr>
+<tr><td>① 下载</td><td>从 <a href="https://opencv.org/releases/" target="_blank">opencv.org/releases</a> 下载 Windows 预编译包，解压到 <code>C:\opencv</code></td></tr>
+<tr><td>② PATH</td><td>此电脑 → 属性 → 高级系统设置 → 环境变量 → 在 PATH 追加 <code>C:\opencv\build\x64\vc15\bin</code>（按 VS 版本选 vc14 / vc15）</td></tr>
+<tr><td>③ 包含目录</td><td>项目属性 → VC++ 目录 → 包含目录加 <code>C:\opencv\build\include</code></td></tr>
+<tr><td>④ 库目录</td><td>库目录加 <code>C:\opencv\build\x64\vc15\lib</code></td></tr>
+<tr><td>⑤ 附加依赖</td><td>链接器 → 输入 → 附加依赖项加 <code>opencv_world4xx.lib</code>（按实际文件名，如 <code>opencv_world450.lib</code>）</td></tr>
+</table>
+<div class="warn">
+  <span class="card-t">5.0 的 C++ 硬要求</span>
+  <p>官方迁移指南明确写：<b>OpenCV 5.0 需要 C++17 或更高</b>（GCC 8+ / Clang 9+ / MSVC 2017 19.14+），Python 2 不再支持。另外 <b>OpenCV 1.x 的旧 C API 被彻底移除</b>：<code>CvMat</code>、<code>IplImage</code>、<code>cvCreateMat()</code>、<code>cvFindContours()</code> 都不能再用，要改成 <code>cv::Mat</code> 那套 C++ 写法；但 <code>CV_8U</code>、<code>CV_32F</code> 这些宏<b>仍然可用</b>。</p>
+</div>
+
+<h3>25.4 C++ 常用 API 对照</h3>
+<table class="kv">
+<tr><th>Python</th><th>C++</th><th>差异</th></tr>
+<tr><td><code>img = cv2.imread('a.jpg')</code></td><td><code>cv::Mat img = cv::imread("a.jpg");</code></td><td>判空用 <code>img.empty()</code> 而不是 <code>is None</code></td></tr>
+<tr><td><code>gray = cv2.cvtColor(img, ...)</code></td><td><code>cv::Mat gray; cv::cvtColor(img, gray, cv::COLOR_BGR2GRAY);</code></td><td>C++ 常把输出当参数传进去</td></tr>
+<tr><td><code>cv2.imshow / waitKey</code></td><td><code>cv::imshow(...) / cv::waitKey(0)</code></td><td>名字基本一致</td></tr>
+<tr><td><code>img.shape</code></td><td><code>img.rows / img.cols / img.channels()</code></td><td>C++ 用属性分开取</td></tr>
+<tr><td><code>img[y, x]</code></td><td><code>img.at&lt;cv::Vec3b&gt;(y, x)</code></td><td><code>Vec3b</code> = 3 个 uchar 的向量（BGR）</td></tr>
+<tr><td><code>np.zeros(...)</code></td><td><code>cv::Mat::zeros(...)</code></td><td>C++ 用 Mat 自带静态方法</td></tr>
+</table>
+
+<div class="check"><span class="card-t">检查点</span><p>① 能写出最小 C++ 读图转灰度程序。<br>② 知道 5.0 要求 C++17。<br>③ 知道旧 C API（IplImage 等）已被移除。</p></div>
+
+<h2 class="chap" id="c26"><span class="num cv">26</span> 机器学习、性能优化与排错</h2>
+<p class="chap-lead">最后一章补齐进阶主题，并给一张「按症状查」的排错表。</p>
+
+<h3>26.1 机器学习与深度学习（5.0 有变化）</h3>
+<div class="cmd file"><div class="cmd-bar"><span>dnn.py</span><span>5.0 推荐用 ONNX 模型</span></div><pre><span class="k">import</span> cv2
+
+net = cv2.dnn.readNetFromONNX(<span class="s">'model.onnx'</span>)
+<span class="c"># readNetFromONNX = 读取 ONNX 格式的神经网络模型</span>
+<span class="c"># 5.0 删除了 readNetFromCaffe() 和 readNetFromDarknet()，旧模型要先转成 ONNX</span>
+<span class="k">if</span> net.empty():                       <span class="c"># empty = 模型没加载成功</span>
+    <span class="k">print</span>(<span class="s">'模型没读到'</span>); <span class="k">exit</span>()
+img = cv2.imread(<span class="s">'bird.jpg'</span>)
+blob = cv2.dnn.blobFromImage(img, 1/255.0, (640, 640))
+<span class="c"># blobFromImage = 把图片变成网络要的输入：缩放、归一化、调尺寸</span>
+net.setInput(blob)                     <span class="c"># setInput = 把数据送进网络</span>
+out = net.forward()                    <span class="c"># forward = 前向推理，得到输出</span>
+<span class="k">print</span>(out.shape)</pre></div>
+<table class="kv">
+<tr><th>主题</th><th>4.x</th><th>5.0</th></tr>
+<tr><td>DNN 加载器</td><td><code>readNetFromCaffe</code> / <code>readNetFromDarknet</code> / <code>readNetFromTensorflow</code></td><td><b>前两个已删除</b>，统一转 ONNX 后用 <code>readNetFromONNX</code>；TFLite 仍可用</td></tr>
+<tr><td>推理引擎</td><td>classic</td><td><code>readNet()</code> 默认先试新引擎，失败自动回退；可用 <code>ENGINE_CLASSIC</code> / <code>ENGINE_ORT</code> 指定</td></tr>
+<tr><td>机器学习 <code>ml</code></td><td>主库自带（<code>cv2.ml.SVM_create</code> 等）</td><td><b>移到 contrib</b>，Python 里没有 <code>cv2.ml.*</code> 时改用 scikit-learn</td></tr>
+<tr><td>Haar / HOG</td><td>objdetect 模块</td><td><b>移到 contrib 的 xobjdetect</b>（见第 21 章）</td></tr>
+<tr><td>常用算法</td><td colspan="2">KNN、SVM、决策树、随机森林、K-Means、PCA 仍是经典内容</td></tr>
+</table>
+
+<h3>26.2 性能优化（C++ 侧为主）</h3>
+<table class="kv">
+<tr><th>方向</th><th>做法</th></tr>
+<tr><td>算法</td><td>选更合适的算法与更小的图；能只处理 ROI 就别处理整张图</td></tr>
+<tr><td>内存</td><td><span class="kw" data-w="Mat"><code>Mat</code></span> 自带引用计数，函数参数用引用传，避免不必要的 <code>clone()</code></td></tr>
+<tr><td>并行</td><td><code>parallel_for_()</code> 把任务拆开；编译时启用 TBB / OpenMP</td></tr>
+<tr><td>硬件加速</td><td><span class="kw" data-w="UMat"><code>UMat</code></span> 配合 <code>ocl::setUseOpenCL(True)</code>，让部分运算自动跑在 GPU / OpenCL 上</td></tr>
+<tr><td>代码</td><td>减少循环嵌套、把循环里不变的计算提到外面、选对数据结构</td></tr>
+</table>
+
+<h3>26.3 常见问题与排错表</h3>
+<table class="kv">
+<tr><th>症状</th><th>原因</th><th>怎么修</th></tr>
+<tr><td>读图后 <span class="kw" data-w="None"><code>None</code></span>，程序却不报错</td><td><span class="kw" data-w="imread"><code>imread</code></span> 失败返回 None</td><td>加 <code>if img is None:</code>；检查路径；Windows 换英文路径或正斜杠</td></tr>
+<tr><td>窗口一闪而过 / 灰白卡住</td><td>缺 <span class="kw" data-w="waitKey"><code>waitKey</code></span></td><td><span class="kw" data-w="imshow"><code>imshow</code></span> 后补 <code>waitKey(0)</code>，结束补 <code>destroyAllWindows()</code></td></tr>
+<tr><td>颜色不对，人脸发蓝</td><td>BGR 被当 RGB 用</td><td>用 matplotlib 显示前 <code>cv2.cvtColor(img, cv2.COLOR_BGR2RGB)</code></td></tr>
+<tr><td>报「tuple 没有 shape」</td><td><span class="kw" data-w="threshold"><code>threshold</code></span> 返回两个值</td><td>写成 <code>ret, dst = cv2.threshold(...)</code></td></tr>
+<tr><td><span class="kw" data-w="findContours"><code>findContours</code></span> 结果为空</td><td>输入不是二值图</td><td>先 <span class="kw" data-w="threshold"><code>threshold</code></span> 或 <span class="kw" data-w="Canny"><code>Canny</code></span>，且物体应是白色、背景黑色</td></tr>
+<tr><td>写出的视频 0 字节</td><td>帧尺寸不匹配 / 没 release</td><td><span class="kw" data-w="VideoWriter"><code>VideoWriter</code></span> 的 <code>(w,h)</code> 必须与写入帧一致；结尾 <code>out.release()</code></td></tr>
+<tr><td><code>AttributeError: module 'cv2' has no attribute 'CascadeClassifier'</code></td><td><b>5.0 把 Haar 移到 contrib</b></td><td>改装 <code>opencv-contrib-python</code>，或用 <span class="kw" data-w="FaceDetectorYN"><code>FaceDetectorYN</code></span></td></tr>
+<tr><td><code>cv2.ml</code> / SURF 找不到</td><td><b>5.0 移到 contrib</b></td><td>装 contrib 包；ml 可改用 scikit-learn</td></tr>
+<tr><td><code>readNetFromDarknet</code> 报错</td><td><b>5.0 已删除</b></td><td>把模型转成 ONNX，再用 <code>readNetFromONNX</code></td></tr>
+<tr><td>Windows 报 Qt 插件错误</td><td>无图形界面 / HighGUI 问题</td><td>注释掉 <code>imshow/waitKey</code>，改用 <span class="kw" data-w="imwrite"><code>imwrite</code></span> 存文件</td></tr>
+<tr><td>pip 装完 <code>import cv2</code> 仍失败</td><td>装到了另一个 Python 环境</td><td>用 <code>python -m pip install opencv-python</code> 重装；或检查虚拟环境是否激活</td></tr>
+<tr><td>两个 opencv 包同时装导致奇怪报错</td><td>基础包与 contrib 冲突</td><td>两个都 <code>pip uninstall</code>，然后只装一个</td></tr>
+<tr><td>C++ 编译报一堆语法错</td><td>5.0 要求 C++17</td><td>CMake 里写 <code>set(CMAKE_CXX_STANDARD 17)</code></td></tr>
+</table>
+
+<div class="tip"><span class="card-t">排查问题的固定顺序</span><p>① 先看报错最后一行（真正的错误类型）；② 打印 <code>cv2.__version__</code> 确认版本；③ 打印 <code>img.shape</code> 确认读到的是几通道；④ 确认每一步的输入类型（灰度？二值？尺寸一致？）；⑤ 再查路径、摄像头、编码器和 contrib 包。<b>90% 的问题都在这五步里。</b></p></div>
+
+<div class="check"><span class="card-t">检查点</span><p>看到报错能先分清是「环境问题 / 版本问题 / 图像类型问题 / 参数问题」中的哪一类，就算学完了。</p></div>
+
+<h2 class="chap" id="apxa"><span class="num cv">A</span> 附录 A 函数速查表</h2>
+<p class="chap-lead">写代码时回来查这张表就够了。表中「函数」一列可以直接复制到代码里。</p>
+
+<h3>A.1 读写显示</h3>
+<table class="kv">
+<tr><th>函数</th><th>英文原意</th><th>关键参数 / 返回值</th></tr>
+<tr><td><code>cv2.imread(path, flag)</code></td><td>image read 读图</td><td>flag：<code>IMREAD_COLOR</code> / <code>IMREAD_GRAYSCALE</code> / <code>IMREAD_UNCHANGED</code>；失败返回 <span class="kw" data-w="None"><code>None</code></span></td></tr>
+<tr><td><code>cv2.imshow(win, img)</code></td><td>image show 显示</td><td>窗口名、图像；必须配 <span class="kw" data-w="waitKey"><code>waitKey</code></span></td></tr>
+<tr><td><code>cv2.waitKey(ms)</code></td><td>wait key 等按键</td><td>0＝一直等；返回按键 ASCII 码（Esc=27）</td></tr>
+<tr><td><code>cv2.imwrite(path, img, params)</code></td><td>image write 写图</td><td>返回 True/False；<code>IMWRITE_JPEG_QUALITY</code> / <code>IMWRITE_PNG_COMPRESSION</code></td></tr>
+<tr><td><code>cv2.namedWindow()</code> / <code>destroyAllWindows()</code></td><td>建窗口 / 关窗口</td><td><code>WINDOW_AUTOSIZE</code>；程序结束前关窗口</td></tr>
+</table>
+
+<h3>A.2 颜色与通道</h3>
+<table class="kv">
+<tr><th>函数 / 常量</th><th>作用</th></tr>
+<tr><td><code>cv2.cvtColor(src, code)</code></td><td>转颜色空间</td></tr>
+<tr><td><span class="kw" data-w="COLOR_BGR2GRAY"><code>COLOR_BGR2GRAY</code></span> / <span class="kw" data-w="COLOR_BGR2HSV"><code>COLOR_BGR2HSV</code></span> / <code>COLOR_BGR2RGB</code> / <code>COLOR_GRAY2BGR</code></td><td>四种最常用转换方向</td></tr>
+<tr><td><code>cv2.split(img)</code> / <code>cv2.merge([b,g,r])</code></td><td>拆 / 合通道（顺序 B、G、R）</td></tr>
+<tr><td><code>cv2.inRange(hsv, lower, upper)</code></td><td>按颜色区间生成掩码</td></tr>
+<tr><td><code>cv2.bitwise_and(img, img, mask=mask)</code></td><td>用掩码抠图</td></tr>
+</table>
+
+<h3>A.3 像素、绘图与几何</h3>
+<table class="kv">
+<tr><th>写法</th><th>作用</th></tr>
+<tr><td><code>img[y, x]</code> / <code>img[y, x, c]</code></td><td>取像素（先行后列）；c=0 蓝 / 1 绿 / 2 红</td></tr>
+<tr><td><code>img[y1:y2, x1:x2]</code></td><td>ROI 切片；注意是视图，改它会改原图</td></tr>
+<tr><td><code>img.shape</code> / <code>img.dtype</code> / <code>img.copy()</code></td><td>形状 / 类型 / 复制一份</td></tr>
+<tr><td><code>line() / rectangle() / circle() / ellipse() / polylines()</code></td><td>画线 / 框 / 圆 / 椭圆 / 多边形</td></tr>
+<tr><td><code>putText(img, text, org, font, scale, color, thickness)</code></td><td>写字；5.0 字形外观有变化</td></tr>
+<tr><td><code>resize(src, (w,h))</code> / <code>flip(src, code)</code></td><td>缩放（宽,高）/ 翻转（1 水平、0 垂直、-1 双向）</td></tr>
+<tr><td><code>getRotationMatrix2D()</code> + <code>warpAffine()</code></td><td>旋转 / 平移等仿射变换</td></tr>
+<tr><td><code>getPerspectiveTransform()</code> + <code>warpPerspective()</code></td><td>透视矫正 / 拼接</td></tr>
+</table>
+
+<h3>A.4 滤波、阈值、形态学</h3>
+<table class="kv">
+<tr><th>函数</th><th>关键参数</th></tr>
+<tr><td><code>blur(img,(5,5))</code></td><td>核大小</td></tr>
+<tr><td><code>GaussianBlur(img,(5,5),0)</code></td><td>核大小（奇数）、sigmaX=0 自动算</td></tr>
+<tr><td><code>medianBlur(img,5)</code></td><td>一个奇数</td></tr>
+<tr><td><code>bilateralFilter(img,9,75,75)</code></td><td>直径、颜色标准差、空间标准差</td></tr>
+<tr><td><code>filter2D(img,-1,kernel)</code></td><td><code>-1</code>＝保持原数据类型；kernel 自定义核</td></tr>
+<tr><td><code>threshold(src, thresh, maxval, type)</code></td><td>返回 <code>(retval, dst)</code>；type 见第 11 章</td></tr>
+<tr><td><code>adaptiveThreshold(...)</code></td><td><code>blockSize</code> 必须奇数、<code>C</code> 常数</td></tr>
+<tr><td><code>getStructuringElement()</code> / <code>np.ones((5,5),np.uint8)</code></td><td>造形态学核</td></tr>
+<tr><td><code>erode()</code> / <code>dilate()</code> / <code>morphologyEx()</code></td><td>腐蚀 / 膨胀 / 开闭梯度等组合</td></tr>
+</table>
+
+<h3>A.5 边缘、轮廓、直方图</h3>
+<table class="kv">
+<tr><th>函数</th><th>作用</th></tr>
+<tr><td><code>Canny(gray, t1, t2)</code></td><td>双阈值边缘检测</td></tr>
+<tr><td><code>Sobel(src, CV_64F, dx, dy)</code> / <code>Laplacian(src, CV_64F)</code></td><td>方向梯度 / 二阶梯度</td></tr>
+<tr><td><code>findContours(binary, mode, method)</code></td><td>返回 <code>contours, hierarchy</code></td></tr>
+<tr><td><code>drawContours(img, contours, -1, color, thickness)</code></td><td>画轮廓（原地改图）</td></tr>
+<tr><td><code>contourArea()</code> / <code>arcLength()</code> / <code>boundingRect()</code></td><td>面积 / 周长 / 外接框</td></tr>
+<tr><td><code>minAreaRect()</code> / <code>minEnclosingCircle()</code> / <code>approxPolyDP()</code></td><td>旋转框 / 外接圆 / 多边形近似</td></tr>
+<tr><td><code>calcHist([img],[0],None,[256],[0,256])</code></td><td>算直方图（图片和通道都放列表）</td></tr>
+<tr><td><code>equalizeHist(gray)</code> / <code>compareHist()</code></td><td>均衡化 / 比较相似度</td></tr>
+</table>
+
+<h3>A.6 视频、特征、检测</h3>
+<table class="kv">
+<tr><th>函数</th><th>作用</th></tr>
+<tr><td><code>VideoCapture(0)</code> / <code>.isOpened()</code> / <code>.read()</code> / <code>.release()</code></td><td>打开 / 检查 / 读帧 / 释放</td></tr>
+<tr><td><code>cap.get(CAP_PROP_FPS / FRAME_WIDTH / FRAME_HEIGHT)</code></td><td>取帧率 / 宽 / 高；5.0 不支持时返回 -1</td></tr>
+<tr><td><code>VideoWriter_fourcc(*'XVID')</code> + <code>VideoWriter(...)</code></td><td>写视频；<code>.write(frame)</code> + <code>.release()</code></td></tr>
+<tr><td><code>createBackgroundSubtractorMOG2().apply(frame)</code></td><td>背景减除得到前景掩码</td></tr>
+<tr><td><code>meanShift()</code> / <code>CamShift()</code> / <code>calcBackProject()</code></td><td>目标跟踪三件套</td></tr>
+<tr><td><code>SIFT_create()</code> / <code>ORB_create()</code> / <code>detectAndCompute()</code></td><td>特征点与描述子</td></tr>
+<tr><td><code>BFMatcher().knnMatch(..., k=2)</code> / <code>findHomography(..., RANSAC, 5.0)</code></td><td>匹配 / 求单应矩阵</td></tr>
+<tr><td><code>CascadeClassifier()</code> + <code>detectMultiScale()</code></td><td>Haar 人脸；<b>5.0 需要 contrib</b></td></tr>
+<tr><td><code>FaceDetectorYN.create()</code> + <code>.detect()</code></td><td><b>5.0 推荐</b>的 DNN 人脸检测</td></tr>
+<tr><td><code>matchTemplate()</code> + <code>minMaxLoc()</code></td><td>模板匹配</td></tr>
+<tr><td><code>dnn.readNetFromONNX()</code> / <code>blobFromImage()</code> / <code>setInput()</code> / <code>forward()</code></td><td>5.0 深度学习推理四步</td></tr>
+</table>
+
+<h2 class="chap" id="apxb"><span class="num cv">B</span> 附录 B 完整 API 索引</h2>
+<p class="chap-lead">按模块分组列出全书与菜鸟教程 31 页涉及的全部 API，方便反查。<span class="flag5">5</span> 表示 5.0 有变化。</p>
+
+<h3>B.1 core / 数组 / 绘图</h3>
+<table class="kv">
+<tr><th>分类</th><th>API</th></tr>
+<tr><td>数组</td><td><span class="kw" data-w="shape"><code>shape</code></span> <span class="kw" data-w="dtype"><code>dtype</code></span> <code>copy()</code> <code>np.zeros()</code> <code>np.ones()</code> <code>np.array()</code> <code>np.clip()</code> <code>np.where()</code> <code>reshape()</code></td></tr>
+<tr><td>算术</td><td><code>add()</code> <code>subtract()</code> <code>multiply()</code> <code>divide()</code> <code>absdiff()</code> <code>addWeighted()</code> <code>bitwise_and/or/not/xor()</code></td></tr>
+<tr><td>绘图</td><td><code>line()</code> <code>rectangle()</code> <code>circle()</code> <code>ellipse()</code> <code>polylines()</code> <code>putText()</code> <span class="flag5">5</span> <code>FontFace</code> <code>getTextSize()</code></td></tr>
+<tr><td>矩阵（C++）</td><td><code>cv::Mat</code> <code>cv::UMat</code> <code>rows/cols/channels()</code> <code>at&lt;Vec3b&gt;()</code> <code>setTo()</code> <code>clone()</code> <span class="flag5">5</span> <code>MatShape / shape()</code></td></tr>
+</table>
+
+<h3>B.2 imgproc / 图像处理</h3>
+<table class="kv">
+<tr><th>分类</th><th>API</th></tr>
+<tr><td>颜色</td><td><code>cvtColor()</code> <code>split()</code> <code>merge()</code> <code>inRange()</code> <code>COLOR_BGR2GRAY/HSV/RGB</code></td></tr>
+<tr><td>几何</td><td><code>resize()</code> <code>flip()</code> <code>getRotationMatrix2D()</code> <code>warpAffine()</code> <code>getAffineTransform()</code> <code>getPerspectiveTransform()</code> <code>warpPerspective()</code> <code>remap()</code> <span class="flag5">5</span> 插值数值更精确</td></tr>
+<tr><td>滤波</td><td><code>blur()</code> <code>GaussianBlur()</code> <code>medianBlur()</code> <code>bilateralFilter()</code> <code>filter2D()</code> <code>boxFilter()</code></td></tr>
+<tr><td>阈值</td><td><code>threshold()</code> <code>adaptiveThreshold()</code> <code>THRESH_BINARY/INV/TRUNC/TOZERO/OTSU</code></td></tr>
+<tr><td>形态学</td><td><code>getStructuringElement()</code> <code>erode()</code> <code>dilate()</code> <code>morphologyEx()</code> <code>MORPH_OPEN/CLOSE/GRADIENT/TOPHAT/BLACKHAT</code></td></tr>
+<tr><td>边缘</td><td><code>Canny()</code> <code>Sobel()</code> <code>Laplacian()</code> <code>Scharr()</code> <code>convertScaleAbs()</code></td></tr>
+<tr><td>轮廓</td><td><code>findContours()</code> <code>drawContours()</code> <code>contourArea()</code> <code>arcLength()</code> <code>boundingRect()</code> <code>minAreaRect()</code> <code>boxPoints()</code> <code>minEnclosingCircle()</code> <code>approxPolyDP()</code> <span class="flag5">5</span> <code>convexHull</code> 等搬去 geometry（Python 不变）</td></tr>
+<tr><td>直方图</td><td><code>calcHist()</code> <code>equalizeHist()</code> <code>compareHist()</code> <code>calcBackProject()</code> <code>normalize()</code></td></tr>
+<tr><td>模板 / 分割</td><td><code>matchTemplate()</code> <code>minMaxLoc()</code> <code>distanceTransform()</code> <code>watershed()</code></td></tr>
+</table>
+
+<h3>B.3 highgui / imgcodecs / videoio</h3>
+<table class="kv">
+<tr><th>分类</th><th>API</th></tr>
+<tr><td>读写显示</td><td><code>imread()</code> <code>imwrite()</code> <code>imshow()</code> <code>waitKey()</code> <code>namedWindow()</code> <code>destroyAllWindows()</code> <code>setMouseCallback()</code></td></tr>
+<tr><td>视频</td><td><code>VideoCapture()</code> <code>isOpened()</code> <code>read()</code> <code>get()</code> <code>release()</code> <code>VideoWriter()</code> <code>VideoWriter_fourcc()</code> <code>write()</code> <span class="flag5">5</span> 不支持属性返回 -1</td></tr>
+<tr><td>属性常量</td><td><code>CAP_PROP_FPS</code> <code>CAP_PROP_FRAME_WIDTH</code> <code>CAP_PROP_FRAME_HEIGHT</code> <code>CAP_PROP_POS_FRAMES</code></td></tr>
+</table>
+
+<h3>B.4 video / features / objdetect / dnn / ml</h3>
+<table class="kv">
+<tr><th>分类</th><th>API</th></tr>
+<tr><td>背景与跟踪</td><td><code>createBackgroundSubtractorMOG2()</code> <code>createBackgroundSubtractorKNN()</code> <code>bgsegm.createBackgroundSubtractorMOG()</code> <code>meanShift()</code> <code>CamShift()</code> <code>calcOpticalFlowPyrLK()</code> <code>goodFeaturesToTrack()</code></td></tr>
+<tr><td>特征</td><td><code>SIFT_create()</code> <code>ORB_create()</code> <code>FAST()</code> <code>cornerHarris()</code> <code>detectAndCompute()</code> <code>drawKeypoints()</code> <code>BFMatcher()</code> <code>FlannBasedMatcher()</code> <code>knnMatch()</code> <code>drawMatches()</code> <span class="flag5">5</span> SURF / BRIEF / FREAK 移到 contrib</td></tr>
+<tr><td>几何 / 标定</td><td><code>findHomography()</code> <code>perspectiveTransform()</code> <code>solvePnP()</code> <code>calibrateCamera()</code> <code>findChessboardCorners()</code> <span class="flag5">5</span> calib3d 拆成 calib / stereo / geometry</td></tr>
+<tr><td>检测</td><td><code>CascadeClassifier()</code> <code>detectMultiScale()</code> <code>HOGDescriptor</code> <span class="flag5">5</span> <span class="kw" data-w="FaceDetectorYN"><code>FaceDetectorYN</code></span>（推荐）</td></tr>
+<tr><td>深度学习</td><td><code>dnn.readNet()</code> <code>readNetFromONNX()</code> <code>blobFromImage()</code> <code>setInput()</code> <code>forward()</code> <code>NMSBoxes()</code> <span class="flag5">5</span> Caffe / Darknet 加载器删除、新默认引擎</td></tr>
+<tr><td>机器学习</td><td><code>kmeans()</code> <code>ml.SVM_create()</code> <code>PCA()</code> <span class="flag5">5</span> <code>ml</code> 模块移到 contrib</td></tr>
+<tr><td>性能</td><td><span class="kw" data-w="UMat"><code>UMat</code></span> <code>ocl::setUseOpenCL()</code> <code>parallel_for_()</code> <code>getTickCount()</code> <code>getTickFrequency()</code></td></tr>
+</table>
+
+<h2 class="chap" id="apxc"><span class="num cv">C</span> 附录 C 4.x → 5.0 变化对照</h2>
+<p class="chap-lead">菜鸟教程原文基于 4.x；本教程按 5.0 写。这一张表把官方《OpenCV 4.x → 5.x 迁移指南》的关键变化列全。</p>
+
+<h3>C.1 版本信息（2026-11-06 实测）</h3>
+<table class="kv">
+<tr><th>项目</th><th>内容</th></tr>
+<tr><td>源码仓库最新正式版</td><td><code>5.1.0</code>（GitHub opencv/opencv，2026-11-06 发布）</td></tr>
+<tr><td>5.0 正式版 / 预览版</td><td><code>5.0.0</code> / <code>5.0.0-alpha</code></td></tr>
+<tr><td>pip 可装最新版本</td><td><code>opencv-python 5.0.0.93</code>（对应 5.0 系列）</td></tr>
+<tr><td>4.x 最后稳定系列</td><td><code>4.14.0</code>（菜鸟教程原文适用版本）</td></tr>
+<tr><td>运行要求</td><td>Python ≥ 3.6（Python 2 不再支持）；C++ 编译需 <b>C++17</b> 或更高</td></tr>
+<tr><td>迁移指南</td><td><a href="https://github.com/opencv/opencv/wiki/OpenCV-4-to-5-migration" target="_blank">github.com/opencv/opencv/wiki/OpenCV-4-to-5-migration</a></td></tr>
+</table>
+
+<h3>C.2 删除 / 改名 / 迁移（照旧写会报错）</h3>
+<table class="kv">
+<tr><th>4.x 及更早</th><th>5.0</th></tr>
+<tr><td>Python 2</td><td><b>不再支持</b>，用 Python 3.6+</td></tr>
+<tr><td>C++11 / 旧 C API（<code>CvMat</code> <code>IplImage</code> <code>cvFindContours</code>）</td><td><b>C API 彻底移除</b>；改用 <code>cv::Mat</code>；编译要 C++17（<code>CV_8U</code> 等宏保留）</td></tr>
+<tr><td><code>readNetFromCaffe()</code> / <code>readNetFromDarknet()</code></td><td><b>已删除</b>；模型转 ONNX 后用 <code>readNetFromONNX()</code>；TFLite 不变</td></tr>
+<tr><td><code>cv2.CascadeClassifier</code> / <code>HOGDescriptor</code>（Haar/HOG）</td><td><b>移到 opencv_contrib 的 xobjdetect</b>；Python 装 <code>opencv-contrib-python</code>，或改用 <span class="kw" data-w="FaceDetectorYN"><code>FaceDetectorYN</code></span></td></tr>
+<tr><td><code>cv2.ml.*</code> / <code>gapi</code> / SURF / BRIEF / FREAK</td><td><b>移到 contrib</b>；ml 也可用 scikit-learn 替代</td></tr>
+<tr><td><code>features2d</code> / <code>calib3d</code> 模块名</td><td>改名 <code>features</code> / 拆成 <code>calib</code> <code>stereo</code> <code>geometry</code>；<b>Python 无需改</b>，仍是 <code>cv2.函数名()</code></td></tr>
+<tr><td><code>cap.get(属性)</code> 不支持时返回 0</td><td><b>返回 -1</b>；判断写 <code>if val &lt; 0:</code></td></tr>
+<tr><td>把一维数组包装成 <span class="kw" data-w="Mat"><code>Mat</code></span> 是 N×1 二维列向量</td><td>变成真正的 <b>1D 数组</b>；检查 <code>rows/cols</code> 的代码改用 <code>total()</code></td></tr>
+<tr><td><code>MatSize</code></td><td>新增 <code>MatShape / shape()</code>；旧的 <code>m.size</code> 仍可用</td></tr>
+</table>
+
+<h3>C.3 行为变化（不报错，但结果不一样）</h3>
+<table class="kv">
+<tr><th>变化</th><th>影响</th></tr>
+<tr><td>DNN 默认先试新推理引擎，失败自动回退 classic</td><td>多数 ONNX 代码不用改；新引擎目前仅 CPU；可用 <code>ENGINE_CLASSIC</code> / <code>ENGINE_ORT</code> 指定</td></tr>
+<tr><td><code>INTER_NEAREST</code> 与 Pillow 行为对齐</td><td>缩放边界像素的取整结果可能与 4.x 不同</td></tr>
+<tr><td><span class="kw" data-w="warpAffine"><code>warpAffine</code></span> / <span class="kw" data-w="warpPerspective"><code>warpPerspective</code></span> / <code>remap</code> 插值更精确</td><td>API 不变，双线性/双三次输出数值略有差异；逐像素比对需重做基准图</td></tr>
+<tr><td>文字渲染换成 TrueType 引擎</td><td><code>FONT_HERSHEY_*</code> 仍可用，但字形外观变化明显、尺寸略变；新增 <code>FontFace</code> 支持 UTF-8 与自定义字体</td></tr>
+<tr><td>新增数据类型 <code>CV_16BF</code> <code>CV_32U</code> <code>CV_64U</code> <code>CV_64S</code> <code>CV_Bool</code></td><td>用 <code>switch(type)</code> 的 C++ 代码要补 case 或 default</td></tr>
+<tr><td>监听到的数据包、窗口行为等细节优化</td><td>日常 Python 代码基本无感</td></tr>
+</table>
+
+<h3>C.4 官方资源</h3>
+<table class="kv">
+<tr><th>资源</th><th>地址</th></tr>
+<tr><td>菜鸟教程 OpenCV（本教程内容来源）</td><td><a href="https://www.runoob.com/opencv/opencv-tutorial.html" target="_blank">www.runoob.com/opencv/opencv-tutorial.html</a></td></tr>
+<tr><td>OpenCV 官网 / 下载</td><td><a href="https://opencv.org/releases/" target="_blank">opencv.org/releases</a></td></tr>
+<tr><td>官方文档</td><td><a href="https://docs.opencv.org/" target="_blank">docs.opencv.org</a></td></tr>
+<tr><td>源码仓库</td><td><a href="https://github.com/opencv/opencv" target="_blank">github.com/opencv/opencv</a></td></tr>
+<tr><td>4 → 5 迁移指南</td><td><a href="https://github.com/opencv/opencv/wiki/OpenCV-4-to-5-migration" target="_blank">OpenCV-4-to-5-migration</a></td></tr>
+<tr><td>PyPI 包</td><td><a href="https://pypi.org/project/opencv-python/" target="_blank">pypi.org/project/opencv-python</a></td></tr>
+</table>
+
+<div class="warn"><span class="card-t">一句话总结版本选择</span><p>做项目求稳 → <code>pip install opencv-python</code>（Python 生态最新 5.0.0.93）；要用 Haar / SURF / ml → 改装 <code>opencv-contrib-python</code>；要跟进源码最新特性 → 关注 5.1.0。无论哪个版本，本书的 Python 写法都适用，差异处已逐条标注。</p></div>
+
+<div class="stat">
+  <div><b>27</b><span>正文章节</span></div>
+  <div><b>3</b><span>附录</span></div>
+  <div><b>31</b><span>菜鸟教程页面覆盖</span></div>
+  <div><b>5.0</b><span>版本口径</span></div>
+</div>
+
+<div class="footer">
+  <p><b>OpenCV 图解教程 · 2026 最新版（5.0 零基础完整版）</b><br>
+  内容依据菜鸟教程 OpenCV 栏目全部 31 个页面，并按 OpenCV 官方 4.x → 5.x 迁移指南与 2026-11-06 实测版本信息校正。<br>
+  全篇沿用你其它教程的版式：分组侧栏、图解 SVG、逐关键字注释、手把手实战与检查点、可点动画与点词解释。<br>
+  官网 <a href="https://www.runoob.com/opencv/opencv-tutorial.html" target="_blank">菜鸟教程 OpenCV</a>；版本数据来自 GitHub Release 与 PyPI 实时查询。</p>
+</div>
+
+</main>
+</div>
+<div class="gloss-panel" id="glossPanel">
+<button class="gp-x" onclick="CVGloss.hide()">×</button>
+<div class="gp-w" id="gpW"></div>
+<div class="gp-en" id="gpEn"></div>
+<div id="gpCn"></div>
+<div class="gp-ex" id="gpEx"></div>
+</div>
+<script>
+/* ===== 目录高亮 ===== */
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.side a.toc'));
+  var targets = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  function mark(){
+    var y = window.scrollY + 140, idx = 0;
+    targets.forEach(function(t,i){ if(t && t.offsetTop <= y) idx = i; });
+    links.forEach(function(a,i){ a.classList.toggle('on', i === idx); });
+  }
+  window.addEventListener('scroll', mark, {passive:true});
+  window.addEventListener('resize', mark);
+  mark();
+})();
+
+/* ===== 滚动淡入 ===== */
+(function(){
+  var reveals = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, {threshold:.08});
+    reveals.forEach(function(el){ io.observe(el); });
+  } else { reveals.forEach(function(el){ el.classList.add('in'); }); }
+})();
+
+/* ===== 点词看解释 ===== */
+var CVGLOSS = {
+  /* Python 语言层 */
+  'import':['import 导入','把别人写好的库拿进本文件用。','import cv2'],
+  'from':['from 从……','指定从哪个模块拿东西。','from matplotlib import pyplot'],
+  'as':['as 作为','给导入的东西起别名，后面写短名字。','import numpy as np'],
+  'for':['for 对于每一个','把列表里的东西一个一个取出来。','for (x,y,w,h) in faces:'],
+  'in':['in 在……里面','遍历或判断属于某个集合。','for f in files:'],
+  'if':['if 如果','条件成立才执行下面缩进的代码。','if img is None:'],
+  'not':['not 不','取反，把 True 变 False。','if not ret:'],
+  'None':['None 空值','什么都没有；imread 读图失败就返回它。','if img is None:'],
+  'True':['True 真','布尔值：成立。','closed=True'],
+  'False':['False 假','布尔值：不成立。','L2gradient=False'],
+  'def':['define 定义','定义函数，后面写函数名和参数。','def process(img):'],
+  'return':['return 返回','把结果交回给调用者。','return dst'],
+  'while':['while 当……时','条件成立就一直循环；视频逐帧常用。','while True:'],
+  'break':['break 打破','立刻跳出循环。','if not ret: break'],
+  'print':['print 打印','把内容输出到终端，用来检查结果。','print(img.shape)'],
+  '=':['= 赋值','把右边结果存进左边变量，不是「等于」。','img = cv2.imread("a.jpg")'],
+  '==':['== 等于','比较两边是否相等。','if key == 27:'],
+  '.':['. 的','取对象身上的属性或方法。','cv2.cvtColor(...)'],
+  '()':['() 调用','函数名后加括号＝执行它；括号里放参数。','cv2.waitKey(0)'],
+  ':':[': 冒号','下面是一段缩进的代码块。','for i in range(3):'],
+  '#':['# 注释','给人看的说明，Python 不执行。','# 读图'],
+  '[]':['[] 列表 / 下标','造列表，或按位置取第几个。','img[y, x]'],
+  '{}':['{} 字典','按键取值的数据结构。','{"a": 1}'],
+
+  /* NumPy / 数组层 */
+  'numpy':['Numerical Python','Python 的数值计算库，图像在 OpenCV 里就是它的数组。','import numpy as np'],
+  'np':['numpy 的别名','约定俗成把 numpy 简写成 np。','np.zeros((3,3))'],
+  'array':['array 数组','一组按序号排列的数；图像是二维数组（灰度）或三维（彩色）。','np.array([1,2,3])'],
+  'shape':['shape 形状','数组的尺寸；彩色图是 (高, 宽, 通道数)。','h, w = img.shape[:2]'],
+  'dtype':['data type 数据类型','数组里每个数是什么类型；图像常用 uint8。','img.dtype'],
+  'uint8':['unsigned integer 8 bit 无符号 8 位整数','0~255 的整数，正好存一个颜色通道。','np.uint8'],
+  'slice':['slice 切片','用 [起:止] 取数组的一段；ROI 就是切片。','roi = img[50:200, 100:300]'],
+  'zeros':['zeros 全零','造一个全是 0 的数组，常用作黑底或核。','np.zeros((5,5), np.uint8)'],
+  'ones':['ones 全一','造一个全是 1 的数组，常用作形态学核。','np.ones((5,5), np.uint8)'],
+  'where':['where 在哪里','找出满足条件的元素位置。','np.where(res >= 0.8)'],
+  'clip':['clip 夹住','把数值限制在指定范围内，超出就截断。','np.clip(b, 0, 255)'],
+
+  /* OpenCV 核心 */
+  'cv2':['OpenCV 2 的 Python 模块名','历史遗留名字；5.0 里仍然叫 cv2，不是 cv3。','import cv2'],
+  'imread':['image read 读图','把图片文件读成数组；失败返回 None（不报错）。','img = cv2.imread("a.jpg")'],
+  'imshow':['image show 显示图','开一个窗口显示图像；必须配合 waitKey 才能刷新。','cv2.imshow("win", img)'],
+  'waitKey':['wait key 等待按键','等多少毫秒；0 表示一直等；返回按键 ASCII 码。','cv2.waitKey(0)'],
+  'imwrite':['image write 写图','把数组保存成图片文件，返回是否成功。','cv2.imwrite("out.jpg", img)'],
+  'destroyAllWindows':['destroy all windows 关掉所有窗口','程序结束前关窗口，释放资源。','cv2.destroyAllWindows()'],
+  'BGR':['Blue Green Red 蓝绿红','OpenCV 默认通道顺序；和常见的 RGB 相反。','b, g, r = cv2.split(img)'],
+  'RGB':['Red Green Blue 红绿蓝','其它软件常用顺序；OpenCV 要转换后才按这个顺序。','cv2.COLOR_BGR2RGB'],
+  'cvtColor':['convert color 转换颜色','换颜色空间，如彩色转灰度、BGR 转 HSV。','cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)'],
+  'COLOR_BGR2GRAY':['BGR to Gray 彩色转灰度','把三通道彩色图变成单通道灰度图。','gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)'],
+  'COLOR_BGR2HSV':['BGR to HSV','转成色相/饱和度/亮度，便于按颜色找物体。','hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)'],
+  'split':['split 拆开','把三个通道拆成三张单通道图。','b,g,r = cv2.split(img)'],
+  'merge':['merge 合并','把单通道图合成彩色图。','cv2.merge([b,g,r])'],
+  'ROI':['Region Of Interest 感兴趣区域','图中框出来的一小块，本质就是数组切片。','roi = img[y1:y2, x1:x2]'],
+  'kernel':['kernel 核 / 卷积核','一个小小的数字矩阵，在图上滑动做滤波或形态学。','np.ones((5,5), np.uint8)'],
+  'threshold':['threshold 阈值','以某个亮度为界，把图分成黑白两色。','ret, dst = cv2.threshold(gray,127,255,cv2.THRESH_BINARY)'],
+  'adaptiveThreshold':['adaptive threshold 自适应阈值','每个小块自己算阈值，适合光照不均的图。','cv2.adaptiveThreshold(...)'],
+  'blur':['blur 模糊','邻域取平均，去掉细小噪声。','cv2.blur(img,(5,5))'],
+  'GaussianBlur':['Gaussian blur 高斯模糊','按高斯权重取平均，去噪且边缘更自然。','cv2.GaussianBlur(img,(5,5),0)'],
+  'medianBlur':['median blur 中值模糊','取邻域中位数，专门治椒盐噪声。','cv2.medianBlur(img,5)'],
+  'bilateralFilter':['bilateral filter 双边滤波','既看距离又看颜色差，去噪同时保住边缘。','cv2.bilateralFilter(img,9,75,75)'],
+  'filter2D':['filter 2D 二维卷积','用自定义核对图像做卷积，能做浮雕、锐化。','cv2.filter2D(img,-1,kernel)'],
+  'erode':['erode 腐蚀','让白色前景收缩，去掉小白点。','cv2.erode(img,kernel)'],
+  'dilate':['dilate 膨胀','让白色前景扩张，补上小洞。','cv2.dilate(img,kernel)'],
+  'morphologyEx':['morphology extended 形态学扩展','开/闭/梯度等组合操作。','cv2.morphologyEx(img,cv2.MORPH_OPEN,kernel)'],
+  'resize':['resize 改尺寸','缩放图像；尺寸写 (宽, 高)。','cv2.resize(img,(640,480))'],
+  'warpAffine':['warp affine 仿射变换','按 2×3 矩阵做平移、旋转、缩放。','cv2.warpAffine(img,M,(w,h))'],
+  'warpPerspective':['warp perspective 透视变换','按 3×3 矩阵做透视矫正、图像拼接。','cv2.warpPerspective(img,H,(w,h))'],
+  'Canny':['Canny 坎尼边缘检测','双阈值找边缘，输出黑白边缘图。','cv2.Canny(gray,100,200)'],
+  'Sobel':['Sobel 索贝尔算子','算 x / y 方向梯度，找边缘。','cv2.Sobel(img,cv2.CV_64F,1,0)'],
+  'findContours':['find contours 找轮廓','在二值图里找出物体外轮廓。','cv2.findContours(binary,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)'],
+  'drawContours':['draw contours 画轮廓','把找到的轮廓画到图上（原地修改）。','cv2.drawContours(img,contours,-1,(0,255,0),2)'],
+  'calcHist':['calculate histogram 算直方图','统计每个亮度值有多少像素。','cv2.calcHist([img],[0],None,[256],[0,256])'],
+  'equalizeHist':['equalize histogram 直方图均衡化','拉开明暗对比，让灰蒙蒙的图变清楚。','cv2.equalizeHist(gray)'],
+  'addWeighted':['add weighted 加权相加','两张图按权重混合，做叠化/水印。','cv2.addWeighted(a,0.7,b,0.3,0)'],
+  'bitwise_and':['bitwise AND 按位与','用掩码抠出图像的一部分。','cv2.bitwise_and(img,img,mask=mask)'],
+  'VideoCapture':['video capture 视频捕获','打开视频文件或摄像头，逐帧读。','cap = cv2.VideoCapture(0)'],
+  'VideoWriter':['video writer 视频写出','把一帧帧图像写成视频文件。','out = cv2.VideoWriter("o.avi",fourcc,fps,(w,h))'],
+  'fourcc':['four character code 四字符编码','指定视频编码格式，如 XVID、MJPG。','cv2.VideoWriter_fourcc(*"XVID")'],
+  'fps':['frames per second 每秒帧数','视频一秒播放多少张图。','cap.get(cv2.CAP_PROP_FPS)'],
+  'CascadeClassifier':['cascade classifier 级联分类器','Haar 人脸检测器；5.0 起需要 opencv-contrib-python。','cv2.CascadeClassifier(path)'],
+  'FaceDetectorYN':['Face Detector YuNet','5.0 推荐的 DNN 人脸检测器，不用 contrib。','cv2.FaceDetectorYN.create(...)'],
+  'matchTemplate':['match template 模板匹配','拿一张小图在大图里滑着找相似位置。','cv2.matchTemplate(img,tpl,cv2.TM_CCOEFF_NORMED)'],
+  'SIFT':['Scale Invariant Feature Transform','尺度不变特征，拼接/匹配常用，5.0 仍在主库。','cv2.SIFT_create()'],
+  'BFMatcher':['Brute Force Matcher 暴力匹配器','逐个比较特征描述子找匹配。','cv2.BFMatcher()'],
+  'findHomography':['find homography 求单应矩阵','算出两张图之间的透视关系。','cv2.findHomography(src,dst,cv2.RANSAC,5.0)'],
+  'Mat':['Matrix 矩阵','C++ 里存图像的核心类。','cv::Mat img = cv::imread("a.jpg");'],
+  'UMat':['Unified Matrix 统一矩阵','可自动放到 GPU / OpenCL 上算的矩阵。','cv::UMat src, dst;'],
+  'CMake':['CMake 构建工具','用来生成 C++ 项目的编译配置；5.0 要求 C++17。','find_package(OpenCV REQUIRED)'],
+  'C++17':['C++ 17 标准','OpenCV 5.0 编译 C++ 代码的最低语言标准。','set(CMAKE_CXX_STANDARD 17)'],
+  'DNN':['Deep Neural Network 深度神经网络','OpenCV 里加载 ONNX 等模型做推理的模块。','cv2.dnn.readNet("model.onnx")'],
+  'ONNX':['Open Neural Network Exchange','通用模型格式；5.0 建议把 Caffe/Darknet 模型转成它。','cv2.dnn.readNetFromONNX("m.onnx")'],
+  'contrib':['contributions 扩展模块','额外算法包；5.0 的 Haar、ml、SURF 等移到了这里。','pip install opencv-contrib-python']
+};
+
+var CVGloss = {
+  show: function(word){
+    var g = CVGLOSS[word];
+    if (!g) { for (var k in CVGLOSS) { if (word.indexOf(k) === 0) { g = CVGLOSS[k]; break; } } }
+    if (!g) return;
+    document.getElementById('gpW').textContent = word;
+    document.getElementById('gpEn').textContent = g[0];
+    document.getElementById('gpCn').textContent = g[1];
+    document.getElementById('gpEx').textContent = g[2];
+    document.getElementById('glossPanel').classList.add('show');
+  },
+  hide: function(){ document.getElementById('glossPanel').classList.remove('show'); }
+};
+document.addEventListener('click', function(e){
+  var k = e.target.closest ? e.target.closest('.kw') : null;
+  if (k) { CVGloss.show(k.getAttribute('data-w') || k.textContent.trim()); return; }
+  if (!e.target.closest || !e.target.closest('#glossPanel')) CVGloss.hide();
+});
+
+/* ===== 可点动画演示 ===== */
+var CVDemo = {
+  /* 1. 图像就是数组 */
+  img: function(n){
+    var box = document.getElementById('demoImg');
+    if (!box) return;
+    var lamps = box.querySelectorAll('.lamp');
+    for (var i=0;i<lamps.length;i++) lamps[i].classList.toggle('on', i < n);
+    var msg = ['一张图还没拆开','① img.shape → (高, 宽, 3)：三维数组',
+      '② img[y, x] → [蓝, 绿, 红]：一个像素三个数',
+      '③ img[y1:y2, x1:x2] → 切出一块 ROI',
+      '④ 改数组里的数，就等于改了这张图'];
+    box.querySelector('.demo-screen').textContent = msg[n] || msg[0];
+  },
+  /* 2. 颜色空间 */
+  color: function(k){
+    var out = document.getElementById('demoColorOut');
+    if (!out) return;
+    var d = {
+      'bgr':['BGR（OpenCV 默认）','img[y,x] = [12, 80, 210]','第 0 个是蓝，第 1 个绿，第 2 个红'],
+      'gray':['GRAY 灰度','gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)','只剩一个亮度值 0~255，shape 变成 (高, 宽)'],
+      'hsv':['HSV 色相/饱和度/明度','hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)','按颜色找物体最方便，例如 inRange 抠出红色'],
+      'rgb':['RGB（其它软件常用）','rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)','用 matplotlib 显示前必须转，否则红蓝会互换']
+    };
+    var v = d[k] || d['bgr'];
+    out.innerHTML = '<b>' + v[0] + '</b>\n' + v[1] + '\n' + v[2];
+  },
+  /* 3. 阈值类型 */
+  th: function(k){
+    var out = document.getElementById('demoThOut');
+    if (!out) return;
+    var d = {
+      'binary':['THRESH_BINARY 二值化','像素 > 127 → 255（白）；否则 → 0（黑）','最常用，做轮廓检测前的预处理'],
+      'inv':['THRESH_BINARY_INV 反二值化','像素 > 127 → 0；否则 → 255','黑白反过来，适合白底黑字'],
+      'trunc':['THRESH_TRUNC 截断','像素 > 127 → 直接改成 127；否则不变','保留亮部细节'],
+      'zero':['THRESH_TOZERO 归零','像素 > 127 → 不变；否则 → 0','只留下亮的部分'],
+      'otsu':['THRESH_OTSU 大津法','阈值写 0，让算法自己算最合适的值','适合明暗分成两堆的图']
+    };
+    var v = d[k] || d['binary'];
+    out.innerHTML = '<b>' + v[0] + '</b>\n' + v[1] + '\n' + v[2];
+  },
+  /* 4. 卷积核效果 */
+  ker: function(k){
+    var out = document.getElementById('demoKerOut');
+    if (!out) return;
+    var d = {
+      'blur':['均值模糊 blur','核里全是 1/(5×5)，邻域取平均','去随机噪声，但边缘会糊'],
+      'gauss':['高斯模糊 GaussianBlur','中间权重大、四周权重小','去噪更自然，Canny 前常先做'],
+      'median':['中值模糊 medianBlur','取邻域的中位数','专治黑白噪点（椒盐噪声）'],
+      'sharp':['锐化核','[[0,-1,0],[-1,5,-1],[0,-1,0]]','突出边缘，字迹更清楚'],
+      'emboss':['浮雕核','[[-2,-1,0],[-1,1,1],[0,1,2]]','做出立体浮雕感']
+    };
+    var v = d[k] || d['blur'];
+    out.innerHTML = '<b>' + v[0] + '</b>\n' + v[1] + '\n' + v[2];
+  },
+  /* 5. 视频循环 */
+  vid: function(n){
+    var box = document.getElementById('demoVid');
+    if (!box) return;
+    var lamps = box.querySelectorAll('.lamp');
+    for (var i=0;i<lamps.length;i++) lamps[i].classList.toggle('on', i < n);
+    var msg = ['循环还没开始','① cap.isOpened() 确认打开成功','② ret, frame = cap.read() 读一帧',
+      '③ 对 frame 做处理（转灰度 / 检测）','④ imshow 显示，waitKey 判退出','⑤ release() + destroyAllWindows() 收尾'];
+    box.querySelector('.demo-screen').textContent = msg[n] || msg[0];
+  }
+};
+
+</script>
+</body>
+</html>

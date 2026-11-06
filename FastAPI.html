@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FastAPI 完全教程（全文档版）· 小白向</title>
+<title>FastAPI 零基础完全教程 · 2026 最新版（看得懂版）</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
@@ -68,82 +67,459 @@
   summary { cursor: pointer; font-weight: bold; color: var(--blue); }
   footer { margin-left: 260px; padding: 30px 48px; color: #9ca3af; font-size: 13px; border-top: 1px solid var(--line); }
   @media (max-width: 900px) { nav { display: none; } main, footer { margin-left: 0; padding: 24px 18px 80px; } }
+
+/* ================= 2026 统一版式覆盖层（Git 图解教程同款） ================= */
+html{scroll-behavior:smooth}
+body{display:block!important;background:#fff!important;margin:0!important;padding:0!important}
+#progress,#menu,#mask,#topBtn,#top-btn,body>aside.sidebar,body>nav:not(.side),.mask{display:none!important}
+.container{max-width:none!important;width:auto!important;margin:0!important;padding:0!important;box-shadow:none!important;border:0!important;background:transparent!important}
+main{display:block!important;max-width:none!important;margin:0!important;padding:0!important;float:none!important;width:auto!important}
+.wrap{display:flex;max-width:1400px;margin:0 auto;align-items:flex-start}
+.side{width:262px;flex:0 0 262px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--panel);border-right:1px solid var(--line);padding:26px 18px 40px;z-index:5}
+.side .logo{font-weight:800;font-size:17px;letter-spacing:.5px;margin-bottom:4px}
+.side .logo span{color:var(--vue)}
+.side .sub{font-size:12px;color:var(--faint);margin-bottom:20px;line-height:1.6}
+.side a.toc{display:block;font-size:13px;color:var(--muted);padding:6px 10px;border-radius:8px;line-height:1.4;border-left:3px solid transparent;transition:background .2s,color .2s}
+.side a.toc:hover{background:#eaeef3;color:var(--ink);text-decoration:none}
+.side a.toc.on{background:var(--blue-bg);color:var(--blue);font-weight:700;border-left-color:var(--blue)}
+.side .toc-group{font-size:11px;color:var(--faint);letter-spacing:1.2px;margin:16px 0 6px 10px;font-weight:700}
+.main{flex:1;min-width:0;padding:0 46px 100px;max-width:1040px}
+body .wrap .hero{background:linear-gradient(135deg,#ecfdf5 0%,#eff6ff 52%,#faf5ff 100%);border:1px solid var(--line);border-radius:20px;padding:38px 40px;margin:36px 0 28px;animation:fadeUp .7s ease both;box-shadow:none}
+body .wrap .hero h1{font-size:33px;line-height:1.35;margin:0 0 10px;letter-spacing:-.5px}
+body .wrap .hero .lead{font-size:16.5px;color:#374151;margin:0 0 16px}
+.chap-num,.num{display:inline-flex!important;align-items:center;justify-content:center;min-width:38px;height:38px;border-radius:11px;background:var(--vue)!important;color:#fff!important;font-size:16px;font-family:var(--mono);font-weight:700;flex:0 0 auto;float:none!important}
+.chap-head{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.chap-head h2,.main section>h2{border:0!important;padding:0!important;margin:0!important;font-size:24px!important;line-height:1.4}
+.codewrap{border-radius:12px!important;overflow:hidden;border:1px solid #dde3ea!important;margin:14px 0!important}
+.codehead{background:#eaeef3!important;border-bottom:1px solid #dde3ea!important}
+.code{background:var(--code)!important}
+.cmt{color:#5a7d52!important;background:#eef6ea;border-radius:4px;padding:0 4px}
+.callout,.box,.chapter-end,.practice,.info,.tip,.warn,.analogy{border-radius:12px}
+.tblwrap{overflow-x:auto}
+.main section.chapter,.main section[id^="c"]{scroll-margin-top:20px}
+.g-anchor{scroll-margin-top:20px}
+@media(max-width:900px){.wrap{display:block}.side{position:static;width:auto;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:16px}.side .toc-group{display:none}.side a.toc{display:inline-block;margin:2px}.main{padding:0 20px 70px}body .wrap .hero{padding:26px 22px}body .wrap .hero h1{font-size:26px}}
+
+
+:root{
+  --ink:#1f2937; --muted:#5b6570; --faint:#8b949e; --line:#d8dee4;
+  --bg:#ffffff; --panel:#f7f9fb; --code:#f4f7fa;
+  --blue:#2563eb; --blue-bg:#eff6ff; --blue-line:#93c5fd;
+  --orange:#ea580c; --orange-bg:#fff7ed; --orange-line:#fdba74;
+  --green:#16a34a; --green-bg:#f0fdf4; --green-line:#86efac;
+  --purple:#7c3aed; --purple-bg:#faf5ff; --purple-line:#c4b5fd;
+  --red:#dc2626; --red-bg:#fef2f2; --red-line:#fca5a5;
+  --vue:#1a9c74; --vue-bg:#ecfdf5; --vue-line:#6ee7b7;
+  --mono:"Cascadia Code","SF Mono",Consolas,"Liberation Mono",Menlo,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:var(--mono);font-size:.9em;background:#eef1f4;padding:2px 6px;border-radius:5px;color:#b1234a}
+pre{margin:0}
+.wrap{display:flex;max-width:1400px;margin:0 auto;align-items:flex-start}
+
+/* ---------- 侧边目录 ---------- */
+.side{width:258px;flex:0 0 258px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--panel);border-right:1px solid var(--line);padding:26px 18px 40px}
+.side .logo{font-weight:800;font-size:17px;letter-spacing:.5px;margin-bottom:4px}
+.side .logo span{color:var(--vue)}
+.side .sub{font-size:12px;color:var(--faint);margin-bottom:22px;line-height:1.6}
+.side a.toc{display:block;font-size:13.2px;color:var(--muted);padding:6px 10px;border-radius:8px;line-height:1.4;border-left:3px solid transparent;transition:background .2s,color .2s}
+.side a.toc:hover{background:#eaeef3;color:var(--ink);text-decoration:none}
+.side a.toc.on{background:var(--blue-bg);color:var(--blue);font-weight:700;border-left-color:var(--blue)}
+.side .toc-group{font-size:11px;color:var(--faint);letter-spacing:1.5px;margin:18px 0 6px 10px;font-weight:700}
+
+/* ---------- 主区 ---------- */
+.main{flex:1;min-width:0;padding:0 46px 100px;max-width:1020px}
+.hero{background:linear-gradient(135deg,#ecfdf5 0%,#eff6ff 52%,#faf5ff 100%);border:1px solid var(--line);border-radius:20px;padding:40px 42px;margin:36px 0 30px;animation:fadeUp .7s ease both}
+.hero h1{margin:0 0 10px;font-size:34px;letter-spacing:-.5px;line-height:1.35}
+.hero .lead{font-size:17px;color:#374151;margin:0 0 18px}
+.badges{display:flex;flex-wrap:wrap;gap:9px}
+.badge{font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:99px;border:1px solid;transition:transform .25s}
+.badge:hover{transform:translateY(-3px)}
+.b-blue{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-line)}
+.b-green{background:var(--green-bg);color:var(--green);border-color:var(--green-line)}
+.b-purple{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-line)}
+.b-orange{background:var(--orange-bg);color:var(--orange);border-color:var(--orange-line)}
+.b-vue{background:var(--vue-bg);color:var(--vue);border-color:var(--vue-line)}
+
+h2.chap{font-size:26px;margin:64px 0 8px;padding-top:18px;border-top:2px solid var(--line);letter-spacing:-.3px;scroll-margin-top:20px;display:flex;align-items:center;gap:12px}
+h2.chap .num{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:38px;border-radius:11px;background:var(--vue);color:#fff;font-size:17px;font-family:var(--mono);flex:0 0 auto;transition:transform .3s}
+h2.chap:hover .num{transform:rotate(-8deg) scale(1.08)}
+.chap-lead{color:var(--muted);margin:0 0 22px;font-size:15.5px}
+h3{font-size:19px;margin:34px 0 12px;scroll-margin-top:20px}
+h4{font-size:16px;margin:22px 0 8px}
+p{margin:10px 0}
+ul,ol{padding-left:22px}
+li{margin:5px 0}
+strong{font-weight:700}
+.small{font-size:13.5px;color:var(--muted)}
+hr{border:0;border-top:1px dashed var(--line);margin:34px 0}
+.oneline{background:var(--vue-bg);border:1px solid var(--vue-line);border-left:5px solid var(--vue);border-radius:12px;padding:12px 18px;font-size:16px;font-weight:700;margin:14px 0 22px}
+
+/* ---------- 图 ---------- */
+.fig{margin:24px 0;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 20px 14px;overflow:hidden}
+.fig svg{display:block;width:100%;height:auto}
+.fig figcaption{font-size:13px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.6}
+.fig figcaption b{color:var(--ink)}
+svg text{font-family:var(--sans)}
+svg .tb{font-size:15px;font-weight:700;fill:#1f2937}
+svg .t{font-size:13.5px;fill:#1f2937}
+svg .ts{font-size:12px;fill:#5b6570}
+svg .tm{font-family:var(--mono);font-size:12.5px;fill:#1f2937}
+svg .lbl{font-size:12.5px;font-weight:700;fill:#fff}
+svg .flow{font-family:var(--mono);font-size:12px;font-weight:700;fill:#2563eb}
+svg .box{stroke-width:2}
+svg .dash{stroke-dasharray:6 5}
+svg .flowline{stroke-dasharray:9 6;animation:dashMove 1.1s linear infinite}
+svg .pulse{animation:pulseRing 1.9s ease-in-out infinite;transform-origin:center}
+
+/* ---------- 步骤 ---------- */
+.step{background:#fff;border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:12px;padding:18px 22px;margin:20px 0;transition:box-shadow .25s,transform .25s}
+.step:hover{box-shadow:0 8px 24px rgba(37,99,235,.09);transform:translateY(-2px)}
+.step-h{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;margin-bottom:8px}
+.step-n{width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-family:var(--mono);flex:0 0 auto}
+.step p:first-of-type{margin-top:0}
+
+/* ---------- 命令 / 代码 块 ---------- */
+.cmd{background:var(--code);border:1px solid #dde3ea;border-radius:12px;margin:14px 0;overflow:hidden}
+.cmd-bar{background:#eaeef3;border-bottom:1px solid #dde3ea;padding:7px 14px;font-size:11.5px;color:var(--muted);font-family:var(--mono);letter-spacing:.4px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.cmd pre{padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:13.2px;line-height:1.9;color:#111827;white-space:pre}
+.cmd .c{color:#5a7d52;background:#eef6ea;border-radius:4px;padding:0 4px}  /* 注释：带底色＝讲解，不要敲 */
+.cmd .k{color:#0b5cad;font-weight:700}  /* 关键字 */
+.cmd .s{color:#b1234a}          /* 字符串 */
+.cmd .f{color:#8a5a00}          /* 文件名、变量、参数 */
+.cmd .p{color:#0b5cad;background:#dbeafe;border-radius:4px;padding:0 5px;font-weight:700}  /* 蓝底 $ ＝这一行要敲 */
+.cmd .tag{color:#7c3aed;font-weight:700}  /* 标签名 */
+.cmd .attr{color:#0b7285}        /* 属性名 */
+.cmd-note{padding:0 16px 14px;font-size:13px;color:var(--muted);line-height:1.7}
+
+/* 终端 / 浏览器输出 */
+.out{background:#fbfcfd;border:1px solid var(--line);border-left:4px solid var(--green);border-radius:10px;margin:12px 0;overflow:hidden}
+.out-bar{background:var(--green-bg);padding:6px 14px;font-size:11.5px;color:var(--green);font-weight:700;font-family:var(--mono);border-bottom:1px solid var(--green-line)}
+.out pre{padding:12px 16px;font-family:var(--mono);font-size:12.8px;line-height:1.85;color:#243b2f;white-space:pre;overflow-x:auto}
+.out .p{color:#0f9d58;font-weight:700}
+.out .red{color:#c0392b}
+.out .grn{color:#0f9d58;font-weight:700}
+.out .blu{color:#1a56c4;font-weight:700}
+.out .dim{color:#7a8794}
+.trans{padding:10px 16px 14px;font-size:13px;color:var(--muted);border-top:1px dashed var(--line);line-height:1.8}
+.trans b{color:var(--ink)}
+
+/* 逐词拆解 */
+.dissect{border:1px solid var(--blue-line);background:var(--blue-bg);border-radius:12px;padding:16px 18px;margin:14px 0}
+.dissect .dl{font-family:var(--mono);font-size:14px;font-weight:700;color:#0b3d91;background:#fff;border:1px solid var(--blue-line);border-radius:8px;padding:9px 13px;display:inline-block;margin-bottom:12px;white-space:pre-wrap;word-break:break-all}
+table.words{width:100%;border-collapse:collapse;font-size:13.5px}
+table.words td{padding:6px 8px;border-bottom:1px solid #d7e5fb;vertical-align:top;line-height:1.7}
+table.words tr:last-child td{border-bottom:0}
+table.words td:first-child{width:168px;white-space:nowrap}
+table.words code{background:#fff;border:1px solid #d7e5fb;color:#0b5cad;padding:2px 7px;font-size:12.5px}
+table.words .en{color:var(--faint);font-size:12px}
+
+/* 卡片 */
+.analogy,.check,.warn,.tip,.sum{border-radius:12px;padding:14px 18px;margin:16px 0;font-size:14.5px;line-height:1.8}
+.analogy{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid #f59e0b}
+.check{background:var(--green-bg);border:1px solid var(--green-line);border-left:4px solid var(--green)}
+.warn{background:var(--red-bg);border:1px solid var(--red-line);border-left:4px solid var(--red)}
+.tip{background:var(--purple-bg);border:1px solid var(--purple-line);border-left:4px solid var(--purple)}
+.sum{background:var(--vue-bg);border:1px solid var(--vue-line);border-left:4px solid var(--vue)}
+.card-t{font-weight:800;font-size:13px;letter-spacing:.5px;display:block;margin-bottom:4px}
+.analogy .card-t{color:#b45309}.check .card-t{color:#15803d}.warn .card-t{color:#b91c1c}.tip .card-t{color:#6d28d9}.sum .card-t{color:#047857}
+.analogy p,.check p,.warn p,.tip p,.sum p{margin:4px 0}
+
+details.later{border:1px dashed var(--line);border-radius:10px;padding:10px 16px;margin:14px 0;background:#fcfdfe}
+details.later summary{cursor:pointer;font-size:13.5px;color:var(--muted);font-weight:700;outline:none}
+details.later[open] summary{margin-bottom:10px;color:var(--blue)}
+
+table.kv{width:100%;border-collapse:collapse;font-size:14px;margin:16px 0}
+table.kv th,table.kv td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;line-height:1.7}
+table.kv th{background:var(--panel);font-weight:700;font-size:13.5px}
+table.kv tr:nth-child(even) td{background:#fcfdfe}
+table.kv code{font-size:12.5px}
+.pill{display:inline-block;background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-line);border-radius:6px;padding:1px 8px;font-size:12px;font-weight:700;font-family:var(--mono)}
+.footer{margin-top:70px;padding-top:22px;border-top:1px solid var(--line);color:var(--faint);font-size:13px;line-height:1.8}
+
+/* ---------- 动画 & 交互演示 ---------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes dashMove{to{stroke-dashoffset:-30}}
+@keyframes pulseRing{0%,100%{opacity:.45;transform:scale(.92)}50%{opacity:1;transform:scale(1.06)}}
+@keyframes numPop{0%{transform:scale(1)}40%{transform:scale(1.5);color:#2563eb}100%{transform:scale(1)}}
+@keyframes hiFlash{0%{background:#fde68a;box-shadow:0 0 0 6px rgba(253,230,138,.5)}100%{background:transparent;box-shadow:none}}
+@keyframes barGrow{from{width:0}to{width:var(--w,100%)}}
+@keyframes gentleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .55s ease,transform .55s ease}
+.reveal.in{opacity:1;transform:none}
+.pop{animation:numPop .45s ease}
+.flash{animation:hiFlash .8s ease}
+.float{animation:gentleFloat 3s ease-in-out infinite}
+.badge.b-vue{animation:pulseRing 2.4s ease-in-out infinite}
+.demo{border:1px solid var(--blue-line);background:linear-gradient(180deg,#ffffff,#f6faff);border-radius:14px;padding:16px 18px;margin:18px 0}
+.demo-h{font-size:12.5px;font-weight:800;color:var(--blue);letter-spacing:.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.demo-h .live{background:var(--green-bg);color:var(--green);border:1px solid var(--green-line);border-radius:99px;padding:1px 9px;font-size:11px}
+.demo-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.dbtn{font-family:var(--sans);font-size:13.5px;font-weight:700;color:#fff;background:var(--blue);border:0;border-radius:9px;padding:7px 15px;cursor:pointer;transition:transform .18s,box-shadow .18s,background .18s}
+.dbtn:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(37,99,235,.25)}
+.dbtn:active{transform:scale(.95)}
+.dbtn.ghost{background:#fff;color:var(--blue);border:1px solid var(--blue-line)}
+.dbtn.green{background:var(--vue)}
+.dbtn.red{background:var(--red)}
+.dbtn.gray{background:#64748b}
+.demo-screen{background:#fff;border:1px dashed var(--blue-line);border-radius:10px;padding:9px 16px;font-size:15px;min-width:150px;text-align:center}
+.demo-screen b{font-family:var(--mono);font-size:22px;color:var(--blue);display:inline-block}
+.demo input[type=text],.demo input[type=number]{font-family:var(--sans);font-size:14px;border:1px solid var(--line);border-radius:8px;padding:7px 10px;width:150px}
+.lamps{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:14px;font-size:12.5px;color:var(--muted)}
+.lamp{border:1px solid var(--line);background:#fff;border-radius:99px;padding:3px 11px;transition:all .3s}
+.lamp.on{background:var(--orange-bg);border-color:var(--orange-line);color:var(--orange);font-weight:800;box-shadow:0 0 0 4px rgba(234,88,12,.1)}
+.demo-note{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.7}
+.pane{display:flex;gap:12px;flex-wrap:wrap}
+.pane>div{flex:1 1 240px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13.5px}
+.pane .pt{font-weight:800;font-size:12.5px;color:var(--muted);margin-bottom:8px}
+.bar{height:12px;background:#e8eef6;border-radius:99px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#2563eb,#1a9c74);border-radius:99px;animation:barGrow 1s ease both}
+.timeline{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+.tl{font-size:12.5px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 10px;transition:all .3s;cursor:default}
+.tl.on{background:var(--vue);color:#fff;border-color:var(--vue);transform:translateY(-4px)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+@media(max-width:900px){
+  .wrap{display:block}
+  .side{position:static;width:auto;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:16px}
+  .side .toc-group{display:none}
+  .side a.toc{display:inline-block;margin:2px}
+  .main{padding:0 20px 70px}
+  .hero{padding:26px 22px}
+  .hero h1{font-size:26px}
+}
+
+
+/* ===== 代码块文字高对比修复（浅底深字，2026-11-04） ===== */
+body .wrap .main pre.code,
+body .wrap .main pre.output,
+body .wrap .main pre:not([class]){
+  background:#f4f7fa!important;color:#1f2937!important;
+  -webkit-text-fill-color:#1f2937!important;opacity:1!important;text-shadow:none!important;
+}
+body .wrap .main pre.output{
+  background:#fbfcfd!important;color:#243b2f!important;-webkit-text-fill-color:#243b2f!important;
+}
+body .wrap .main pre.output::before{color:#6b7280!important}
+body .wrap .main pre code{
+  color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;background:transparent!important;
+}
+body .wrap .main .codehead,
+body .wrap .main .code-head{background:#eaeef3!important;color:#5b6570!important}
+body .wrap .main .codehead .lab{color:#5b6570!important}
+body .wrap .main .codehead .os{background:#ffffff!important;color:#475569!important;border:1px solid #d8dee4!important}
+/* 语法高亮：全部换成浅底可读的深色 */
+body .wrap .main pre .cmt,
+body .wrap .main pre .c-cm{
+  color:#3f7a3f!important;-webkit-text-fill-color:#3f7a3f!important;
+  background:#eef6ea!important;border-radius:3px;padding:0 3px;
+}
+body .wrap .main pre .kw,
+body .wrap .main pre .c-kw{color:#0b5cad!important;-webkit-text-fill-color:#0b5cad!important;font-weight:700}
+body .wrap .main pre .c-st,
+body .wrap .main pre .s{color:#b1234a!important;-webkit-text-fill-color:#b1234a!important}
+body .wrap .main pre .c-de,
+body .wrap .main pre .f{color:#8a5a00!important;-webkit-text-fill-color:#8a5a00!important}
+body .wrap .main pre .pr{color:#6b7280!important;-webkit-text-fill-color:#6b7280!important}
+body .wrap .main pre .tag{color:#6d28d9!important;-webkit-text-fill-color:#6d28d9!important}
+body .wrap .main .codewrap{background:#f4f7fa!important;border:1px solid #dde3ea!important}
+body .wrap .main pre.code::-webkit-scrollbar-thumb,
+body .wrap .main pre.output::-webkit-scrollbar-thumb{background:#cbd5e1!important}
+
+/* CODE_HIGHLIGHT_V2 CSS START */
+body pre span,body pre code span{-webkit-text-fill-color:currentColor!important}
+body pre span[class^="tk-"],body pre code span[class^="tk-"]{font-weight:inherit;font-style:normal}
+body pre span.tk-kw,body pre code span.tk-kw{color:#0b5cad!important;font-weight:700}
+body pre span.tk-str,body pre code span.tk-str{color:#b1234a!important}
+body pre span.tk-url,body pre code span.tk-url{color:#b1234a!important;text-decoration:underline;text-decoration-color:#f0a8bd}
+body pre span.tk-num,body pre code span.tk-num{color:#a35300!important}
+body pre span.tk-fn,body pre code span.tk-fn{color:#6d28d9!important}
+body pre span.tk-prop,body pre code span.tk-prop{color:#0b7285!important}
+body pre span.tk-opt,body pre code span.tk-opt{color:#c2410c!important}
+body pre span.tk-bi,body pre code span.tk-bi{color:#047857!important}
+body pre span.tk-cmt,body pre code span.tk-cmt{color:#3f7a3f!important;background:#eef6ea;border-radius:3px;padding:0 2px}
+body pre span.tk-tag,body pre code span.tk-tag{color:#7c3aed!important}
+body pre span.tk-op,body pre code span.tk-op{color:#64748b!important}
+body pre.hl-dark span.tk-kw,body pre.hl-dark code span.tk-kw{color:#93c5fd!important}
+body pre.hl-dark span.tk-str,body pre.hl-dark code span.tk-str{color:#fca5a5!important}
+body pre.hl-dark span.tk-url,body pre.hl-dark code span.tk-url{color:#fca5a5!important}
+body pre.hl-dark span.tk-num,body pre.hl-dark code span.tk-num{color:#fdba74!important}
+body pre.hl-dark span.tk-fn,body pre.hl-dark code span.tk-fn{color:#c4b5fd!important}
+body pre.hl-dark span.tk-prop,body pre.hl-dark code span.tk-prop{color:#67e8f9!important}
+body pre.hl-dark span.tk-opt,body pre.hl-dark code span.tk-opt{color:#fdba74!important}
+body pre.hl-dark span.tk-bi,body pre.hl-dark code span.tk-bi{color:#6ee7b7!important}
+body pre.hl-dark span.tk-cmt,body pre.hl-dark code span.tk-cmt{color:#7ee787!important;background:transparent}
+body pre.hl-dark span.tk-tag,body pre.hl-dark code span.tk-tag{color:#d8b4fe!important}
+body pre.hl-dark span.tk-op,body pre.hl-dark code span.tk-op{color:#94a3b8!important}
+/* CODE_HIGHLIGHT_V2 CSS END */
 </style>
 </head>
-<body>
-<div id="progress"></div>
+<body><div class="wrap"><div class="side">
+<div class="logo">FastAPI <span>零基础教程</span></div>
+<div class="sub">2026 最新版 · 50 章 + 附录<br>零基础 → 第一个接口 → 参数 → 依赖注入 → 部署</div>
+<div class="toc-group">开篇必看</div>
+<a class="toc" href="#versions">0 2026 版本对照</a>
+<a class="toc" href="#keywords">0 关键字速查表</a>
+<a class="toc" href="#map">0 全书一张图</a>
+<div class="toc-group">第一篇 · 入门</div>
+<a class="toc" href="#c1">三个核心概念</a>
+<a class="toc" href="#c2">环境准备</a>
+<a class="toc" href="#c3">第一个程序</a>
+<a class="toc" href="#c4">自动文档详解</a>
+<div class="toc-group">第二篇 · 请求参数大全</div>
+<a class="toc" href="#c5">HTTP 方法总览</a>
+<a class="toc" href="#c6">路径参数</a>
+<a class="toc" href="#c7">枚举：固定取值</a>
+<a class="toc" href="#c8">查询参数</a>
+<a class="toc" href="#c9">请求体与 Pydantic</a>
+<a class="toc" href="#c10">Query 查询参数验证</a>
+<a class="toc" href="#c11">Path 路径参数验证</a>
+<a class="toc" href="#c12">Field 字段验证</a>
+<a class="toc" href="#c13">嵌套模型</a>
+<a class="toc" href="#c14">请求示例数据</a>
+<a class="toc" href="#c15">特殊数据类型</a>
+<a class="toc" href="#c16">Cookie 参数</a>
+<a class="toc" href="#c17">Header 参数</a>
+<a class="toc" href="#c18">表单数据 Form</a>
+<a class="toc" href="#c19">文件上传 File</a>
+<a class="toc" href="#c20">表单+文件混合</a>
+<div class="toc-group">第三篇 · 响应控制</div>
+<a class="toc" href="#c21">响应模型</a>
+<a class="toc" href="#c22">响应状态码</a>
+<a class="toc" href="#c23">响应字段过滤</a>
+<a class="toc" href="#c24">直接返回响应对象</a>
+<a class="toc" href="#c25">接口文档信息配置</a>
+<div class="toc-group">第四篇 · 错误与更新</div>
+<a class="toc" href="#c26">错误处理全家桶</a>
+<a class="toc" href="#c27">JSON 兼容编码器</a>
+<a class="toc" href="#c28">PATCH 部分更新</a>
+<div class="toc-group">第五篇 · 依赖注入深入</div>
+<a class="toc" href="#c29">依赖注入基础</a>
+<a class="toc" href="#c30">类作为依赖</a>
+<a class="toc" href="#c31">子依赖</a>
+<a class="toc" href="#c32">yield 依赖：资源管理</a>
+<a class="toc" href="#c33">全局依赖与装饰器依赖</a>
+<div class="toc-group">第六篇 · 安全认证</div>
+<a class="toc" href="#c34">安全概念与 OAuth2</a>
+<a class="toc" href="#c35">JWT 登录完整实例</a>
+<div class="toc-group">第七篇 · 工程化</div>
+<a class="toc" href="#c36">中间件</a>
+<a class="toc" href="#c37">CORS 跨域</a>
+<a class="toc" href="#c38">静态文件</a>
+<a class="toc" href="#c39">数据库 SQLModel</a>
+<a class="toc" href="#c40">APIRouter 项目拆分</a>
+<a class="toc" href="#c41">后台任务</a>
+<a class="toc" href="#c42">生命周期事件</a>
+<a class="toc" href="#c43">WebSocket 实时通信</a>
+<a class="toc" href="#c44">返回 HTML 模板页面</a>
+<a class="toc" href="#c45">配置与环境变量</a>
+<a class="toc" href="#c46">自动化测试</a>
+<a class="toc" href="#c47">调试技巧</a>
+<a class="toc" href="#c48">部署上线</a>
+<div class="toc-group">第八篇 · 附录</div>
+<a class="toc" href="#c49">常见坑 FAQ（15个）</a>
+<a class="toc" href="#c50">学习路线与文档地图</a>
+<a class="toc" href="#new2026">附 2026 新变化</a>
+</div><div class="main"><div class="hero"><h1>FastAPI 零基础完全教程 <span style="font-size:19px;color:var(--vue);vertical-align:middle">2026 版</span></h1><p class="lead">写几行 Python 就有一个能用的后端接口，还自带交互文档。<br>每行代码逐词翻译，每步告诉你「会看到什么」，全程配图与动画。</p><div class="badges"><span class="badge b-vue">对齐 FastAPI 0.162.0</span><span class="badge b-blue">Python 3.15.2</span><span class="badge b-purple">uvicorn 0.54.0</span><span class="badge b-orange">Pydantic 2 / 自动文档</span><span class="badge b-green">50 章 + 可点动画演示</span></div></div>
+<div class="tip"><span class="card-t">这份教程怎么用（30 秒看完）</span>
+<p>① <b>先做再懂</b>：前几章照着敲就能跑起来，原理放到后面讲。<br>
+② <b>只抄命令行，注释不要抄</b>：本书代码块里命令直接写（如 <code>npm install</code>），后面带绿底的 <code>#</code> 是讲解，<b>不要敲</b>；注释里的 <code>=</code> 读作「意思是」，不是命令语法。<br>
+③ <b>每个英文都翻译</b>：命令、参数、字段、函数、符号逐个拆开讲；本页还有一张<a href="#keywords">代码关键字速查表</a>。<br>
+④ <b>带「▶ 可以点一下」的框是真能点的</b>：先看动画效果，再学代码。<br>
+⑤ <b>每章有检查点</b>：敲完能看到什么、错了怎么查，都写清楚了。<br>
+⑥ 全书只用一套类比，且<b>标题里不放类比词</b>，类比只放正文。</p></div>
+<div class="warn"><span class="card-t">先看这里：哪些字要敲</span><p>本书代码块里<b>整行命令照抄</b>（例如 <code>npm install</code> 就敲这几个词），<b>带绿底的 <code>#</code> 注释是讲解，不要敲</b>；终端自己显示的提示符（<code>user@pc ~ $</code>、<code>PS C://Users//...&gt;</code>）也不用敲。本目录《Git.html》《vue.html》用蓝底 <code>$</code> 标记要敲的行，看到时只敲 <code>$</code> 后面的内容即可。</p></div>
 
-<nav>
-  <h2>🍳 FastAPI 全文档教程</h2>
-  <div class="nav-part">第一部分 · 入门</div>
-  <a href="#c1">1. 三个核心概念</a>
-  <a href="#c2">2. 环境准备</a>
-  <a href="#c3">3. 第一个程序</a>
-  <a href="#c4">4. 自动文档详解</a>
-  <div class="nav-part">第二部分 · 请求参数大全</div>
-  <a href="#c5">5. HTTP 方法总览</a>
-  <a href="#c6">6. 路径参数</a>
-  <a href="#c7">7. 枚举：固定取值</a>
-  <a href="#c8">8. 查询参数</a>
-  <a href="#c9">9. 请求体与 Pydantic</a>
-  <a href="#c10">10. Query 查询参数验证</a>
-  <a href="#c11">11. Path 路径参数验证</a>
-  <a href="#c12">12. Field 字段验证</a>
-  <a href="#c13">13. 嵌套模型</a>
-  <a href="#c14">14. 请求示例数据</a>
-  <a href="#c15">15. 特殊数据类型</a>
-  <a href="#c16">16. Cookie 参数</a>
-  <a href="#c17">17. Header 参数</a>
-  <a href="#c18">18. 表单数据 Form</a>
-  <a href="#c19">19. 文件上传 File</a>
-  <a href="#c20">20. 表单+文件混合</a>
-  <div class="nav-part">第三部分 · 响应控制</div>
-  <a href="#c21">21. 响应模型</a>
-  <a href="#c22">22. 响应状态码</a>
-  <a href="#c23">23. 响应字段过滤</a>
-  <a href="#c24">24. 直接返回响应对象</a>
-  <a href="#c25">25. 接口文档信息配置</a>
-  <div class="nav-part">第四部分 · 错误与更新</div>
-  <a href="#c26">26. 错误处理全家桶</a>
-  <a href="#c27">27. JSON 兼容编码器</a>
-  <a href="#c28">28. PATCH 部分更新</a>
-  <div class="nav-part">第五部分 · 依赖注入深入</div>
-  <a href="#c29">29. 依赖注入基础</a>
-  <a href="#c30">30. 类作为依赖</a>
-  <a href="#c31">31. 子依赖</a>
-  <a href="#c32">32. yield 依赖：资源管理</a>
-  <a href="#c33">33. 全局依赖与装饰器依赖</a>
-  <div class="nav-part">第六部分 · 安全认证</div>
-  <a href="#c34">34. 安全概念与 OAuth2</a>
-  <a href="#c35">35. JWT 登录完整实例</a>
-  <div class="nav-part">第七部分 · 工程化</div>
-  <a href="#c36">36. 中间件</a>
-  <a href="#c37">37. CORS 跨域</a>
-  <a href="#c38">38. 静态文件</a>
-  <a href="#c39">39. 数据库 SQLModel</a>
-  <a href="#c40">40. APIRouter 项目拆分</a>
-  <a href="#c41">41. 后台任务</a>
-  <a href="#c42">42. 生命周期事件</a>
-  <a href="#c43">43. WebSocket 实时通信</a>
-  <a href="#c44">44. 返回 HTML 模板页面</a>
-  <a href="#c45">45. 配置与环境变量</a>
-  <a href="#c46">46. 自动化测试</a>
-  <a href="#c47">47. 调试技巧</a>
-  <a href="#c48">48. 部署上线</a>
-  <div class="nav-part">第八部分 · 附录</div>
-  <a href="#c49">49. 常见坑 FAQ（15个）</a>
-  <a href="#c50">50. 学习路线与文档地图</a>
-</nav>
-
-<main>
-
-<div class="hero">
-  <h1>FastAPI 完全教程（全文档版）</h1>
-  <p>50 章，覆盖 FastAPI 官方文档的每一个功能点：从第一个程序到请求参数、响应控制、依赖注入、安全认证、数据库、WebSocket、测试与部署。全程"开餐厅"类比，代码逐行中文注释，所有示例可直接运行。</p>
-  <div class="tags">
-    <span>50 章全覆盖</span><span>零基础友好</span><span>逐行注释</span><span>餐厅类比</span><span>可直接运行</span>
-  </div>
+<h3 id="versions" class="g-anchor">版本对照：2026 年该装什么</h3>
+<p class="small">版本于 2026-11-04 从 PyPI 与 Python 官网核对，不是猜的。</p>
+<table class="kv"><colgroup><col style="width:170px"><col style="width:290px"><col style="width:"></colgroup><tr><th>东西</th><th>2026 年该用的版本</th><th>一句话说明</th></tr><tr><td><b>FastAPI</b></td><td><code>0.162.0</code></td><td>PyPI 最新稳定版（2026-11-04 核对），要求 Python ≥ 3.10</td></tr><tr><td><b>Python</b></td><td><code>3.15.2</code>（稳定）</td><td>最新版；稳一点可用 3.14</td></tr><tr><td><b>uvicorn</b></td><td><code>0.54.0</code></td><td>ASGI 服务器，负责把你的 app 跑起来</td></tr><tr><td><b>Pydantic</b></td><td><code>2.x</code></td><td>请求参数校验与数据模型的底座</td></tr><tr><td><b>Starlette</b></td><td>FastAPI 的底座</td><td>路由、请求、响应、中间件都由它提供</td></tr></table>
+<h3 id="keywords" class="g-anchor">代码关键字速查表（不认识就回来查）</h3>
+<p>FastAPI 里英文多，但真正要记的不多。下面一次列全；正文每行代码也会就地注一句。</p>
+<table class="kv"><colgroup><col style="width:230px"><col style="width:220px"><col style="width:"></colgroup><tr><th>写法</th><th>英文原意</th><th>中文意思与用途</th></tr><tr><td><code>FastAPI()</code></td><td>fast + API</td><td>创建一个应用对象，通常起名 <code>app</code></td></tr><tr><td><code>@app.get("/")</code></td><td>decorator 装饰器 + get</td><td>把下面这个函数绑到 GET / 这个网址上</td></tr><tr><td><code>async def</code></td><td>asynchronous 异步 + define 定义</td><td>定义异步函数；里面可以用 <code>await</code> 等耗时操作</td></tr><tr><td><code>await</code></td><td>等待</td><td>等数据库 / 网络结果，期间不阻塞别的请求</td></tr><tr><td><code>path parameter</code></td><td>路径参数</td><td>写在网址里：<code>/items/{item_id}</code></td></tr><tr><td><code>query parameter</code></td><td>查询参数</td><td>网址 <code>?</code> 后面：<code>?q=abc</code></td></tr><tr><td><code>request body</code></td><td>请求体</td><td>POST 时随请求发来的 JSON 数据</td></tr><tr><td><code>BaseModel</code></td><td>基础模型</td><td>Pydantic 的类，继承它来定义「数据长什么样」</td></tr><tr><td><code>Field</code></td><td>字段</td><td>给字段加约束：默认值、最大长度、描述</td></tr><tr><td><code>Query / Path / Body</code></td><td>查询 / 路径 / 请求体</td><td>显式声明参数来源并加校验规则</td></tr><tr><td><code>Annotated</code></td><td>标注的</td><td>2026 年推荐写法：把类型和校验规则写在一起</td></tr><tr><td><code>response_model</code></td><td>响应模型</td><td>规定返回的数据形状，自动过滤多余字段</td></tr><tr><td><code>status_code</code></td><td>状态码</td><td>201 创建成功、404 找不到、422 参数不合法</td></tr><tr><td><code>HTTPException</code></td><td>HTTP 异常</td><td>主动返回错误：<code>raise HTTPException(404, "没找到")</code></td></tr><tr><td><code>Depends</code></td><td>depend 依赖</td><td>依赖注入：把「取当前用户」「连数据库」抽成可复用的一块</td></tr><tr><td><code>yield</code></td><td>让出</td><td>在依赖里做「用前准备、用后清理」，如开关数据库连接</td></tr><tr><td><code>APIRouter</code></td><td>路由器</td><td>把一组接口拆到单独文件，再用 include_router 装回来</td></tr><tr><td><code>middleware</code></td><td>中间件</td><td>每个请求进出都要过的一层，如记日志</td></tr><tr><td><code>CORSMiddleware</code></td><td>跨域资源共享</td><td>允许前端页面访问这个后端接口</td></tr><tr><td><code>OpenAPI / docs</code></td><td>开放接口规范 / 文档</td><td>自动生成的可交互接口文档，访问 /docs</td></tr><tr><td><code>redoc</code></td><td>另一种文档页面</td><td>访问 /redoc，排版更适合阅读</td></tr><tr><td><code>TestClient</code></td><td>测试客户端</td><td>不发真实网络请求就能测接口</td></tr><tr><td><code>UploadFile / File</code></td><td>上传文件</td><td>处理表单上传的文件</td></tr><tr><td><code>BackgroundTasks</code></td><td>后台任务</td><td>响应发完后再慢慢做，如发邮件</td></tr><tr><td><code>WebSocket</code></td><td>长连接协议</td><td>做聊天、实时推送时用</td></tr><tr><td><code>JSON</code></td><td>JavaScript Object Notation</td><td>前后端传数据用的文本格式</td></tr></table><div class="sum"><span class="card-t">归纳 · 记住这 3 行</span><p>① 一个接口 = <b>装饰器 + 函数</b>：<code>@app.get("/路径")</code> 下面写 <code>async def</code>。<br>② 参数从哪来：<b>路径 {} / 查询 ? / 请求体 JSON</b>；类型写清楚，Pydantic 自动校验。<br>③ 写完访问 <code>/docs</code> 就能点着试接口，不用装额外工具。</p></div>
+<h3 id="map" class="g-anchor">全书一张图</h3>
+<div class="fig reveal"><svg viewBox="0 0 860 220" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="fa" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#1a9c74"/></marker></defs>
+<rect x="0" y="0" width="860" height="220" fill="#ffffff"/>
+<text class="tb" x="24" y="26">一个请求从进来到出去，FastAPI 替你做了五件事</text>
+<rect class="box" x="18" y="52" width="140" height="56" rx="10" fill="#eff6ff" stroke="#93c5fd"/><text class="t" x="88" y="78" text-anchor="middle" font-weight="700">浏览器请求</text><text class="ts" x="88" y="97" text-anchor="middle">GET /items/7?q=a</text>
+<path class="flowline" d="M162,80 L192,80" stroke="#1a9c74" stroke-width="3" fill="none" marker-end="url(#fa)"/>
+<rect class="box" x="196" y="52" width="140" height="56" rx="10" fill="#ecfdf5" stroke="#6ee7b7"/><text class="t" x="266" y="78" text-anchor="middle" font-weight="700">① 路由匹配</text><text class="ts" x="266" y="97" text-anchor="middle">找到 @app.get</text>
+<path class="flowline" d="M340,80 L370,80" stroke="#1a9c74" stroke-width="3" fill="none" marker-end="url(#fa)"/>
+<rect class="box" x="374" y="52" width="140" height="56" rx="10" fill="#ecfdf5" stroke="#6ee7b7"/><text class="t" x="444" y="78" text-anchor="middle" font-weight="700">② 参数校验</text><text class="ts" x="444" y="97" text-anchor="middle">Pydantic 自动做</text>
+<path class="flowline" d="M518,80 L548,80" stroke="#1a9c74" stroke-width="3" fill="none" marker-end="url(#fa)"/>
+<rect class="box" x="552" y="52" width="140" height="56" rx="10" fill="#faf5ff" stroke="#c4b5fd"/><text class="t" x="622" y="78" text-anchor="middle" font-weight="700">③ 你的函数</text><text class="ts" x="622" y="97" text-anchor="middle">查库、算结果</text>
+<path class="flowline" d="M696,80 L726,80" stroke="#1a9c74" stroke-width="3" fill="none" marker-end="url(#fa)"/>
+<rect class="box" x="730" y="52" width="112" height="56" rx="10" fill="#fff7ed" stroke="#fdba74"/><text class="t" x="786" y="78" text-anchor="middle" font-weight="700">④ JSON</text><text class="ts" x="786" y="97" text-anchor="middle">响应</text>
+<rect x="196" y="132" width="646" height="40" rx="9" fill="#fffbeb" stroke="#fde68a"/>
+<text class="ts" x="214" y="157">⑤ 顺带自动生成 /docs 交互文档 —— 代码写完，接口说明书就有了，不用另写一份。</text>
+<text class="ts" x="24" y="200">类比：像餐厅前台 —— 先确认你点的是哪道菜（路由），检查要求能不能做（校验），交给后厨（函数），最后上菜（响应）。</text>
+</svg><figcaption><b>图 0-1</b>　虚线箭头＝FastAPI 自动做；你只写第 ③ 步那个函数。</figcaption></div>
+<div class="fig reveal">
+<svg viewBox="0 0 860 200" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="860" height="200" fill="#ffffff"/>
+<text class="tb" x="24" y="26">参数从哪来：同一个请求，三种入口</text>
+<rect class="box" x="24" y="48" width="812" height="42" rx="9" fill="#eff6ff" stroke="#93c5fd"/>
+<text class="tm" x="42" y="75">GET /items/7?q=a&amp;limit=10     +     POST 时附带 JSON 请求体</text>
+<g>
+<rect class="box" x="24" y="106" width="252" height="70" rx="11" fill="#ecfdf5" stroke="#6ee7b7"/>
+<text class="t" x="150" y="132" text-anchor="middle" font-weight="700">① 路径参数 path</text>
+<text class="ts" x="150" y="154" text-anchor="middle">/items/{item_id} → 7</text>
+<rect class="box" x="304" y="106" width="252" height="70" rx="11" fill="#faf5ff" stroke="#c4b5fd"/>
+<text class="t" x="430" y="132" text-anchor="middle" font-weight="700">② 查询参数 query</text>
+<text class="ts" x="430" y="154" text-anchor="middle">?q=a&amp;limit=10 → 筛选条件</text>
+<rect class="box" x="584" y="106" width="252" height="70" rx="11" fill="#fff7ed" stroke="#fdba74"/>
+<text class="t" x="710" y="132" text-anchor="middle" font-weight="700">③ 请求体 body</text>
+<text class="ts" x="710" y="154" text-anchor="middle">JSON → BaseModel 校验</text>
+</g>
+<text class="ts" x="24" y="192">归纳：写在网址路径里用 {}，写在 ? 后面用普通参数，要提交一整份数据用请求体。</text>
+</svg>
+<figcaption><b>图 0-2</b>　三类参数一眼分清，后面 Query / Path / Body 章节全是这张图的展开。</figcaption>
 </div>
+<div class="fig reveal">
+<svg viewBox="0 0 860 200" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="fdp" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#7c3aed"/></marker></defs>
+<rect x="0" y="0" width="860" height="200" fill="#ffffff"/>
+<text class="tb" x="24" y="26">依赖注入 Depends：一项公共检查，多个接口复用</text>
+<g>
+<rect class="box" x="24" y="54" width="180" height="44" rx="9" fill="#eff6ff" stroke="#93c5fd"/><text class="t" x="114" y="81" text-anchor="middle">/users/me</text>
+<rect class="box" x="24" y="108" width="180" height="44" rx="9" fill="#eff6ff" stroke="#93c5fd"/><text class="t" x="114" y="135" text-anchor="middle">/orders</text>
+<rect class="box" x="24" y="162" width="180" height="30" rx="9" fill="#eff6ff" stroke="#93c5fd"/><text class="t" x="114" y="183" text-anchor="middle">/admin/stats</text>
+<path d="M208,76 L330,110" stroke="#7c3aed" stroke-width="2" fill="none" marker-end="url(#fdp)"/>
+<path d="M208,130 L330,118" stroke="#7c3aed" stroke-width="2" fill="none" marker-end="url(#fdp)"/>
+<path d="M208,176 L330,128" stroke="#7c3aed" stroke-width="2" fill="none" marker-end="url(#fdp)"/>
+<rect class="box" x="334" y="88" width="230" height="60" rx="11" fill="#faf5ff" stroke="#c4b5fd"/>
+<text class="t" x="449" y="113" text-anchor="middle" font-weight="700">Depends(get_current_user)</text>
+<text class="ts" x="449" y="135" text-anchor="middle">取出当前登录用户</text>
+<path d="M568,118 L640,118" stroke="#1a9c74" stroke-width="2.5" fill="none" marker-end="url(#fdp)"/>
+<rect class="box" x="644" y="92" width="192" height="52" rx="11" fill="#ecfdf5" stroke="#6ee7b7"/>
+<text class="t" x="740" y="114" text-anchor="middle" font-weight="700">各接口只写自己的业务</text>
+<text class="ts" x="740" y="134" text-anchor="middle">不用复制登录校验</text>
+</g>
+<text class="ts" x="24" y="196">类比：进每个房间前都要刷一次门禁卡，这张卡由门口统一管，不用每个房间自己装一套。</text>
+</svg>
+<figcaption><b>图 0-3</b>　<code>Depends</code> 就是「把重复的准备动作抽出来，谁要谁声明」。</figcaption>
+</div>
+
+<div class="demo" id="fast-req">
+  <div class="demo-h">▶ 可以点一下：发一个请求，看它怎么被处理 <span class="live">交互演示</span></div>
+  <div class="demo-row"><button class="dbtn" onclick="D.req('ok')">GET /items/7?q=a</button><button class="dbtn ghost" onclick="D.req('bad')">GET /items/abc（类型错）</button></div>
+  <div class="lamps" style="margin-top:12px"><span class="lamp" id="fr-l1">① 路由匹配</span> → <span class="lamp" id="fr-l2">② 参数校验</span> → <span class="lamp" id="fr-l3">③ 执行函数</span> → <span class="lamp" id="fr-l4">④ 返回 JSON</span></div>
+  <div id="fr-out" style="margin-top:12px;background:#fbfcfd;border:1px solid var(--line);border-radius:9px;padding:10px 14px;font-family:var(--mono);font-size:12.5px;color:#243b2f;min-height:44px;white-space:pre-wrap">点上面任意一个按钮。</div>
+</div>
+
+<div class="demo" id="fast-docs">
+  <div class="demo-h">▶ 可以点一下：自动生成的三个地址 <span class="live">交互演示</span></div>
+  <div class="demo-row"><button class="dbtn" onclick="D.doc('docs')">/docs</button><button class="dbtn ghost" onclick="D.doc('redoc')">/redoc</button><button class="dbtn ghost" onclick="D.doc('openapi')">/openapi.json</button></div>
+  <div id="fd-out" style="margin-top:12px;background:#fff;border:1px solid var(--blue-line);border-radius:9px;padding:12px 14px;font-size:14px">点按钮看每个地址是干什么用的。</div>
+</div>
+
+<div class="check"><span class="card-t">检查点：第一个接口跑起来了会看到什么</span><p>① 终端出现 <code>Uvicorn running on http://127.0.0.1:8000</code>；② 浏览器打开这个地址看到 <code>{"message":"Hello World"}</code>；③ 打开 <code>/docs</code> 能看到可点的接口列表，点「Try it out」能直接发请求。三条都对，环境就通了。</p></div>
+<div class="analogy"><span class="card-t">打个比方（正文沿用这一套）</span><p>FastAPI 像<b>餐厅前台 + 后厨传菜口</b>：装饰器是<b>菜单条目</b>（哪个网址对应哪道菜），参数类型是<b>点单要求</b>（「这道菜必须配一个整数编号」），你的函数是<b>后厨</b>，返回的 JSON 是<b>上菜</b>。而 <code>/docs</code> 是<b>自动印好的带图菜单</b> —— 你没写一行文档，它自己就有了。</p></div>
+<div id="top"></div>
 
 <!-- ================= 第 1 章 ================= -->
 <section id="c1">
@@ -161,7 +537,7 @@
   </ul>
   <h3>本教程的全局类比表</h3>
   <table>
-    <tr><th>后端概念</th><th>餐厅类比</th><th>后端概念</th><th>餐厅类比</th></tr>
+    <tbody><tr><th>后端概念</th><th>餐厅类比</th><th>后端概念</th><th>餐厅类比</th></tr>
     <tr><td>服务器 / 后端</td><td>厨房</td><td>Pydantic 模型</td><td>标准点菜单模板</td></tr>
     <tr><td>API 接口（路由）</td><td>点菜窗口</td><td>依赖注入</td><td>传菜员（各窗口共用）</td></tr>
     <tr><td>请求 Request</td><td>递进来的点菜单</td><td>中间件</td><td>门口保安（进出必经）</td></tr>
@@ -169,7 +545,7 @@
     <tr><td>GET/POST/PUT/DELETE</td><td>看菜单/点菜/换菜/退菜</td><td>路径参数</td><td>取餐号</td></tr>
     <tr><td>状态码 404 / 500</td><td>没这道菜 / 厨房着火</td><td>查询参数</td><td>点单备注</td></tr>
     <tr><td>Cookie / Header</td><td>会员卡 / 纸条抬头的附加信息</td><td>WebSocket</td><td>对讲机（双方随时通话）</td></tr>
-  </table>
+  </tbody></table>
 </section>
 
 <!-- ================= 第 2 章 ================= -->
@@ -212,12 +588,12 @@ app = FastAPI()
   <h3>点火开张</h3>
   <div class="cmd">uvicorn main:app --reload</div>
   <table>
-    <tr><th>命令部分</th><th>含义</th></tr>
+    <tbody><tr><th>命令部分</th><th>含义</th></tr>
     <tr><td><code>uvicorn</code></td><td>用灶台点火</td></tr>
     <tr><td><code>main</code></td><td>指 main.py 文件（不带后缀）</td></tr>
     <tr><td><code>app</code></td><td>指文件里 <code>app = FastAPI()</code> 的变量名</td></tr>
     <tr><td><code>--reload</code></td><td>改代码后自动重启，开发必加</td></tr>
-  </table>
+  </tbody></table>
   <p>看到 <code>Uvicorn running on http://127.0.0.1:8000</code> 即开张成功。<code>127.0.0.1</code> = 本机，<code>8000</code> = 门牌号（端口）。浏览器访问它，就能看到第一盘"菜"。</p>
 </section>
 
@@ -226,11 +602,11 @@ app = FastAPI()
   <h2><span class="num">4</span>自动文档详解</h2>
   <p class="lead">FastAPI 最大的招牌：盖厨房的同时免费印好菜单说明书。</p>
   <table>
-    <tr><th>地址</th><th>内容</th></tr>
+    <tbody><tr><th>地址</th><th>内容</th></tr>
     <tr><td><code>/docs</code></td><td><b>Swagger UI</b>：交互式文档，能直接点 "Try it out" 测试每个接口</td></tr>
     <tr><td><code>/redoc</code></td><td><b>ReDoc</b>：另一种风格的文档，更适合阅读</td></tr>
     <tr><td><code>/openapi.json</code></td><td>文档的原始数据（OpenAPI 标准格式），供其他工具使用</td></tr>
-  </table>
+  </tbody></table>
   <div class="box tip"><div class="box-title">💡 本教程的核心学习方法</div>
   每写一个新接口，就去 <code>/docs</code> 里点一点、试吃一遍。</div>
   <h3>不想要文档？可以关掉（比如生产环境保密）</h3>
@@ -243,14 +619,14 @@ app = FastAPI(docs_url=<span class="c-kw">None</span>, redoc_url=<span class="c-
   <h2><span class="num">5</span>HTTP 方法总览</h2>
   <p class="lead">类比：餐厅里顾客能做的四件事。合称 CRUD（增删改查），是后端 90% 的日常。</p>
   <table>
-    <tr><th>方法</th><th>餐厅类比</th><th>用途</th><th>FastAPI 写法</th></tr>
+    <tbody><tr><th>方法</th><th>餐厅类比</th><th>用途</th><th>FastAPI 写法</th></tr>
     <tr><td><b>GET</b></td><td>看菜单</td><td>查询/获取</td><td><code>@app.get(...)</code></td></tr>
     <tr><td><b>POST</b></td><td>点菜</td><td>新建</td><td><code>@app.post(...)</code></td></tr>
     <tr><td><b>PUT</b></td><td>整盘换掉</td><td>整体更新</td><td><code>@app.put(...)</code></td></tr>
     <tr><td><b>PATCH</b></td><td>只换配菜</td><td>部分更新（第28章）</td><td><code>@app.patch(...)</code></td></tr>
     <tr><td><b>DELETE</b></td><td>退菜</td><td>删除</td><td><code>@app.delete(...)</code></td></tr>
     <tr><td><b>OPTIONS / HEAD / TRACE</b></td><td>冷门动作</td><td>极少用，知道存在即可</td><td>对应同名装饰器</td></tr>
-  </table>
+  </tbody></table>
 </section>
 
 <!-- ================= 第 6 章 ================= -->
@@ -280,7 +656,7 @@ app = FastAPI(docs_url=<span class="c-kw">None</span>, redoc_url=<span class="c-
 
 <!-- ================= 第 7 章 ================= -->
 <section id="c7">
-  <h2><span class="num">7</span>枚举：参数只能是固定几个值</h2>
+  <h2><span class="num">7</span>枚举：固定取值</h2>
   <div class="box analogy"><div class="box-title">🍽️ 类比</div>辣度只能选"不辣 / 微辣 / 特辣"，不许自创"宇宙辣"。用 Python 的 <b>Enum（枚举）</b>把可选值列死。</div>
 <pre><code><span class="c-kw">from</span> enum <span class="c-kw">import</span> Enum  <span class="c-cm"># Python 自带的枚举工具</span>
 
@@ -329,7 +705,7 @@ app = FastAPI(docs_url=<span class="c-kw">None</span>, redoc_url=<span class="c-
 
 <!-- ================= 第 9 章 ================= -->
 <section id="c9">
-  <h2><span class="num">9</span>请求体与 Pydantic 模型</h2>
+  <h2><span class="num">9</span>请求体与 Pydantic</h2>
   <div class="box analogy"><div class="box-title">🍽️ 类比：标准点菜单</div>GET 像隔窗口问句话；POST 像<b>递一张写满信息的点菜单</b>。菜单不能乱写，得有<b>标准模板</b>——就是 Pydantic 模型。菜单内容叫<b>请求体（body）</b>。</div>
   <h3>定义模板 + 接单</h3>
 <pre><code><span class="c-kw">from</span> pydantic <span class="c-kw">import</span> BaseModel  <span class="c-cm"># 所有模板的"母模板"</span>
@@ -366,7 +742,7 @@ r = requests.post(<span class="c-st">"http://127.0.0.1:8000/dishes"</span>,
 
 <!-- ================= 第 10 章 ================= -->
 <section id="c10">
-  <h2><span class="num">10</span>Query：查询参数验证</h2>
+  <h2><span class="num">10</span>Query 查询参数验证</h2>
   <div class="box analogy"><div class="box-title">🍽️ 类比</div>备注也不能乱写："加辣程度 1~5 级"、"备注最多 50 字"。用 <code>Query()</code> 给查询参数立规矩。</div>
 <pre><code><span class="c-kw">from</span> fastapi <span class="c-kw">import</span> Query
 
@@ -389,7 +765,7 @@ r = requests.post(<span class="c-st">"http://127.0.0.1:8000/dishes"</span>,
 </section>
 <!-- ================= 第 11 章 ================= -->
 <section id="c11">
-  <h2><span class="num">11</span>Path：路径参数验证</h2>
+  <h2><span class="num">11</span>Path 路径参数验证</h2>
   <p class="lead">取餐号也不能乱报：不能是负数、不能超过 9999。用 <code>Path()</code> 立规矩，写法和 Query 一样。</p>
 <pre><code><span class="c-kw">from</span> fastapi <span class="c-kw">import</span> Path
 
@@ -400,16 +776,16 @@ r = requests.post(<span class="c-st">"http://127.0.0.1:8000/dishes"</span>,
 ):
     <span class="c-kw">return</span> {<span class="c-st">"item_id"</span>: item_id}</code></pre>
   <table>
-    <tr><th>规则</th><th>意思</th><th>规则</th><th>意思</th></tr>
+    <tbody><tr><th>规则</th><th>意思</th><th>规则</th><th>意思</th></tr>
     <tr><td><code>gt</code></td><td>大于</td><td><code>ge</code></td><td>大于等于</td></tr>
     <tr><td><code>lt</code></td><td>小于</td><td><code>le</code></td><td>小于等于</td></tr>
-  </table>
+  </tbody></table>
   <div class="box warn"><div class="box-title">⚠️ 顺序提醒</div>路径参数用 <code>Path()</code> 赋予默认值后，就不能再写在"无默认值参数"前面了。如果报语法错，把带默认值的参数移到后面，或者都改成关键字传参。</div>
 </section>
 
 <!-- ================= 第 12 章 ================= -->
 <section id="c12">
-  <h2><span class="num">12</span>Field：模型字段验证</h2>
+  <h2><span class="num">12</span>Field 字段验证</h2>
   <div class="box analogy"><div class="box-title">🍽️ 类比：服务员审单</div>点菜单每栏都有填写规范：菜名 2~20 字、价格必须为正。用 <code>Field()</code> 写在模型里，一次定义处处生效。</div>
 <pre><code><span class="c-kw">from</span> pydantic <span class="c-kw">import</span> BaseModel, Field
 
@@ -424,13 +800,13 @@ r = requests.post(<span class="c-st">"http://127.0.0.1:8000/dishes"</span>,
     tags: <span class="c-kw">list</span>[<span class="c-kw">str</span>] = Field(default=[])</code></pre>
   <h3>常用规则速查</h3>
   <table>
-    <tr><th>规则</th><th>意思</th><th>例子</th></tr>
+    <tbody><tr><th>规则</th><th>意思</th><th>例子</th></tr>
     <tr><td><code>min_length</code> / <code>max_length</code></td><td>文字/列表 最短/最长</td><td><code>Field(min_length=2)</code></td></tr>
     <tr><td><code>gt</code> / <code>ge</code> / <code>lt</code> / <code>le</code></td><td>大于/大于等于/小于/小于等于</td><td><code>Field(gt=0)</code></td></tr>
     <tr><td><code>pattern</code></td><td>正则约束</td><td><code>Field(pattern="^1[0-9]{10}$")</code></td></tr>
     <tr><td><code>default</code> / <code>default_factory</code></td><td>默认值 / 默认值工厂（生成列表等）</td><td><code>Field(default_factory=list)</code></td></tr>
     <tr><td><code>alias</code></td><td>对外用别的字段名</td><td><code>Field(alias="dish_name")</code></td></tr>
-  </table>
+  </tbody></table>
 </section>
 
 <!-- ================= 第 13 章 ================= -->
@@ -479,7 +855,7 @@ r = requests.post(<span class="c-st">"http://127.0.0.1:8000/dishes"</span>,
 
 <!-- ================= 第 14 章 ================= -->
 <section id="c14">
-  <h2><span class="num">14</span>请求示例数据（example）</h2>
+  <h2><span class="num">14</span>请求示例数据</h2>
   <p class="lead">类比：菜单上印"填写样例"，顾客照着填不出错。示例会自动显示在 /docs 的输入框里。</p>
   <h3>方法1：在模型里写示例（推荐）</h3>
 <pre><code><span class="c-kw">from</span> pydantic <span class="c-kw">import</span> BaseModel, Field
@@ -516,7 +892,7 @@ r = requests.post(<span class="c-st">"http://127.0.0.1:8000/dishes"</span>,
   <h2><span class="num">15</span>特殊数据类型</h2>
   <p class="lead">除了 str/int/float/bool，FastAPI 还支持这些类型，参数、模型字段里都能用：</p>
   <table>
-    <tr><th>类型</th><th>说明</th><th>餐厅类比</th></tr>
+    <tbody><tr><th>类型</th><th>说明</th><th>餐厅类比</th></tr>
     <tr><td><code>UUID</code></td><td>全球唯一编号，格式自动校验</td><td>会员卡的卡号</td></tr>
     <tr><td><code>datetime</code></td><td>日期+时间（2008-09-15T15:53:00）</td><td>预约到店的时间</td></tr>
     <tr><td><code>date</code> / <code>time</code></td><td>只有日期 / 只有时间</td><td>生日 / 营业时间</td></tr>
@@ -524,7 +900,7 @@ r = requests.post(<span class="c-st">"http://127.0.0.1:8000/dishes"</span>,
     <tr><td><code>bytes</code></td><td>原始字节（请求体里是 base64 文本）</td><td>密封的调料包</td></tr>
     <tr><td><code>Decimal</code></td><td>精确小数（算钱用它，避免浮点误差）</td><td>收银台的账本数字</td></tr>
     <tr><td><code>EmailStr</code></td><td>邮箱格式自动校验（需 pip install email-validator）</td><td>会员卡绑定的邮箱</td></tr>
-  </table>
+  </tbody></table>
 <pre><code><span class="c-kw">from</span> datetime <span class="c-kw">import</span> datetime
 <span class="c-kw">from</span> uuid <span class="c-kw">import</span> UUID
 <span class="c-kw">from</span> decimal <span class="c-kw">import</span> Decimal
@@ -626,13 +1002,13 @@ r = requests.post(<span class="c-st">"http://127.0.0.1:8000/dishes"</span>,
             <span class="c-st">"大小"</span>: <span class="c-kw">len</span>(content)}</code></pre>
   <h3>UploadFile 的常用本领</h3>
   <table>
-    <tr><th>属性/方法</th><th>作用</th></tr>
+    <tbody><tr><th>属性/方法</th><th>作用</th></tr>
     <tr><td><code>file.filename</code></td><td>原文件名</td></tr>
     <tr><td><code>file.content_type</code></td><td>文件类型（MIME）</td></tr>
     <tr><td><code>await file.read()</code></td><td>读内容</td></tr>
     <tr><td><code>await file.seek(0)</code></td><td>读完后"倒带"，可重读</td></tr>
     <tr><td><code>file.file</code></td><td>底层文件对象（可传给 pandas 等库）</td></tr>
-  </table>
+  </tbody></table>
   <h3>多文件上传</h3>
 <pre><code><span class="c-cm"># 一次收多个包裹</span>
 <span class="c-de">@app.post</span>(<span class="c-st">"/upload-many"</span>)
@@ -642,7 +1018,7 @@ r = requests.post(<span class="c-st">"http://127.0.0.1:8000/dishes"</span>,
 
 <!-- ================= 第 20 章 ================= -->
 <section id="c20">
-  <h2><span class="num">20</span>表单 + 文件混合提交</h2>
+  <h2><span class="num">20</span>表单+文件混合</h2>
   <p class="lead">类比：顾客寄包裹时还附了张手写登记表——文件和文字一起来。用 multipart/form-data 格式，File 和 Form 可以同时用。</p>
 <pre><code><span class="c-kw">from</span> fastapi <span class="c-kw">import</span> UploadFile, File, Form
 
@@ -703,7 +1079,7 @@ r = requests.post(<span class="c-st">"http://127.0.0.1:8000/dishes"</span>,
     <span class="c-kw">return</span> <span class="c-kw">None</span></code></pre>
   <h3>常见状态码（用餐厅记）</h3>
   <table>
-    <tr><th>状态码</th><th>意思</th><th>餐厅类比</th></tr>
+    <tbody><tr><th>状态码</th><th>意思</th><th>餐厅类比</th></tr>
     <tr><td>200</td><td>成功</td><td>菜端上来了</td></tr>
     <tr><td>201</td><td>创建成功</td><td>新菜研发成功</td></tr>
     <tr><td>204</td><td>成功无内容</td><td>退菜成功，不必回话</td></tr>
@@ -713,12 +1089,12 @@ r = requests.post(<span class="c-st">"http://127.0.0.1:8000/dishes"</span>,
     <tr><td>404</td><td>找不到</td><td>菜单上没这道菜</td></tr>
     <tr><td>422</td><td>数据格式错</td><td>价格写成"abc"（自动报）</td></tr>
     <tr><td>500</td><td>服务器崩了</td><td>厨房着火了</td></tr>
-  </table>
+  </tbody></table>
 </section>
 
 <!-- ================= 第 23 章 ================= -->
 <section id="c23">
-  <h2><span class="num">23</span>响应字段过滤：include / exclude</h2>
+  <h2><span class="num">23</span>响应字段过滤</h2>
   <p class="lead">不想为每种出菜方式都建一个模型？可以临时告诉筛子"这次只端这几样"。</p>
 <pre><code><span class="c-cm"># response_model_exclude={"cost"}：这次出菜把 cost 挑出去</span>
 <span class="c-de">@app.get</span>(<span class="c-st">"/dishes/a"</span>, response_model=DishInDB, response_model_exclude={<span class="c-st">"cost"</span>})
@@ -747,14 +1123,14 @@ r = requests.post(<span class="c-st">"http://127.0.0.1:8000/dishes"</span>,
   <h2><span class="num">24</span>直接返回响应对象</h2>
   <p class="lead">默认 FastAPI 把字典转成 JSON。但有时候你要端出去的不是 JSON——比如一段 HTML、一个文件、一段纯文本，或者想自己控制响应头和 Cookie。</p>
   <table>
-    <tr><th>响应类</th><th>端出去的东西</th></tr>
+    <tbody><tr><th>响应类</th><th>端出去的东西</th></tr>
     <tr><td><code>JSONResponse</code></td><td>JSON（默认，可自定义头）</td></tr>
     <tr><td><code>HTMLResponse</code></td><td>网页 HTML</td></tr>
     <tr><td><code>PlainTextResponse</code></td><td>纯文本</td></tr>
     <tr><td><code>FileResponse</code></td><td>一个文件（下载用）</td></tr>
     <tr><td><code>RedirectResponse</code></td><td>跳转（把顾客领到别的窗口）</td></tr>
     <tr><td><code>StreamingResponse</code></td><td>流式输出（大文件/AI 逐字输出）</td></tr>
-  </table>
+  </tbody></table>
 <pre><code><span class="c-kw">from</span> fastapi.responses <span class="c-kw">import</span> HTMLResponse, FileResponse, RedirectResponse, JSONResponse
 
 <span class="c-de">@app.get</span>(<span class="c-st">"/page"</span>, response_class=HTMLResponse)
@@ -828,7 +1204,7 @@ r = requests.post(<span class="c-st">"http://127.0.0.1:8000/dishes"</span>,
 
 <span class="c-de">@app.get</span>(<span class="c-st">"/dishes/{dish_id}"</span>)
 <span class="c-kw">def</span> get_dish(dish_id: <span class="c-kw">int</span>):
-    <span class="c-kw">if</span> dish_id > 100:
+    <span class="c-kw">if</span> dish_id &gt; 100:
         <span class="c-cm"># status_code：错误类型；detail：给顾客看的解释纸条</span>
         <span class="c-kw">raise</span> HTTPException(status_code=404, detail=<span class="c-st">"菜单上没这道菜"</span>)
     <span class="c-kw">return</span> {<span class="c-st">"菜号"</span>: dish_id}</code></pre>
@@ -977,7 +1353,7 @@ r = requests.post(<span class="c-st">"http://127.0.0.1:8000/dishes"</span>,
 
 <span class="c-cm"># 经理还能继续被依赖：查"是不是店长"</span>
 <span class="c-kw">def</span> get_admin(user=Depends(get_current_user)):
-    <span class="c-kw">if</span> user[<span class="c-st">"level"</span>] < 5:
+    <span class="c-kw">if</span> user[<span class="c-st">"level"</span>] &lt; 5:
         <span class="c-kw">raise</span> HTTPException(status_code=403, detail=<span class="c-st">"需要店长权限"</span>)
     <span class="c-kw">return</span> user</code></pre>
   <p>链条：<code>/me 窗口 → get_current_user → get_token</code>，每层出错都会在正确的位置停下并报错。</p>
@@ -985,7 +1361,7 @@ r = requests.post(<span class="c-st">"http://127.0.0.1:8000/dishes"</span>,
 
 <!-- ================= 第 32 章 ================= -->
 <section id="c32">
-  <h2><span class="num">32</span>yield 依赖：自动开关门</h2>
+  <h2><span class="num">32</span>yield 依赖：资源管理</h2>
   <div class="box analogy"><div class="box-title">🍽️ 类比</div>仓库管理员：顾客来了<b>开门</b>，顾客走了<b>锁门</b>——不管交易成功与否，门必须锁。用 <code>yield</code> 写依赖：yield 前是"开门"，yield 后是"锁门"，保证执行。</div>
 <pre><code><span class="c-kw">from</span> fastapi <span class="c-kw">import</span> Depends
 
@@ -1031,7 +1407,7 @@ app = FastAPI(dependencies=[Depends(check_open)])</code></pre>
 </section>
 <!-- ================= 第 34 章 ================= -->
 <section id="c34">
-  <h2><span class="num">34</span>安全概念与 OAuth2 密码流程</h2>
+  <h2><span class="num">34</span>安全概念与 OAuth2</h2>
   <div class="box analogy"><div class="box-title">🍽️ 类比：会员制度</div>
   1) 顾客在收银台出示用户名密码（<b>登录</b>）→ 2) 店里发一张带编号的会员卡（<b>令牌 Token</b>）→ 3) 之后进包间刷卡即可，不用每次报密码（<b>带令牌访问</b>）。这套流程的行业标准叫 <b>OAuth2 Password Flow</b>。</div>
   <h3>FastAPI 自带的"刷卡器"</h3>
@@ -1172,7 +1548,7 @@ app.mount(<span class="c-st">"/static"</span>, StaticFiles(directory=<span class
 
 <!-- ================= 第 39 章 ================= -->
 <section id="c39">
-  <h2><span class="num">39</span>数据库：SQLModel 完整实战</h2>
+  <h2><span class="num">39</span>数据库 SQLModel</h2>
   <div class="box analogy"><div class="box-title">🍽️ 类比</div>列表存数据是"黑板"，粉笔一擦（重启）就没了。数据库是<b>真正的仓库</b>。SQLite 不用安装、就是一个文件，最适合新手；SQLModel 是 FastAPI 作者的兄弟库，写法和 Pydantic 几乎一样。</div>
   <div class="cmd">pip install sqlmodel</div>
   <div class="code-head">library_db.py（完整可运行：带数据库的图书馆 CRUD）</div>
@@ -1259,7 +1635,7 @@ app = FastAPI(title=<span class="c-st">"带数据库的图书馆"</span>)
 
 <!-- ================= 第 40 章 ================= -->
 <section id="c40">
-  <h2><span class="num">40</span>APIRouter：项目拆分</h2>
+  <h2><span class="num">40</span>APIRouter 项目拆分</h2>
   <div class="box analogy"><div class="box-title">🍽️ 类比</div>餐厅做大了要分凉菜间、热菜间、面点间，各管各的窗口——这就是 <code>APIRouter</code>。</div>
   <div class="code-head">目录结构</div>
 <pre><code>myapi/
@@ -1313,7 +1689,7 @@ app.include_router(users.router)</code></pre>
 
 <!-- ================= 第 42 章 ================= -->
 <section id="c42">
-  <h2><span class="num">42</span>生命周期事件（Lifespan）</h2>
+  <h2><span class="num">42</span>生命周期事件</h2>
   <div class="box analogy"><div class="box-title">🍽️ 类比</div>餐厅<b>开业前</b>要备料、检查设备（启动时做的事）；<b>打烊后</b>要关气、锁门（关闭时做的事）。</div>
 <pre><code><span class="c-kw">from</span> contextlib <span class="c-kw">import</span> asynccontextmanager
 <span class="c-kw">from</span> fastapi <span class="c-kw">import</span> FastAPI
@@ -1380,7 +1756,7 @@ html = <span class="c-st">"""
 
 <!-- ================= 第 44 章 ================= -->
 <section id="c44">
-  <h2><span class="num">44</span>返回 HTML 模板页面（Jinja2）</h2>
+  <h2><span class="num">44</span>返回 HTML 模板页面</h2>
   <p class="lead">类比：不仅有点菜窗口，还能直接端出一桌摆好盘的宴席（完整网页）。用 Jinja2 模板引擎：HTML 骨架里留空位，后端往里填数据。</p>
   <div class="cmd">pip install jinja2</div>
   <div class="code-head">templates/menu.html（新建 templates 文件夹存放）</div>
@@ -1408,7 +1784,7 @@ templates = Jinja2Templates(directory=<span class="c-st">"templates"</span>)  <s
 
 <!-- ================= 第 45 章 ================= -->
 <section id="c45">
-  <h2><span class="num">45</span>配置与环境变量（Settings）</h2>
+  <h2><span class="num">45</span>配置与环境变量</h2>
   <div class="box analogy"><div class="box-title">🍽️ 类比</div>秘方（密钥、数据库密码）不能写在菜谱上（代码里），要锁进保险柜（环境变量 / .env 文件），用的时候再取。</div>
   <div class="cmd">pip install pydantic-settings</div>
   <div class="code-head">.env 文件（和 main.py 同目录，别提交到 git）</div>
@@ -1522,7 +1898,7 @@ logger = logging.getLogger(<span class="c-st">"餐厅日志"</span>)
 
 <!-- ================= 第 49 章 ================= -->
 <section id="c49">
-  <h2><span class="num">49</span>常见坑 FAQ（15 个）</h2>
+  <h2><span class="num">49</span>常见坑 FAQ（15个）</h2>
   <details><summary>1. 改了代码没反应？</summary>启动时忘了加 <code>--reload</code>。</details>
   <details><summary>2. uvicorn 不是命令？</summary>改用 <code>python -m uvicorn main:app --reload</code>。</details>
   <details><summary>3. POST 一直 422？</summary>JSON 格式错了（单引号、多逗号），或字段类型不对。去 /docs 用它的格式试。</details>
@@ -1543,10 +1919,10 @@ logger = logging.getLogger(<span class="c-st">"餐厅日志"</span>)
 
 <!-- ================= 第 50 章 ================= -->
 <section id="c50">
-  <h2><span class="num">50</span>学习路线与官方文档地图</h2>
+  <h2><span class="num">50</span>学习路线与文档地图</h2>
   <h3>本教程 ↔ 官方文档对照</h3>
   <table>
-    <tr><th>官方文档板块</th><th>对应本教程章节</th></tr>
+    <tbody><tr><th>官方文档板块</th><th>对应本教程章节</th></tr>
     <tr><td>First Steps / Path / Query / Body</td><td>第 3~9 章</td></tr>
     <tr><td>Validations / Nested Models / Extra Types</td><td>第 10~15 章</td></tr>
     <tr><td>Cookie / Header / Form / File</td><td>第 16~20 章</td></tr>
@@ -1554,16 +1930,16 @@ logger = logging.getLogger(<span class="c-st">"餐厅日志"</span>)
     <tr><td>Dependencies 全家</td><td>第 29~33 章</td></tr>
     <tr><td>Security / OAuth2 / JWT</td><td>第 34~35 章</td></tr>
     <tr><td>Middleware / CORS / Static / SQL / Router / Background / Lifespan / WebSocket / Templates / Settings / Testing / Debugging / Deployment</td><td>第 36~48 章</td></tr>
-  </table>
+  </tbody></table>
   <h3>毕业之后的进阶方向</h3>
   <table>
-    <tr><th>方向</th><th>学什么</th><th>餐厅类比</th></tr>
+    <tbody><tr><th>方向</th><th>学什么</th><th>餐厅类比</th></tr>
     <tr><td>性能</td><td>async 深入、数据库连接池、Redis 缓存</td><td>一个厨师炒十口锅 + 半成品备菜</td></tr>
     <tr><td>异步任务</td><td>Celery / ARQ + Redis</td><td>外卖配送队（不占用堂食厨师）</td></tr>
     <tr><td>数据层</td><td>Alembic 数据库迁移、MongoDB</td><td>仓库改造图纸存档 + 新型仓库</td></tr>
     <tr><td>工程化</td><td>Docker、CI/CD、日志聚合、监控告警</td><td>连锁店标准化装修 + 巡店系统</td></tr>
     <tr><td>生态</td><td>FastAPI Users、Admin 面板、GraphQL(strawberry)</td><td>加盟现成的收银/会员系统</td></tr>
-  </table>
+  </tbody></table>
   <div class="box tip"><div class="box-title">🎓 给小白的四句话</div>
   1. 每个例子<b>亲手敲一遍</b>，别复制粘贴——手会了才是真的会。<br>
   2. 每写一个接口，去 <code>/docs</code> 里点一点试吃。<br>
@@ -1571,22 +1947,152 @@ logger = logging.getLogger(<span class="c-st">"餐厅日志"</span>)
   4. 卡住时查官方文档 fastapi.tiangolo.com——你现在已经有对照地图了。</div>
 </section>
 <!--@MORE-->
-</main>
 
-<footer>FastAPI 完全教程（全文档版）· 用"开餐厅"的方式学后端 · 50 章覆盖官方文档全部功能点</footer>
+<h2 class="chap" id="new2026"><span class="num">附</span>2026 年的新变化</h2>
+<p class="chap-lead">本书 50 章覆盖的 API 在 0.162 里照用；下面是版本与写法的更新。</p>
+<table class="kv"><tr><th>变化</th><th>一句话</th><th>对零基础的影响</th></tr><tr><td><b>FastAPI 0.162.0</b></td><td>2026 年最新稳定版，要求 Python ≥ 3.10</td><td>装饰器、Depends、response_model 写法不变</td></tr><tr><td><b>Python 3.15.2</b></td><td>最新稳定版；3.16 还是预览版</td><td>装稳定版即可，别追预览版</td></tr><tr><td><b>uvicorn 0.54.0</b></td><td>ASGI 服务器</td><td><code>uvicorn main:app --reload</code> 仍是标准启动命令</td></tr><tr><td><b>Pydantic 2.x</b></td><td>校验与模型层</td><td><code>Annotated</code> + <code>Field</code> 是新推荐写法</td></tr><tr><td><b>类型注解优先</b></td><td>用 Python 类型标注声明参数</td><td>少写一堆 Query()/Body()，代码更短</td></tr></table>
+<div class="tip"><span class="card-t">老教程里的写法还管用吗</span><p><code>from pydantic import BaseModel</code>、<code>@app.get</code>、<code>Depends</code> 都还在。变化主要是：Pydantic v1 的 <code>.dict()</code> 改成 <code>.model_dump()</code>、<code>parse_obj</code> 改成 <code>model_validate</code>；用 <code>Annotated</code> 声明参数更简洁。看到老写法能认出来就行。</p></div>
+<div class="sum"><span class="card-t">归纳 · 记住这 3 行</span><p>① 2026 年用 <b>FastAPI 0.162.0 + Python 3.15.2 + uvicorn 0.54.0</b>。<br>② 写法没大变，只是 Pydantic 2 的 <code>model_dump()</code> 和 <code>Annotated</code> 更常见。<br>③ 零基础先掌握：装饰器、三类参数、BaseModel、Depends、/docs 这五件事。</p></div><div class="footer"><p><b>FastAPI 零基础完全教程 · 2026 版</b>　版本核对：FastAPI 0.162.0 / Python 3.15.2 / uvicorn 0.54.0 / Pydantic 2.x。　</p><p>版式与目录大纲对齐本目录《Git.html》；全书为单文件 HTML，<b>断网也能完整阅读</b>。</p></div></div></div><script>
+window.D = {
+  init: function(){},
+  req: function(k){
+    var o=document.getElementById('fr-out'); if(!o)return;
+    if(k==='ok'){
+      T.lamps('fr-l',4);
+      o.textContent='200 OK\n{\n  "item_id": 7,\n  "q": "a"\n}';
+    }else{
+      for(var i=1;i<=4;i++){var e=document.getElementById('fr-l'+i);if(e)e.classList.remove('on');}
+      var l=document.getElementById('fr-l2'); if(l)l.classList.add('on');
+      o.textContent='422 Unprocessable Entity\n{\n  "detail": [{\n    "loc": ["path","item_id"],\n    "msg": "Input should be a valid integer"\n  }]\n}';
+    }
+    T.flash(o);
+  },
+  doc: function(k){
+    var o=document.getElementById('fd-out'); if(!o)return;
+    var m={'docs':'/docs　Swagger UI：可以直接点「Try it out」发请求的交互文档。',
+           'redoc':'/redoc　ReDoc：排版更适合通读的接口说明书，不能发请求。',
+           'openapi':'/openapi.json　机器可读的接口描述文件，前端代码生成工具读的就是它。'};
+    o.textContent=m[k]||''; T.flash(o);
+  }
+};
 
-<script>
-window.addEventListener('scroll', () => {
-  const h = document.documentElement;
-  document.getElementById('progress').style.width =
-    (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
-  const sections = document.querySelectorAll('section');
-  let current = '';
-  sections.forEach(s => { if (h.scrollTop >= s.offsetTop - 120) current = s.id; });
-  document.querySelectorAll('nav a').forEach(a => {
-    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
-  });
-});
+(function(){
+ 'use strict';
+ function $(id){return document.getElementById(id);}
+ var links=Array.prototype.slice.call(document.querySelectorAll('.side a.toc'));
+ var targets=links.map(function(a){try{return document.querySelector(a.getAttribute('href'));}catch(e){return null;}});
+ function mark(){var y=window.scrollY+140,idx=0;targets.forEach(function(t,i){if(t&&t.offsetTop<=y)idx=i;});links.forEach(function(a,i){a.classList.toggle('on',i===idx);});}
+ window.addEventListener('scroll',mark,{passive:true});window.addEventListener('resize',mark);mark();
+ var rev=Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+ if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.05});rev.forEach(function(x){io.observe(x);});}else{rev.forEach(function(x){x.classList.add('in');});}
+ window.T={
+  pop:function(el,v){if(!el)return;el.textContent=v;el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');},
+  flash:function(el){if(!el)return;el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');},
+  lamps:function(p,n){var i;for(i=1;i<=n;i++){var e=$(p+i);if(e)e.classList.remove('on');}for(i=1;i<=n;i++){(function(k){setTimeout(function(){var el=$(p+k);if(el)el.classList.add('on');},k*170);})(i);}setTimeout(function(){for(var j=1;j<=n;j++){var el=$(p+j);if(el)el.classList.remove('on');}},n*170+1100);}
+ };
+ if(window.D&&D.init)D.init();
+})();
+</script><script>
+
+/* CODE_HIGHLIGHT_V2 START */
+(function(){
+ 'use strict';
+ var KW='const|let|var|function|return|if|else|elif|for|in|of|while|break|continue|new|class|extends|import|from|export|default|as|async|await|try|catch|except|finally|raise|with|def|lambda|pass|yield|del|global|nonlocal|assert|this|self|super|typeof|instanceof|void|delete|throw|static|public|private|interface|type|enum|fn|mut|match|where|select|group|order|by|limit|insert|update|create|table|echo|exit|set|call|source|use|package|include|local|readonly|declare|end|then|do|done|fi|case|esac';
+ var BI='true|false|null|undefined|None|True|False|NaN|Infinity|document|window|console|Math|JSON|Date|Array|Object|String|Number|Promise|RegExp|ref|reactive|computed|watch|watchEffect|onMounted|onUnmounted|defineProps|defineEmits|defineModel|createApp|axios|localStorage|process|require|module|exports|cls|print|len|range|str|int|float|list|dict|set|tuple|open';
+ var RE=new RegExp(
+   '(https?://[^\\s"\'<>\x27]+)'+
+   '|("(?:\\\\.|[^"\\\\])*"|\x27(?:\\\\.|[^\x27\\\\])*\x27|`(?:\\\\.|[^`\\\\])*`)'+
+   '|(<\\/?[A-Za-z][\\w-]*(?:\\s[^<>]*)?\\/?>)'+
+   '|(\\/\\/[^\\n]*|\\/\\*[\\s\\S]*?\\*\\/)'+
+   '|(@[A-Za-z_$][\\w$]*|v-[a-z]+|--?[A-Za-z][\\w-]*)'+
+   '|(\\b(?:0x[0-9a-fA-F]+|\\d+(?:\\.\\d+)*)\\b)'+
+   '|\\b('+KW+')\\b'+
+   '|\\b('+BI+')\\b'+
+   '|((?:\\.[A-Za-z_$][\\w$]*|[A-Za-z_$][\\w$]*))(?=\\s*\\()'+
+   '|(\\.[A-Za-z_$][\\w$]*)'+
+   '|([=+\\-*/%<>!&|?:^~]+)'
+ ,'g');
+ var CLS=['tk-url','tk-str','tk-tag','tk-cmt','tk-opt','tk-num','tk-kw','tk-bi','tk-fn','tk-prop','tk-op'];
+ function kind(m){ for(var i=1;i<=CLS.length;i++){ if(m[i]!==undefined) return CLS[i-1]; } return null; }
+ function isDark(pre){
+   var el=pre,c,m,tries=0;
+   while(el&&tries<4){
+     c=getComputedStyle(el).backgroundColor;
+     m=(c||'').match(/[\d.]+/g);
+     if(m&&m.length>=3&&!(m.length>3&&parseFloat(m[3])<0.25)){
+       return (0.299*parseFloat(m[0])+0.587*parseFloat(m[1])+0.114*parseFloat(m[2]))<128;
+     }
+     el=el.parentElement; tries++;
+   }
+   return false;
+ }
+ function skip(pre){
+   if(pre.hasAttribute('data-hl')) return true;
+   if(pre.classList&&pre.classList.contains('output')) return true;
+   if(/out/i.test(pre.id||'')) return true;
+   var p=pre.parentElement;
+   while(p&&p!==document.body){
+     if(p.classList&&(p.classList.contains('out')||p.classList.contains('demo')||p.classList.contains('output'))) return true;
+     p=p.parentElement;
+   }
+   return false;
+ }
+ function paint(node){
+   var text=node.nodeValue;
+   if(!text||!text.trim()) return;
+   var frag=document.createDocumentFragment(),last=0,m,hit=false;
+   RE.lastIndex=0;
+   while((m=RE.exec(text))!==null){
+     if(m[0].length===0){ RE.lastIndex++; continue; }
+     if(m.index>last) frag.appendChild(document.createTextNode(text.slice(last,m.index)));
+     var sp=document.createElement('span');
+     sp.className=kind(m)||'tk-op';
+     sp.textContent=m[0];
+     frag.appendChild(sp);
+     last=m.index+m[0].length; hit=true;
+   }
+   if(!hit) return;
+   if(last<text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+   if(node.parentNode) node.parentNode.replaceChild(frag,node);
+ }
+ var mo=null, pending=false;
+ function run(){
+   if(mo) mo.disconnect();
+   var pres=document.querySelectorAll('pre');
+   for(var i=0;i<pres.length;i++){
+     var pre=pres[i];
+     if(skip(pre)) continue;
+     var target=pre;
+     if(pre.children.length===1&&pre.firstElementChild&&pre.firstElementChild.tagName==='CODE') target=pre.firstElementChild;
+     var nodes=[],n=target.firstChild;
+     while(n){ if(n.nodeType===3) nodes.push(n); n=n.nextSibling; }
+     for(var j=0;j<nodes.length;j++) paint(nodes[j]);
+     if(isDark(pre)) pre.classList.add('hl-dark');
+     pre.setAttribute('data-hl','1');
+   }
+   if(mo) mo.observe(document.body,{childList:true,subtree:true});
+ }
+ function schedule(){
+   if(pending) return;
+   pending=true;
+   (window.requestAnimationFrame||function(f){setTimeout(f,60);})(function(){ pending=false; run(); });
+ }
+ run();
+ if(window.MutationObserver){
+   mo=new MutationObserver(function(muts){
+     for(var i=0;i<muts.length;i++){
+       var a=muts[i].addedNodes;
+       for(var j=0;j<a.length;j++){
+         if(a[j].nodeType!==1) continue;
+         if(a[j].tagName==='PRE'||(a[j].querySelectorAll&&a[j].querySelectorAll('pre').length)){ schedule(); return; }
+       }
+     }
+   });
+   mo.observe(document.body,{childList:true,subtree:true});
+ }
+ window.addEventListener('load',schedule);
+})();
+/* CODE_HIGHLIGHT_V2 END */
+
 </script>
-</body>
-</html>
+</body></html>

@@ -2,66 +2,307 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>我的教程站 · 学习资料导航</title>
-<link rel="stylesheet" href="assets/style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>教程资料库</title>
+<style>
+:root{
+  --line:#111; --ink:#1f2937; --muted:#6b7280; --faint:#9ca3af;
+  --blue:#2563eb; --blue-bg:#eaf1ff; --blue-line:#93c5fd; --hover:#f3f5f8;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:8px;background:#fff;color:var(--ink);font:14px/1.6 var(--sans)}
+.layout{display:flex;gap:8px;height:calc(100vh - 16px);align-items:stretch}
+.col{border:2px solid var(--line);background:#fff;display:flex;flex-direction:column;min-width:0}
+.col-files{flex:0 0 17%}
+.col-outline{flex:0 0 19%}
+.col-page{flex:1 1 auto}
+.col-head{flex:0 0 auto;text-align:center;font-weight:700;font-size:14px;letter-spacing:1px;
+  padding:9px 8px;border-bottom:2px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.col-head .sub{font-weight:400;color:var(--muted);font-size:11px;letter-spacing:0;margin-left:6px}
+.col-body{flex:1 1 auto;overflow-y:auto;padding:8px 6px;scrollbar-width:thin}
+.page-body{flex:1 1 auto;min-height:0}
+iframe{width:100%;height:100%;border:0;display:block;background:#fff}
+
+.file-item{display:block;width:100%;text-align:left;border:1px solid transparent;background:none;
+  padding:8px 10px;border-radius:7px;cursor:pointer;color:var(--ink);font:13.5px/1.45 var(--sans)}
+.file-item:hover{background:var(--hover)}
+.file-item.on{background:var(--blue-bg);border-color:var(--blue-line);color:var(--blue);font-weight:700}
+.file-item small{display:block;color:var(--muted);font-size:11px;font-weight:400;margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-item.on small{color:#4b74c4}
+.file-count{text-align:center;color:var(--faint);font-size:11px;padding:10px 4px 4px;border-top:1px solid #e5e7eb;margin-top:6px}
+
+.outline-tools{flex:0 0 auto;padding:7px 6px;border-bottom:1px solid #e5e7eb;display:flex;gap:5px}
+#filter{flex:1 1 auto;min-width:0;border:1px solid #d1d5db;border-radius:6px;padding:5px 8px;font:12px var(--sans);outline:none}
+#filter:focus{border-color:var(--blue)}
+#toggleAll{flex:0 0 auto;border:1px solid #d1d5db;background:#fff;border-radius:6px;padding:5px 7px;
+  font:11.5px var(--sans);color:var(--muted);cursor:pointer;white-space:nowrap}
+#toggleAll:hover{background:var(--hover)}
+.grp{margin:2px 0 8px}
+.grp-title{display:flex;align-items:center;gap:5px;cursor:pointer;font-size:11.5px;font-weight:700;
+  color:#374151;padding:5px 6px;border-radius:5px;user-select:none}
+.grp-title:hover{background:var(--hover)}
+.grp-title .caret{color:var(--faint);font-size:10px;width:10px;flex:0 0 10px}
+.grp-title .gname{flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  color:inherit;text-decoration:none;cursor:pointer}
+.grp-title .caret{cursor:pointer}
+.grp-title .cnt{color:var(--faint);font-weight:400;font-size:10px}
+.grp-title .gname.glink{color:var(--blue)}
+.ol-item{display:block;padding:4px 8px 4px 18px;border-radius:5px;border-left:3px solid transparent;
+  color:#4b5563;font-size:12.5px;cursor:pointer;text-decoration:none;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ol-item:hover{background:var(--hover);color:var(--ink);text-decoration:none}
+.ol-item.lv1{padding-left:30px;font-size:12px;color:var(--muted)}
+.ol-item.on{background:var(--blue-bg);color:var(--blue);font-weight:700;border-left-color:var(--blue)}
+.ol-empty{text-align:center;color:var(--faint);font-size:12px;padding:18px 4px}
+.loading{color:var(--faint);font-size:12px;text-align:center;padding:12px}
+
+@media (max-width:900px){
+  .layout{flex-direction:column;height:auto;gap:8px}
+  .col-files,.col-outline{flex:0 0 auto;max-height:230px}
+  .col-page{flex:0 0 auto;height:78vh}
+}
+</style>
 </head>
 <body>
-
-<header class="navbar">
-  <div class="container nav-inner">
-    <a class="brand" href="index.html">
-      <span class="brand-badge">学</span>
-      <span class="brand-name">我的教程站</span>
-    </a>
-    <nav class="nav-links">
-      <a href="index.html" class="active">首页</a>
-      <a href="#tutorials">全部教程</a>
-      <a href="#tags">标签</a>
-    </nav>
-  </div>
-</header>
-
-<!-- Hero：通栏背景，内容居中约束 -->
-<section class="hero">
-  <div class="container hero-inner">
-    <div class="hero-eyebrow">LEARNING HUB</div>
-    <h1>个人学习教程站</h1>
-    <p class="hero-sub">把自己整理过的教程做成站点，无需数据库，随时随地在线查阅与分享。</p>
-    <div class="hero-search">
-      <input id="searchBox" type="text" placeholder="搜索教程（标题 / 标签 / 简介）" autocomplete="off">
-      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
-    </div>
-    <div class="hero-stats"><span id="heroStats"></span></div>
-  </div>
-</section>
-
-<main class="container page">
-
-  <section id="tutorials" class="section">
-    <div class="section-head">
-      <h2 class="section-title">全部教程</h2>
-      <span class="section-line"></span>
-    </div>
-    <div id="categoryList"></div>
+<div class="layout">
+  <section class="col col-files">
+    <div class="col-head">文件目录菜单</div>
+    <div class="col-body" id="fileList"></div>
   </section>
-
-  <section id="tags" class="section">
-    <div class="section-head">
-      <h2 class="section-title">标签</h2>
-      <span class="section-line"></span>
+  <section class="col col-outline">
+    <div class="col-head">大纲目录</div>
+    <div class="outline-tools">
+      <input id="filter" type="search" placeholder="筛选大纲…" autocomplete="off">
+      <button id="toggleAll" type="button">展开全部</button>
     </div>
-    <div id="tagCloud" class="tag-cloud"></div>
+    <div class="col-body" id="outline"></div>
   </section>
+  <section class="col col-page">
+    <div class="col-head">页面内容<span class="sub" id="curTitle"></span></div>
+    <div class="page-body"><iframe id="frame" title="页面内容"></iframe></div>
+  </section>
+</div>
+<script>
+const DOCS = [{"file":"FastAPI.html","title":"FastAPI 零基础完全教程 · 2026 最新版（看得懂版）","kind":"static","groups":[{"name":"开篇必看","items":[{"t":"0 2026 版本对照","h":"versions","lv":0},{"t":"0 关键字速查表","h":"keywords","lv":0},{"t":"0 全书一张图","h":"map","lv":0}],"open":true},{"name":"第一篇 · 入门","items":[{"t":"三个核心概念","h":"c1","lv":0},{"t":"环境准备","h":"c2","lv":0},{"t":"第一个程序","h":"c3","lv":0},{"t":"自动文档详解","h":"c4","lv":0}],"open":true},{"name":"第二篇 · 请求参数大全","items":[{"t":"HTTP 方法总览","h":"c5","lv":0},{"t":"路径参数","h":"c6","lv":0},{"t":"枚举：固定取值","h":"c7","lv":0},{"t":"查询参数","h":"c8","lv":0},{"t":"请求体与 Pydantic","h":"c9","lv":0},{"t":"Query 查询参数验证","h":"c10","lv":0},{"t":"Path 路径参数验证","h":"c11","lv":0},{"t":"Field 字段验证","h":"c12","lv":0},{"t":"嵌套模型","h":"c13","lv":0},{"t":"请求示例数据","h":"c14","lv":0},{"t":"特殊数据类型","h":"c15","lv":0},{"t":"Cookie 参数","h":"c16","lv":0},{"t":"Header 参数","h":"c17","lv":0},{"t":"表单数据 Form","h":"c18","lv":0},{"t":"文件上传 File","h":"c19","lv":0},{"t":"表单+文件混合","h":"c20","lv":0}],"open":true},{"name":"第三篇 · 响应控制","items":[{"t":"响应模型","h":"c21","lv":0},{"t":"响应状态码","h":"c22","lv":0},{"t":"响应字段过滤","h":"c23","lv":0},{"t":"直接返回响应对象","h":"c24","lv":0},{"t":"接口文档信息配置","h":"c25","lv":0}],"open":true},{"name":"第四篇 · 错误与更新","items":[{"t":"错误处理全家桶","h":"c26","lv":0},{"t":"JSON 兼容编码器","h":"c27","lv":0},{"t":"PATCH 部分更新","h":"c28","lv":0}],"open":true},{"name":"第五篇 · 依赖注入深入","items":[{"t":"依赖注入基础","h":"c29","lv":0},{"t":"类作为依赖","h":"c30","lv":0},{"t":"子依赖","h":"c31","lv":0},{"t":"yield 依赖：资源管理","h":"c32","lv":0},{"t":"全局依赖与装饰器依赖","h":"c33","lv":0}],"open":true},{"name":"第六篇 · 安全认证","items":[{"t":"安全概念与 OAuth2","h":"c34","lv":0},{"t":"JWT 登录完整实例","h":"c35","lv":0}],"open":true},{"name":"第七篇 · 工程化","items":[{"t":"中间件","h":"c36","lv":0},{"t":"CORS 跨域","h":"c37","lv":0},{"t":"静态文件","h":"c38","lv":0},{"t":"数据库 SQLModel","h":"c39","lv":0},{"t":"APIRouter 项目拆分","h":"c40","lv":0},{"t":"后台任务","h":"c41","lv":0},{"t":"生命周期事件","h":"c42","lv":0},{"t":"WebSocket 实时通信","h":"c43","lv":0},{"t":"返回 HTML 模板页面","h":"c44","lv":0},{"t":"配置与环境变量","h":"c45","lv":0},{"t":"自动化测试","h":"c46","lv":0},{"t":"调试技巧","h":"c47","lv":0},{"t":"部署上线","h":"c48","lv":0}],"open":true},{"name":"第八篇 · 附录","items":[{"t":"常见坑 FAQ（15个）","h":"c49","lv":0},{"t":"学习路线与文档地图","h":"c50","lv":0},{"t":"附 2026 新变化","h":"new2026","lv":0}],"open":true}]},{"file":"Git.html","title":"Git 图解教程 · 2026 最新版（看得懂版）","kind":"static","groups":[{"name":"第一篇 · 跟着做（零基础）","items":[{"t":"01 开始之前","h":"c1","lv":0},{"t":"02 装好并认识终端","h":"c2","lv":0},{"t":"03 第一次提交（手把手）","h":"c3","lv":0},{"t":"└ Windows 换行符警告","h":"lfcrlf","lv":1},{"t":"04 刚才发生了什么","h":"c4","lv":0}],"open":true},{"name":"第二篇 · 日常主线","items":[{"t":"05 查看状态、历史、改动","h":"c5","lv":0},{"t":"06 反悔怎么办","h":"c6","lv":0},{"t":"07 分支与合并","h":"c7","lv":0},{"t":"08 连上 GitHub","h":"c8","lv":0},{"t":"09 完整实战：从零到上线","h":"c9","lv":0}],"open":true},{"name":"第三篇 · 全部技能（补全）","items":[{"t":"10 文件操作与取消追踪","h":"c10","lv":0},{"t":"11 查看历史的全部方法","h":"c11","lv":0},{"t":"12 撤销与回退全解","h":"c12","lv":0},{"t":"13 分支与合并全解","h":"c13","lv":0},{"t":"14 变基与挑拣","h":"c14","lv":0},{"t":"15 储藏与标签","h":"c15","lv":0},{"t":"16 配置、别名与忽略规则","h":"c16","lv":0},{"t":"17 远程仓库与协作全解","h":"c17","lv":0},{"t":"18 团队协作与 Pull Request","h":"c18","lv":0}],"open":true},{"name":"第四篇 · 新版与附录","items":[{"t":"19 2026 年 Git 的新变化","h":"c19","lv":0},{"t":"20 常见报错急救","h":"c20","lv":0},{"t":"21 速查表与英汉字典","h":"c21","lv":0},{"t":"附录 A 内部是怎么存的","h":"apxa","lv":0},{"t":"附录 B 完整命令索引","h":"apxb","lv":0},{"t":"附录 C 常见问题 12 问","h":"apxc","lv":0}],"open":true}]},{"file":"JQuery.html","title":"jQuery 在线速查手册 · 每个 API 名称后面都有一句中文解释","kind":"dynamic","groups":[{"name":"核心","open":false,"items":[{"t":"jQuery([sel,[context]])","h":"jquery-sel-context","lv":0},{"t":"jQuery(html,[ownerDoc])","h":"jquery-html-ownerdoc","lv":0},{"t":"jQuery(callback)","h":"jquery-callback","lv":0},{"t":"jQuery.holdReady(hold)","h":"jquery-holdready-hold","lv":0},{"t":"each(callback)","h":"each-callback","lv":0},{"t":"size()","h":"size","lv":0},{"t":"length","h":"length","lv":0},{"t":"selector","h":"selector","lv":0},{"t":"context","h":"context","lv":0},{"t":"get([index])","h":"get-index","lv":0},{"t":"index([selector|element])","h":"index-selector-element","lv":0},{"t":"data([key],[value])","h":"data-key-value","lv":0},{"t":"removeData([name|list])","h":"removedata-name-list","lv":0},{"t":"$.data(ele,[key],[val])","h":"data-ele-key-val","lv":0},{"t":"queue(element,[queueName])","h":"queue-element-queuename","lv":0},{"t":"dequeue([queueName])","h":"dequeue-queuename","lv":0},{"t":"clearQueue([queueName])","h":"clearqueue-queuename","lv":0},{"t":"jQuery.fn.extend(object)","h":"jquery-fn-extend-object","lv":0},{"t":"jQuery.extend(object)","h":"jquery-extend-object","lv":0},{"t":"jQuery.noConflict([extreme])","h":"jquery-noconflict-extreme","lv":0}],"h":"s-core"},{"name":"属性","open":false,"items":[{"t":"attr(name|properties|key,value|fn)","h":"attr-name-properties-key-value-fn","lv":0},{"t":"removeAttr(name)","h":"removeattr-name","lv":0},{"t":"prop(name|properties|key,value|fn)","h":"prop-name-properties-key-value-fn","lv":0},{"t":"removeProp(name)","h":"removeprop-name","lv":0},{"t":"addClass(class|fn)","h":"addclass-class-fn","lv":0},{"t":"removeClass([class|fn])","h":"removeclass-class-fn","lv":0},{"t":"toggleClass(class|fn[,sw])","h":"toggleclass-class-fn-sw","lv":0},{"t":"html([val|fn])","h":"html-val-fn","lv":0},{"t":"text([val|fn])","h":"text-val-fn","lv":0},{"t":"val([val|fn|arr])","h":"val-val-fn-arr","lv":0}],"h":"s-attributes"},{"name":"CSS","open":false,"items":[{"t":"css(name|properties|[,value|fn])","h":"css-name-properties-value-fn","lv":0},{"t":"jQuery.cssHooks","h":"jquery-csshooks","lv":0},{"t":"offset([coordinates])","h":"offset-coordinates","lv":0},{"t":"position()","h":"position","lv":0},{"t":"scrollTop([val])","h":"scrolltop-val","lv":0},{"t":"scrollLeft([val])","h":"scrollleft-val","lv":0},{"t":"height([val|fn])","h":"height-val-fn","lv":0},{"t":"width([val|fn])","h":"width-val-fn","lv":0},{"t":"innerHeight()","h":"innerheight","lv":0},{"t":"innerWidth()","h":"innerwidth","lv":0},{"t":"outerHeight([soptions])","h":"outerheight-soptions","lv":0},{"t":"outerWidth([options])","h":"outerwidth-options","lv":0}],"h":"s-css"},{"name":"选择器","open":false,"items":[{"t":"#id","h":"id","lv":0},{"t":"element","h":"element","lv":0},{"t":".class","h":"class","lv":0},{"t":"*","h":"selectors-3","lv":0},{"t":"selector1,selector2,selectorN","h":"selector1-selector2-selectorn","lv":0},{"t":"ancestor descendant","h":"ancestor-descendant","lv":0},{"t":"parent > child","h":"parent-child","lv":0},{"t":"prev + next","h":"prev-next","lv":0},{"t":"prev ~ siblings","h":"prev-siblings","lv":0},{"t":":first","h":"first","lv":0},{"t":":not(selector)","h":"not-selector","lv":0},{"t":":even","h":"even","lv":0},{"t":":odd","h":"odd","lv":0},{"t":":eq(index)","h":"eq-index","lv":0},{"t":":gt(index)","h":"gt-index","lv":0},{"t":":lang","h":"lang","lv":0},{"t":":last","h":"last","lv":0},{"t":":lt(index)","h":"lt-index","lv":0},{"t":":header","h":"header","lv":0},{"t":":animated","h":"animated","lv":0},{"t":":focus","h":"focus","lv":0},{"t":":root","h":"root","lv":0},{"t":":target","h":"target","lv":0},{"t":":contains(text)","h":"contains-text","lv":0},{"t":":empty","h":"empty","lv":0},{"t":":has(selector)","h":"has-selector","lv":0},{"t":":parent","h":"parent","lv":0},{"t":":hidden","h":"hidden","lv":0},{"t":":visible","h":"visible","lv":0},{"t":"[attribute]","h":"attribute","lv":0},{"t":"[attribute=value]","h":"attribute-value","lv":0},{"t":"[attribute!=value]","h":"attribute-value-2","lv":0},{"t":"[attribute^=value]","h":"attribute-value-3","lv":0},{"t":"[attribute$=value]","h":"attribute-value-4","lv":0},{"t":"[attribute*=value]","h":"attribute-value-5","lv":0},{"t":"[attrSel1][attrSel2][attrSelN]","h":"attrsel1-attrsel2-attrseln","lv":0},{"t":":first-child","h":"first-child","lv":0},{"t":":first-of-type","h":"first-of-type","lv":0},{"t":":last-child","h":"last-child","lv":0},{"t":":last-of-type","h":"last-of-type","lv":0},{"t":":nth-child","h":"nth-child","lv":0},{"t":":nth-last-child()","h":"nth-last-child","lv":0},{"t":":nth-last-of-type()","h":"nth-last-of-type","lv":0},{"t":":nth-of-type()","h":"nth-of-type","lv":0},{"t":":only-child","h":"only-child","lv":0},{"t":":only-of-type","h":"only-of-type","lv":0},{"t":":input","h":"input","lv":0},{"t":":text","h":"text","lv":0},{"t":":password","h":"password","lv":0},{"t":":radio","h":"radio","lv":0},{"t":":checkbox","h":"checkbox","lv":0},{"t":":submit","h":"submit","lv":0},{"t":":image","h":"image","lv":0},{"t":":reset","h":"reset","lv":0},{"t":":button","h":"button","lv":0},{"t":":file","h":"file","lv":0},{"t":":hidden","h":"hidden-2","lv":0},{"t":":enabled","h":"enabled","lv":0},{"t":":disabled","h":"disabled","lv":0},{"t":":checked","h":"checked","lv":0},{"t":":selected","h":"selected","lv":0}],"h":"s-selectors"},{"name":"文档处理","open":false,"items":[{"t":"append(content|fn)","h":"append-content-fn","lv":0},{"t":"appendTo(content)","h":"appendto-content","lv":0},{"t":"prepend(content|fn)","h":"prepend-content-fn","lv":0},{"t":"prependTo(content)","h":"prependto-content","lv":0},{"t":"after(content|fn)","h":"after-content-fn","lv":0},{"t":"before(content|fn)","h":"before-content-fn","lv":0},{"t":"insertAfter(content)","h":"insertafter-content","lv":0},{"t":"insertBefore(content)","h":"insertbefore-content","lv":0},{"t":"wrap(html|element|fn)","h":"wrap-html-element-fn","lv":0},{"t":"unwrap()","h":"unwrap","lv":0},{"t":"wrapall(html|element)","h":"wrapall-html-element","lv":0},{"t":"wrapInner(html|element|fn)","h":"wrapinner-html-element-fn","lv":0},{"t":"replaceWith(content|fn)","h":"replacewith-content-fn","lv":0},{"t":"replaceAll(selector)","h":"replaceall-selector","lv":0},{"t":"empty()","h":"empty-2","lv":0},{"t":"remove([expr])","h":"remove-expr","lv":0},{"t":"detach([expr])","h":"detach-expr","lv":0},{"t":"clone([Even[,deepEven]])","h":"clone-even-deepeven","lv":0}],"h":"s-manipulation"},{"name":"筛选","open":false,"items":[{"t":"eq(index|-index)","h":"eq-index-index","lv":0},{"t":"first()","h":"first-2","lv":0},{"t":"last()","h":"last-2","lv":0},{"t":"hasClass(class)","h":"hasclass-class","lv":0},{"t":"filter(expr|object|element|fn)","h":"filter-expr-object-element-fn","lv":0},{"t":"is(expr|object|element|fn)","h":"is-expr-object-element-fn","lv":0},{"t":"map(callback)","h":"map-callback","lv":0},{"t":"has(expr|element)","h":"has-expr-element","lv":0},{"t":"not(expr|element|fn)","h":"not-expr-element-fn","lv":0},{"t":"slice(start,[end])","h":"slice-start-end","lv":0},{"t":"children([expr])","h":"children-expr","lv":0},{"t":"closest(expr,[context]|object|element)","h":"closest-expr-context-object-element","lv":0},{"t":"find(expr|object|element)","h":"find-expr-object-element","lv":0},{"t":"next([expr])","h":"next-expr","lv":0},{"t":"nextAll([expr])","h":"nextall-expr","lv":0},{"t":"nextUntil([expr|element][,filter])","h":"nextuntil-expr-element-filter","lv":0},{"t":"offsetParent()","h":"offsetparent","lv":0},{"t":"parent([expr])","h":"parent-expr","lv":0},{"t":"parents([expr])","h":"parents-expr","lv":0},{"t":"parentsUntil([expr|element][,filter])","h":"parentsuntil-expr-element-filter","lv":0},{"t":"prev([expr])","h":"prev-expr","lv":0},{"t":"prevall([expr])","h":"prevall-expr","lv":0},{"t":"prevUntil([expr|element][,filter])","h":"prevuntil-expr-element-filter","lv":0},{"t":"siblings([expr])","h":"siblings-expr","lv":0},{"t":"add(expr|element|html|object[,context])","h":"add-expr-element-html-object-context","lv":0},{"t":"andSelf()","h":"andself","lv":0},{"t":"contents()","h":"contents","lv":0},{"t":"end()","h":"end","lv":0}],"h":"s-traversing"},{"name":"事件","open":false,"items":[{"t":"ready(fn)","h":"ready-fn","lv":0},{"t":"on(events,[selector],[data],fn)","h":"on-events-selector-data-fn","lv":0},{"t":"off(events,[selector],[data],fn)","h":"off-events-selector-data-fn","lv":0},{"t":"bind(type,[data],fn)","h":"bind-type-data-fn","lv":0},{"t":"one(type,[data],fn)","h":"one-type-data-fn","lv":0},{"t":"trigger(type,[data])","h":"trigger-type-data","lv":0},{"t":"triggerHandler(type, [data])","h":"triggerhandler-type-data","lv":0},{"t":"unbind(type,[data|fn])","h":"unbind-type-data-fn","lv":0},{"t":"live(type,[data],fn)","h":"live-type-data-fn","lv":0},{"t":"die(type,[fn])","h":"die-type-fn","lv":0},{"t":"delegate(selector,[type],[data],fn)","h":"delegate-selector-type-data-fn","lv":0},{"t":"undelegate([selector,[type],fn])","h":"undelegate-selector-type-fn","lv":0},{"t":"hover([over,]out)","h":"hover-over-out","lv":0},{"t":"toggle(fn, fn2, [fn3, fn4, ...])","h":"toggle-fn-fn2-fn3-fn4","lv":0},{"t":"blur([[data],fn])","h":"blur-data-fn","lv":0},{"t":"change([[data],fn])","h":"change-data-fn","lv":0},{"t":"click([[data],fn])","h":"click-data-fn","lv":0},{"t":"dblclick([[data],fn])","h":"dblclick-data-fn","lv":0},{"t":"error([[data],fn])","h":"error-data-fn","lv":0},{"t":"focus([[data],fn])","h":"focus-data-fn","lv":0},{"t":"focusin([data],fn)","h":"focusin-data-fn","lv":0},{"t":"focusout([data],fn)","h":"focusout-data-fn","lv":0},{"t":"keydown([[data],fn])","h":"keydown-data-fn","lv":0},{"t":"keypress([[data],fn])","h":"keypress-data-fn","lv":0},{"t":"keyup([[data],fn])","h":"keyup-data-fn","lv":0},{"t":"mousedown([[data],fn])","h":"mousedown-data-fn","lv":0},{"t":"mouseenter([[data],fn])","h":"mouseenter-data-fn","lv":0},{"t":"mouseleave([[data],fn])","h":"mouseleave-data-fn","lv":0},{"t":"mousemove([[data],fn])","h":"mousemove-data-fn","lv":0},{"t":"mouseout([[data],fn])","h":"mouseout-data-fn","lv":0},{"t":"mouseover([[data],fn])","h":"mouseover-data-fn","lv":0},{"t":"mouseup([[data],fn])","h":"mouseup-data-fn","lv":0},{"t":"resize([[data],fn])","h":"resize-data-fn","lv":0},{"t":"scroll([[data],fn])","h":"scroll-data-fn","lv":0},{"t":"select([[data],fn])","h":"select-data-fn","lv":0},{"t":"submit([[data],fn])","h":"submit-data-fn","lv":0},{"t":"unload([[data],fn])","h":"unload-data-fn","lv":0}],"h":"s-events"},{"name":"效果","open":false,"items":[{"t":"show([speed,[easing],[fn]])","h":"show-speed-easing-fn","lv":0},{"t":"hide([speed,[easing],[fn]])","h":"hide-speed-easing-fn","lv":0},{"t":"slideDown([speed],[easing],[fn])","h":"slidedown-speed-easing-fn","lv":0},{"t":"slideUp([speed,[easing],[fn]])","h":"slideup-speed-easing-fn","lv":0},{"t":"slideToggle([speed],[easing],[fn])","h":"slidetoggle-speed-easing-fn","lv":0},{"t":"fadeIn([speed],[easing],[fn])","h":"fadein-speed-easing-fn","lv":0},{"t":"fadeOut([speed],[easing],[fn])","h":"fadeout-speed-easing-fn","lv":0},{"t":"fadeTo([[speed],opacity,[easing],[fn]])","h":"fadeto-speed-opacity-easing-fn","lv":0},{"t":"fadeToggle([speed,[easing],[fn]])","h":"fadetoggle-speed-easing-fn","lv":0},{"t":"animate(params,[speed],[easing],[fn])","h":"animate-params-speed-easing-fn","lv":0},{"t":"stop([clearQueue],[jumpToEnd])","h":"stop-clearqueue-jumptoend","lv":0},{"t":"delay(duration,[queueName])","h":"delay-duration-queuename","lv":0},{"t":"finish([queue])","h":"finish-queue","lv":0},{"t":"jQuery.fx.off","h":"jquery-fx-off","lv":0},{"t":"jQuery.fx.interval","h":"jquery-fx-interval","lv":0}],"h":"s-effects"},{"name":"Ajax","open":false,"items":[{"t":"$.ajax(url,[settings])","h":"ajax-url-settings","lv":0},{"t":"load(url,[data],[callback])","h":"load-url-data-callback","lv":0},{"t":"$.get(url,[data],[fn],[type])","h":"get-url-data-fn-type","lv":0},{"t":"$.getJSON(url,[data],[fn])","h":"getjson-url-data-fn","lv":0},{"t":"$.getScript(url,[callback])","h":"getscript-url-callback","lv":0},{"t":"$.post(url,[data],[fn],[type])","h":"post-url-data-fn-type","lv":0},{"t":"ajaxComplete(callback)","h":"ajaxcomplete-callback","lv":0},{"t":"ajaxError(callback)","h":"ajaxerror-callback","lv":0},{"t":"ajaxSend(callback)","h":"ajaxsend-callback","lv":0},{"t":"ajaxStart(callback)","h":"ajaxstart-callback","lv":0},{"t":"ajaxStop(callback)","h":"ajaxstop-callback","lv":0},{"t":"ajaxSuccess(callback)","h":"ajaxsuccess-callback","lv":0},{"t":"$.ajaxPrefilter([type],fn)","h":"ajaxprefilter-type-fn","lv":0},{"t":"$.ajaxSetup([options])","h":"ajaxsetup-options","lv":0},{"t":"serialize()","h":"serialize","lv":0},{"t":"serializearray()","h":"serializearray","lv":0}],"h":"s-ajax"},{"name":"工具","open":false,"items":[{"t":"$.support","h":"support","lv":0},{"t":"$.browser","h":"browser","lv":0},{"t":"$.browser.version","h":"browser-version","lv":0},{"t":"$.boxModel","h":"boxmodel","lv":0},{"t":"$.each(object,[callback])","h":"each-object-callback","lv":0},{"t":"$.extend([d],tgt,obj1,[objN])","h":"extend-d-tgt-obj1-objn","lv":0},{"t":"$.grep(array,fn,[invert])","h":"grep-array-fn-invert","lv":0},{"t":"$.sub()","h":"sub","lv":0},{"t":"$.when(deferreds)","h":"when-deferreds","lv":0},{"t":"$.makearray(obj)","h":"makearray-obj","lv":0},{"t":"$.map(arr|obj,callback)","h":"map-arr-obj-callback","lv":0},{"t":"$.inarray(val,arr,[from])","h":"inarray-val-arr-from","lv":0},{"t":"$.toarray()","h":"toarray","lv":0},{"t":"$.merge(first,second)","h":"merge-first-second","lv":0},{"t":"$.unique(array)","h":"unique-array","lv":0},{"t":"$.parseJSON(json)","h":"parsejson-json","lv":0},{"t":"$.parseXML(data)","h":"parsexml-data","lv":0},{"t":"$.noop","h":"noop","lv":0},{"t":"$.proxy(function,context)","h":"proxy-function-context","lv":0},{"t":"$.contains(container,contained)","h":"contains-container-contained","lv":0},{"t":"$.type(obj)","h":"type-obj","lv":0},{"t":"$.isarray(obj)","h":"isarray-obj","lv":0},{"t":"$.isFunction(obj)","h":"isfunction-obj","lv":0},{"t":"$.isEmptyObject(obj)","h":"isemptyobject-obj","lv":0},{"t":"$.isPlainObject(obj)","h":"isplainobject-obj","lv":0},{"t":"$.isWindow(obj)","h":"iswindow-obj","lv":0},{"t":"$.isNumeric(value)","h":"isnumeric-value","lv":0},{"t":"$.trim(str)","h":"trim-str","lv":0},{"t":"$.param(obj,[traditional])","h":"param-obj-traditional","lv":0},{"t":"$.error(message)","h":"error-message","lv":0},{"t":"$.fn.jquery","h":"fn-jquery","lv":0}],"h":"s-utilities"},{"name":"事件对象","open":false,"items":[{"t":"eve.currentTarget","h":"eve-currenttarget","lv":0},{"t":"eve.data","h":"eve-data","lv":0},{"t":"eve.delegateTarget","h":"eve-delegatetarget","lv":0},{"t":"eve.isDefaultPrevented()","h":"eve-isdefaultprevented","lv":0},{"t":"event.isImmediatePropagationStopped","h":"event-isimmediatepropagationstopped","lv":0},{"t":"eve.isPropagationStopped()","h":"eve-ispropagationstopped","lv":0},{"t":"eve.namespace","h":"eve-namespace","lv":0},{"t":"eve.pageX","h":"eve-pagex","lv":0},{"t":"eve.pageY","h":"eve-pagey","lv":0},{"t":"eve.preventDefault()","h":"eve-preventdefault","lv":0},{"t":"eve.relatedTarget","h":"eve-relatedtarget","lv":0},{"t":"eve.result","h":"eve-result","lv":0},{"t":"event.stopImmediatePropagation","h":"event-stopimmediatepropagation","lv":0},{"t":"eve.stopPropagation()","h":"eve-stoppropagation","lv":0},{"t":"eve.target","h":"eve-target","lv":0},{"t":"eve.timeStamp","h":"eve-timestamp","lv":0},{"t":"event.type","h":"event-type","lv":0},{"t":"eve.which","h":"eve-which","lv":0}],"h":"s-Eventobject"},{"name":"延迟对象","open":false,"items":[{"t":"deferred.done(doneCallbacks[,doneCallbacks])","h":"deferred-done-donecallbacks-donecallbacks","lv":0},{"t":"def.fail(failCallbacks)","h":"def-fail-failcallbacks","lv":0},{"t":"def.isRejected()","h":"def-isrejected","lv":0},{"t":"def.isResolved()","h":"def-isresolved","lv":0},{"t":"def.reject(args)","h":"def-reject-args","lv":0},{"t":"deferred.rejectWith(context,[args])","h":"deferred-rejectwith-context-args","lv":0},{"t":"def.resolve(args)","h":"def-resolve-args","lv":0},{"t":"deferred.resolveWith(context,[args])","h":"deferred-resolvewith-context-args","lv":0},{"t":"deferred.then(doneCallbacks,failCallbacks[, progressCallbacks])","h":"deferred-then-donecallbacks-failcallbacks-progresscallbacks","lv":0},{"t":"deferred.promise([type],[target])","h":"deferred-promise-type-target","lv":0},{"t":"deferred.pipe([doneFilter],[failFilter],[progressFilter])","h":"deferred-pipe-donefilter-failfilter-progressfilter","lv":0},{"t":"deferred.always(alwaysCallbacks,[alwaysCallbacks])","h":"deferred-always-alwayscallbacks-alwayscallbacks","lv":0},{"t":"def.notify(args)","h":"def-notify-args","lv":0},{"t":"deferred.notifyWith(context,[args])","h":"deferred-notifywith-context-args","lv":0},{"t":"deferred.progress(progressCallbacks)","h":"deferred-progress-progresscallbacks","lv":0},{"t":"def.state()","h":"def-state","lv":0}],"h":"s-Deferred"},{"name":"回调函数","open":false,"items":[{"t":"cal.add(callbacks)","h":"cal-add-callbacks","lv":0},{"t":"cal.disable()","h":"cal-disable","lv":0},{"t":"cal.empty()","h":"cal-empty","lv":0},{"t":"cal.fire(arguments)","h":"cal-fire-arguments","lv":0},{"t":"cal.fired()","h":"cal-fired","lv":0},{"t":"callbacks.fireWith([context] [, args])","h":"callbacks-firewith-context-args","lv":0},{"t":"cal.has(callback)","h":"cal-has-callback","lv":0},{"t":"cal.lock()","h":"cal-lock","lv":0},{"t":"cal.locked()","h":"cal-locked","lv":0},{"t":"cal.remove(callbacks)","h":"cal-remove-callbacks","lv":0},{"t":"$.callbacks(flags)","h":"callbacks-flags","lv":0}],"h":"s-Callbacks"},{"name":"其它","open":false,"items":[{"t":"正则表达式速查表","h":"正则表达式速查表","lv":0}],"h":"s-Other"}]},{"file":"npm.html","title":"npm 零基础完全教程 · 2026 最新版（看得懂版）","kind":"static","groups":[{"name":"开篇必看","items":[{"t":"0 2026 版本对照","h":"versions","lv":0},{"t":"0 关键字速查表","h":"keywords","lv":0},{"t":"0 全书一张图","h":"map","lv":0}],"open":true},{"name":"第一篇 · 跟着做（零基础）","items":[{"t":"npm 是什么","h":"ch1","lv":0},{"t":"安装 Node.js 与 npm","h":"ch2","lv":0},{"t":"package.json 项目清单","h":"ch3","lv":0},{"t":"安装包 npm install","h":"ch4","lv":0},{"t":"node_modules 目录","h":"ch5","lv":0}],"open":true},{"name":"第二篇 · 日常主线","items":[{"t":"版本号规则","h":"ch6","lv":0},{"t":"package-lock.json","h":"ch7","lv":0},{"t":"npm scripts 脚本","h":"ch8","lv":0},{"t":"npx 临时执行","h":"ch9","lv":0},{"t":"卸载与更新","h":"ch10","lv":0}],"open":true},{"name":"第三篇 · 全部技能","items":[{"t":"配置与 .npmrc","h":"ch11","lv":0},{"t":"依赖类型","h":"ch12","lv":0},{"t":"发布自己的包","h":"ch13","lv":0},{"t":"作用域包与标签","h":"ch14","lv":0},{"t":"安全与审计","h":"ch15","lv":0}],"open":true},{"name":"第四篇 · 新版与附录","items":[{"t":"多包与工作区","h":"ch16","lv":0},{"t":"常见问题排查","h":"ch17","lv":0},{"t":"速查表与常见问题","h":"ch18","lv":0},{"t":"附 2026 新变化","h":"new2026","lv":0}],"open":true}]},{"file":"Python.html","title":"Python3 在线速查手册 · 每个名称后面都有一句中文解释","kind":"dynamic","groups":[{"name":"Python3 数学函数","open":false,"items":[{"t":"abs(x)","h":"abs-x","lv":0},{"t":"ceil(x)","h":"ceil-x","lv":0},{"t":"floor(x)","h":"floor-x","lv":0},{"t":"round(x [,n])","h":"round-x-n","lv":0},{"t":"exp(x)","h":"exp-x","lv":0},{"t":"fabs(x)","h":"fabs-x","lv":0},{"t":"log(x [,base])","h":"log-x-base","lv":0},{"t":"log10(x)","h":"log10-x","lv":0},{"t":"log2(x)","h":"log2-x","lv":0},{"t":"pow(x, y)","h":"pow-x-y","lv":0},{"t":"sqrt(x)","h":"sqrt-x","lv":0},{"t":"modf(x)","h":"modf-x","lv":0},{"t":"trunc(x)","h":"trunc-x","lv":0},{"t":"gcd(*integers)","h":"gcd-integers","lv":0},{"t":"lcm(*integers)","h":"lcm-integers","lv":0},{"t":"factorial(n)","h":"factorial-n","lv":0},{"t":"fmod(x, y)","h":"fmod-x-y","lv":0},{"t":"remainder(x, y)","h":"remainder-x-y","lv":0},{"t":"isnan(x)","h":"isnan-x","lv":0},{"t":"isinf(x)","h":"isinf-x","lv":0},{"t":"isfinite(x)","h":"isfinite-x","lv":0},{"t":"isclose(a, b)","h":"isclose-a-b","lv":0},{"t":"copysign(x, y)","h":"copysign-x-y","lv":0},{"t":"fsum(iterable)","h":"fsum-iterable","lv":0},{"t":"prod(iterable)","h":"prod-iterable","lv":0},{"t":"dist(p, q)","h":"dist-p-q","lv":0},{"t":"comb(n, k)","h":"comb-n-k","lv":0},{"t":"perm(n, k)","h":"perm-n-k","lv":0},{"t":"math.e","h":"math-e","lv":0},{"t":"math.inf","h":"math-inf","lv":0},{"t":"math.nan","h":"math-nan","lv":0}],"h":"s-math"},{"name":"Python3 随机数函数","open":false,"items":[{"t":"choice(seq)","h":"choice-seq","lv":0},{"t":"randint(a, b)","h":"randint-a-b","lv":0},{"t":"randrange([start,] stop [,step])","h":"randrange-start-stop-step","lv":0},{"t":"random()","h":"random","lv":0},{"t":"uniform(x, y)","h":"uniform-x-y","lv":0},{"t":"seed([x])","h":"seed-x","lv":0},{"t":"shuffle(lst)","h":"shuffle-lst","lv":0},{"t":"sample(pop, k)","h":"sample-pop-k","lv":0},{"t":"choices(pop, k=1)","h":"choices-pop-k-1","lv":0},{"t":"getrandbits(k)","h":"getrandbits-k","lv":0}],"h":"s-random"},{"name":"Python3 三角函数","open":false,"items":[{"t":"sin(x)","h":"sin-x","lv":0},{"t":"cos(x)","h":"cos-x","lv":0},{"t":"tan(x)","h":"tan-x","lv":0},{"t":"asin(x)","h":"asin-x","lv":0},{"t":"acos(x)","h":"acos-x","lv":0},{"t":"atan(x)","h":"atan-x","lv":0},{"t":"atan2(y, x)","h":"atan2-y-x","lv":0},{"t":"sinh(x) / cosh(x) / tanh(x)","h":"sinh-x-cosh-x-tanh-x","lv":0},{"t":"hypot(x, y)","h":"hypot-x-y","lv":0},{"t":"degrees(x)","h":"degrees-x","lv":0},{"t":"radians(x)","h":"radians-x","lv":0},{"t":"math.pi","h":"math-pi","lv":0}],"h":"s-trig"},{"name":"Python3 日期和时间","open":false,"items":[{"t":"time.time()","h":"time-time","lv":0},{"t":"time.localtime([secs])","h":"time-localtime-secs","lv":0},{"t":"time.gmtime([secs])","h":"time-gmtime-secs","lv":0},{"t":"time.strftime(fmt[, t])","h":"time-strftime-fmt-t","lv":0},{"t":"time.strptime(s, fmt)","h":"time-strptime-s-fmt","lv":0},{"t":"time.mktime(t)","h":"time-mktime-t","lv":0},{"t":"time.sleep(secs)","h":"time-sleep-secs","lv":0},{"t":"time.perf_counter()","h":"time-perf-counter","lv":0},{"t":"time.monotonic()","h":"time-monotonic","lv":0},{"t":"time.tzset()","h":"time-tzset","lv":0},{"t":"time.clock()","h":"time-clock","lv":0},{"t":"datetime.datetime.now()","h":"datetime-datetime-now","lv":0},{"t":"datetime.date.today()","h":"datetime-date-today","lv":0},{"t":"datetime.timedelta(...)","h":"datetime-timedelta","lv":0},{"t":"datetime.strftime(fmt)","h":"datetime-strftime-fmt","lv":0},{"t":"datetime.strptime(s, fmt)","h":"datetime-strptime-s-fmt","lv":0},{"t":"datetime.timestamp()","h":"datetime-timestamp","lv":0}],"h":"s-datetime"},{"name":"Python3 字符串","open":false,"items":[{"t":"s.capitalize()","h":"s-capitalize","lv":0},{"t":"s.casefold()","h":"s-casefold","lv":0},{"t":"s.center(width[, fillchar])","h":"s-center-width-fillchar","lv":0},{"t":"s.count(sub[, start[, end]])","h":"s-count-sub-start-end","lv":0},{"t":"s.encode(encoding=\"utf-8\", errors=\"strict\")","h":"s-encode-encoding-utf-8-errors-strict","lv":0},{"t":"s.endswith(suffix[, start[, end]])","h":"s-endswith-suffix-start-end","lv":0},{"t":"s.expandtabs(tabsize=8)","h":"s-expandtabs-tabsize-8","lv":0},{"t":"s.find(sub[, start[, end]])","h":"s-find-sub-start-end","lv":0},{"t":"s.format(*args, **kwargs)","h":"s-format-args-kwargs","lv":0},{"t":"s.format_map(mapping)","h":"s-format-map-mapping","lv":0},{"t":"s.index(sub[, start[, end]])","h":"s-index-sub-start-end","lv":0},{"t":"s.isalnum()","h":"s-isalnum","lv":0},{"t":"s.isalpha()","h":"s-isalpha","lv":0},{"t":"s.isascii()","h":"s-isascii","lv":0},{"t":"s.isdecimal()","h":"s-isdecimal","lv":0},{"t":"s.isdigit()","h":"s-isdigit","lv":0},{"t":"s.isidentifier()","h":"s-isidentifier","lv":0},{"t":"s.islower()","h":"s-islower","lv":0},{"t":"s.isnumeric()","h":"s-isnumeric","lv":0},{"t":"s.isprintable()","h":"s-isprintable","lv":0},{"t":"s.isspace()","h":"s-isspace","lv":0},{"t":"s.istitle()","h":"s-istitle","lv":0},{"t":"s.isupper()","h":"s-isupper","lv":0},{"t":"sep.join(iterable)","h":"sep-join-iterable","lv":0},{"t":"s.ljust(width[, fillchar])","h":"s-ljust-width-fillchar","lv":0},{"t":"s.lower()","h":"s-lower","lv":0},{"t":"s.lstrip([chars])","h":"s-lstrip-chars","lv":0},{"t":"str.maketrans(x[, y[, z]])","h":"str-maketrans-x-y-z","lv":0},{"t":"s.partition(sep)","h":"s-partition-sep","lv":0},{"t":"s.removeprefix(prefix)","h":"s-removeprefix-prefix","lv":0},{"t":"s.removesuffix(suffix)","h":"s-removesuffix-suffix","lv":0},{"t":"s.replace(old, new[, count])","h":"s-replace-old-new-count","lv":0},{"t":"s.rfind(sub[, start[, end]])","h":"s-rfind-sub-start-end","lv":0},{"t":"s.rindex(sub[, start[, end]])","h":"s-rindex-sub-start-end","lv":0},{"t":"s.rjust(width[, fillchar])","h":"s-rjust-width-fillchar","lv":0},{"t":"s.rpartition(sep)","h":"s-rpartition-sep","lv":0},{"t":"s.rsplit(sep=None, maxsplit=-1)","h":"s-rsplit-sep-none-maxsplit-1","lv":0},{"t":"s.rstrip([chars])","h":"s-rstrip-chars","lv":0},{"t":"s.split(sep=None, maxsplit=-1)","h":"s-split-sep-none-maxsplit-1","lv":0},{"t":"s.splitlines(keepends=False)","h":"s-splitlines-keepends-false","lv":0},{"t":"s.startswith(prefix[, start[, end]])","h":"s-startswith-prefix-start-end","lv":0},{"t":"s.strip([chars])","h":"s-strip-chars","lv":0},{"t":"s.swapcase()","h":"s-swapcase","lv":0},{"t":"s.title()","h":"s-title","lv":0},{"t":"s.translate(table)","h":"s-translate-table","lv":0},{"t":"s.upper()","h":"s-upper","lv":0},{"t":"s.zfill(width)","h":"s-zfill-width","lv":0}],"h":"s-str"},{"name":"Python3 列表函数、方法","open":false,"items":[{"t":"l.append(x)","h":"l-append-x","lv":0},{"t":"l.clear()","h":"l-clear","lv":0},{"t":"l.copy()","h":"l-copy","lv":0},{"t":"l.count(x)","h":"l-count-x","lv":0},{"t":"l.extend(iterable)","h":"l-extend-iterable","lv":0},{"t":"l.index(x[, start[, end]])","h":"l-index-x-start-end","lv":0},{"t":"l.insert(i, x)","h":"l-insert-i-x","lv":0},{"t":"l.pop([i])","h":"l-pop-i","lv":0},{"t":"l.remove(x)","h":"l-remove-x","lv":0},{"t":"l.reverse()","h":"l-reverse","lv":0},{"t":"l.sort(*, key=None, reverse=False)","h":"l-sort-key-none-reverse-false","lv":0}],"h":"s-list"},{"name":"Python3 元组","open":false,"items":[{"t":"t.count(x)","h":"t-count-x","lv":0},{"t":"t.index(x[, start[, end]])","h":"t-index-x-start-end","lv":0}],"h":"s-tuple"},{"name":"Python3 字典","open":false,"items":[{"t":"d.clear()","h":"d-clear","lv":0},{"t":"d.copy()","h":"d-copy","lv":0},{"t":"dict.fromkeys(seq[, value])","h":"dict-fromkeys-seq-value","lv":0},{"t":"d.get(key[, default])","h":"d-get-key-default","lv":0},{"t":"d.items()","h":"d-items","lv":0},{"t":"d.keys()","h":"d-keys","lv":0},{"t":"d.pop(key[, default])","h":"d-pop-key-default","lv":0},{"t":"d.popitem()","h":"d-popitem","lv":0},{"t":"d.setdefault(key[, default])","h":"d-setdefault-key-default","lv":0},{"t":"d.update(other)","h":"d-update-other","lv":0},{"t":"d.values()","h":"d-values","lv":0}],"h":"s-dict"},{"name":"Python3 集合","open":false,"items":[{"t":"s.add(x)","h":"s-add-x","lv":0},{"t":"s.clear()","h":"s-clear","lv":0},{"t":"s.copy()","h":"s-copy","lv":0},{"t":"s.difference(*others)","h":"s-difference-others","lv":0},{"t":"s.difference_update(*others)","h":"s-difference-update-others","lv":0},{"t":"s.discard(x)","h":"s-discard-x","lv":0},{"t":"s.intersection(*others)","h":"s-intersection-others","lv":0},{"t":"s.intersection_update(*others)","h":"s-intersection-update-others","lv":0},{"t":"s.isdisjoint(other)","h":"s-isdisjoint-other","lv":0},{"t":"s.issubset(other)","h":"s-issubset-other","lv":0},{"t":"s.issuperset(other)","h":"s-issuperset-other","lv":0},{"t":"s.pop()","h":"s-pop","lv":0},{"t":"s.remove(x)","h":"s-remove-x","lv":0},{"t":"s.symmetric_difference(other)","h":"s-symmetric-difference-other","lv":0},{"t":"s.symmetric_difference_update(other)","h":"s-symmetric-difference-update-other","lv":0},{"t":"s.union(*others)","h":"s-union-others","lv":0},{"t":"s.update(*others)","h":"s-update-others","lv":0}],"h":"s-set"},{"name":"Python3 File(文件) 方法","open":false,"items":[{"t":"f.close()","h":"f-close","lv":0},{"t":"f.flush()","h":"f-flush","lv":0},{"t":"f.fileno()","h":"f-fileno","lv":0},{"t":"f.isatty()","h":"f-isatty","lv":0},{"t":"f.read([size])","h":"f-read-size","lv":0},{"t":"f.readable()","h":"f-readable","lv":0},{"t":"f.readline([size])","h":"f-readline-size","lv":0},{"t":"f.readlines([hint])","h":"f-readlines-hint","lv":0},{"t":"f.seek(offset[, whence])","h":"f-seek-offset-whence","lv":0},{"t":"f.seekable()","h":"f-seekable","lv":0},{"t":"f.tell()","h":"f-tell","lv":0},{"t":"f.truncate([size])","h":"f-truncate-size","lv":0},{"t":"f.writable()","h":"f-writable","lv":0},{"t":"f.write(s)","h":"f-write-s","lv":0},{"t":"f.writelines(lines)","h":"f-writelines-lines","lv":0}],"h":"s-file"},{"name":"Python3 OS 文件/目录方法","open":false,"items":[{"t":"os.getcwd()","h":"os-getcwd","lv":0},{"t":"os.chdir(path)","h":"os-chdir-path","lv":0},{"t":"os.listdir(path)","h":"os-listdir-path","lv":0},{"t":"os.mkdir(path[, mode])","h":"os-mkdir-path-mode","lv":0},{"t":"os.makedirs(name[, exist_ok])","h":"os-makedirs-name-exist-ok","lv":0},{"t":"os.rmdir(path)","h":"os-rmdir-path","lv":0},{"t":"os.removedirs(name)","h":"os-removedirs-name","lv":0},{"t":"os.remove(path)","h":"os-remove-path","lv":0},{"t":"os.unlink(path)","h":"os-unlink-path","lv":0},{"t":"os.rename(src, dst)","h":"os-rename-src-dst","lv":0},{"t":"os.replace(src, dst)","h":"os-replace-src-dst","lv":0},{"t":"os.stat(path)","h":"os-stat-path","lv":0},{"t":"os.chmod(path, mode)","h":"os-chmod-path-mode","lv":0},{"t":"os.access(path, mode)","h":"os-access-path-mode","lv":0},{"t":"os.walk(top)","h":"os-walk-top","lv":0},{"t":"os.scandir(path)","h":"os-scandir-path","lv":0},{"t":"os.path.exists(path)","h":"os-path-exists-path","lv":0},{"t":"os.path.isfile(path)","h":"os-path-isfile-path","lv":0},{"t":"os.path.isdir(path)","h":"os-path-isdir-path","lv":0},{"t":"os.path.join(path, *paths)","h":"os-path-join-path-paths","lv":0},{"t":"os.path.abspath(path)","h":"os-path-abspath-path","lv":0},{"t":"os.path.basename(path)","h":"os-path-basename-path","lv":0},{"t":"os.path.dirname(path)","h":"os-path-dirname-path","lv":0},{"t":"os.path.split(path)","h":"os-path-split-path","lv":0},{"t":"os.path.splitext(path)","h":"os-path-splitext-path","lv":0},{"t":"os.path.getsize(path)","h":"os-path-getsize-path","lv":0},{"t":"os.path.getmtime(path)","h":"os-path-getmtime-path","lv":0},{"t":"os.system(command)","h":"os-system-command","lv":0},{"t":"os.popen(cmd)","h":"os-popen-cmd","lv":0},{"t":"os.environ","h":"os-environ","lv":0},{"t":"os.getenv(key[, default])","h":"os-getenv-key-default","lv":0},{"t":"os.sep / os.linesep","h":"os-sep-os-linesep","lv":0},{"t":"os.name","h":"os-name","lv":0},{"t":"os.cpu_count()","h":"os-cpu-count","lv":0},{"t":"os.getpid() / os.getppid()","h":"os-getpid-os-getppid","lv":0},{"t":"os.urandom(n)","h":"os-urandom-n","lv":0},{"t":"os.link / os.symlink","h":"os-link-os-symlink","lv":0},{"t":"os.startfile(path)","h":"os-startfile-path","lv":0}],"h":"s-os"},{"name":"Python3 实例","open":false,"items":[{"t":"Python Hello World 实例","h":"python-hello-world-实例","lv":0},{"t":"Python 数字求和","h":"python-数字求和","lv":0},{"t":"Python 平方根","h":"python-平方根","lv":0},{"t":"Python 二次方程求根","h":"python-二次方程求根","lv":0},{"t":"Python 计算三角形面积","h":"python-计算三角形面积","lv":0},{"t":"Python 生成随机数","h":"python-生成随机数","lv":0},{"t":"Python 摄氏温度转华氏温度","h":"python-摄氏温度转华氏温度","lv":0},{"t":"Python 判断奇偶数","h":"python-判断奇偶数","lv":0},{"t":"Python 判断闰年","h":"python-判断闰年","lv":0},{"t":"Python 判断质数","h":"python-判断质数","lv":0},{"t":"Python 求阶乘","h":"python-求阶乘","lv":0},{"t":"Python 斐波那契数列","h":"python-斐波那契数列","lv":0},{"t":"Python 九九乘法表","h":"python-九九乘法表","lv":0},{"t":"Python 打印菱形 / 金字塔","h":"python-打印菱形-金字塔","lv":0},{"t":"Python 字符串反转","h":"python-字符串反转","lv":0},{"t":"Python 判断回文","h":"python-判断回文","lv":0},{"t":"Python 列表去重","h":"python-列表去重","lv":0},{"t":"Python 冒泡排序","h":"python-冒泡排序","lv":0},{"t":"Python 二分查找","h":"python-二分查找","lv":0},{"t":"Python 最大公约数和最小公倍数","h":"python-最大公约数和最小公倍数","lv":0},{"t":"Python 交换两个变量","h":"python-交换两个变量","lv":0},{"t":"Python 统计字符出现次数","h":"python-统计字符出现次数","lv":0},{"t":"Python 计算平均数 / 最大最小值","h":"python-计算平均数-最大最小值","lv":0},{"t":"Python 合并两个字典","h":"python-合并两个字典","lv":0},{"t":"Python 秒数转时分秒","h":"python-秒数转时分秒","lv":0},{"t":"Python 判断元素是否在列表中","h":"python-判断元素是否在列表中","lv":0},{"t":"Python 大小写转换","h":"python-大小写转换","lv":0},{"t":"Python 生成日历","h":"python-生成日历","lv":0},{"t":"Python 获取昨天 / 明天的日期","h":"python-获取昨天-明天的日期","lv":0}],"h":"s-example"},{"name":"Python3 内置函数","open":false,"items":[{"t":"abs(x)","h":"abs-x-2","lv":0},{"t":"aiter(async_iterable)","h":"aiter-async-iterable","lv":0},{"t":"all(iterable)","h":"all-iterable","lv":0},{"t":"anext(async_iterator[, default])","h":"anext-async-iterator-default","lv":0},{"t":"any(iterable)","h":"any-iterable","lv":0},{"t":"ascii(object)","h":"ascii-object","lv":0},{"t":"bin(x)","h":"bin-x","lv":0},{"t":"bool([x])","h":"bool-x","lv":0},{"t":"breakpoint(*args, **kws)","h":"breakpoint-args-kws","lv":0},{"t":"bytearray([source[, encoding[, errors]]])","h":"bytearray-source-encoding-errors","lv":0},{"t":"bytes([source[, encoding[, errors]]])","h":"bytes-source-encoding-errors","lv":0},{"t":"callable(object)","h":"callable-object","lv":0},{"t":"chr(i)","h":"chr-i","lv":0},{"t":"classmethod(func)","h":"classmethod-func","lv":0},{"t":"compile(source, filename, mode)","h":"compile-source-filename-mode","lv":0},{"t":"complex([real[, imag]])","h":"complex-real-imag","lv":0},{"t":"delattr(obj, name)","h":"delattr-obj-name","lv":0},{"t":"dict(**kwarg)","h":"dict-kwarg","lv":0},{"t":"dir([object])","h":"dir-object","lv":0},{"t":"divmod(a, b)","h":"divmod-a-b","lv":0},{"t":"enumerate(iterable, start=0)","h":"enumerate-iterable-start-0","lv":0},{"t":"eval(expression[, globals[, locals]])","h":"eval-expression-globals-locals","lv":0},{"t":"exec(object[, globals[, locals]])","h":"exec-object-globals-locals","lv":0},{"t":"filter(function, iterable)","h":"filter-function-iterable","lv":0},{"t":"float([x])","h":"float-x","lv":0},{"t":"format(value[, format_spec])","h":"format-value-format-spec","lv":0},{"t":"frozenset([iterable])","h":"frozenset-iterable","lv":0},{"t":"getattr(object, name[, default])","h":"getattr-object-name-default","lv":0},{"t":"globals()","h":"globals","lv":0},{"t":"hasattr(object, name)","h":"hasattr-object-name","lv":0},{"t":"hash(object)","h":"hash-object","lv":0},{"t":"help([object])","h":"help-object","lv":0},{"t":"hex(x)","h":"hex-x","lv":0},{"t":"id(object)","h":"id-object","lv":0},{"t":"input([prompt])","h":"input-prompt","lv":0},{"t":"int(x) / int(x, base)","h":"int-x-int-x-base","lv":0},{"t":"isinstance(object, classinfo)","h":"isinstance-object-classinfo","lv":0},{"t":"issubclass(class, classinfo)","h":"issubclass-class-classinfo","lv":0},{"t":"iter(object[, sentinel])","h":"iter-object-sentinel","lv":0},{"t":"len(s)","h":"len-s","lv":0},{"t":"list([iterable])","h":"list-iterable","lv":0},{"t":"locals()","h":"locals","lv":0},{"t":"map(function, iterable, ...)","h":"map-function-iterable","lv":0},{"t":"max(iterable, *[, key, default])","h":"max-iterable-key-default","lv":0},{"t":"memoryview(object)","h":"memoryview-object","lv":0},{"t":"min(iterable, *[, key, default])","h":"min-iterable-key-default","lv":0},{"t":"next(iterator[, default])","h":"next-iterator-default","lv":0},{"t":"object()","h":"object","lv":0},{"t":"oct(x)","h":"oct-x","lv":0},{"t":"open(file, mode=\"r\", ...)","h":"open-file-mode-r","lv":0},{"t":"ord(c)","h":"ord-c","lv":0},{"t":"pow(base, exp[, mod])","h":"pow-base-exp-mod","lv":0},{"t":"print(*objects, sep=\" \", end=\"\\n\", file=None, flush=False)","h":"print-objects-sep-end-n-file-none-flush-false","lv":0},{"t":"property(fget, fset, fdel, doc)","h":"property-fget-fset-fdel-doc","lv":0},{"t":"range(start, stop[, step])","h":"range-start-stop-step","lv":0},{"t":"repr(object)","h":"repr-object","lv":0},{"t":"reversed(seq)","h":"reversed-seq","lv":0},{"t":"round(number[, ndigits])","h":"round-number-ndigits","lv":0},{"t":"set([iterable])","h":"set-iterable","lv":0},{"t":"setattr(obj, name, value)","h":"setattr-obj-name-value","lv":0},{"t":"slice(start, stop[, step])","h":"slice-start-stop-step","lv":0},{"t":"sorted(iterable, *, key=None, reverse=False)","h":"sorted-iterable-key-none-reverse-false","lv":0},{"t":"staticmethod(func)","h":"staticmethod-func","lv":0},{"t":"str(object=\"\")","h":"str-object","lv":0},{"t":"sum(iterable, start=0)","h":"sum-iterable-start-0","lv":0},{"t":"super()","h":"super","lv":0},{"t":"tuple([iterable])","h":"tuple-iterable","lv":0},{"t":"type(object) / type(name, bases, dict)","h":"type-object-type-name-bases-dict","lv":0},{"t":"vars([object])","h":"vars-object","lv":0},{"t":"zip(*iterables, strict=False)","h":"zip-iterables-strict-false","lv":0},{"t":"__import__(name, ...)","h":"import-name","lv":0}],"h":"s-builtin"},{"name":"Python3 保留关键字","open":false,"items":[{"t":"False / True","h":"false-true","lv":0},{"t":"None","h":"none","lv":0},{"t":"and","h":"and","lv":0},{"t":"or","h":"or","lv":0},{"t":"not","h":"not","lv":0},{"t":"if / elif / else","h":"if-elif-else","lv":0},{"t":"for","h":"for","lv":0},{"t":"while","h":"while","lv":0},{"t":"break","h":"break","lv":0},{"t":"continue","h":"continue","lv":0},{"t":"pass","h":"pass","lv":0},{"t":"def","h":"def","lv":0},{"t":"return","h":"return","lv":0},{"t":"lambda","h":"lambda","lv":0},{"t":"class","h":"class","lv":0},{"t":"import","h":"import","lv":0},{"t":"from","h":"from","lv":0},{"t":"as","h":"as","lv":0},{"t":"with","h":"with","lv":0},{"t":"try / except / else / finally","h":"try-except-else-finally","lv":0},{"t":"raise","h":"raise","lv":0},{"t":"assert","h":"assert","lv":0},{"t":"del","h":"del","lv":0},{"t":"global","h":"global","lv":0},{"t":"nonlocal","h":"nonlocal","lv":0},{"t":"in","h":"in","lv":0},{"t":"is","h":"is","lv":0},{"t":"for ... else / while ... else","h":"for-else-while-else","lv":0},{"t":"yield","h":"yield","lv":0},{"t":"async / await","h":"async-await","lv":0},{"t":"match / case","h":"match-case","lv":0}],"h":"s-keyword"}]},{"file":"pywin32.html","title":"pywin32 零基础完全教程 · 2026 最新版（看得懂版）","kind":"static","groups":[{"name":"开篇必看","items":[{"t":"0 2026 版本对照","h":"versions","lv":0},{"t":"0 关键字速查表","h":"keywords","lv":0},{"t":"0 全书一张图","h":"map","lv":0}],"open":true},{"name":"第一篇 · 跟着做（零基础）","items":[{"t":"pywin32 是什么","h":"ch1","lv":0},{"t":"安装与验证","h":"ch2","lv":0},{"t":"模块总览","h":"ch3","lv":0},{"t":"句柄与常量","h":"ch4","lv":0},{"t":"查找窗口 win32gui","h":"ch5","lv":0}],"open":true},{"name":"第二篇 · 日常主线","items":[{"t":"操作窗口 win32gui","h":"ch6","lv":0},{"t":"键盘鼠标模拟","h":"ch7","lv":0},{"t":"窗口消息机制","h":"ch8","lv":0},{"t":"剪贴板与屏幕信息","h":"ch9","lv":0},{"t":"文件与磁盘操作","h":"ch10","lv":0},{"t":"进程与程序启动","h":"ch11","lv":0},{"t":"注册表读写","h":"ch12","lv":0}],"open":true},{"name":"第三篇 · 全部技能","items":[{"t":"系统服务","h":"ch13","lv":0},{"t":"COM 与 Office 自动化","h":"ch14","lv":0},{"t":"事件与定时器","h":"ch15","lv":0},{"t":"实战一","h":"ch16","lv":0},{"t":"实战二","h":"ch17","lv":0},{"t":"实战三","h":"ch18","lv":0},{"t":"调试技巧","h":"ch19","lv":0},{"t":"常见报错","h":"ch20","lv":0}],"open":true},{"name":"第四篇 · 新版与附录","items":[{"t":"性能优化","h":"ch21","lv":0},{"t":"打包分发","h":"ch22","lv":0},{"t":"与 ctypes 对比","h":"ch23","lv":0},{"t":"权限问题","h":"ch24","lv":0},{"t":"多线程","h":"ch25","lv":0},{"t":"错误处理","h":"ch26","lv":0},{"t":"附录 A 速查","h":"ch27","lv":0},{"t":"附录 B 常见问题","h":"ch28","lv":0},{"t":"附 2026 新变化","h":"new2026","lv":0}],"open":true}]},{"file":"SQLAlchemy.html","title":"SQLAlchemy 图解教程 · 2026 最新版（零基础看得懂版）","kind":"static","groups":[{"name":"第一篇 · 跟着做（零基础）","items":[{"t":"00 关键字速查表","h":"c0","lv":0},{"t":"01 开始之前","h":"c1","lv":0},{"t":"02 装好环境（手把手）","h":"c2","lv":0},{"t":"03 第一次增删改查","h":"c3","lv":0},{"t":"04 刚才发生了什么","h":"c4","lv":0}],"open":true},{"name":"第二篇 · 日常主线","items":[{"t":"05 连接与 Engine","h":"c5","lv":0},{"t":"06 定义表和模型","h":"c6","lv":0},{"t":"07 新增、修改、删除","h":"c7","lv":0},{"t":"08 查询数据","h":"c8","lv":0},{"t":"09 完整实战：图书借阅","h":"c9","lv":0}],"open":true},{"name":"第三篇 · 全部技能（补全）","items":[{"t":"10 表与表的关系","h":"c10","lv":0},{"t":"11 事务与 Session","h":"c11","lv":0},{"t":"12 SQL 表达式与 Core","h":"c12","lv":0},{"t":"13 字段类型与约束","h":"c13","lv":0},{"t":"14 异步写法","h":"c14","lv":0},{"t":"15 数据库迁移","h":"c15","lv":0},{"t":"16 事件、连接池与性能","h":"c16","lv":0},{"t":"17 与其它工具配合","h":"c17","lv":0},{"t":"18 常见报错急救","h":"c18","lv":0}],"open":true},{"name":"第四篇 · 新版与附录","items":[{"t":"19 2026 年 2.1 新变化","h":"c19","lv":0},{"t":"20 老写法与新写法对照","h":"c20","lv":0},{"t":"21 速查表与词典","h":"c21","lv":0},{"t":"附录 A 内部是怎么跑的","h":"apxa","lv":0},{"t":"附录 B 完整 API 索引","h":"apxb","lv":0},{"t":"附录 C 常见问题 12 问","h":"apxc","lv":0}],"open":true}]},{"file":"Vite.html","title":"Vite 零基础完全教程 · 2026 最新版（看得懂版）","kind":"static","groups":[{"name":"开篇必看","items":[{"t":"0 2026 版本对照","h":"versions","lv":0},{"t":"0 关键字速查表","h":"keywords","lv":0},{"t":"0 全书一张图","h":"map","lv":0}],"open":true},{"name":"第一篇 · 跟着做（零基础）","items":[{"t":"Vite 是什么","h":"ch1","lv":0},{"t":"安装 Node.js 与 npm","h":"ch2","lv":0},{"t":"创建第一个项目","h":"ch3","lv":0},{"t":"项目目录结构","h":"ch4","lv":0}],"open":true},{"name":"第二篇 · 日常主线","items":[{"t":"启动与热更新","h":"ch5","lv":0},{"t":"工作原理","h":"ch6","lv":0},{"t":"样式与静态资源","h":"ch7","lv":0},{"t":"配置文件 vite.config.js","h":"ch8","lv":0},{"t":"环境变量与模式","h":"ch9","lv":0}],"open":true},{"name":"第三篇 · 全部技能","items":[{"t":"代理与后端联调","h":"ch10","lv":0},{"t":"框架项目实战","h":"ch11","lv":0},{"t":"插件","h":"ch12","lv":0},{"t":"构建与打包","h":"ch13","lv":0}],"open":true},{"name":"第四篇 · 新版与附录","items":[{"t":"部署上线","h":"ch14","lv":0},{"t":"性能优化","h":"ch15","lv":0},{"t":"速查表与排错","h":"ch16","lv":0},{"t":"附 2026 新变化","h":"new2026","lv":0}],"open":true}]},{"file":"vue.html","title":"Vue 3 全家桶图解教程 · 2026 最新版（零基础看得懂版）","kind":"static","groups":[{"name":"开篇必看","items":[{"t":"0 代码关键字速查表","h":"keywords","lv":0}],"open":true},{"name":"第一篇 · 跟着做（零基础）","items":[{"t":"01 Vue 是什么","h":"c1","lv":0},{"t":"02 装好工具","h":"c2","lv":0},{"t":"03 第一个页面（手把手）","h":"c3","lv":0},{"t":"04 刚才发生了什么","h":"c4","lv":0}],"open":true},{"name":"第二篇 · 页面怎么写","items":[{"t":"05 模板语法与指令总表","h":"c5","lv":0},{"t":"06 绑定属性、样式与事件","h":"c6","lv":0},{"t":"07 条件渲染与列表渲染","h":"c7","lv":0},{"t":"08 表单双向绑定","h":"c8","lv":0},{"t":"09 计算属性与侦听器","h":"c9","lv":0}],"open":true},{"name":"第三篇 · 组件","items":[{"t":"10 组件与单文件组件","h":"c10","lv":0},{"t":"11 组件之间传值","h":"c11","lv":0},{"t":"12 插槽与组件进阶","h":"c12","lv":0},{"t":"13 生命周期","h":"c13","lv":0}],"open":true},{"name":"第四篇 · 组合式 API","items":[{"t":"14 setup 与语法糖","h":"c14","lv":0},{"t":"15 ref 与 reactive","h":"c15","lv":0},{"t":"16 响应式工具全家","h":"c16","lv":0},{"t":"17 编译宏与组合式函数","h":"c17","lv":0}],"open":true},{"name":"第五篇 · 全家桶","items":[{"t":"18 Vite、目录与 TS 入门","h":"c18","lv":0},{"t":"19 请求数据与 UI 库","h":"c19","lv":0},{"t":"20 Vue Router 全解","h":"c20","lv":0},{"t":"21 Pinia 全解","h":"c21","lv":0},{"t":"22 测试、工具库与上线","h":"c22","lv":0}],"open":true},{"name":"第六篇 · 手把手实战","items":[{"t":"23 实战一：购物车","h":"c23","lv":0},{"t":"24 实战二：待办 + 登录","h":"c24","lv":0},{"t":"25 实战三：数据看板与上线","h":"c25","lv":0},{"t":"26 常见报错急救","h":"c26","lv":0}],"open":true},{"name":"附录","items":[{"t":"A 2026 年的新变化","h":"apxa","lv":0},{"t":"B 速查表与英汉词典","h":"apxb","lv":0},{"t":"C 常见问题 + 课时对照","h":"apxc","lv":0}],"open":true}]},{"file":"WSL.html","title":"WSL 零基础完全教程 · 2026 最新版（看得懂版）","kind":"static","groups":[{"name":"开篇必看","items":[{"t":"0 2026 版本对照","h":"versions","lv":0},{"t":"0 关键字速查表","h":"keywords","lv":0},{"t":"0 全书一张图","h":"map","lv":0}],"open":true},{"name":"第一篇 · 跟着做（零基础）","items":[{"t":"WSL 是什么","h":"ch1","lv":0},{"t":"安装前的检查","h":"ch2","lv":0},{"t":"一键安装（手把手）","h":"ch3","lv":0},{"t":"发行版管理","h":"ch4","lv":0}],"open":true},{"name":"第二篇 · 日常主线","items":[{"t":"两个系统互相访问文件","h":"ch5","lv":0},{"t":"Linux 常用命令","h":"ch6","lv":0},{"t":"用 apt 装软件","h":"ch7","lv":0},{"t":"权限与文件系统","h":"ch8","lv":0},{"t":"网络与 SSH","h":"ch9","lv":0}],"open":true},{"name":"第三篇 · 全部技能","items":[{"t":"终端与 VS Code","h":"ch10","lv":0},{"t":"搭建开发环境","h":"ch11","lv":0},{"t":"备份与迁移","h":"ch12","lv":0},{"t":"常见问题排查","h":"ch13","lv":0}],"open":true},{"name":"第四篇 · 新版与附录","items":[{"t":"进阶配置","h":"ch14","lv":0},{"t":"容器与 GPU","h":"ch15","lv":0},{"t":"速查表与常见问题","h":"ch16","lv":0},{"t":"附 2026 新变化：WSL 3.0","h":"new2026","lv":0}],"open":true}]}];
+const DEFAULT_DOC = 'Git.html';
+const byFile = {};
+DOCS.forEach(function(d){ byFile[d.file] = d; });
 
-</main>
+const fileList = document.getElementById('fileList');
+const outline  = document.getElementById('outline');
+const filter   = document.getElementById('filter');
+const toggleAll= document.getElementById('toggleAll');
+const curTitle = document.getElementById('curTitle');
+const frame    = document.getElementById('frame');
 
-<footer class="footer">
-  <div class="container">
-    <p>由个人整理 · 托管于 GitHub Pages · 纯静态站点</p>
-  </div>
-</footer>
+let current = null;
+let activeAnchor = '';
+let collapsed = {};       // 用户手动折叠/展开的分组，覆盖默认 open
+let allOpen = false;
+let scrollTimer = null;
 
-<script src="assets/app.js"></script>
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+function urlParams(){
+  const q = new URLSearchParams(location.search);
+  return { f: q.get('f') || '', s: q.get('s') || '' };
+}
+function setUrl(f, s){
+  const u = new URL(location.href);
+  u.searchParams.set('f', f);
+  if (s) u.searchParams.set('s', s); else u.searchParams.delete('s');
+  history.replaceState(null, '', u.pathname + u.search + u.hash);
+}
+
+function renderFiles(){
+  let h = '';
+  DOCS.forEach(function(d){
+    h += '<button class="file-item" data-f="' + esc(d.file) + '" title="' + esc(d.title) + '">' +
+         '<span>' + esc(d.file) + '</span><small>' + esc(d.title) + '</small></button>';
+  });
+  h += '<div class="file-count">共 ' + DOCS.length + ' 个文件</div>';
+  fileList.innerHTML = h;
+}
+function markFile(){
+  Array.prototype.forEach.call(fileList.querySelectorAll('.file-item'), function(b){
+    b.classList.toggle('on', !!current && b.dataset.f === current.file);
+  });
+}
+
+function groupOpen(g, i){
+  return i in collapsed ? collapsed[i] : !!g.open;
+}
+function renderOutline(){
+  if (!current) return;
+  const kw = filter.value.trim().toLowerCase();
+  let h = '', shown = 0;
+  current.groups.forEach(function(g, gi){
+    const items = g.items.filter(function(it){
+      return !kw || it.t.toLowerCase().indexOf(kw) > -1 || g.name.toLowerCase().indexOf(kw) > -1;
+    });
+    if (!items.length) return;
+    const open = kw ? true : groupOpen(g, gi);
+    h += '<div class="grp"><div class="grp-title" data-g="' + gi + '" title="' + esc(g.name) + '">' +
+         '<span class="caret" data-fold="1">' + (open ? '▾' : '▸') + '</span>' +
+         '<a class="gname' + (g.h ? ' glink' : '') + '" href="#"' +
+         (g.h ? ' data-h="' + esc(g.h) + '"' : '') + '>' + esc(g.name) + '</a>' +
+         '<span class="cnt">' + items.length + '</span></div>';
+    if (open) {
+      h += '<div>';
+      items.forEach(function(it){
+        h += '<a class="ol-item' + (it.lv ? ' lv1' : '') + '" href="#' + esc(it.h) + '"' +
+             ' data-h="' + esc(it.h) + '" title="' + esc(it.t) + '">' + esc(it.t) + '</a>';
+      });
+      h += '</div>';
+    }
+    h += '</div>';
+    shown += items.length;
+  });
+  if (!shown) h = '<div class="ol-empty">没有匹配的目录项</div>';
+  outline.innerHTML = h;
+  markOutline(false);
+  syncToggle();
+}
+function syncToggle(){
+  if (!current) return;
+  let opened = 0;
+  current.groups.forEach(function(g, i){ if (groupOpen(g, i)) opened++; });
+  allOpen = opened > current.groups.length / 2;
+  toggleAll.textContent = allOpen ? '折叠全部' : '展开全部';
+}
+function markOutline(scroll){
+  if (!current) return;
+  let hit = null;
+  Array.prototype.forEach.call(outline.querySelectorAll('.ol-item'), function(a){
+    const on = a.dataset.h === activeAnchor;
+    a.classList.toggle('on', on);
+    if (on) hit = a;
+  });
+  if (scroll && hit && hit.scrollIntoView) hit.scrollIntoView({block:'nearest'});
+}
+
+function injectFrameCSS(){
+  try {
+    const d = frame.contentDocument;
+    if (!d || d.getElementById('__agg_hide_side__')) return;
+    const st = d.createElement('style');
+    st.id = '__agg_hide_side__';
+    /* 聚合页已有中栏大纲，隐藏原页面自带的左目录，正文原样保留 */
+    st.textContent = 'nav.side,div.side,aside.side,.side,#sidebar{display:none!important}' +
+                     '#main{padding-left:14px!important}' +
+                     '.wrap{max-width:none!important}';
+    d.head.appendChild(st);
+    frame.contentWindow.dispatchEvent(new Event('resize'));
+  } catch (e) { /* file:// 下不同源，忽略：此时原目录仍在，不影响阅读 */ }
+}
+
+function goAnchor(anchor, fromScroll){
+  if (!current || !anchor) return;
+  activeAnchor = anchor;
+  if (!fromScroll) setUrl(current.file, anchor);
+  markOutline(false);
+  try {
+    const win = frame.contentWindow, d = frame.contentDocument;
+    const decoded = decodeURIComponent(anchor);
+    if (win.location.hash.slice(1) !== decoded) win.location.hash = '#' + encodeURIComponent(decoded);
+    setTimeout(function(){
+      const el = d.getElementById(decoded);
+      if (!el) return;
+      /* 原页面普遍设了 scroll-behavior:smooth，平滑滚动在 iframe 里容易卡住，
+         这里临时关掉 CSS 平滑，用绝对坐标一次定位到位 */
+      const root = d.documentElement;
+      const prev = root.style.scrollBehavior;
+      root.style.scrollBehavior = 'auto';
+      const cur = win.pageYOffset || root.scrollTop || 0;
+      const top = el.getBoundingClientRect().top + cur - 12;
+      win.scrollTo(0, top > 0 ? top : 0);
+      if (el.scrollIntoView) el.scrollIntoView({behavior:'auto', block:'start'});
+      setTimeout(function(){ root.style.scrollBehavior = prev; }, 60);
+    }, 70);
+  } catch (e) {
+    frame.src = current.file + '#' + encodeURIComponent(anchor);
+  }
+}
+
+function onFrameScroll(){
+  if (scrollTimer) return;
+  scrollTimer = setTimeout(function(){
+    scrollTimer = null;
+    try {
+      const d = frame.contentDocument;
+      let best = null, bestTop = -1e9;
+      current.groups.forEach(function(g){
+        g.items.forEach(function(it){
+          const el = d.getElementById(decodeURIComponent(it.h));
+          if (!el) return;
+          const top = el.getBoundingClientRect().top;
+          if (top <= 150 && top > bestTop) { bestTop = top; best = it.h; }
+        });
+      });
+      if (best && best !== activeAnchor) {
+        activeAnchor = best;
+        markOutline(true);
+        setUrl(current.file, best);
+      }
+    } catch (e) {}
+  }, 200);
+}
+
+function openDoc(file, anchor){
+  const d = byFile[file] || byFile[DEFAULT_DOC] || DOCS[0];
+  current = d;
+  collapsed = {};
+  filter.value = '';
+  activeAnchor = anchor || '';
+  renderFiles(); markFile(); renderOutline();
+  curTitle.textContent = d.file + (d.title ? ' · ' + d.title : '');
+  frame.src = d.file + (anchor ? '#' + encodeURIComponent(anchor) : '');
+  setUrl(d.file, anchor || '');
+}
+
+fileList.addEventListener('click', function(e){
+  const b = e.target.closest('.file-item');
+  if (b) openDoc(b.dataset.f, '');
+});
+outline.addEventListener('click', function(e){
+  const a = e.target.closest('.ol-item');
+  if (a) { e.preventDefault(); goAnchor(a.dataset.h); return; }
+  const gt = e.target.closest('.grp-title');
+  if (!gt) return;
+  const i = +gt.dataset.g;
+  const gname = gt.querySelector('.gname');
+  const isCaret = !!e.target.closest('.caret');
+  e.preventDefault();
+  if (!isCaret && gname && gname.dataset.h) {
+    collapsed[i] = true;                 // 跳到分区，同时把该分区展开
+    renderOutline();
+    goAnchor(gname.dataset.h);
+    return;
+  }
+  collapsed[i] = !groupOpen(current.groups[i], i);
+  renderOutline();
+});
+filter.addEventListener('input', renderOutline);
+toggleAll.addEventListener('click', function(){
+  allOpen = !allOpen;
+  current.groups.forEach(function(g, i){ collapsed[i] = allOpen; });
+  renderOutline();
+});
+frame.addEventListener('load', function(){
+  injectFrameCSS();
+  try { frame.contentWindow.addEventListener('scroll', onFrameScroll, {passive:true}); } catch (e) {}
+  if (activeAnchor) setTimeout(function(){ goAnchor(activeAnchor); }, 60);
+});
+
+renderFiles();
+const init = urlParams();
+openDoc(byFile[init.f] ? init.f : DEFAULT_DOC, init.s);
+</script>
 </body>
 </html>
